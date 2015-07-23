@@ -22,8 +22,8 @@ var client_id = 'a000adffbd26453fbef24e8c1ff69c3b'; // Your client id
 var client_secret = '899b3ec7d52b4baabba05d6031663ba2'; // Your client secret
 var redirect_uri = 'http://89549b9a.ngrok.io/callback'; // Your redirect uri
 
-var message = require('./node_modules/twilio/examples/example.js');
-var twilio = require('twilio');
+//var message = require('./node_modules/twilio/examples/example.js');
+//var twilio = require('twilio');
 var insert = require ('./playlist');
 var insert = require ('./databasetools/insert');
 var query = require ('./databasetools/querydb');
@@ -268,8 +268,9 @@ app.post('/message', function(req, res){
     if (error) {
       console.log ('noodle');
     }
-    
     console.log (body);
+    console.log (req.body);
+    console.log (response);
     trackAdd = body
     //trackTitle = body.items[0].name
     trackID = body.tracks
