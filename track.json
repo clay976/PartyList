@@ -1,0 +1,91 @@
+{
+  "tracks" : {
+    "href" : "https://api.spotify.com/v1/search?query=Beware&offset=0&limit=1&type=track",
+    "items" : [ {
+      "album" : {
+        "album_type" : "album",
+        "available_markets" : [ "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR",
+"CH", "CL", "CO", "CR", "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR", "GB", "GR", "GT",
+"HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV", 
+"MC", "MT", "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY",
+"RO", "SE", "SG", "SI", "SK", "SV", "TR", "TW", "UY" ],
+        "external_urls" : {
+          "spotify" : "https://open.spotify.com/album/2kSTssn90EgrYWNlWZJ9r4"
+        },
+        "href" : "https://api.spotify.com/v1/albums/2kSTssn90EgrYWNlWZJ9r4",
+        "id" : "2kSTssn90EgrYWNlWZJ9r4",
+        "images" : [ {
+          "height" : 640,
+          "url" : "https://i.scdn.co/image/e90517404976ea56c4046b1f7804d650015b39cd",
+          "width" : 640
+        }, {
+          "height" : 300,
+          "url" : "https://i.scdn.co/image/fa524b18d13d4822d639f2a290781a4466ee136d",
+          "width" : 300
+        }, {
+          "height" : 64,
+          "url" : "https://i.scdn.co/image/d5e3c65b445d656aff17c6b2beb045a6ed7103cd",
+          "width" : 64
+        } ],
+        "name" : "Hall Of Fame (Deluxe)",
+        "type" : "album",
+        "uri" : "spotify:album:2kSTssn90EgrYWNlWZJ9r4"
+      },
+      "artists" : [ {
+        "external_urls" : {
+          "spotify" : "https://open.spotify.com/artist/0c173mlxpT3dSFRgMO8XPh"
+        },
+        "href" : "https://api.spotify.com/v1/artists/0c173mlxpT3dSFRgMO8XPh",
+        "id" : "0c173mlxpT3dSFRgMO8XPh",
+        "name" : "Big Sean",
+        "type" : "artist",
+        "uri" : "spotify:artist:0c173mlxpT3dSFRgMO8XPh"
+      }, {
+        "external_urls" : {
+          "spotify" : "https://open.spotify.com/artist/55Aa2cqylxrFIXC767Z865"
+        },
+        "href" : "https://api.spotify.com/v1/artists/55Aa2cqylxrFIXC767Z865",
+        "id" : "55Aa2cqylxrFIXC767Z865",
+        "name" : "Lil Wayne",
+        "type" : "artist",
+        "uri" : "spotify:artist:55Aa2cqylxrFIXC767Z865"
+      }, {
+        "external_urls" : {
+          "spotify" : "https://open.spotify.com/artist/5ZS223C6JyBfXasXxrRqOk"
+        },
+        "href" : "https://api.spotify.com/v1/artists/5ZS223C6JyBfXasXxrRqOk",
+        "id" : "5ZS223C6JyBfXasXxrRqOk",
+        "name" : "Jhene Aiko",
+        "type" : "artist",
+        "uri" : "spotify:artist:5ZS223C6JyBfXasXxrRqOk"
+      } ],
+      "available_markets" : [ "AD", "AR", "AT", "AU", "BE", "BG", "BO", "BR", "CH"
+, "CL", "CO", "CR", "CY", "CZ", "DE", "DK", "DO", "EC", "EE", "ES", "FI", "FR"
+, "GB", "GR", "GT", "HK", "HN", "HU", "IE", "IS", "IT", "LI", "LT", "LU", "LV",
+"MC", "MT", "MY", "NI", "NL", "NO", "NZ", "PA", "PE", "PH", "PL", "PT", "PY", "RO"
+, "SE", "SG", "SI", "SK", "SV", "TR", "TW", "UY" ],
+      "disc_number" : 1,
+      "duration_ms" : 235186,
+      "explicit" : true,
+      "external_ids" : {
+        "isrc" : "USUM71307500"
+      },
+      "external_urls" : {
+        "spotify" : "https://open.spotify.com/track/3Byz6Mk9WCNYeGthiDVti2"
+      },
+      "href" : "https://api.spotify.com/v1/tracks/3Byz6Mk9WCNYeGthiDVti2",
+      "id" : "3Byz6Mk9WCNYeGthiDVti2",
+      "name" : "Beware",
+      "popularity" : 63,
+      "preview_url" : "https://p.scdn.co/mp3-preview/afe1efc7fc0cb6c8429400bec8fccf00bb8cac4f",
+      "track_number" : 6,
+      "type" : "track",
+      "uri" : "spotify:track:3Byz6Mk9WCNYeGthiDVti2"
+    } ],
+    "limit" : 1,
+    "next" : "https://api.spotify.com/v1/search?query=Beware&offset=1&limit=1&type=track",
+    "offset" : 0,
+    "previous" : null,
+    "total" : 4354
+  }
+}
