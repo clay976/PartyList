@@ -4,7 +4,13 @@
   "description": "text a twilio number to add a song to a spotify playlist",
   "version": "0.0.1",
   "main": "app.js",
+  "repository":"https://github.com/BrentBrightling/PartyList.git",
+  "license":"MIT",
   "dependencies": {
+    "body-parser": "1.13.2",
+    "jquery": "2.1.4",
+    "mongodb": "2.0.39",
+    "spotify-web-api-node": "2.1.0",
     "cookie-parser": "1.3.2",
     "express": "~4.0.0",
     "querystring": "~0.2.0",
