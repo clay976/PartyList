@@ -23,14 +23,10 @@ module.exports.findPLaylist = function(ID){
     { "playlistID" : ID }) 
 }; 
 
-module.exports.search = function (collect, docu, callback){ 
-  MongoClient.connect(url, function(err, db) {
-    assert.equal(null, err);
-    var cursor =db.collection(collect).find(docu);
-    cursor.toArray(function(err, doc) {
-      assert.equal(err, null);
-      db.close();
-      callback (doc [0]) 
-    })
+module.exports.search = function (collect, docu, db, callback){ 
+  var cursor =db.collection(collect).find(docu);
+  cursor.toArray(function(err, doc) {
+    assert.equal(err, null);
+    callback (doc [0]) 
   });
 };
