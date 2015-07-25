@@ -49,12 +49,8 @@ module.exports.accessToken = function(aToken){
   }}) 
 };
  
-module.exports.updater = function (collection, doc, info, callback){ 
-  MongoClient.connect(url, function(err, db) {
-    assert.equal(null, err);
-    db.collection(collection).updateOne(doc,info, function(err, results) {
-      db.close();
-      callback (err);
-    });
+module.exports.updater = function (collection, doc, info,db, callback){ 
+  db.collection(collection).updateOne(doc,info, function(err, results) {
+    callback (err);
   });
 };

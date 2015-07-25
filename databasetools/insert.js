@@ -1,7 +1,4 @@
-var MongoClient = require('mongodb').MongoClient;
-var assert = require('assert')
-var ObjectId = require('mongodb').ObjectID;
-var url = 'mongodb://localhost:27017/party';
+
  
 module.exports.playlist = function(host,ID){
   return({
@@ -41,19 +38,9 @@ module.exports.apiInfo = function (host, access, refresh){
   })
 };
 
-var insertDocument = function(collect, docinsert, db, callback) {
-   db.collection(collect).insertOne(docinsert, function(err, result) {
+var insert = function(collect, docinsert, db, callback) {
+  db.collection(collect).insertOne(docinsert, function(err, result) {
     assert.equal(err, null);
-    console.log("Inserted a document into the" +collect+ " collection.");
     callback(result);
   });
-};
-
-module.exports.insert = function (collect, doc){
-  MongoClient.connect( url, function(err, db) {
-    assert.equal(null, err);
-    insertDocument(collect, doc, db, function() {
-      db.close();
-    });
-  });
-};
+};;
