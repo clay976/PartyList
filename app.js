@@ -24,7 +24,7 @@ var redirect_uri = 'http://89549b9a.ngrok.io/callback'; // Your redirect uri
 
 //var message = require('./node_modules/twilio/examples/example.js');
 //var twilio = require('twilio');
-var insert = require ('./playlist');
+var addTrack = require ('./playlist.js');
 var insert = require ('./databasetools/insert');
 var query = require ('./databasetools/querydb');
 var update = require ('./databasetools/update');
@@ -34,6 +34,7 @@ var host;
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var mongoUrl = 'mongodb://localhost:27017/party';
+var playlistID;
 
 
   MongoClient.connect(mongoUrl, function(err, db) {
@@ -211,7 +212,7 @@ var mongoUrl = 'mongodb://localhost:27017/party';
   });
 
   app.post('/createPlaylist', function(req, res){
-    var playlistname = req.body.playName;
+    playlistname = req.body.playName;
     if (playlistname) {
       console.log('creating: ' + playlistname);  
     }else{
@@ -220,7 +221,7 @@ var mongoUrl = 'mongodb://localhost:27017/party';
     
     //database casll to obtain access token, if access token is expired then
     //obtain new access token by using refresh token
-    validateToken.checkToken (host, function(tokenValid, docFound){
+    validateToken.checkToken (host, db, function(tokenValid, docFound){
     var options = {
       url: 'https://api.spotify.com/v1/users/' +host+ '/playlists',
         body: JSON.stringify({
@@ -235,8 +236,10 @@ var mongoUrl = 'mongodb://localhost:27017/party';
       };
     request.post(options, function(error, response, body) {
       console.log ('creating playlist');
-      console.log (response);
-    })
+      playlist = JSON.parse (body);
+      playlistID = playlist.id
+      console.log (playlistID);
+    });
     res.send({
               playlist: 'playlist created'
             });
@@ -268,6 +271,8 @@ var mongoUrl = 'mongodb://localhost:27017/party';
   app.post('/message', function(req, res){
     var searchParam = req.body.Body;
     var trackID;
+    var trackTitle;
+    var trackFind;
     //message.message ("I LOVE NOODLES");
     var options = {
       url: 'https://api.spotify.com/v1/search?q=' +searchParam+ '&type=track&limit=1'
@@ -277,16 +282,75 @@ var mongoUrl = 'mongodb://localhost:27017/party';
       if (error) {
         console.log ('noodle');
       }
-      
-      trackAdd = body
-      insert.insert ('trackListing', trackAdd);
-      query.search (host, {'host':host}, db, function(found){
-      //trackTitle = body.items[0].name
-      //console.log ('adding '+ trackTitle+ ' by ');
-      
-      //playlist.addTack(user.id, trackID, playlistID);
-      });   
+      trackAdd = JSON.parse(body);
+      trackID =trackAdd.tracks.items[0].id;
+      console.log (trackID);
+      console.log (playlistID);
+      console.log (host);
+
+      trackTitle = trackAdd.tracks.items[0].name;
+      console.log (trackTitle);
+      //insert.insert ('trackListing', trackAdd);
+      //trackFind = query.findTrack ()
+      //query.search (host, {'host':host}, db, function(found){
+
+      console.log ('adding '+ trackTitle+ ' by ');
+      validateToken.checkToken (host, db, function(tokenValid, docFound){
+
+        var options = {
+          url: "https://api.spotify.com/v1/users/" +host+ "/playlists/"+playlistID+ "/tracks",
+          body: JSON.stringify({"uris": ["spotify:track:"+trackID]}),
+          dataType:'json',
+            headers: {
+            Authorization: "Bearer " + docFound.access_token,
+            "Content-Type": "application/json",
+          }
+        };
+        console.log (options);
+        request.post(options, function(error, response, body) {
+          console.log (error);
+          console.log (body);
+          playlist = JSON.parse (body);
+
+        });
+      });
     });
   });
   app.listen(8888);
+  setInterval(function refreshToken (req, res) {
+
+    // requesting access token from refresh token
+    doc = query.findHost (host);
+    var refresh_token;
+    query.search (host,doc, db, function(docum){
+      refresh_token = docum.refresh_token;
+      console.log (refresh_token);
+    var authOptions = {
+      url: 'https://accounts.spotify.com/api/token',
+      headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+      form: {
+        grant_type: 'refresh_token',
+        refresh_token: refresh_token
+      },
+      json: true
+    };
+
+    request.post(authOptions, function(error, response, body) {
+      if (!error && response.statusCode === 200) {
+        access_token = body.access_token;
+        var documUpdate = update.findHost (host); 
+        var updateInfo = update.accessToken (access_token);
+
+        update.updater (host, documUpdate, updateInfo,db, function(error){
+          console.log ('updated the access token:');
+          query.search (host, {'host':host}, db, function(found){ 
+            if (found != null){
+              console.log (found.access_token);
+            }
+          });
+        });
+      }
+    })
+    });
+  },3540000 );
 });
