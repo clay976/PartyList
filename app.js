@@ -24,7 +24,6 @@ var redirect_uri = 'http://89549b9a.ngrok.io/callback'; // Your redirect uri
 
 //var message = require('./node_modules/twilio/examples/example.js');
 //var twilio = require('twilio');
-var addTrack = require ('./playlist.js');
 var insert = require ('./databasetools/insert');
 var query = require ('./databasetools/querydb');
 var update = require ('./databasetools/update');
@@ -279,41 +278,45 @@ var playlistID;
     };
 
     request.get(options, function(error, response, body) {
+      console.log (body);
       if (error) {
         console.log ('noodle');
       }
+      
       trackAdd = JSON.parse(body);
-      trackID =trackAdd.tracks.items[0].id;
-      console.log (trackID);
-      console.log (playlistID);
-      console.log (host);
+      if ((trackAdd.tracks.total)>0){
+        trackID =trackAdd.tracks.items[0].id;
+        console.log (trackID);
+        console.log (playlistID);
+        console.log (host);
 
-      trackTitle = trackAdd.tracks.items[0].name;
-      console.log (trackTitle);
-      //insert.insert ('trackListing', trackAdd);
-      //trackFind = query.findTrack ()
-      //query.search (host, {'host':host}, db, function(found){
+        trackTitle = trackAdd.tracks.items[0].name;
+        console.log (trackTitle);
+        //insert.insert ('trackListing', trackAdd);
+        //trackFind = query.findTrack ()
+        //query.search (host, {'host':host}, db, function(found){
 
-      console.log ('adding '+ trackTitle+ ' by ');
-      validateToken.checkToken (host, db, function(tokenValid, docFound){
+        console.log ('adding '+ trackTitle+ ' by ');
+        validateToken.checkToken (host, db, function(tokenValid, docFound){
 
-        var options = {
-          url: "https://api.spotify.com/v1/users/" +host+ "/playlists/"+playlistID+ "/tracks",
-          body: JSON.stringify({"uris": ["spotify:track:"+trackID]}),
-          dataType:'json',
-            headers: {
-            Authorization: "Bearer " + docFound.access_token,
-            "Content-Type": "application/json",
-          }
-        };
-        console.log (options);
-        request.post(options, function(error, response, body) {
-          console.log (error);
-          console.log (body);
-          playlist = JSON.parse (body);
+          var options = {
+            url: "https://api.spotify.com/v1/users/" +host+ "/playlists/"+playlistID+ "/tracks",
+            body: JSON.stringify({"uris": ["spotify:track:"+trackID]}),
+            dataType:'json',
+              headers: {
+              Authorization: "Bearer " + docFound.access_token,
+              "Content-Type": "application/json",
+            }
+          };
+          console.log (options);
+          request.post(options, function(error, response, body) {
+            console.log (error);
+            console.log (body);
+            playlist = JSON.parse (body);
 
+          });
         });
-      });
+      };
     });
   });
   app.listen(8888);
