@@ -1,12 +1,5 @@
+var assert = require('assert')
 
- 
-module.exports.playlist = function(host,ID){
-  return({
-    "playlistID":ID,
-    "tracks":[]
-  })
-};
- 
 module.exports.guest = function(host,phoneNum, reqID){
   return({
     "phone":phoneNum,
@@ -23,8 +16,6 @@ module.exports.track = function(host,playID,trackID){
 };
 
 module.exports.apiInfo = function (host, access, refresh){
-  var d = new Date();
-  time = d.getTime();
   return({
     "host":host,
     "clientId": "000adffbd26453fbef24e8c1ff69c3b",
@@ -34,11 +25,12 @@ module.exports.apiInfo = function (host, access, refresh){
     "token_type":"Bearer",
     expires_in:3500000,
     "refresh_token": refresh,
-    "time": time
+    "playlistID":"",
+    "tracks":[]
   })
 };
 
-var insert = function(collect, docinsert, db, callback) {
+module.exports.insert = function(collect, docinsert, db, callback) {
   db.collection(collect).insertOne(docinsert, function(err, result) {
     assert.equal(err, null);
     callback(result);
