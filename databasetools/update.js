@@ -1,12 +1,4 @@
-var MongoClient = require('mongodb').MongoClient;
 var assert = require('assert')
-var ObjectId = require('mongodb').ObjectID;
-var url = 'mongodb://localhost:27017/party';
-
-module.exports.findHost = function(searchQ){
-  return (
-    { "host" : searchQ }) 
-}; 
 
 //update playlist document
 module.exports.playlistID = function(ID){

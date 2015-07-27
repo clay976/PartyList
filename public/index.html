@@ -26,13 +26,12 @@
           <button id= "obtain-new-token" name = "obtain new token"> obtain new token </button>
         <div id="oauth"></div>
           <label for="filename">create new playlist</label>
+          <form id="input" action="/findPlaylist" method="POST">
+            <input type="submit" value="find current playlists">
+          </form>
           <form id="input" action="/createPlaylist" method="POST">
             <input type="text" name="playName" placeholder="new playlist Name">
             <input type="submit" value="create">
-          </form>
-          <form id="input" action="/findPlaylist" method="POST">
-            <input type="submit" value="get playlists">
-          </form>
           <form id="input" action="/switchPlaylist" method="POST">
             <input type="text" name="playListName" placeholder="existing Playlist Name" readonly>
             <input type="submit" value="use">
@@ -64,6 +63,14 @@
       <h2>oAuth info</h2>
       <dl class="dl-horizontal">
         <dt>Access token</dt><dd class="text-overflow">{{access_token}}</dd>
+        <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}></dd>
+      </dl>
+    </script>
+
+    <script id="Playlists" type="text/x-handlebars-template">
+      <h2>Playlist Info</h2>
+      <dl class="dl-horizontal">
+        <dt>Users PLaylists</dt><dd class="text-overflow">{{}}</dd>
         <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}></dd>
       </dl>
     </script>
