@@ -1,10 +1,11 @@
 var assert = require('assert')
 
-module.exports.guest = function(host,phoneNum, reqID){
+module.exports.guest = function(host,phoneNum){
   return({
+    "host": host,
     "phone":phoneNum,
     numRequests:5,
-    "tracks":[reqID]
+    "tracks":[]
   })
 };
 module.exports.track = function(host,playID,trackID){
