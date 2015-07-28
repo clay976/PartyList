@@ -88,8 +88,8 @@ var playlistID;
       res.redirect('/#' +
         querystring.stringify({
           error: 'state_mismatch'
-        }));
-    } else {
+      }));
+    }else{
       res.clearCookie(stateKey);
       var authOptions = {
         url: 'https://accounts.spotify.com/api/token',
@@ -106,28 +106,22 @@ var playlistID;
 
       request.post(authOptions, function(error, response, body) {
         if (!error && response.statusCode === 200) {
-          
-          var access_token = body.access_token,
-            refresh_token = body.refresh_token
-
+          var access_token = body.access_token;
+          var refresh_token = body.refresh_token;
           //databasecalls to save access and refresh tokens in the partyList collection
           // unser the tokens document
-
           var options = {
             url: 'https://api.spotify.com/v1/me',
             headers: { 'Authorization': 'Bearer ' + access_token },
             json: true
           };
-
           // use the access token to access the Spotify Web API
           request.get(options, function(error, response, body) {
-
-            //database call to save the tokens and user id as a host collection document
+            var found;
             host = (body.id).toString();
             console.log ('searching for ' + host);
+            //database call to save the tokens and user id as a host collection document
             var docuInsert = insert.apiInfo (host,access_token, refresh_token);
-            var found;
-
             query.search (host, {'host':host}, db, function(found){ 
               if (found != null){
                 console.log ('found existing user');
@@ -145,7 +139,7 @@ var playlistID;
               }else{
                 console.log ('creating new user');
                 insert.insert (host, docuInsert, db, function (result){
-                  console.log("Inserted a document into the" +collect+ " collection.");
+                  console.log("Inserted a document into the" +host+ " collection.");
                   console.log (result);
                 });
               };
@@ -177,36 +171,41 @@ var playlistID;
     query.search (host,doc, db, function(docum){
       refresh_token = docum.refresh_token;
       console.log (refresh_token);
-    var authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
-      form: {
-        grant_type: 'refresh_token',
-        refresh_token: refresh_token
-      },
-      json: true
-    };
+      var authOptions = {
+        url: 'https://accounts.spotify.com/api/token',
+        headers: { 'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64')) },
+        form: {
+          grant_type: 'refresh_token',
+          refresh_token: refresh_token
+        },
+        json: true
+      };
 
-    request.post(authOptions, function(error, response, body) {
-      if (!error && response.statusCode === 200) {
-        access_token = body.access_token;
-        var documUpdate = update.findHost (host); 
-        var updateInfo = update.accessToken (access_token);
+      request.post(authOptions, function(error, response, body) {
+        if (!error && response.statusCode === 200) {
+          access_token = body.access_token;
+          var documUpdate = update.findHost (host); 
+          var updateInfo = update.accessToken (access_token);
 
-        update.updater (host, documUpdate, updateInfo,db, function(error){
-          console.log ('updated the access token:');
-          query.search (host, {'host':host}, db, function(found){ 
-            if (found != null){
-              console.log (found.access_token);
-            }
+          update.updater (host, documUpdate, updateInfo,db, function(error){
+            console.log ('updated the access token:');
+            query.search (host, {'host':host}, db, function(found){ 
+              if (found != null){
+                console.log (found.access_token);
+              }
+            });
           });
-        });
 
-        res.send({
-          'access_token': access_token
-        });
-      }
-    })
+          res.send({
+            'access_token': access_token
+          });
+        }else {
+          res.redirect('/#' +
+          querystring.stringify({
+            error: 'invalid refresh token'
+          }));
+        };
+      });
     });
   });
 
@@ -214,35 +213,32 @@ var playlistID;
     playlistname = req.body.playName;
     if (playlistname) {
       console.log('creating: ' + playlistname);  
+      //database casll to obtain access token, if access token is expired then
+      //obtain new access token by using refresh token
+      validateToken.checkToken (host, db, function(tokenValid, docFound){
+      var options = {
+        url: 'https://api.spotify.com/v1/users/' +host+ '/playlists',
+          body: JSON.stringify({
+            'name': playlistname,
+            'public': false
+          }),
+          dataType:'json',
+          headers: {
+            'Authorization': 'Bearer ' + docFound.access_token,
+            'Content-Type': 'application/json',
+          }
+        };
+        request.post(options, function(error, response, body) {
+          console.log ('creating playlist');
+          playlist = JSON.parse (body);
+          playlistID = playlist.id
+          console.log (playlistID);
+        });
+        res.send('playlist created');
+      });
     }else{
       console.log('Please enter a playlist name!');
-    }
-    
-    //database casll to obtain access token, if access token is expired then
-    //obtain new access token by using refresh token
-    validateToken.checkToken (host, db, function(tokenValid, docFound){
-    var options = {
-      url: 'https://api.spotify.com/v1/users/' +host+ '/playlists',
-        body: JSON.stringify({
-          'name': playlistname,
-          'public': false
-        }),
-        dataType:'json',
-        headers: {
-          'Authorization': 'Bearer ' + docFound.access_token,
-          'Content-Type': 'application/json',
-        }
-      };
-    request.post(options, function(error, response, body) {
-      console.log ('creating playlist');
-      playlist = JSON.parse (body);
-      playlistID = playlist.id
-      console.log (playlistID);
-    });
-    res.send({
-              playlist: 'playlist created'
-            });
-    });
+    };
   });
 
   app.post('/findPlaylist', function(req, res){
@@ -255,31 +251,43 @@ var playlistID;
 
       request.get(options, function(error, response, body) {
         console.log ('finding playlist');
-        if (error) {
-          console.log ('noodle');
-        }
-        playlistItems= JSON.parse (body);
-        var playLid = playlistItems.items[0].id;
-        console.log ("using latest playlist: "+ playlistItems.items[0].name);
-        console.log ("playlist id: " +playLid);
+        if (!error) {
+          playlistItems= JSON.parse (body);
+          var playLid = playlistItems.items[0].id;
+          console.log ("using latest playlist: "+ playlistItems.items[0].name);
+          console.log ("playlist id: " +playLid);
 
-        //updating the users current playlist id with the lastest playlist that was just found.
-        var updateInfo = update.playlistID (playLid)
-        update.updater (host, docFound, updateInfo, db, function(err){
-          if (err){
-            console.log (err);
-          }else{
-            console.log ("playlist updated");
-          };
-        });
+          //updating the users current playlist id with the lastest playlist that was just found.
+          var updateInfo = update.playlistID (playLid)
+          update.updater (host, docFound, updateInfo, db, function(err){
+            if (err){
+              console.log (err);
+            }else{
+              console.log ("playlist updated");
+            };
+          });
+          res.send('playlist updated');
+        }else{
+          console.log (error);
+        };
       });  
     });
-    //res.send({
-      //playlist: playlists.json
-    //});
+  });
+
+  app.post('/addGuest', function(req, res){
+    var guestNum = req.body.guestNum;
+    console.log (guestNum);
+    validateToken.checkToken (host, db, function(tokenValid, docFound){
+      guest2Add = insert.guest (host, guestNum);
+      insert.insert ("guest", guest2Add, db, function(result){
+        console.log (result);
+      });
+    });
+    res.send('guest updated');
   });
 
   app.post('/message', function(req, res){
+    console.log (req);
     var searchParam = req.body.Body;
     var trackID;
     var trackTitle;
@@ -350,7 +358,7 @@ var playlistID;
     request.post(authOptions, function(error, response, body) {
       if (!error && response.statusCode === 200) {
         access_token = body.access_token;
-        var documUpdate = update.findHost (host); 
+        var documUpdate = query.findHost (host); 
         var updateInfo = update.accessToken (access_token);
 
         update.updater (host, documUpdate, updateInfo,db, function(error){
