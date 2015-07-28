@@ -6,7 +6,7 @@ module.exports.checkToken = function(host, db, callback){
         console.log ('found user');
         callback (true, found);
     }else{
-    	console.log ('the user has not logged in');
+    	console.log ('the user has not logged in properly');
     	callback (false, null);
     }
   });
