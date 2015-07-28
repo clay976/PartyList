@@ -89,7 +89,7 @@ var playlistID;
         querystring.stringify({
           error: 'state_mismatch'
         }));
-    } else {
+    }else{
       res.clearCookie(stateKey);
       var authOptions = {
         url: 'https://accounts.spotify.com/api/token',
@@ -121,56 +121,47 @@ var playlistID;
 
           // use the access token to access the Spotify Web API
           request.get(options, function(error, response, body) {
+            if (!error){
+              //database call to save the tokens and user id as a host collection document
+              host = (body.id).toString();
+              console.log ('searching for ' + host);
+              var docuInsert = insert.apiInfo (host,access_token, refresh_token);
+              var found;
 
-            //database call to save the tokens and user id as a host collection document
-            host = (body.id).toString();
-            console.log ('searching for ' + host);
-            var docuInsert = insert.apiInfo (host,access_token, refresh_token);
-            var found;
-
-            query.search (host, {'host':host}, db, function(found){ 
-              if (found != null){
-                console.log ('found existing user');
-                // found host so we will update their tokens to access api
-                var updateInfo = update.bothTokens (access_token, refresh_token);
-                update.updater (host, found, updateInfo,db, function(error){
-                  console.log ('updated the info');
-                  query.search (host, {'host':host}, db, function(found){ 
-                    if (found != null){
-                      console.log (found.access_token);
-                    }
+              query.search (host, {'host':host}, db, function(found){ 
+                if (found != null){
+                  console.log ('found existing user');
+                  // found host so we will update their tokens to access api
+                  var updateInfo = update.bothTokens (access_token, refresh_token);
+                  update.updater (host, found, updateInfo,db, function(error){
+                    if (!error){
+                      console.log ('updated the info');
+                    }else{
+                      console.log (error);
+                    };
                   });
-                });
-
-              }else{
-                console.log ('creating new user');
-                insert.insert (host, docuInsert, db, function (result){
-                  console.log("Inserted a document into the" +collect+ " collection.");
-                  console.log (result);
-                });
-              };
-            });
+                }else{
+                  console.log ('creating new user');
+                  insert.insert (host, docuInsert, db, function (result){
+                    console.log("Inserted a document into the" +collect+ " collection.");
+                    console.log (result);
+                  });
+                };
+              });
+            }else{
+              console.log (error);
+            }
           });
-
           // we can also pass the token to the browser to make requests from there
-          res.redirect('/#' +
-            querystring.stringify({
-              access_token: access_token,
-              refresh_token: refresh_token
-            }));
-        } 
-        else {
-          res.redirect('/#' +
-            querystring.stringify({
-              error: 'invalid_token'
-            }));
-        }
-      })
-    }
+          res.redirect('/#' +querystring.stringify({access_token: access_token, refresh_token: refresh_token}));
+        }else{
+          res.redirect('/#' +querystring.stringify({error: 'invalid_token'}));
+        };
+      });
+    };
   });
-
+/*
   app.get('/refresh_token', function refreshToken (req, res) {
-
     // requesting access token from refresh token
     doc = query.findHost (host);
     var refresh_token;
@@ -209,15 +200,14 @@ var playlistID;
     })
     });
   });
-
+*/
   app.post('/createPlaylist', function(req, res){
     playlistname = req.body.playName;
     if (playlistname) {
       console.log('creating: ' + playlistname);  
     }else{
       console.log('Please enter a playlist name!');
-    }
-    
+    };
     //database casll to obtain access token, if access token is expired then
     //obtain new access token by using refresh token
     validateToken.checkToken (host, db, function(tokenValid, docFound){

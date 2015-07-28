@@ -1,10 +1,11 @@
 var assert = require('assert')
 
-module.exports.guest = function(host,phoneNum, reqID){
+module.exports.guest = function(host,phoneNum){
   return({
+    "host": host,
     "phone":phoneNum,
     numRequests:5,
-    "tracks":[reqID]
+    "tracks":[]
   })
 };
 module.exports.track = function(host,playID,trackID){
@@ -33,6 +34,6 @@ module.exports.apiInfo = function (host, access, refresh){
 module.exports.insert = function(collect, docinsert, db, callback) {
   db.collection(collect).insertOne(docinsert, function(err, result) {
     assert.equal(err, null);
-    callback(result);
+    callback(err, result);
   });
 };;
