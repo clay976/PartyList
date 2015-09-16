@@ -8,6 +8,7 @@ module.exports.guest = function(host,phoneNum){
     "tracks":[]
   })
 };
+
 module.exports.track = function(host,playID,trackID){
   return({ 
     "trackId":trackID,
@@ -36,4 +37,4 @@ module.exports.insert = function(collect, docinsert, db, callback) {
     assert.equal(err, null);
     callback(result);
   });
-};;
+};
