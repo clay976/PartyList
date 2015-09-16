@@ -16,7 +16,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 //global variables the api needs
 var client_id = 'a000adffbd26453fbef24e8c1ff69c3b'; // Your client id
 var client_secret = '899b3ec7d52b4baabba05d6031663ba2'; // Your client secret
-var redirect_uri = 'http://b7360715.ngrok.io/callback'; // Your redirect uri
+var redirect_uri = '104.131.215.55/callback'; // Your redirect uri <------TODO: change to digital ocean adress and put it on Github
 var host;
 
 //required documents and tools
