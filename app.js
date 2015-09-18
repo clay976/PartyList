@@ -14,7 +14,7 @@ app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x
 //global variables the api needs
 var client_id = 'a000adffbd26453fbef24e8c1ff69c3b'; // Your client id
 var client_secret = '899b3ec7d52b4baabba05d6031663ba2'; // Your client secret
-var redirect_uri = 'http://104.131.215.55:8888/callback'; // Your redirect uri
+var redirect_uri = 'http://104.131.215.55:80/callback'; // Your redirect uri
 var host;
 //required documents and tools
 var insert = require ('./databasetools/insert');
@@ -283,7 +283,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
       res.redirect('/'); 
     };
   });
-  app.listen(8888);
+  app.listen(80);
   setInterval(function refreshToken (req, res) {
     if (host){
       // requesting access token from refresh token
