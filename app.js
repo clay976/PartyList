@@ -6,7 +6,11 @@ var querystring = require('querystring');
 var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var assert = require('assert');
-//var twilio = require('twilio');
+
+//twillio variables
+var twillioAccountSID = "SKfbed6a62375068e1b9598e76e5c40d30";
+var twilioAccountSecret = "bXbtASPnDrDY0VLkbckdCudFRKMZgXtO";
+var twilio = require('twilio')(twillioAccountSID, twilioAccountSecret);
 //app declaration and uses
 var app = express();
 app.use(bodyParser.json()); // for parsing application/json
@@ -16,15 +20,18 @@ var client_id = 'a000adffbd26453fbef24e8c1ff69c3b'; // Your client id
 var client_secret = '899b3ec7d52b4baabba05d6031663ba2'; // Your client secret
 var redirect_uri = 'http://104.131.215.55:80/callback'; // Your redirect uri
 var host;
+
 //required documents and tools
 var insert = require ('./databasetools/insert');
 var query = require ('./databasetools/querydb');
 var update = require ('./databasetools/update');
 var validateToken = require ('./databasetools/checkToken');
+
 //mongo database variables
 var MongoClient = require('mongodb').MongoClient;
 var ObjectId = require('mongodb').ObjectID;
 var mongoUrl = 'mongodb://localhost:27017/party';
+
 //connect to the database, this happens when api starts, and the conection doesn't close until the API shuts down/crashes
 MongoClient.connect(mongoUrl, function(err, db) {
   assert.equal(null, err);
@@ -242,7 +249,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
           var trackID;
           var trackTitle;
           var playlistID;
-          //message.message ("I LOVE NOODLES");
+          var resp = new twilio.TwimlResponse();
           var options = {
             url: 'https://api.spotify.com/v1/search?q=' +searchParam+ '&type=track&limit=1'
           };   
