@@ -270,6 +270,8 @@ MongoClient.connect(mongoUrl, function(err, db) {
               console.log ('adding '+ trackTitle+ ' by ');
               messageBody = ('adding '+ trackTitle+ ' to playlist');
               messageObject = messageTool.message (sender, messageBody);
+              console.log (sender);
+              console.log (messageObject);
               twilio.messages.create(messageObject, function(err, message) { 
                 console.log(message.sid); 
               });
