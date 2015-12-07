@@ -1,10 +1,10 @@
-var twilio = require('twilio')
+var twilio = require('twilio');
+http = require('http');
 
-module.exports.message = function(toNumber,fromNumber, action){
+module.exports.message = function(toNum,body){
   return({
-    "host": host,
-    "phone":phoneNum,
-    numRequests:5,
-    "tracks":[]
+    to: toNum,
+    from:"+12892161101",
+    body:body
   })
 };

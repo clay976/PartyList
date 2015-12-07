@@ -8,9 +8,11 @@ var bodyParser = require('body-parser');
 var assert = require('assert');
 
 //twillio variables
-var twillioAccountSID = "SKfbed6a62375068e1b9598e76e5c40d30";
+var twilioAccountSID = "SKfbed6a62375068e1b9598e76e5c40d30";
 var twilioAccountSecret = "bXbtASPnDrDY0VLkbckdCudFRKMZgXtO";
-var twilio = require('twilio')(twillioAccountSID, twilioAccountSecret);
+var twilio = require('twilio')(twilioAccountSID, twilioAccountSecret);
+var messageTool = require ('./messageTools/message');
+
 //app declaration and uses
 var app = express();
 app.use(bodyParser.json()); // for parsing application/json
@@ -242,14 +244,15 @@ MongoClient.connect(mongoUrl, function(err, db) {
   app.post('/message', function(req, res){
     if (host){ 
       console.log (req.body.From); 
-      var foundGuest = query.findGuest (req.body.From);
+      var sender = req.body.From;
+      var foundGuest = query.findGuest (sender);
       query.search ('guests', foundGuest, db, function(guestFound){
         if (guestFound){
           var searchParam = req.body.Body;
           var trackID;
           var trackTitle;
           var playlistID;
-          var resp = new twilio.TwimlResponse();
+          var messageBody
           var options = {
             url: 'https://api.spotify.com/v1/search?q=' +searchParam+ '&type=track&limit=1'
           };   
@@ -265,6 +268,11 @@ MongoClient.connect(mongoUrl, function(err, db) {
               trackTitle = trackAdd.tracks.items[0].name;
               //insert.insert ('trackListing', trackAdd);
               console.log ('adding '+ trackTitle+ ' by ');
+              messageBody = ('adding '+ trackTitle+ ' to playlist');
+              messageObject = messageTools.message (sender, messageBody);
+              twilio.messages.create(messageObject, function(err, message) { 
+                console.log(message.sid); 
+              });
               validateToken.checkToken (host, db, function(tokenValid, docFound){
                 playlistID = docFound.playlistID;
                 var options = {
