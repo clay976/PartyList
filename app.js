@@ -239,6 +239,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
       res.redirect('/');
     };
   });
+  
   app.post('/message', function(req, res){
     if (host){ 
       console.log (req.body.From); 
