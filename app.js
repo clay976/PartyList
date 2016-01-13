@@ -244,6 +244,16 @@ MongoClient.connect(mongoUrl, function(err, db) {
   app.post('/message', function(req, res){
     if (host){ 
       console.log (req.body.From); 
+      //TODO: delete these console logs and produce real messages to the user on the application side of things so..
+      //that they actually know whats going on in the party instead of this coming to us as devs. 
+
+      //need to find out why the message system is not working.
+      //giving us an error that says the pohone number is unverified.
+      //this is also another problem in using twilio with a trial account.
+      //we are only able to send messages to verified users and this might casue a problem in the future
+      //if we can not find an automated way to add users to tyhe verified list when they message the host of the party!
+
+      
       var sender = req.body.From;
       var foundGuest = query.findGuest (sender);
       query.search ('guests', foundGuest, db, function(guestFound){
