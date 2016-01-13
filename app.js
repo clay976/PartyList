@@ -271,7 +271,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
           request.get(options, function(error, response, body) {
             console.log (body);
             if (error) {
-              console.log ('noodle');
+              console.log ('error searching spotify for the song');
             };
             trackAdd = JSON.parse(body);
             if ((trackAdd.tracks.total)>0){
@@ -279,16 +279,12 @@ MongoClient.connect(mongoUrl, function(err, db) {
               console.log (trackID);
               trackTitle = trackAdd.tracks.items[0].name;
               //insert.insert ('trackListing', trackAdd);
-              console.log ('adding '+ trackTitle+ ' by ');
-              messageBody = ('adding '+ trackTitle+ ' to playlist');
-              messageObject = messageTool.message (sender, messageBody);
+              //TODO: add the insert function with the functionality to let
+              //the sender know if that song has already been requested.
               console.log (sender);
-              console.log (messageObject);
-              twilio.messages.create(messageObject, function(err, message) { 
-                console.log("tring to send message"); 
-              });
               validateToken.checkToken (host, db, function(tokenValid, docFound){
                 playlistID = docFound.playlistID;
+                //these options create the object to make the spotify request
                 var options = {
                   url: "https://api.spotify.com/v1/users/" +host+ "/playlists/"+playlistID+ "/tracks",
                   body: JSON.stringify({"uris": ["spotify:track:"+trackID]}),
@@ -298,24 +294,36 @@ MongoClient.connect(mongoUrl, function(err, db) {
                     "Content-Type": "application/json",
                   }
                 };
+                //this request is actually adds  the song to the playlist
                 request.post(options, function(error, response, body) {
-                  console.log (body);
-                });
-                twilio.sendMessage(messageObject, function(err, responseData) {
-                  if (!err) { // "err" is an error received during the request, if any
-                    console.log(responseData.from); // outputs "+14506667788"
-                    console.log(responseData.body); // outputs "word to your mother."
+                  if (error){
+                    messageBody = ('there was an error adding '+ trackTitle+ ' to the playlist, will provide more usefull error messages in the future');
                   }else{
-                    console.log (err);
+                    console.log ('adding '+ trackTitle);
+                    messageBody = ('adding '+ trackTitle+ ' to the playlist');
                   }
+                //logging the body of the spotify request will let the dev know if there are errors connecting to spotify.
+                console.log (body);
                 });
               });
+            }else{
+              messageBody = ('sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!');
             };
           });
         }else{
-          message.message ('you are not a guest at a party');
-          console.log ('they are not a guest');
+          messageBody = ('sorry, you are not a guest of this party, you can send back a host code for this party. We have also send the host a text with your number in case they want to add it themselves');
+          console.log ('a non-guest tried to add to the playlist');
         };
+        \ = messageTool.message (sender, messageBody); 
+        twilio.sendMessage(messageObject, function(err, responseData) {
+          console.log("tring to send message"); 
+          if (!err) { // "err" is an error received during the request, if any
+            console.log(responseData.from); // outputs "+14506667788"
+            console.log(responseData.body); // outputs "word to your mother."
+          }else{
+            console.log (err);
+          }
+        });
       });
     }else{
       res.redirect('/'); 
