@@ -253,6 +253,8 @@ MongoClient.connect(mongoUrl, function(err, db) {
       //we are only able to send messages to verified users and this might casue a problem in the future
       //if we can not find an automated way to add users to tyhe verified list when they message the host of the party!
 
+      //this branch under messages is now under heavy dev for getting these messages back to the sender.
+
       
       var sender = req.body.From;
       var foundGuest = query.findGuest (sender);
