@@ -280,7 +280,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
               trackTitle = trackAdd.tracks.items[0].name;
               //insert.insert ('trackListing', trackAdd);
               console.log ('adding '+ trackTitle+ ' by ');
-              messageBody = ('adding '+ trackTitle+ ' to playlist' +);
+              messageBody = ('adding '+ trackTitle+ ' to playlist');
               messageObject = messageTool.message (sender, messageBody);
               console.log (sender);
               console.log (messageObject);
