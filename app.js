@@ -285,7 +285,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
               console.log (sender);
               console.log (messageObject);
               twilio.messages.create(messageObject, function(err, message) { 
-                console.log(message.sid); 
+                console.log("tring to send message"); 
               });
               validateToken.checkToken (host, db, function(tokenValid, docFound){
                 playlistID = docFound.playlistID;
