@@ -280,7 +280,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
               trackTitle = trackAdd.tracks.items[0].name;
               //insert.insert ('trackListing', trackAdd);
               console.log ('adding '+ trackTitle+ ' by ');
-              messageBody = ('adding '+ trackTitle+ ' to playlist');
+              messageBody = ('adding '+ trackTitle+ ' to playlist' +);
               messageObject = messageTool.message (sender, messageBody);
               console.log (sender);
               console.log (messageObject);
@@ -299,12 +299,19 @@ MongoClient.connect(mongoUrl, function(err, db) {
                   }
                 };
                 request.post(options, function(error, response, body) {
+                  console.log (body);
+                });
+                twilio.sendMessage(messageObject, function(err, responseData) {
+                  if (!err) { // "err" is an error received during the request, if any
+                    console.log(responseData.from); // outputs "+14506667788"
+                    console.log(responseData.body); // outputs "word to your mother."
+                  }
                 });
               });
             };
           });
         }else{
-          //message.message ('you are not a guest at a party');
+          message.message ('you are not a guest at a party');
           console.log ('they are not a guest');
         };
       });
