@@ -314,7 +314,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
           messageBody = ('sorry, you are not a guest of this party, you can send back a host code for this party. We have also send the host a text with your number in case they want to add it themselves');
           console.log ('a non-guest tried to add to the playlist');
         };
-        \ = messageTool.message (sender, messageBody); 
+        messageObject = messageTool.message (sender, messageBody); 
         twilio.sendMessage(messageObject, function(err, responseData) {
           console.log("tring to send message"); 
           if (!err) { // "err" is an error received during the request, if any
