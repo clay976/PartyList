@@ -10,7 +10,7 @@ var assert = require('assert');
 //twillio variables
 var twilioAccountSID = "SKfbed6a62375068e1b9598e76e5c40d30";
 var twilioAccountSecret = "bXbtASPnDrDY0VLkbckdCudFRKMZgXtO";
-var twilio = require('twilio')(twilioAccountSID, twilioAccountSecret);
+var twilio = require('twilio/lib')(twilioAccountSID, twilioAccountSecret);
 var messageTool = require ('./messageTools/message');
 
 //app declaration and uses
