@@ -8,8 +8,8 @@ var bodyParser = require('body-parser');
 var assert = require('assert');
 
 //twillio variables
-var twilioAccountSID = "SKfbed6a62375068e1b9598e76e5c40d30";
-var twilioAccountSecret = "bXbtASPnDrDY0VLkbckdCudFRKMZgXtO";
+var twilioAccountSID = "AC85573f40ef0c3fb0c5aa58477f61b02e";
+var twilioAccountSecret = "fcea26b2b0ae541d904ba23e12e2c499";
 var twilio = require('twilio/lib')(twilioAccountSID, twilioAccountSecret);
 var messageTool = require ('./messageTools/message');
 
