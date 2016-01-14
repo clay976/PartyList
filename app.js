@@ -8,9 +8,9 @@ var bodyParser = require('body-parser');
 var assert = require('assert');
 
 //twillio variables
-var twilioAccountSID = "SKfbed6a62375068e1b9598e76e5c40d30";
-var twilioAccountSecret = "bXbtASPnDrDY0VLkbckdCudFRKMZgXtO";
-var twilio = require('twilio')(twilioAccountSID, twilioAccountSecret);
+var twilioAccountSID = "AC85573f40ef0c3fb0c5aa58477f61b02e";
+var twilioAccountSecret = "fcea26b2b0ae541d904ba23e12e2c499";
+var twilio = require('twilio/lib')(twilioAccountSID, twilioAccountSecret);
 var messageTool = require ('./messageTools/message');
 
 //app declaration and uses
@@ -254,6 +254,8 @@ MongoClient.connect(mongoUrl, function(err, db) {
       //we are only able to send messages to verified users and this might casue a problem in the future
       //if we can not find an automated way to add users to tyhe verified list when they message the host of the party!
 
+      //this branch under messages is now under heavy dev for getting these messages back to the sender.
+
       
       var sender = req.body.From;
       var foundGuest = query.findGuest (sender);
@@ -267,10 +269,11 @@ MongoClient.connect(mongoUrl, function(err, db) {
           var options = {
             url: 'https://api.spotify.com/v1/search?q=' +searchParam+ '&type=track&limit=1'
           };   
+          // searches spotify with the search parameter
           request.get(options, function(error, response, body) {
             console.log (body);
             if (error) {
-              console.log ('noodle');
+              console.log ('error searching spotify for the song');
             };
             trackAdd = JSON.parse(body);
             if ((trackAdd.tracks.total)>0){
@@ -278,16 +281,12 @@ MongoClient.connect(mongoUrl, function(err, db) {
               console.log (trackID);
               trackTitle = trackAdd.tracks.items[0].name;
               //insert.insert ('trackListing', trackAdd);
-              console.log ('adding '+ trackTitle+ ' by ');
-              messageBody = ('adding '+ trackTitle+ ' to playlist');
-              messageObject = messageTool.message (sender, messageBody);
+              //TODO: add the insert function with the functionality to let
+              //the sender know if that song has already been requested.
               console.log (sender);
-              console.log (messageObject);
-              twilio.messages.create(messageObject, function(err, message) { 
-                console.log(message.sid); 
-              });
               validateToken.checkToken (host, db, function(tokenValid, docFound){
                 playlistID = docFound.playlistID;
+                //these options create the object to make the spotify request
                 var options = {
                   url: "https://api.spotify.com/v1/users/" +host+ "/playlists/"+playlistID+ "/tracks",
                   body: JSON.stringify({"uris": ["spotify:track:"+trackID]}),
@@ -297,14 +296,38 @@ MongoClient.connect(mongoUrl, function(err, db) {
                     "Content-Type": "application/json",
                   }
                 };
+                //this request is actually adds  the song to the playlist
                 request.post(options, function(error, response, body) {
+                  if (error){
+                    messageBody = ('there was an error adding '+ trackTitle+ ' to the playlist, will provide more usefull error messages in the future');
+                  }else{
+                    console.log ('adding '+ trackTitle);
+                    messageBody = ('adding '+ trackTitle+ ' to the playlist');
+                  };
+                //logging the body of the spotify request will let the dev know if there are errors connecting to spotify.
+                messageObject = messageTool.message (sender, messageBody); 
+                twilio.sendMessage(messageObject, function(err, responseData) {
+                  messageTool.responseHandler (err, responseData);
                 });
+                console.log (body);
+                });
+              });
+            }else{
+              messageBody = ('sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!');
+              messageObject = messageTool.message (sender, messageBody);
+              twilio.sendMessage(messageObject, function(err, responseData) {
+                messageTool.responseHandler (err, responseData);
               });
             };
           });
+          
         }else{
-          //message.message ('you are not a guest at a party');
-          console.log ('they are not a guest');
+          messageBody = ('sorry, you are not a guest of this party, you can send back a host code for this party. We have also send the host a text with your number in case they want to add it themselves');
+          messageObject = messageTool.message (sender, messageBody);
+          twilio.sendMessage(messageObject, function(err, responseData) {
+            messageTool.responseHandler (err, responseData);
+          });
+          console.log ('a non-guest tried to add to the playlist');
         };
       });
     }else{
