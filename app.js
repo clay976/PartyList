@@ -309,21 +309,23 @@ MongoClient.connect(mongoUrl, function(err, db) {
             }else{
               messageBody = ('sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!');
             };
+            messageObject = messageTool.message (sender, messageBody); 
+            twilio.sendMessage(messageObject, function(err, responseData) {
+              console.log("tring to send message"); 
+              if (!err) { // "err" is an error received during the request, if any
+                console.log(responseData.from); // outputs "+14506667788"
+                console.log(responseData.body); // outputs "word to your mother."
+              }else{
+                console.log ("error sending message back");
+                console.log (err);
+              }
+            });
           });
+          
         }else{
           messageBody = ('sorry, you are not a guest of this party, you can send back a host code for this party. We have also send the host a text with your number in case they want to add it themselves');
           console.log ('a non-guest tried to add to the playlist');
         };
-        messageObject = messageTool.message (sender, messageBody); 
-        twilio.sendMessage(messageObject, function(err, responseData) {
-          console.log("tring to send message"); 
-          if (!err) { // "err" is an error received during the request, if any
-            console.log(responseData.from); // outputs "+14506667788"
-            console.log(responseData.body); // outputs "word to your mother."
-          }else{
-            console.log (err);
-          }
-        });
       });
     }else{
       res.redirect('/'); 
