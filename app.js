@@ -11,7 +11,7 @@ var assert = require('assert');
 var twilioAccountSID = "AC85573f40ef0c3fb0c5aa58477f61b02e";
 var twilioAccountSecret = "fcea26b2b0ae541d904ba23e12e2c499";
 var twilio = require('twilio/lib')(twilioAccountSID, twilioAccountSecret);
-var messageTool = require ('./messageTools/message');
+var messageTool = require ('./messageTool/message');
 
 //app declaration and uses
 var app = express();
@@ -306,7 +306,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
                 //logging the body of the spotify request will let the dev know if there are errors connecting to spotify.
                 messageObject = messageTool.message (sender, messageBody); 
                 twilio.sendMessage(messageObject, function(err, responseData) {
-                  messageTools.responseHandler (err, responseData);
+                  messageTool.responseHandler (err, responseData);
                 });
                 console.log (body);
                 });
@@ -315,7 +315,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
               messageBody = ('sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!');
               messageObject = messageTool.message (sender, messageBody);
               twilio.sendMessage(messageObject, function(err, responseData) {
-                messageTools.responseHandler (err, responseData);
+                messageTool.responseHandler (err, responseData);
               });
             };
           });
@@ -324,7 +324,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
           messageBody = ('sorry, you are not a guest of this party, you can send back a host code for this party. We have also send the host a text with your number in case they want to add it themselves');
           messageObject = messageTool.message (sender, messageBody);
           twilio.sendMessage(messageObject, function(err, responseData) {
-            messageTools.responseHandler (err, responseData);
+            messageTool.responseHandler (err, responseData);
           });
           console.log ('a non-guest tried to add to the playlist');
         };
