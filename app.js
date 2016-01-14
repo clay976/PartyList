@@ -268,6 +268,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
           var options = {
             url: 'https://api.spotify.com/v1/search?q=' +searchParam+ '&type=track&limit=1'
           };   
+          // searches spotify with the search parameter
           request.get(options, function(error, response, body) {
             console.log (body);
             if (error) {
@@ -305,24 +306,26 @@ MongoClient.connect(mongoUrl, function(err, db) {
                 //logging the body of the spotify request will let the dev know if there are errors connecting to spotify.
                 messageObject = messageTool.message (sender, messageBody); 
                 twilio.sendMessage(messageObject, function(err, responseData) {
-                  console.log("tring to send message"); 
-                  if (!err) { // "err" is an error received during the request, if any
-                    console.log(responseData.body); // outputs the body of the twilio response
-                  }else{
-                    console.log ("error sending message back");
-                    console.log (err);
-                  };
+                  messageTools.responseHandler (err, responseData);
                 });
                 console.log (body);
                 });
               });
             }else{
               messageBody = ('sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!');
+              messageObject = messageTool.message (sender, messageBody);
+              twilio.sendMessage(messageObject, function(err, responseData) {
+                messageTools.responseHandler (err, responseData);
+              });
             };
           });
           
         }else{
           messageBody = ('sorry, you are not a guest of this party, you can send back a host code for this party. We have also send the host a text with your number in case they want to add it themselves');
+          messageObject = messageTool.message (sender, messageBody);
+          twilio.sendMessage(messageObject, function(err, responseData) {
+            messageTools.responseHandler (err, responseData);
+          });
           console.log ('a non-guest tried to add to the playlist');
         };
       });
