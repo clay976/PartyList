@@ -301,25 +301,24 @@ MongoClient.connect(mongoUrl, function(err, db) {
                   }else{
                     console.log ('adding '+ trackTitle);
                     messageBody = ('adding '+ trackTitle+ ' to the playlist');
-                  }
+                  };
                 //logging the body of the spotify request will let the dev know if there are errors connecting to spotify.
+                messageObject = messageTool.message (sender, messageBody); 
+                twilio.sendMessage(messageObject, function(err, responseData) {
+                  console.log("tring to send message"); 
+                  if (!err) { // "err" is an error received during the request, if any
+                    console.log(responseData.body); // outputs the body of the twilio response
+                  }else{
+                    console.log ("error sending message back");
+                    console.log (err);
+                  };
+                });
                 console.log (body);
                 });
               });
             }else{
               messageBody = ('sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!');
             };
-            messageObject = messageTool.message (sender, messageBody); 
-            twilio.sendMessage(messageObject, function(err, responseData) {
-              console.log("tring to send message"); 
-              if (!err) { // "err" is an error received during the request, if any
-                console.log(responseData.from); // outputs "+14506667788"
-                console.log(responseData.body); // outputs "word to your mother."
-              }else{
-                console.log ("error sending message back");
-                console.log (err);
-              }
-            });
           });
           
         }else{
