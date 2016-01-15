@@ -261,6 +261,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
           var searchParam = req.body.Body;
           if (searchParam == 'Yes'){
             trackID = guestFound.currentTrack;
+            console.log (trackID)
             query.search ('tracks', trackID, db, function(trackDocFound){
               if (trackDocFound){
                 var updateObj = update.tracksReqd ();
@@ -277,12 +278,13 @@ MongoClient.connect(mongoUrl, function(err, db) {
                   messageBody = ('Your request is new, it has been added to the play queue!');
                 });
               };
+              console.log (messageBody);
               messageObject = messageTool.message (sender, messageBody);
               twilio.sendMessage(messageObject, function(err, responseData) {
                 messageTool.responseHandler (err, responseData);
               });
             });
-          }if (searchParam == 'No'){
+          }else if (searchParam == 'No'){
             messageBody = ('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.');
             messageObject = messageTool.message (sender, messageBody);
             twilio.sendMessage(messageObject, function(err, responseData) {
