@@ -274,6 +274,10 @@ MongoClient.connect(mongoUrl, function(err, db) {
                     update.updater ('tracks', trackDocFound, updateObj, db, function(err, resuts){
                       if (!err){
                         messageBody = ('This track has already been requested, Your request will bump it up in the queue!');
+                        messageObject = messageTool.message (sender, messageBody);
+                        twilio.sendMessage(messageObject, function(err, responseData) {
+                          messageTool.responseHandler (err, responseData);
+                        });
                       }else{
                         console.log (err);
                       };
@@ -284,13 +288,13 @@ MongoClient.connect(mongoUrl, function(err, db) {
                 var trackIn = insert.track (host, trackID);
                 insert.insert ('tracks', trackIn, db, function (result){
                   messageBody = ('Your request is new, it has been added to the play queue!');
+                  messageObject = messageTool.message (sender, messageBody);
+                  twilio.sendMessage(messageObject, function(err, responseData) {
+                    messageTool.responseHandler (err, responseData);
+                  });
                 });
               };
               console.log (messageBody);
-              messageObject = messageTool.message (sender, messageBody);
-              twilio.sendMessage(messageObject, function(err, responseData) {
-                messageTool.responseHandler (err, responseData);
-              });
             });
           }else if (searchParam == 'No'){
             messageBody = ('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.');
