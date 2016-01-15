@@ -279,6 +279,8 @@ MongoClient.connect(mongoUrl, function(err, db) {
               trackID =trackAdd.tracks.items[0].id;
               console.log (trackID);
               trackTitle = trackAdd.tracks.items[0].name;
+              trackArtist = trackAdd.tracks.items[0];
+              console.log (trackArtist);
               //insert.insert ('trackListing', trackAdd);
               //TODO: add the insert function with the functionality to let
               //the sender know if that song has already been requested.
@@ -303,11 +305,11 @@ MongoClient.connect(mongoUrl, function(err, db) {
                     console.log ('adding '+ trackTitle);
                     messageBody = ('adding '+ trackTitle+ ' to the playlist');
                   };
-                //logging the body of the spotify request will let the dev know if there are errors connecting to spotify.
-                messageObject = messageTool.message (sender, messageBody); 
-                twilio.sendMessage(messageObject, function(err, responseData) {
-                  messageTool.responseHandler (err, responseData);
-                });
+                  //logging the body of the spotify request will let the dev know if there are errors connecting to spotify.
+                  messageObject = messageTool.message (sender, messageBody); 
+                  twilio.sendMessage(messageObject, function(err, responseData) {
+                    messageTool.responseHandler (err, responseData);
+                  });
                 console.log (body);
                 });
               });
