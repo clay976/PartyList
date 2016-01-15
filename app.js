@@ -279,7 +279,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
               trackID =trackAdd.tracks.items[0].id;
               console.log (trackID);
               trackTitle = trackAdd.tracks.items[0].name;
-              trackArtist = trackAdd.tracks.items[0].artists.name;
+              trackArtist = trackAdd.tracks.items[0].artists[0].name;
               console.log (trackArtist);
               //insert.insert ('trackListing', trackAdd);
               //TODO: add the insert function with the functionality to let
