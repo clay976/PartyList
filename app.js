@@ -282,7 +282,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
                 messageTool.responseHandler (err, responseData);
               });
             });
-          }if (seachParam == 'no'){
+          }if (searchParam == 'no'){
             messageBody = ('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.');
             messageObject = messageTool.message (sender, messageBody);
             twilio.sendMessage(messageObject, function(err, responseData) {
