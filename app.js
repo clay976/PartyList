@@ -289,6 +289,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
               messageTool.responseHandler (err, responseData);
             });
           }else{
+            console.log (searchParam);
             var trackTitle;
             var playlistID;
             var messageBody
