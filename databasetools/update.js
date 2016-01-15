@@ -14,7 +14,7 @@ module.exports.guestRequest = function(trackID){
   }) 
 };
 
-module.exports.guestconfirm = function(){
+module.exports.guestConfirm = function(){
   return ({
     $inc: { numRequests: -1},
     $set: { "CurrentTrack": "" }
