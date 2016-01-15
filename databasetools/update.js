@@ -21,6 +21,12 @@ module.exports.guestConfirm = function(){
   }) 
 };
 
+module.exports.guestReset = function(){
+  return ({
+    $set: { numRequests: 5}
+  }) 
+};
+
 //update tracks function 
 module.exports.tracksReqd = function(){
   return ({

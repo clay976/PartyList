@@ -35,7 +35,7 @@ var ObjectId = require('mongodb').ObjectID;
 var mongoUrl = 'mongodb://localhost:27017/party';
 
 //connect to the database, this happens when api starts, and the conection doesn't close until the API shuts down/crashes
-MongoClient.connect(mongoUrl, function(err, db) {
+MongoClient.connect(mongoUrl, function (err, db) {
   assert.equal(null, err);
   var generateRandomString = function(length) {
     var text = '';
@@ -51,7 +51,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
   //login function (this will be handles by the fron end soon)
   //the hosts spotify ID needs to be saved as a session varaible on the front end and passes back to the API
   //with every request so we know who is actually making the requests...
-  app.get('/login', function(req, res) {
+  app.get('/login', function (req, res) {
     console.log ('loging in');
     var state = generateRandomString(16);
     res.cookie(stateKey, state);
@@ -68,7 +68,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
     );
   });
   //callback will save the hosts data and some other stuff to be queried in the db later.
-  app.get('/callback', function(req, res) {
+  app.get('/callback', function (req, res) {
     //requests refresh and access tokens
     //after checking the state parameter
     var code = req.query.code || null;
@@ -95,7 +95,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
         json: true
       };
       //this is the actual post to retreive the access and refresh tokens that wqill be used later.
-      request.post(authOptions, function(error, response, body) {
+      request.post(authOptions, function (error, response, body) {
         if (!error && response.statusCode === 200) {
           var access_token = body.access_token;
           var refresh_token = body.refresh_token;
@@ -114,13 +114,13 @@ MongoClient.connect(mongoUrl, function(err, db) {
             docuSearch = query.findHost (host);
             var docuInsert = insert.apiInfo (host,access_token, refresh_token);
             //database call to save the tokens and user id as a host collection document
-            query.search (host, docuSearch, db, function(found){
+            query.search (host, docuSearch, db, function (found){
               //error handling within the found funtion itself 
               if (found != null){
                 console.log ('found existing user');
                 // found host so we will update their tokens to access api
                 var updateInfo = update.bothTokens (access_token, refresh_token);
-                update.updater (host, found, updateInfo,db, function(error){
+                update.updater (host, found, updateInfo,db, function (error){
                   console.log ('updated the tokens');
                 });
               }else{
@@ -141,14 +141,14 @@ MongoClient.connect(mongoUrl, function(err, db) {
       });
     };
   });
-  app.post('/createPlaylist', function(req, res){
+  app.post('/createPlaylist', function (req, res){
     if (host){
       var playlistname = req.body.playName;
       if (playlistname) {
         console.log('creating: ' + playlistname);  
-        //database casll to obtain access token, if access token is expired then
+        //database call to obtain access token, if access token is expired then
         //obtain new access token by using refresh token
-        validateToken.checkToken (host, db, function(tokenValid, docFound){
+        validateToken.checkToken (host, db, function (tokenValid, docFound){
           if (tokenValid){   
             var options = {
               url: 'https://api.spotify.com/v1/users/' +host+ '/playlists',
@@ -162,7 +162,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
                 'Content-Type': 'application/json',
               }
             };
-            request.post(options, function(error, response, body) {
+            request.post(options, function (error, response, body) {
               console.log ('creating playlist');
               playlist = JSON.parse (body);
               playlistID = playlist.id
@@ -181,15 +181,15 @@ MongoClient.connect(mongoUrl, function(err, db) {
       res.redirect('/');
     };
   });
-  app.post('/findPlaylist', function(req, res){
+  app.post('/findPlaylist', function (req, res){
     if (host){
-      validateToken.checkToken (host, db, function(tokenValid, docFound){
+      validateToken.checkToken (host, db, function (tokenValid, docFound){
         if (tokenValid){  
           var options = {
             url: 'https://api.spotify.com/v1/users/' + host + '/playlists',
             headers: {'Authorization': 'Bearer ' +docFound.access_token}
           };
-          request.get(options, function(error, response, body) {
+          request.get(options, function (error, response, body) {
             console.log ('finding playlist');
             if (!error) {
               playlistItems= JSON.parse (body);
@@ -198,7 +198,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
               console.log ("playlist id: " +playLid);
               //updating the users current playlist id with the lastest playlist that was just found.
               var updateInfo = update.playlistID (playLid)
-              update.updater (host, docFound, updateInfo, db, function(err){
+              update.updater (host, docFound, updateInfo, db, function (err){
                 if (err){
                   console.log (err);
                 }else{
@@ -218,18 +218,22 @@ MongoClient.connect(mongoUrl, function(err, db) {
       res.redirect('/');
     };
   });
-  app.post('/addGuest', function(req, res){
+
+  app.post ('/resetAllGuests', function (req, res){
+    db.guests.drop();
+  });
+  app.post('/addGuest', function (req, res){
     if (host){
       var guestNum = req.body.guestNum;
       if (guestNum){
         var guestNum = '+1'+ guestNum;
         var foundGuest = query.findGuest (guestNum);
-        query.search ('guests', foundGuest, db, function(guestFound){
+        query.search ('guests', foundGuest, db, function (guestFound){
           if (guestFound){
             res.send ('you already added this guest');
           }else{
             guest2Add = insert.guest (host, guestNum);
-            insert.insert ('guests', guest2Add, db, function(result){
+            insert.insert ('guests', guest2Add, db, function (result){
               res.send('guest updated');
             });
           };
@@ -241,7 +245,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
       res.redirect('/');
     };
   });
-  app.post('/message', function(req, res){
+  app.post('/message', function (req, res){
     if (host){  
       //TODO: delete these console logs and produce real messages to the user on the application side of things so..
       //that they actually know whats going on in the party instead of this coming to us as devs. 
@@ -255,27 +259,27 @@ MongoClient.connect(mongoUrl, function(err, db) {
       
       var sender = req.body.From;
       var foundGuest = query.findGuest (sender);
-      query.search ('guests', foundGuest, db, function(guestFound){
+      query.search ('guests', foundGuest, db, function (guestFound){
         if (guestFound){
           var trackID;
           var searchParam = req.body.Body;
           if (searchParam == 'Yes'){
             trackID = guestFound.currentTrack;
-            console.log (trackID)
+            console.log (trackID);
             var trackObjID = query.findTrack (trackID);
-            query.search ('tracks', trackObjID, db, function(trackDocFound){
+            query.search ('tracks', trackObjID, db, function (trackDocFound){
               if (trackDocFound){
                 var incrementGuest = update.guestConfirm ();
-                update.updater ('guests', foundGuest, incrementGuest,db, function(err){
+                update.updater ('guests', foundGuest, incrementGuest,db, function (err){
                   if (err){
                     console.log (err);
                   }else{
                     var updateObj = update.tracksReqd ();
-                    update.updater ('tracks', trackDocFound, updateObj, db, function(err, resuts){
+                    update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
                       if (!err){
-                        messageBody = ('This track has already been requested, Your request will bump it up in the queue!\n\n Requests left: ' +guestFound.numRequests+ '\n\n This song now has ' +trackDocFound.numRequests+ 'requests!');
+                        messageBody = ('This track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +guestFound.numRequests+ '\n\n This song now has ' +trackDocFound.numRequests+ ' requests!');
                         messageObject = messageTool.message (sender, messageBody);
-                        twilio.sendMessage(messageObject, function(err, responseData) {
+                        twilio.sendMessage(messageObject, function (err, responseData) {
                           messageTool.responseHandler (err, responseData);
                         });
                       }else{
@@ -289,17 +293,25 @@ MongoClient.connect(mongoUrl, function(err, db) {
                 insert.insert ('tracks', trackIn, db, function (result){
                   messageBody = ('Your request is new, it has been added to the play queue!\n\n Requests left: ' +guestFound.numRequests);
                   messageObject = messageTool.message (sender, messageBody);
-                  twilio.sendMessage(messageObject, function(err, responseData) {
+                  twilio.sendMessage(messageObject, function (err, responseData) {
                     messageTool.responseHandler (err, responseData);
                   });
                 });
               };
-              console.log (messageBody);
+              if (guestFound.numRequests = 0){
+                messageBody = ('You are recieving an advertisment because you have made 5 successful request');
+                messageObject = messageTool.message (sender, messageBody);
+                twilio.sendMessage(messageObject, function (err, responseData) {
+                  messageTool.responseHandler (err, responseData);
+                });
+                var updateObj = update.guestReset ();
+                update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
+              }
             });
           }else if (searchParam == 'No'){
             messageBody = ('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.');
             messageObject = messageTool.message (sender, messageBody);
-            twilio.sendMessage(messageObject, function(err, responseData) {
+            twilio.sendMessage(messageObject, function (err, responseData) {
               messageTool.responseHandler (err, responseData);
             });
           }else{
@@ -311,7 +323,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
               url: 'https://api.spotify.com/v1/search?q=' +searchParam+ '&type=track&limit=1'
             };   
             // searches spotify with the search parameter
-            request.get(options, function(error, response, body) {
+            request.get(options, function (error, response, body) {
               if (error) {
                 console.log ('error searching spotify for the song');
               };
@@ -322,20 +334,20 @@ MongoClient.connect(mongoUrl, function(err, db) {
                 trackArtist = trackAdd.tracks.items[0].artists[0].name;
 
                 var guestReqObj = update.guestRequest (trackID);
-                update.updater ('guests', guestFound, guestReqObj, db, function(err){
+                update.updater ('guests', guestFound, guestReqObj, db, function (err){
                   if (err){
                     console.log (err);
                   };
                 });
                 messageBody = ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\nSend back "Yes" to confirm, "No" to discard this request!');
                 messageObject = messageTool.message (sender, messageBody);
-                twilio.sendMessage(messageObject, function(err, responseData) {
+                twilio.sendMessage(messageObject, function (err, responseData) {
                   messageTool.responseHandler (err, responseData);
                 });
               }else{
                 messageBody = ('sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!');
                 messageObject = messageTool.message (sender, messageBody);
-                twilio.sendMessage(messageObject, function(err, responseData) {
+                twilio.sendMessage(messageObject, function (err, responseData) {
                   messageTool.responseHandler (err, responseData);
                 });
               };
@@ -376,7 +388,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
         }else{
           messageBody = ('sorry, you are not a guest of this party, you can send back a host code for this party. We have also send the host a text with your number in case they want to add it themselves');
           messageObject = messageTool.message (sender, messageBody);
-          twilio.sendMessage(messageObject, function(err, responseData) {
+          twilio.sendMessage(messageObject, function (err, responseData) {
             messageTool.responseHandler (err, responseData);
           });
           console.log ('a non-guest tried to add to the playlist');
@@ -392,7 +404,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
       // requesting access token from refresh token
       doc = query.findHost (host);
       var refresh_token;
-      query.search (host,doc, db, function(docum){
+      query.search (host,doc, db, function (docum){
         refresh_token = docum.refresh_token;
         console.log (refresh_token);
         var authOptions = {
@@ -404,14 +416,14 @@ MongoClient.connect(mongoUrl, function(err, db) {
           },
           json: true
         };
-        request.post(authOptions, function(error, response, body) {
+        request.post(authOptions, function (error, response, body) {
           if (!error && response.statusCode === 200) {
             access_token = body.access_token;
             var documUpdate = query.findHost (host); 
             var updateInfo = update.accessToken (access_token);
-            update.updater (host, documUpdate, updateInfo,db, function(error){
+            update.updater (host, documUpdate, updateInfo,db, function (error){
               console.log ('updated the access token:');
-              query.search (host, {'host':host}, db, function(found){ 
+              query.search (host, doc, db, function (found){ 
                 if (found != null){
                   console.log (found.access_token);
                 };
