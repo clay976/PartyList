@@ -306,7 +306,11 @@ MongoClient.connect(mongoUrl, function (err, db) {
                 });
                 var updateObj = update.guestReset ();
                 update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
-              }
+                  if (err){
+                    console.log (err);
+                  };
+                });
+              };
             });
           }else if (searchParam == 'No'){
             messageBody = ('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.');
