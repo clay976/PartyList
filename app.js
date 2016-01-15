@@ -259,10 +259,10 @@ MongoClient.connect(mongoUrl, function(err, db) {
         if (guestFound){
           var trackID;
           var searchParam = req.body.Body;
-          if (searchParam == 'yes'){
+          if (searchParam == 'Yes'){
             trackID = guestFound.currentTrack;
             query.search ('tracks', trackID, db, function(trackDocFound){
-              if (trackFound){
+              if (trackDocFound){
                 var updateObj = update.tracksReqd ();
                 update.updater ('tracks', trackDocFound, updateObj, db, function(err, resuts){
                   if (!err){
@@ -282,7 +282,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
                 messageTool.responseHandler (err, responseData);
               });
             });
-          }if (searchParam == 'no'){
+          }if (searchParam == 'No'){
             messageBody = ('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.');
             messageObject = messageTool.message (sender, messageBody);
             twilio.sendMessage(messageObject, function(err, responseData) {
@@ -306,7 +306,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
                 trackTitle = trackAdd.tracks.items[0].name;
                 trackArtist = trackAdd.tracks.items[0].artists[0].name;
 
-                messageBody = ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n send back "yes" to confirm, "no" to discard this request!');
+                messageBody = ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\nSend back "Yes" to confirm, "No" to discard this request!');
                 messageObject = messageTool.message (sender, messageBody);
                 twilio.sendMessage(messageObject, function(err, responseData) {
                   messageTool.responseHandler (err, responseData);
