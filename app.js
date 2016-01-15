@@ -262,7 +262,8 @@ MongoClient.connect(mongoUrl, function(err, db) {
           if (searchParam == 'Yes'){
             trackID = guestFound.currentTrack;
             console.log (trackID)
-            query.search ('tracks', trackID, db, function(trackDocFound){
+            var trackObjID = query.findTrack (trackID);
+            query.search ('tracks', trackObjID, db, function(trackDocFound){
               if (trackDocFound){
                 var incrementGuest = update.guestConfirm ();
                 update.updater ('guests', foundGuest, incrementGuest,db, function(err){
