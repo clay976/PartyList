@@ -259,7 +259,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
         if (guestFound){
           var trackID;
           var searchParam = req.body.Body;
-          if (seachParam == 'yes'){
+          if (searchParam == 'yes'){
             trackID = guestFound.currentTrack;
             query.search ('tracks', trackID, db, function(trackDocFound){
               if (trackFound){
