@@ -220,7 +220,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
   });
 
   app.post ('/resetAllGuests', function (req, res){
-    db.guests.drop();
+    db.host.drop();
   });
   app.post('/addGuest', function (req, res){
     if (host){
