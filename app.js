@@ -273,7 +273,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
                 });
               }else{
                 var trackIn = insert.track (host, trackID);
-                insert.inset ('tracks', trackIn, db, function (result){
+                insert.insert ('tracks', trackIn, db, function (result){
                   messageBody = ('Your request is new, it has been added to the play queue!');
                 });
               };
