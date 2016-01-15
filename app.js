@@ -264,12 +264,19 @@ MongoClient.connect(mongoUrl, function(err, db) {
             console.log (trackID)
             query.search ('tracks', trackID, db, function(trackDocFound){
               if (trackDocFound){
-                var updateObj = update.tracksReqd ();
-                update.updater ('tracks', trackDocFound, updateObj, db, function(err, resuts){
-                  if (!err){
-                    messageBody = ('This track has already been requested, Your request will bump it up in the queue!');
-                  }else{
+                var incrementGuest = update.guestConfirm ();
+                update.updater ('guests', foundGuest, incrementGuest,db, fucntion(err){
+                  if (err){
                     console.log (err);
+                  }else{
+                    var updateObj = update.tracksReqd ();
+                    update.updater ('tracks', trackDocFound, updateObj, db, function(err, resuts){
+                      if (!err){
+                        messageBody = ('This track has already been requested, Your request will bump it up in the queue!');
+                      }else{
+                        console.log (err);
+                      };
+                    });
                   };
                 });
               }else{
@@ -309,14 +316,17 @@ MongoClient.connect(mongoUrl, function(err, db) {
                 trackTitle = trackAdd.tracks.items[0].name;
                 trackArtist = trackAdd.tracks.items[0].artists[0].name;
 
+                var guestReqObj = update.guestRequest (trackID);
+                update.updater ('guests', guestFound, guestReqObj, db, function(err){
+                  if (err){
+                    console.log (err);
+                  };
+                });
                 messageBody = ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\nSend back "Yes" to confirm, "No" to discard this request!');
                 messageObject = messageTool.message (sender, messageBody);
                 twilio.sendMessage(messageObject, function(err, responseData) {
                   messageTool.responseHandler (err, responseData);
                 });
-                //insert.insert ('trackListing', trackAdd);
-                //TODO: add the insert function with the functionality to let
-                //the sender know if that song has already been requested.
               }else{
                 messageBody = ('sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!');
                 messageObject = messageTool.message (sender, messageBody);

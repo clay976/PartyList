@@ -10,8 +10,14 @@ module.exports.playlistID = function(ID){
 //update guests functions
 module.exports.guestRequest = function(trackID){
   return ({
-    $inc: { numRequests: -1},
     $set: { "CurrentTrack": trackID }
+  }) 
+};
+
+module.exports.guestconfirm = function(){
+  return ({
+    $inc: { numRequests: -1},
+    $set: { "CurrentTrack": "" }
   }) 
 };
 
