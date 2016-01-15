@@ -273,7 +273,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
                     var updateObj = update.tracksReqd ();
                     update.updater ('tracks', trackDocFound, updateObj, db, function(err, resuts){
                       if (!err){
-                        messageBody = ('This track has already been requested, Your request will bump it up in the queue!');
+                        messageBody = ('This track has already been requested, Your request will bump it up in the queue!\n\n Requests left: ' +guestFound.numRequests '\n\n This song now has ' +trackDocFound.numRequests+ 'requests!');
                         messageObject = messageTool.message (sender, messageBody);
                         twilio.sendMessage(messageObject, function(err, responseData) {
                           messageTool.responseHandler (err, responseData);
@@ -287,7 +287,7 @@ MongoClient.connect(mongoUrl, function(err, db) {
               }else{
                 var trackIn = insert.track (host, trackID);
                 insert.insert ('tracks', trackIn, db, function (result){
-                  messageBody = ('Your request is new, it has been added to the play queue!');
+                  messageBody = ('Your request is new, it has been added to the play queue!\n\n Requests left: ' +guestFound.numRequests);
                   messageObject = messageTool.message (sender, messageBody);
                   twilio.sendMessage(messageObject, function(err, responseData) {
                     messageTool.responseHandler (err, responseData);
