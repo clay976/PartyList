@@ -5,11 +5,11 @@ module.exports.guest = function(host,phoneNum){
     "host": host,
     "phone":phoneNum,
     numRequests:5,
-    "tracks":[]
+    "currentTrack":""
   })
 };
 
-module.exports.track = function(host,playID,trackID){
+module.exports.track = function(host,trackID){
   return({ 
     "trackId":trackID,
     numRequests:1,

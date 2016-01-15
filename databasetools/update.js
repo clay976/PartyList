@@ -11,12 +11,12 @@ module.exports.playlistID = function(ID){
 module.exports.guestRequest = function(trackID){
   return ({
     $inc: { numRequests: -1},
-    $addToSet: { "tracks": trackID }
+    $set: { "CurrentTrack": trackID }
   }) 
 };
 
 //update tracks function 
-module.exports.tracksReqd = function(trackID){
+module.exports.tracksReqd = function(){
   return ({
     $inc: { numRequests: 1}
   }) 

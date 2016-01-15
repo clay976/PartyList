@@ -242,13 +242,10 @@ MongoClient.connect(mongoUrl, function(err, db) {
     };
   });
   app.post('/message', function(req, res){
-    if (host){ 
-      console.log (req.body.From); 
+    if (host){  
       //TODO: delete these console logs and produce real messages to the user on the application side of things so..
       //that they actually know whats going on in the party instead of this coming to us as devs. 
 
-      //need to find out why the message system is not working.
-      //giving us an error that says the pohone number is unverified.
       //this is also another problem in using twilio with a trial account.
       //we are only able to send messages to verified users and this might casue a problem in the future
       //if we can not find an automated way to add users to tyhe verified list when they message the host of the party!
@@ -260,32 +257,75 @@ MongoClient.connect(mongoUrl, function(err, db) {
       var foundGuest = query.findGuest (sender);
       query.search ('guests', foundGuest, db, function(guestFound){
         if (guestFound){
-          var searchParam = req.body.Body;
           var trackID;
-          var trackTitle;
-          var playlistID;
-          var messageBody
-          var options = {
-            url: 'https://api.spotify.com/v1/search?q=' +searchParam+ '&type=track&limit=1'
-          };   
-          // searches spotify with the search parameter
-          request.get(options, function(error, response, body) {
-            console.log (body);
-            if (error) {
-              console.log ('error searching spotify for the song');
-            };
-            trackAdd = JSON.parse(body);
-            if ((trackAdd.tracks.total)>0){
-              trackID =trackAdd.tracks.items[0].id;
-              console.log (trackID);
-              trackTitle = trackAdd.tracks.items[0].name;
-              trackArtist = trackAdd.tracks.items[0].artists[0].name;
-              console.log (trackArtist);
-              //insert.insert ('trackListing', trackAdd);
-              //TODO: add the insert function with the functionality to let
-              //the sender know if that song has already been requested.
-              console.log (sender);
-              validateToken.checkToken (host, db, function(tokenValid, docFound){
+          var searchParam = req.body.Body;
+          if (seachParam == 'yes'){
+            trackID = guestFound.currentTrack;
+            query.search ('tracks', trackID, db, function(trackDocFound){
+              if (trackFound){
+                var updateObj = update.tracksReqd ();
+                update.updater ('tracks', trackDocFound, updateObj, db, function(err, resuts){
+                  if (!err){
+                    messageBody = ('This track has already been requested, Your request will bump it up in the queue!');
+                  }else{
+                    console.log (err);
+                  };
+                });
+              }else{
+                var trackIn = insert.track (host, trackID);
+                insert.inset ('tracks', trackIn, db, function (result){
+                  messageBody = ('Your request is new, it has been added to the play queue!');
+                });
+              };
+              messageObject = messageTool.message (sender, messageBody);
+              twilio.sendMessage(messageObject, function(err, responseData) {
+                messageTool.responseHandler (err, responseData);
+              });
+            });
+          }if (seachParam == 'no'){
+            messageBody = ('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.');
+            messageObject = messageTool.message (sender, messageBody);
+            twilio.sendMessage(messageObject, function(err, responseData) {
+              messageTool.responseHandler (err, responseData);
+            });
+          }else{
+            var trackTitle;
+            var playlistID;
+            var messageBody
+            var options = {
+              url: 'https://api.spotify.com/v1/search?q=' +searchParam+ '&type=track&limit=1'
+            };   
+            // searches spotify with the search parameter
+            request.get(options, function(error, response, body) {
+              if (error) {
+                console.log ('error searching spotify for the song');
+              };
+              trackAdd = JSON.parse(body);
+              if ((trackAdd.tracks.total)>0){
+                trackID =trackAdd.tracks.items[0].id;
+                trackTitle = trackAdd.tracks.items[0].name;
+                trackArtist = trackAdd.tracks.items[0].artists[0].name;
+
+                messageBody = ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n send back "yes" to confirm, "no" to discard this request!');
+                messageObject = messageTool.message (sender, messageBody);
+                twilio.sendMessage(messageObject, function(err, responseData) {
+                  messageTool.responseHandler (err, responseData);
+                });
+                //insert.insert ('trackListing', trackAdd);
+                //TODO: add the insert function with the functionality to let
+                //the sender know if that song has already been requested.
+              }else{
+                messageBody = ('sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!');
+                messageObject = messageTool.message (sender, messageBody);
+                twilio.sendMessage(messageObject, function(err, responseData) {
+                  messageTool.responseHandler (err, responseData);
+                });
+              };
+
+              //this code needs to be changed so that it runs when we actually want to add a song to the playlist.
+              //right now it is running as soon as the track is found, where that does not allow us to minipulate
+              //the amount of requests that a song has!
+              /*validateToken.checkToken (host, db, function(tokenValid, docFound){
                 playlistID = docFound.playlistID;
                 //these options create the object to make the spotify request
                 var options = {
@@ -300,10 +340,10 @@ MongoClient.connect(mongoUrl, function(err, db) {
                 //this request is actually adds  the song to the playlist
                 request.post(options, function(error, response, body) {
                   if (error){
-                    messageBody = ('there was an error adding '+ trackTitle+ ' to the playlist, will provide more usefull error messages in the future');
+                    messageBody = ('there was an error adding ' +trackTitle+ ' to the playlist, will provide more usefull error messages in the future');
                   }else{
-                    console.log ('adding '+ trackTitle);
-                    messageBody = ('adding '+ trackTitle+ ' to the playlist');
+                    console.log ('adding ' +trackTitle);
+                    messageBody = (trackTitle+ ' by ' +trackArtist+ ' has been added to the playlist');
                   };
                   //logging the body of the spotify request will let the dev know if there are errors connecting to spotify.
                   messageObject = messageTool.message (sender, messageBody); 
@@ -312,16 +352,9 @@ MongoClient.connect(mongoUrl, function(err, db) {
                   });
                 console.log (body);
                 });
-              });
-            }else{
-              messageBody = ('sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!');
-              messageObject = messageTool.message (sender, messageBody);
-              twilio.sendMessage(messageObject, function(err, responseData) {
-                messageTool.responseHandler (err, responseData);
-              });
-            };
-          });
-          
+              });*/
+            });
+          };
         }else{
           messageBody = ('sorry, you are not a guest of this party, you can send back a host code for this party. We have also send the host a text with your number in case they want to add it themselves');
           messageObject = messageTool.message (sender, messageBody);
