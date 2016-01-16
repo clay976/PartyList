@@ -289,6 +289,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
                   };
                 });
               }else{
+                console.log (guestFound);
                 var trackIn = insert.track (host, trackID);
                 insert.insert ('tracks', trackIn, db, function (result){
                   messageBody = ('Your request is new, it has been added to the play queue!\n\n Requests before next ad: ' +guestFound.numRequests+ '\n\n This song now has ' +trackDocFound.numRequests+ ' requests!');
