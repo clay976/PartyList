@@ -299,17 +299,18 @@ MongoClient.connect(mongoUrl, function (err, db) {
                   });
                 });
               };
+              console.log (guestFound.numRequests);
               if (guestFound.numRequests = 0){
                 messageBody = ('You are recieving an advertisment because you have made 5 successful request');
                 messageObject = messageTool.message (sender, messageBody);
                 twilio.sendMessage(messageObject, function (err, responseData) {
                   messageTool.responseHandler (err, responseData);
-                });
-                var updateObj = update.guestReset ();
-                update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
-                  if (err){
-                    console.log (err);
-                  };
+                  var updateObj = update.guestReset ();
+                  update.updater ('guests', host, updateObj, db, function (err, resuts){
+                    if (err){
+                      console.log (err);
+                    };
+                  });
                 });
               };
             });
