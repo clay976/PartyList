@@ -262,9 +262,11 @@ MongoClient.connect(mongoUrl, function (err, db) {
       query.search ('guests', foundGuest, db, function (guestFound){
         if (guestFound){
           var trackID;
+          var numRequests;
           var searchParam = req.body.Body;
           if (searchParam == 'Yes'){
             trackID = guestFound.currentTrack;
+            numRequests = guestFound.numRequests;
             console.log (trackID);
             var trackObjID = query.findTrack (trackID);
             query.search ('tracks', trackObjID, db, function (trackDocFound){
@@ -277,7 +279,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
                     var updateObj = update.tracksReqd ();
                     update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
                       if (!err){
-                        messageBody = ('This track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +guestFound.numRequests+ '\n\n This song now has ' +trackDocFound.numRequests+ ' requests!');
+                        messageBody = ('This track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +numRequests+ '\n\n This song now has ' +trackDocFound.numRequests+ ' requests!');
                         messageObject = messageTool.message (sender, messageBody);
                         twilio.sendMessage(messageObject, function (err, responseData) {
                           messageTool.responseHandler (err, responseData);
@@ -292,14 +294,14 @@ MongoClient.connect(mongoUrl, function (err, db) {
                 console.log (guestFound);
                 var trackIn = insert.track (host, trackID);
                 insert.insert ('tracks', trackIn, db, function (result){
-                  messageBody = ('Your request is new, it has been added to the play queue!\n\n Requests before next ad: ' +guestFound.numRequests+ '\n\n This song now has ' +trackDocFound.numRequests+ ' requests!');
+                  messageBody = ('Your request is new, it has been added to the play queue!\n\n Requests before next ad: ' +numRequests+ '\n\n This song now has ' +trackDocFound.numRequests+ ' requests!');
                   messageObject = messageTool.message (sender, messageBody);
                   twilio.sendMessage(messageObject, function (err, responseData) {
                     messageTool.responseHandler (err, responseData);
                   });
                 });
               };
-              if (guestFound.numRequests = 0){
+              if (numRequests = 0){
                 messageBody = ('You are recieving an advertisment because you have made 5 successful request');
                 messageObject = messageTool.message (sender, messageBody);
                 twilio.sendMessage(messageObject, function (err, responseData) {
