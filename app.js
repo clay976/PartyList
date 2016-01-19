@@ -220,7 +220,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
   });
 
   app.post ('/resetAllGuests', function (req, res){
-    db.host.drop();
+    db.clay976.drop();
   });
   app.post('/addGuest', function (req, res){
     if (host){
@@ -261,14 +261,17 @@ MongoClient.connect(mongoUrl, function (err, db) {
       var foundGuest = query.findGuest (sender);
       query.search ('guests', foundGuest, db, function (guestFound){
         if (guestFound){
+          var guestRequestsLeft
           var trackID;
           var searchParam = req.body.Body;
           if (searchParam == 'Yes'){
             trackID = guestFound.currentTrack;
+            guestRequestsLeft = guestFound.numRequests;
             console.log (trackID);
             var trackObjID = query.findTrack (trackID);
             query.search ('tracks', trackObjID, db, function (trackDocFound){
               if (trackDocFound){
+                console.log (trackDocFound);
                 var incrementGuest = update.guestConfirm ();
                 update.updater ('guests', foundGuest, incrementGuest,db, function (err){
                   if (err){
@@ -277,7 +280,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
                     var updateObj = update.tracksReqd ();
                     update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
                       if (!err){
-                        messageBody = ('This track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +guestFound.numRequests+ '\n\n This song now has ' +trackDocFound.numRequests+ ' requests!');
+                        messageBody = ('This track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +trackDocFound.numRequests+ ' requests!');
                         messageObject = messageTool.message (sender, messageBody);
                         twilio.sendMessage(messageObject, function (err, responseData) {
                           messageTool.responseHandler (err, responseData);
