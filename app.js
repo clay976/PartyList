@@ -271,12 +271,13 @@ MongoClient.connect(mongoUrl, function (err, db) {
             var trackObjID = query.findTrack (trackID);
             query.search ('tracks', trackObjID, db, function (trackDocFound){
               if (trackDocFound){
-                console.log (trackDocFound);
+                
                 var incrementGuest = update.guestConfirm ();
                 update.updater ('guests', foundGuest, incrementGuest,db, function (err){
                   if (err){
                     console.log (err);
                   }else{
+                    console.log (trackDocFound);
                     var updateObj = update.tracksReqd ();
                     update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
                       if (!err){
