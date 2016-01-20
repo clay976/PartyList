@@ -310,7 +310,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
                 twilio.sendMessage(messageObject, function (err, responseData) {
                   messageTool.responseHandler (err, responseData);
                   var updateObj = update.guestReset ();
-                  update.updater ('guests', host, updateObj, db, function (err, resuts){
+                  update.updater ('guests', foundGuest, updateObj, db, function (err, resuts){
                     if (err){
                       console.log (err);
                     };
