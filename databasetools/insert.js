@@ -12,7 +12,7 @@ module.exports.guest = function(host,phoneNum){
 module.exports.track = function(host,trackID){
   return({ 
     "trackId":trackID,
-    numRequests:2,
+    numRequests:1,
     timePlayed:0 
   })
 };

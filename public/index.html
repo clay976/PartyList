@@ -18,20 +18,23 @@
   <body>
     <div class="container" id= "contain">
       <div id="login">
-        <h1>Log in to let spoitify do awesome things</h1>
+        <h1>Log in to let spotify do awesome things</h1>
         <a href="/login" class="btn btn-primary">Log in</a>
       </div>
       <div id="loggedin">
         <div id="user-profile"></div>
           <button id= "obtain-new-token" name = "obtain new token"> obtain new token </button>
         <div id="oauth"></div>
-          <label for="filename">create new playlist</label>
+          <label for="filename">Playlist</label>
           <form id="input" action="/findPlaylist" method="POST">
             <input type="submit" value="find current playlists">
           </form>
           <form id="input" action="/createPlaylist" method="POST">
             <input type="text" name="playName" placeholder="new playlist Name">
             <input type="submit" value="create">
+          </form>
+          <form id="input" action="/resetSonglist" method="POST">
+            <input type="submit" value="reset song requests">
           </form>
           <label for="filename">Guest Manipulation</label>
           <form id="input" action="/resetAllGuests" method="POST">

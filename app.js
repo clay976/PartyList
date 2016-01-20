@@ -24,6 +24,7 @@ var redirect_uri = 'http://104.131.215.55:80/callback'; // Your redirect uri
 var host;
 
 //required documents and tools
+var removeSonglist = require ('./databasetools/removeSonglist');
 var insert = require ('./databasetools/insert');
 var query = require ('./databasetools/querydb');
 var update = require ('./databasetools/update');
@@ -243,6 +244,11 @@ MongoClient.connect(mongoUrl, function (err, db) {
       res.redirect('/');
     };
   });
+
+  app.post('/resetSonglist', function (req, res){
+    removeSonglist (db);
+  });
+
   app.post('/message', function (req, res){
     if (host){  
       //TODO: delete these console logs and produce real messages to the user on the application side of things so..
@@ -267,7 +273,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
                 var updateObj = update.tracksReqd ();
                 update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
                   if (!err){
-                    messageBody = ('\n\nThis track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +trackDocFound.numRequests+ ' requests!');
+                    messageBody = ('\n\nThis track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +trackDocFound.numRequests+1 ' requests!');
                     messageObject = messageTool.message (sender, messageBody);
                     twilio.sendMessage(messageObject, function (err, responseData) {
                       messageTool.responseHandler (err, responseData);
