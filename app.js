@@ -52,7 +52,6 @@ MongoClient.connect(mongoUrl, function (err, db) {
   //the hosts spotify ID needs to be saved as a session varaible on the front end and passes back to the API
   //with every request so we know who is actually making the requests...
   app.get('/login', function (req, res) {
-    console.log ('loging in');
     var state = generateRandomString(16);
     res.cookie(stateKey, state);
     // your application requests authorization
@@ -117,17 +116,17 @@ MongoClient.connect(mongoUrl, function (err, db) {
             query.search (host, docuSearch, db, function (found){
               //error handling within the found funtion itself 
               if (found != null){
-                console.log ('found existing user');
                 // found host so we will update their tokens to access api
                 var updateInfo = update.bothTokens (access_token, refresh_token);
                 update.updater (host, found, updateInfo,db, function (error){
                   console.log ('updated the tokens');
+                  console.log (found);
                 });
               }else{
                 console.log ('creating new user');
                 insert.insert (host, docuInsert, db, function (result){
                   //error handling withjin the insert funtion itself
-                  console.log("Inserted a document into the" +host+ " collection.");
+                  console.log("Inserted a document into the " +host+ " collection.");
                   console.log (result);
                 });
               };
@@ -168,7 +167,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
               playlistID = playlist.id
               console.log (playlistID);
             });
-            res.send('playlist created');
+            res.redirect('/#' +querystring.stringify({access_token: docFound.access_token,refresh_token: docFound.refresh_token}));
           }else{
             res.redirect('/login');
           };
@@ -190,7 +189,6 @@ MongoClient.connect(mongoUrl, function (err, db) {
             headers: {'Authorization': 'Bearer ' +docFound.access_token}
           };
           request.get(options, function (error, response, body) {
-            console.log ('finding playlist');
             if (!error) {
               playlistItems= JSON.parse (body);
               var playLid = playlistItems.items[0].id;
@@ -205,7 +203,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
                   console.log ("playlist updated");
                 };
               });
-              res.send('playlist updated');
+              res.redirect('/#' +querystring.stringify({access_token: docFound.access_token,refresh_token: docFound.refresh_token}));
             }else{
               console.log (error);
             };
@@ -234,7 +232,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
           }else{
             guest2Add = insert.guest (host, guestNum);
             insert.insert ('guests', guest2Add, db, function (result){
-              res.send('guest updated');
+              res.redirect('/#' +querystring.stringify({access_token: docFound.access_token,refresh_token: docFound.refresh_token}));
             });
           };
         });  
@@ -267,7 +265,6 @@ MongoClient.connect(mongoUrl, function (err, db) {
           if (searchParam == 'Yes'){
             trackID = guestFound.currentTrack;
             guestRequestsLeft = guestFound.numRequests;
-            console.log (trackID);
             var trackObjID = query.findTrack (trackID);
             query.search ('tracks', trackObjID, db, function (trackDocFound){
               if (trackDocFound){
@@ -277,7 +274,6 @@ MongoClient.connect(mongoUrl, function (err, db) {
                   if (err){
                     console.log (err);
                   }else{
-                    console.log (trackDocFound);
                     var updateObj = update.tracksReqd ();
                     update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
                       if (!err){
@@ -293,7 +289,6 @@ MongoClient.connect(mongoUrl, function (err, db) {
                   };
                 });
               }else{
-                console.log (guestFound);
                 var trackIn = insert.track (host, trackID);
                 insert.insert ('tracks', trackIn, db, function (result){
                   messageBody = ('Your request is new, it has been added to the play queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +1+ ' request!');
@@ -303,7 +298,6 @@ MongoClient.connect(mongoUrl, function (err, db) {
                   });
                 });
               };
-              console.log (guestFound.numRequests);
               if (guestFound.numRequests < 1){
                 messageBody = ('You are recieving an advertisment because you have made 5 successful request');
                 messageObject = messageTool.message (sender, messageBody);
@@ -325,7 +319,6 @@ MongoClient.connect(mongoUrl, function (err, db) {
               messageTool.responseHandler (err, responseData);
             });
           }else{
-            console.log (searchParam);
             var trackTitle;
             var playlistID;
             var messageBody
