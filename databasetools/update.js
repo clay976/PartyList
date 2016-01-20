@@ -23,7 +23,7 @@ module.exports.guestConfirm = function(){
 
 module.exports.guestReset = function(){
   return ({
-    $set: { numRequests: 5}
+    $set: { numRequests: 4}
   }) 
 };
 
