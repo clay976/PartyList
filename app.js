@@ -344,18 +344,25 @@ MongoClient.connect(mongoUrl, function (err, db) {
                 trackID =trackAdd.tracks.items[0].id;
                 trackTitle = trackAdd.tracks.items[0].name;
                 trackArtist = trackAdd.tracks.items[0].artists[0].name;
-
                 var guestReqObj = update.guestRequest (trackID);
                 update.updater ('guests', guestFound, guestReqObj, db, function (err){
                   if (err){
                     console.log (err);
                   };
                 });
-                messageBody = ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\nSend back "Yes" to confirm, "No" to discard this request!');
-                messageObject = messageTool.message (sender, messageBody);
-                twilio.sendMessage(messageObject, function (err, responseData) {
-                  messageTool.responseHandler (err, responseData);
-                });
+                var trackObjID = query.findTrack (trackID);
+                query.search ('tracks', trackObjID, db, function (trackDocFound){
+                  var currentSongRequests;
+                  if (trackDocFound){
+                    currentSongRequests = trackDocFound.numRequests;
+                    messageBody = ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\n Current number of requests: ' +currentSongRequests+ '\n\nSend back "Yes" to confirm, "No" to discard this request!');
+                  }else{
+                    messageBody = ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\n Current number of requests: 0 \n\nSend back "Yes" to confirm, "No" to discard this request!');
+                  }
+                  messageObject = messageTool.message (sender, messageBody);
+                  twilio.sendMessage(messageObject, function (err, responseData) {
+                    messageTool.responseHandler (err, responseData);
+                  });
               }else{
                 messageBody = ('sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!');
                 messageObject = messageTool.message (sender, messageBody);
