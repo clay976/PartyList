@@ -253,53 +253,49 @@ MongoClient.connect(mongoUrl, function (err, db) {
       //if we can not find an automated way to add users to tyhe verified list when they message the host of the party!
 
       //this branch under messages is now under heavy dev for getting these messages back to the sender.
-
-      
       var sender = req.body.From;
-      var foundGuest = query.findGuest (sender);
-      query.search ('guests', foundGuest, db, function (guestFound){
+      var guest2Find = query.findGuest (sender);
+      query.search ('guests', guest2Find, db, function (guestFound){
         if (guestFound){
-          var guestRequestsLeft
-          var trackID;
+          var guestRequestsLeft = guestFound.numRequests;
+          var trackID = guestFound.currentTrack;;
           var searchParam = req.body.Body;
-          if (searchParam == 'Yes'){
-            trackID = guestFound.currentTrack;
-            guestRequestsLeft = guestFound.numRequests;
+          if (searchParam == 'Yes') && (trackID != ''){
             var trackObjID = query.findTrack (trackID);
             query.search ('tracks', trackObjID, db, function (trackDocFound){
               if (trackDocFound){
-                
-                var incrementGuest = update.guestConfirm ();
-                update.updater ('guests', foundGuest, incrementGuest,db, function (err){
-                  if (err){
-                    console.log (err);
-                  }else{
-                    var updateObj = update.tracksReqd ();
-                    update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
-                      if (!err){
-                        messageBody = ('This track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +trackDocFound.numRequests+ ' requests!');
-                        messageObject = messageTool.message (sender, messageBody);
-                        twilio.sendMessage(messageObject, function (err, responseData) {
-                          messageTool.responseHandler (err, responseData);
-                        });
-                      }else{
-                        console.log (err);
-                      };
-                    });
-                  };
-                });
+                  var updateObj = update.tracksReqd ();
+                  update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
+                    if (!err){
+                      messageBody = ('\n\nThis track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +trackDocFound.numRequests+ ' requests!');
+                      messageObject = messageTool.message (sender, messageBody);
+                      twilio.sendMessage(messageObject, function (err, responseData) {
+                        messageTool.responseHandler (err, responseData);
+                      });
+                    }else{
+                      console.log (err);
+                    };
+                  });
+                };
               }else{
-                var trackIn = insert.track (host, trackID);
-                insert.insert ('tracks', trackIn, db, function (result){
-                  messageBody = ('Your request is new, it has been added to the play queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +1+ ' request!');
+                var track2Insert = insert.track (host, trackID);
+                insert.insert ('tracks', track2Insert, db, function (result){
+                  messageBody = ('\n\nYour request is new, it has been added to the play queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +1+ ' request!');
                   messageObject = messageTool.message (sender, messageBody);
                   twilio.sendMessage(messageObject, function (err, responseData) {
                     messageTool.responseHandler (err, responseData);
                   });
                 });
               };
+
+              var incrementGuest = update.guestConfirm ();
+              update.updater ('guests', guest2Find, incrementGuest,db, function (err){
+                if (err){
+                  console.log (err);
+                }
+
               if (guestFound.numRequests < 1){
-                messageBody = ('You are recieving an advertisment because you have made 5 successful request');
+                messageBody = ('\n\nYou are recieving an advertisment because you have made 5 successful request');
                 messageObject = messageTool.message (sender, messageBody);
                 twilio.sendMessage(messageObject, function (err, responseData) {
                   messageTool.responseHandler (err, responseData);
@@ -312,8 +308,14 @@ MongoClient.connect(mongoUrl, function (err, db) {
                 });
               };
             });
+          }else if (searchParam == 'Yes'){
+            messageBody = ('\n\nYou did not request a song to be confirmed yet!');
+            messageObject = messageTool.message (sender, messageBody);
+            twilio.sendMessage(messageObject, function (err, responseData) {
+              messageTool.responseHandler (err, responseData);
+            });
           }else if (searchParam == 'No'){
-            messageBody = ('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.');
+            messageBody = ('\n\nSorry about the wrong song, try modifying your search! Remember to not use any special characters.');
             messageObject = messageTool.message (sender, messageBody);
             twilio.sendMessage(messageObject, function (err, responseData) {
               messageTool.responseHandler (err, responseData);
