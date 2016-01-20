@@ -340,7 +340,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
                 console.log ('error searching spotify for the song');
               };
               trackAdd = JSON.parse(body);
-              if (trackAdd.tracjs && trackAdd.tracks.total>0){
+              if (trackAdd.tracks && trackAdd.tracks.total>0){
                 trackID =trackAdd.tracks.items[0].id;
                 trackTitle = trackAdd.tracks.items[0].name;
                 trackArtist = trackAdd.tracks.items[0].artists[0].name;
