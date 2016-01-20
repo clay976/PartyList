@@ -264,19 +264,18 @@ MongoClient.connect(mongoUrl, function (err, db) {
             var trackObjID = query.findTrack (trackID);
             query.search ('tracks', trackObjID, db, function (trackDocFound){
               if (trackDocFound){
-                  var updateObj = update.tracksReqd ();
-                  update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
-                    if (!err){
-                      messageBody = ('\n\nThis track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +trackDocFound.numRequests+ ' requests!');
-                      messageObject = messageTool.message (sender, messageBody);
-                      twilio.sendMessage(messageObject, function (err, responseData) {
-                        messageTool.responseHandler (err, responseData);
-                      });
-                    }else{
-                      console.log (err);
-                    };
-                  });
-                };
+                var updateObj = update.tracksReqd ();
+                update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
+                  if (!err){
+                    messageBody = ('\n\nThis track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +trackDocFound.numRequests+ ' requests!');
+                    messageObject = messageTool.message (sender, messageBody);
+                    twilio.sendMessage(messageObject, function (err, responseData) {
+                      messageTool.responseHandler (err, responseData);
+                    });
+                  }else{
+                    console.log (err);
+                  };
+                });
               }else{
                 var track2Insert = insert.track (host, trackID);
                 insert.insert ('tracks', track2Insert, db, function (result){
@@ -287,26 +286,26 @@ MongoClient.connect(mongoUrl, function (err, db) {
                   });
                 });
               };
-
+              
               var incrementGuest = update.guestConfirm ();
               update.updater ('guests', guest2Find, incrementGuest,db, function (err){
                 if (err){
                   console.log (err);
                 }
-
-              if (guestFound.numRequests < 1){
-                messageBody = ('\n\nYou are recieving an advertisment because you have made 5 successful request');
-                messageObject = messageTool.message (sender, messageBody);
-                twilio.sendMessage(messageObject, function (err, responseData) {
-                  messageTool.responseHandler (err, responseData);
-                  var updateObj = update.guestReset ();
-                  update.updater ('guests', foundGuest, updateObj, db, function (err, resuts){
-                    if (err){
-                      console.log (err);
-                    };
+                if (guestFound.numRequests < 1){
+                  messageBody = ('\n\nYou are recieving an advertisment because you have made 5 successful request');
+                  messageObject = messageTool.message (sender, messageBody);
+                  twilio.sendMessage(messageObject, function (err, responseData) {
+                    messageTool.responseHandler (err, responseData);
+                    var updateObj = update.guestReset ();
+                    update.updater ('guests', foundGuest, updateObj, db, function (err, resuts){
+                      if (err){
+                        console.log (err);
+                      };
+                    });
                   });
-                });
-              };
+                };
+              });
             });
           }else if (searchParam == 'Yes'){
             messageBody = ('\n\nYou did not request a song to be confirmed yet!');
