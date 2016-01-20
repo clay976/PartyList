@@ -225,8 +225,8 @@ MongoClient.connect(mongoUrl, function (err, db) {
       var guestNum = req.body.guestNum;
       if (guestNum){
         var guestNum = '+1'+ guestNum;
-        var foundGuest = query.findGuest (guestNum);
-        query.search ('guests', foundGuest, db, function (guestFound){
+        var guest2Find = query.findGuest (guestNum);
+        query.search ('guests', guest2Find, db, function (guestFound){
           if (guestFound){
             res.send ('you already added this guest');
           }else{
@@ -298,7 +298,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
                   twilio.sendMessage(messageObject, function (err, responseData) {
                     messageTool.responseHandler (err, responseData);
                     var updateObj = update.guestReset ();
-                    update.updater ('guests', foundGuest, updateObj, db, function (err, resuts){
+                    update.updater ('guests', guest2Find, updateObj, db, function (err, resuts){
                       if (err){
                         console.log (err);
                       };
