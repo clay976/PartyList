@@ -260,7 +260,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
           var guestRequestsLeft = guestFound.numRequests;
           var trackID = guestFound.currentTrack;;
           var searchParam = req.body.Body;
-          if (searchParam == 'Yes') && (trackID != ''){
+          if (searchParam == 'Yes' && trackID != ''){
             var trackObjID = query.findTrack (trackID);
             query.search ('tracks', trackObjID, db, function (trackDocFound){
               if (trackDocFound){
@@ -286,7 +286,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
                   });
                 });
               };
-              
+
               var incrementGuest = update.guestConfirm ();
               update.updater ('guests', guest2Find, incrementGuest,db, function (err){
                 if (err){
