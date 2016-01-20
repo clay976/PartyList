@@ -296,7 +296,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
                 console.log (guestFound);
                 var trackIn = insert.track (host, trackID);
                 insert.insert ('tracks', trackIn, db, function (result){
-                  messageBody = ('Your request is new, it has been added to the play queue!\n\n Requests before next ad: ' +guestFound.numRequests+ '\n\n This song now has ' +1+ ' request!');
+                  messageBody = ('Your request is new, it has been added to the play queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +1+ ' request!');
                   messageObject = messageTool.message (sender, messageBody);
                   twilio.sendMessage(messageObject, function (err, responseData) {
                     messageTool.responseHandler (err, responseData);
@@ -304,7 +304,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
                 });
               };
               console.log (guestFound.numRequests);
-              if (guestFound.numRequests = 0){
+              if (guestFound.numRequests < 1){
                 messageBody = ('You are recieving an advertisment because you have made 5 successful request');
                 messageObject = messageTool.message (sender, messageBody);
                 twilio.sendMessage(messageObject, function (err, responseData) {
