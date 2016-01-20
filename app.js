@@ -183,6 +183,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
   });
   app.post('/findPlaylist', function (req, res){
     if (host){
+      removeSonglist (db);
       validateToken.checkToken (host, db, function (tokenValid, docFound){
         if (tokenValid){  
           var options = {
@@ -221,6 +222,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
   app.post ('/resetAllGuests', function (req, res){
     db.clay976.drop();
   });
+
   app.post('/addGuest', function (req, res){
     if (host){
       var guestNum = req.body.guestNum;
@@ -273,7 +275,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
                 var updateObj = update.tracksReqd ();
                 update.updater ('tracks', trackDocFound, updateObj, db, function (err, resuts){
                   if (!err){
-                    messageBody = ('\n\nThis track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +trackDocFound.numRequests+1 ' requests!');
+                    messageBody = ('\n\nThis track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +( trackDocFound.numRequests+1) + ' requests!');
                     messageObject = messageTool.message (sender, messageBody);
                     twilio.sendMessage(messageObject, function (err, responseData) {
                       messageTool.responseHandler (err, responseData);
