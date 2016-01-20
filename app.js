@@ -363,6 +363,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
                   twilio.sendMessage(messageObject, function (err, responseData) {
                     messageTool.responseHandler (err, responseData);
                   });
+                });
               }else{
                 messageBody = ('sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!');
                 messageObject = messageTool.message (sender, messageBody);
