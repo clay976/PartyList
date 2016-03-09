@@ -10,7 +10,8 @@ var assert = require('assert');
 //known needed variables.
 //this is going to be a heavy refactor of this code to modularize it way more than it is
 //right now. not really sure how this is going to go...
-var spotifyTools = require ('./spotifyTools/tools');
+var spotifyLoginTools = require ('./spotifyTools/loginTools');
+var spotifyPlaylistTools = require ('./spotifyTools/playlistTools');
 
 
 
@@ -51,52 +52,14 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   //login function (this will be handles by the fron end soon)
   //the hosts spotify ID needs to be saved as a session varaible on the front end and passes back to the API
   //with every request so we know who is actually making the requests...
-  app.get('/login', spotifyTools.loginInformation)
+  app.get('/login', spotifyLoginTools.login)
 
   //callback will save the hosts data and some other stuff to be queried in the db later.
-  app.get('/callback', spotifyTools.checkLoginSate);
+  app.get('/callback', spotifyLoginTools.getToHomePage);
+
+  app.post('/createPlaylist', spotifyPlaylistTools.createPlaylist);
 
 
-  app.post('/createPlaylist', function (req, res){
-    if (host){
-      var playlistname = req.body.playName;
-      if (playlistname) {
-        console.log('creating: ' + playlistname);  
-        //database call to obtain access token, if access token is expired then
-        //obtain new access token by using refresh token
-        validateToken.checkToken (host, db, function (tokenValid, docFound){
-          if (tokenValid){   
-            var options = {
-              url: 'https://api.spotify.com/v1/users/' +host+ '/playlists',
-              body: JSON.stringify({
-                'name': playlistname,
-                'public': false
-              }),
-              dataType:'json',
-              headers: {
-                'Authorization': 'Bearer ' + docFound.access_token,
-                'Content-Type': 'application/json',
-              }
-            };
-            request.post(options, function (error, response, body) {
-              console.log ('creating playlist');
-              playlist = JSON.parse (body);
-              playlistID = playlist.id
-              console.log (playlistID);
-            });
-            res.redirect('/#' +querystring.stringify({access_token: docFound.access_token,refresh_token: docFound.refresh_token}));
-          }else{
-            res.redirect('/login');
-          };
-        });
-      }else{
-        console.log('dumb user didnt actually send playlist name');
-        res.send({error: 'please_enter_a_name'});
-      };
-    }else{
-      res.redirect('/');
-    };
-  });
   app.post('/findPlaylist', function (req, res){
     if (host){
       removeSonglist (db);

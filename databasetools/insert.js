@@ -33,8 +33,13 @@ module.exports.apiInfo = function (host, access, refresh){
 };
 
 module.exports.insert = function(collect, docinsert, db, callback) {
-  db.collection(collect).insertOne(docinsert, function(err, result) {
-    assert.equal(err, null);
-    callback(result);
-  });
+  db.collection(collect).insertOne(docinsert, callback);
 };
+
+function insertReponseHandley(err, results) {
+  if (err){
+    console.log ('there was an error inserting the document');
+  }else{
+    console.log ('document inserted succsefully');
+  }
+}

@@ -1,11 +1,9 @@
 var tools = require ('../generalTools/tools');
 var querystring = require('querystring');
 var request = require('request'); // "Request" library
-var removeSonglist = require ('../databasetools/removeSonglist');
 var insert = require ('../databasetools/insert');
 var query = require ('../databasetools/querydb');
 var update = require ('../databasetools/update');
-var validateToken = require ('../databasetools/checkToken');
 
 var stateKey = 'spotify_auth_state'
 var client_id = 'a000adffbd26453fbef24e8c1ff69c3b';
@@ -18,7 +16,7 @@ var redirect_uri = 'http://104.131.215.55:80/callback';
 // with the redirect URI.
 // the state is what will be checked by the app when
 // we are trying to make calls afterward
-function loginInformation (req, res) {
+function login (req, res) {
   var state = tools.generateRandomString(16);
   res.cookie(stateKey, state);
   // your application requests authorization
@@ -31,12 +29,11 @@ function loginInformation (req, res) {
     state: state
   }));
 }
-
 // this will prepare the JSON object with our applications
 // authorization tokens for the spotify API.
 // requests refresh and access tokens for the user
 // after checking the state parameter
-function checkLoginSate (req, res, db) {
+function getToHomePage (req, res, db) {
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -83,35 +80,31 @@ function prepareTokenAccess (error, response, body) {
 }
 
 function getHostInfo (error, response, body) {
-  var found;
   host = (body.id).toString();
-  console.log ('searching for ' + host);
   docuSearch = query.findHost (host);
   var docuInsert = insert.apiInfo (host,access_token, refresh_token);
   //database call to save the tokens and user id as a host collection document
-  query.search (host, docuSearch, db, function (found){
-    //error handling within the found funtion itself 
-    if (found != null){
-      // found host so we will update their tokens to access api
-      var updateInfo = update.bothTokens (access_token, refresh_token);
-      update.updater (host, found, updateInfo,db, function (error){
-        console.log ('updated the tokens');
-        console.log (found);
-      });
-    }else{
-      console.log ('creating new user');
-      insert.insert (host, docuInsert, db, function (result){
-        //error handling withjin the insert funtion itself
-        console.log("Inserted a document into the " +host+ " collection.");
-        console.log (result);
-      });
-    };
-  });
+  query.search (host, docuSearch, db, updateOrInsert);
+}
+
+function updateOrInsert (found){
+  //error handling within the found funtion itself 
+  if (found != null){
+    console.log ('user has been found');
+    // found host so we will update their tokens to access api
+    var updateInfo = update.bothTokens (access_token, refresh_token);
+    update.updater (host, found, updateInfo,db, updateResponseHandler);
+  }else{
+    console.log ('creating new user');
+    var docuInsert = insert.apiInfo (host,access_token, refresh_token);
+    insert.insert (host, docuInsert, db, insertResponseHandler);
+  };
 }
 
 module.exports = {
-  loginInformation: loginInformation,
-  checkLoginSate: checkLoginSate,
+  login: login,
+  getToHomePage: getToHomePage,
   prepareTokenAccess: prepareTokenAccess,
-  getHostInfo: getHostInfo
+  getHostInfo: getHostInfo,
+  updateOrInsert: updateOrInsert
 }

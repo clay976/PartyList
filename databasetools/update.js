@@ -54,7 +54,13 @@ module.exports.accessToken = function(aToken){
 };
  
 module.exports.updater = function (collection, doc, info,db, callback){ 
-  db.collection(collection).updateOne(doc,info, function(err, results) {
-    callback (err);
-  });
+  db.collection(collection).updateOne(doc,info,callback);
 };
+
+function updateReponseHandley(err, results) {
+  if (err){
+    console.log ('there was an error updating the document');
+  }else{
+    console.log ('document updated succsefully');
+  }
+}
