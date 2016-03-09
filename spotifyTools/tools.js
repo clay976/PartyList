@@ -26,7 +26,7 @@ module.exports.login = function (req, res) {
   }));
 }
 
-module.exports.handleHomePage = function (req, res) {
+module.exports.handleHomePage = function (req, res, db) {
   //requests refresh and access tokens
   //after checking the state parameter
   var code = req.query.code || null;

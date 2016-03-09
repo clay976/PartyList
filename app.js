@@ -44,7 +44,7 @@ var ObjectId = require('mongodb').ObjectID;
 var mongoUrl = 'mongodb://localhost:27017/party';
 
 //connect to the database, this happens when api starts, and the conection doesn't close until the API shuts down/crashes
-MongoClient.connect(mongoUrl, function (err, db) {
+MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   assert.equal(null, err);
   var stateKey = 'spotify_auth_state';
   app.use(express.static(__dirname + '/public')).use(cookieParser());
@@ -56,7 +56,7 @@ MongoClient.connect(mongoUrl, function (err, db) {
   //callback will save the hosts data and some other stuff to be queried in the db later.
   app.get('/callback', spotifyTools.handleHomePage);
 
-  
+
   app.post('/createPlaylist', function (req, res){
     if (host){
       var playlistname = req.body.playName;
