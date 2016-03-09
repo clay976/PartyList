@@ -10,7 +10,6 @@ var assert = require('assert');
 //known needed variables.
 //this is going to be a heavy refactor of this code to modularize it way more than it is
 //right now. not really sure how this is going to go...
-var tools = require ('./generalTools/tools');
 var spotifyTools = require ('./spotifyTools/tools');
 
 

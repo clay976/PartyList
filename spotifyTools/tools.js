@@ -1,3 +1,5 @@
+var tools = require ('../generalTools/tools');
+
 module.exports.login = function (req, res) {
   var state = tools.generateRandomString(16);
   res.cookie(stateKey, state);
