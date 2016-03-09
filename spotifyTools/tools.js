@@ -18,7 +18,7 @@ var redirect_uri = 'http://104.131.215.55:80/callback';
 // with the redirect URI.
 // the state is what will be checked by the app when
 // we are trying to make calls afterward
-module.exports.loginInformation = function (req, res) {
+function loginInformation (req, res) {
   var state = tools.generateRandomString(16);
   res.cookie(stateKey, state);
   // your application requests authorization
@@ -36,7 +36,7 @@ module.exports.loginInformation = function (req, res) {
 // authorization tokens for the spotify API.
 // requests refresh and access tokens for the user
 // after checking the state parameter
-module.exports.checkLoginSate = function (req, res, db) {
+function checkLoginSate (req, res, db) {
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -58,11 +58,11 @@ module.exports.checkLoginSate = function (req, res, db) {
     };
     // this request will use the object we just created to obtain the access
     // and refresh tokens for the specific user.
-    request.post(authOptions, perpareTokenAccess)
+    request.post(authOptions, prepareTokenAccess)
   }
 }
 
-module.exports.perpareTokenAccess = function (error, response, body) {
+function prepareTokenAccess (error, response, body) {
   if (!error && response.statusCode === 200) {
     var access_token = body.access_token;
     var refresh_token = body.refresh_token;
@@ -82,7 +82,7 @@ module.exports.perpareTokenAccess = function (error, response, body) {
   }
 }
 
-module.exports.getHostInfo = function (error, response, body) {
+function getHostInfo (error, response, body) {
   var found;
   host = (body.id).toString();
   console.log ('searching for ' + host);
@@ -107,4 +107,11 @@ module.exports.getHostInfo = function (error, response, body) {
       });
     };
   });
+}
+
+module.exports = {
+  loginInformation: loginInformation,
+  checkLoginSate: checkLoginSate,
+  prepareTokenAccess: prepareTokenAccess,
+  getHostInfo: getHostInfo
 }
