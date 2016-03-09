@@ -7,6 +7,13 @@ var cookieParser = require('cookie-parser');
 var bodyParser = require('body-parser');
 var assert = require('assert');
 
+//known needed variables.
+//this is going to be a heavy refactor of this code to modularize it way more than it is
+//right now. not really sure how this is going to go...
+var tools = require ('./generalTools/tools');
+
+
+
 //twillio variables
 var twilioAccountSID = "AC85573f40ef0c3fb0c5aa58477f61b02e";
 var twilioAccountSecret = "fcea26b2b0ae541d904ba23e12e2c499";
@@ -17,6 +24,7 @@ var messageTool = require ('./messageTools/message');
 var app = express();
 app.use(bodyParser.json()); // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })); // for parsing application/x-www-form-urlencoded
+
 //global variables the api needs
 var client_id = 'a000adffbd26453fbef24e8c1ff69c3b'; // Your client id
 var client_secret = '899b3ec7d52b4baabba05d6031663ba2'; // Your client secret
@@ -38,22 +46,13 @@ var mongoUrl = 'mongodb://localhost:27017/party';
 //connect to the database, this happens when api starts, and the conection doesn't close until the API shuts down/crashes
 MongoClient.connect(mongoUrl, function (err, db) {
   assert.equal(null, err);
-  var generateRandomString = function(length) {
-    var text = '';
-    var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
-    for (var i = 0; i < length; i++) {
-      text += possible.charAt(Math.floor(Math.random() * possible.length));
-    };
-    return text;
-  };
   var stateKey = 'spotify_auth_state';
-  app.use(express.static(__dirname + '/public'))
-    .use(cookieParser());
+  app.use(express.static(__dirname + '/public')).use(cookieParser());
   //login function (this will be handles by the fron end soon)
   //the hosts spotify ID needs to be saved as a session varaible on the front end and passes back to the API
   //with every request so we know who is actually making the requests...
   app.get('/login', function (req, res) {
-    var state = generateRandomString(16);
+    var state = tools.generateRandomString(16);
     res.cookie(stateKey, state);
     // your application requests authorization
     var scope = 'user-read-private user-read-email user-read-birthdate streaming playlist-modify-private playlist-modify-public playlist-read-private';
