@@ -60,7 +60,7 @@ function getToHomePage (req, res, db) {
 }
 
 function prepareTokenAccess (error, res, body) {
-  if (!error && response.statusCode === 200) {
+  if (!error && res.statusCode === 200) {
     var access_token = body.access_token;
     var refresh_token = body.refresh_token;
     //databasecalls to save access and refresh tokens in the partyList collection
