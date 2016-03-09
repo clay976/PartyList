@@ -12,7 +12,13 @@ var client_id = 'a000adffbd26453fbef24e8c1ff69c3b';
 var client_secret = '899b3ec7d52b4baabba05d6031663ba2'; // Your client secret
 var redirect_uri = 'http://104.131.215.55:80/callback';
 
-module.exports.login = function (req, res) {
+// this is what the user will see when the click login for the first
+// time, it tells them what our app will be allowed to access
+// and provides the location of where the app will go after login
+// with the redirect URI.
+// the state is what will be checked by the app when
+// we are trying to make calls afterward
+module.exports.loginInformation = function (req, res) {
   var state = tools.generateRandomString(16);
   res.cookie(stateKey, state);
   // your application requests authorization
@@ -26,14 +32,16 @@ module.exports.login = function (req, res) {
   }));
 }
 
-module.exports.handleHomePage = function (req, res, db) {
-  //requests refresh and access tokens
-  //after checking the state parameter
+// this will prepare the JSON object with our applications
+// authorization tokens for the spotify API.
+// requests refresh and access tokens for the user
+// after checking the state parameter
+module.exports.checkLoginSate = function (req, res, db) {
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
   if (state === null || state !== storedState) {
-    res.redirect('/#' +querystring.stringify({error: 'state_mismatch'}));
+    res.redirect('/' +querystring.stringify({error: 'state_mismatch'}));
   }else{
     res.clearCookie(stateKey);
     var authOptions = {
@@ -48,50 +56,55 @@ module.exports.handleHomePage = function (req, res, db) {
       },
       json: true
     };
-    //this is the actual post to retreive the access and refresh tokens that wqill be used later.
-    request.post(authOptions, function (error, response, body) {
-      if (!error && response.statusCode === 200) {
-        var access_token = body.access_token;
-        var refresh_token = body.refresh_token;
-        //databasecalls to save access and refresh tokens in the partyList collection
-        //unser the tokens document
-        var options = {
-          url: 'https://api.spotify.com/v1/me',
-          headers: { 'Authorization': 'Bearer ' + access_token },
-          json: true
-        };
-        // use the access token to access the Spotify Web API
-        request.get(options, function(error, response, body) {
-          var found;
-          host = (body.id).toString();
-          console.log ('searching for ' + host);
-          docuSearch = query.findHost (host);
-          var docuInsert = insert.apiInfo (host,access_token, refresh_token);
-          //database call to save the tokens and user id as a host collection document
-          query.search (host, docuSearch, db, function (found){
-            //error handling within the found funtion itself 
-            if (found != null){
-              // found host so we will update their tokens to access api
-              var updateInfo = update.bothTokens (access_token, refresh_token);
-              update.updater (host, found, updateInfo,db, function (error){
-                console.log ('updated the tokens');
-                console.log (found);
-              });
-            }else{
-              console.log ('creating new user');
-              insert.insert (host, docuInsert, db, function (result){
-                //error handling withjin the insert funtion itself
-                console.log("Inserted a document into the " +host+ " collection.");
-                console.log (result);
-              });
-            };
-          });
-        });
-        // we can also pass the token to the browser to make requests from there
-        res.redirect('/#' +querystring.stringify({access_token: access_token,refresh_token: refresh_token}));
-      }else{
-        res.redirect('/#' +querystring.stringify({error: 'invalid_token'}));
-      }
-    })
+    // this request will use the object we just created to obtain the access
+    // and refresh tokens for the specific user.
+    request.post(authOptions, perpareTokenAccess)
   }
+}
+
+module.exports.perpareTokenAccess = function (error, response, body) {
+  if (!error && response.statusCode === 200) {
+    var access_token = body.access_token;
+    var refresh_token = body.refresh_token;
+    //databasecalls to save access and refresh tokens in the partyList collection
+    //under the tokens document
+    var options = {
+      url: 'https://api.spotify.com/v1/me',
+      headers: { 'Authorization': 'Bearer ' + access_token },
+      json: true
+    };
+    // use the access token to access the Spotify Web API
+    request.get(options, getHostInfo);
+    // we can also pass the token to the browser to make requests from there
+    res.redirect('/#');
+  }else{
+    res.redirect('/' +querystring.stringify({error: 'invalid_token'}));
+  }
+}
+
+module.exports.getHostInfo = function (error, response, body) {
+  var found;
+  host = (body.id).toString();
+  console.log ('searching for ' + host);
+  docuSearch = query.findHost (host);
+  var docuInsert = insert.apiInfo (host,access_token, refresh_token);
+  //database call to save the tokens and user id as a host collection document
+  query.search (host, docuSearch, db, function (found){
+    //error handling within the found funtion itself 
+    if (found != null){
+      // found host so we will update their tokens to access api
+      var updateInfo = update.bothTokens (access_token, refresh_token);
+      update.updater (host, found, updateInfo,db, function (error){
+        console.log ('updated the tokens');
+        console.log (found);
+      });
+    }else{
+      console.log ('creating new user');
+      insert.insert (host, docuInsert, db, function (result){
+        //error handling withjin the insert funtion itself
+        console.log("Inserted a document into the " +host+ " collection.");
+        console.log (result);
+      });
+    };
+  });
 }

@@ -51,10 +51,10 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   //login function (this will be handles by the fron end soon)
   //the hosts spotify ID needs to be saved as a session varaible on the front end and passes back to the API
   //with every request so we know who is actually making the requests...
-  app.get('/login', spotifyTools.login)
+  app.get('/login', spotifyTools.loginInformation)
 
   //callback will save the hosts data and some other stuff to be queried in the db later.
-  app.get('/callback', spotifyTools.handleHomePage);
+  app.get('/callback', spotifyTools.checkLoginSate);
 
 
   app.post('/createPlaylist', function (req, res){
