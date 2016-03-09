@@ -42,3 +42,9 @@ function postPLaylistResponseHandler (error, res, body) {
     res.redirect('/' +querystring.stringify({reponse: 'Success!'}));
   }
 }
+
+module.exports = {
+  createPlaylist: createPlaylist,
+  preparePlaylistRequest: preparePlaylistRequest,
+  postPLaylistResponseHandler: postPLaylistResponseHandler,
+}
