@@ -1,4 +1,5 @@
 var tools = require ('../generalTools/tools');
+var stateKey = 'spotify_auth_state'
 
 module.exports.login = function (req, res) {
   var state = tools.generateRandomString(16);
