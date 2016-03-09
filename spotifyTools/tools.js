@@ -1,5 +1,8 @@
 var tools = require ('../generalTools/tools');
 var stateKey = 'spotify_auth_state'
+var querystring = require('querystring');
+var client_id = 'a000adffbd26453fbef24e8c1ff69c3b';
+var redirect_uri = 'http://104.131.215.55:80/callback';
 
 module.exports.login = function (req, res) {
   var state = tools.generateRandomString(16);
