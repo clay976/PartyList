@@ -59,7 +59,7 @@ function getToHomePage (req, res, db) {
   }
 }
 
-function prepareTokenAccess (error, res, body) {
+function prepareTokenAccess (error, response, body, res) {
   if (!error && res.statusCode === 200) {
     var access_token = body.access_token;
     var refresh_token = body.refresh_token;
@@ -72,14 +72,14 @@ function prepareTokenAccess (error, res, body) {
     };
     // use the access token to access the Spotify Web API
     request.get(options, getHostInfo);
+    res.redirect ('/#');
     // we can also pass the token to the browser to make requests from there
   }else{
-    res.redirect ('/' +querystring.stringify({error: 'invalid_token'}));
+    console.log (error)
   }
 }
 
-function getHostInfo (error, res, body) {
-  res.redirect ('/#');
+function getHostInfo (error, response, body) {
   host = (body.id).toString();
   docuSearch = query.findHost (host);
   var docuInsert = insert.apiInfo (host,access_token, refresh_token);
