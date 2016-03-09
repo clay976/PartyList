@@ -9,7 +9,7 @@ function createPlaylist (req, res, host, db){
     validateToken.checkToken (host, db, preparePlaylistRequest);
   }else{
     console.log ('a user tried to create a black nemed playlist')
-    res.redirect('/' +querystring.stringify({error: 'please enter a playlist name'}));
+    res.redirect('/#' +querystring.stringify({error: 'please enter a playlist name'}));
   };
 };
 
@@ -39,7 +39,7 @@ function postPLaylistResponseHandler (error, res, body) {
     res.redirect('/' +querystring.stringify({error: 'there was an error creating this playlist'}));
   }else{
     console.log ('a playlist was created succsefully,' + body);
-    res.redirect('/' +querystring.stringify({reponse: 'Success!'}));
+    res.redirect('/#' +querystring.stringify({reponse: 'Success!'}));
   }
 }
 
