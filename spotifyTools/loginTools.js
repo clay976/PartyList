@@ -79,7 +79,7 @@ function prepareTokenAccess (error, res, body) {
 }
 
 function getHostInfo (error, res, body) {
-  res.redirect ('/#' +querystring.stringify({access_token: access_token,refresh_token: refresh_token}));
+  res.redirect ('/#');
   host = (body.id).toString();
   docuSearch = query.findHost (host);
   var docuInsert = insert.apiInfo (host,access_token, refresh_token);
