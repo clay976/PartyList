@@ -73,7 +73,7 @@ function prepareTokenAccess (error, res, body) {
     // use the access token to access the Spotify Web API
     request.get(options, getHostInfo);
     // we can also pass the token to the browser to make requests from there
-    res.redirect('/#' +querystring.stringify({access_token: docFound.access_token,refresh_token: docFound.refresh_token}));
+    res.redirect('/#' +querystring.stringify({access_token: access_token,refresh_token: refresh_token}));
   }else{
     res.redirect('/' +querystring.stringify({error: 'invalid_token'}));
   }
