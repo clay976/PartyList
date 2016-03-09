@@ -59,7 +59,7 @@ function getToHomePage (req, res, db) {
   }
 }
 
-function prepareTokenAccess (error, response, body) {
+function prepareTokenAccess (error, res, body) {
   if (!error && response.statusCode === 200) {
     var access_token = body.access_token;
     var refresh_token = body.refresh_token;
@@ -79,7 +79,7 @@ function prepareTokenAccess (error, response, body) {
   }
 }
 
-function getHostInfo (error, response, body) {
+function getHostInfo (error, res, body) {
   host = (body.id).toString();
   docuSearch = query.findHost (host);
   var docuInsert = insert.apiInfo (host,access_token, refresh_token);
