@@ -11,6 +11,7 @@ var assert = require('assert');
 //this is going to be a heavy refactor of this code to modularize it way more than it is
 //right now. not really sure how this is going to go...
 var tools = require ('./generalTools/tools');
+var spotifyTools = require ('./spotifyTools/tools');
 
 
 
@@ -51,21 +52,8 @@ MongoClient.connect(mongoUrl, function (err, db) {
   //login function (this will be handles by the fron end soon)
   //the hosts spotify ID needs to be saved as a session varaible on the front end and passes back to the API
   //with every request so we know who is actually making the requests...
-  app.get('/login', function (req, res) {
-    var state = tools.generateRandomString(16);
-    res.cookie(stateKey, state);
-    // your application requests authorization
-    var scope = 'user-read-private user-read-email user-read-birthdate streaming playlist-modify-private playlist-modify-public playlist-read-private';
-    res.redirect('https://accounts.spotify.com/authorize?' +
-      querystring.stringify({
-        response_type: 'code',
-        client_id: client_id,
-        scope: scope,
-        redirect_uri: redirect_uri,
-        state: state
-      })
-    );
-  });
+  app.get('/login', spotifyTools.login (req, res))
+
   //callback will save the hosts data and some other stuff to be queried in the db later.
   app.get('/callback', function (req, res) {
     //requests refresh and access tokens

@@ -1,4 +1,4 @@
-module.exports.spotifyLogin = function (req, res) {
+module.exports.login = function (req, res) {
   var state = tools.generateRandomString(16);
   res.cookie(stateKey, state);
   // your application requests authorization
