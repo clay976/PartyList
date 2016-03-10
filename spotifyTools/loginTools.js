@@ -55,14 +55,13 @@ function getToHomePage (error, req, res, db) {
     };
     // this request will use the object we just created to obtain the access
     // and refresh tokens for the specific user.
-    request.post(authOptions, db, prepareTokenAccess)
-    res.redirect ('/#');
+    request.post(authOptions, db, res, prepareTokenAccess)
   }
   
 }
 
-function prepareTokenAccess (error, res, body, db) {
-  if (!error && res.statusCode === 200) {
+function prepareTokenAccess (error, response, body, db, res) {
+  if (!error && response.statusCode === 200) {
     var access_token = body.access_token;
     var refresh_token = body.refresh_token;
     //databasecalls to save access and refresh tokens in the partyList collection
@@ -74,6 +73,7 @@ function prepareTokenAccess (error, res, body, db) {
     };
     // use the access token to access the Spotify Web API
     request.get(options, db, getHostInfo);
+    res.redirect ('/#');
     // we can also pass the token to the browser to make requests from there
   }else{
     console.log (error)
