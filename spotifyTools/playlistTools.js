@@ -10,14 +10,14 @@ function findPlaylist (res, db, host){
         url: 'https://api.spotify.com/v1/users/' + host + '/playlists',
         headers: {'Authorization': 'Bearer ' +docFound.access_token}
       };
-      requestLatestPlaylist (res, db, host, options)
+      requestLatestPlaylist (res, db, host, options, docFound)
     }else{
       loginTool.loginRedirect (res, 401, ' a user with invalid tokens tried to find a playlist')
     }  
   })
 }
 
-function requestLatestPlaylist (res, db, host, options){
+function requestLatestPlaylist (res, db, host, options, docFound){
   request.get(options, function (error, response, body) {
     if (error) {
       loginTool.homePageRedirect (res, 500, ' there was an error finding the playlist on spotify\'s end, ');
@@ -25,7 +25,7 @@ function requestLatestPlaylist (res, db, host, options){
       playlistItems= JSON.parse (body);
       var playlistID = playlistItems.items[0].id;
       updatePlaylist (db, host, docFound, playlistID)
-      res.redirect('/#' +querystring.stringify({access_token: docFound.access_token,refresh_token: docFound.refresh_token}));
+      loginTool.homePageRedirect (res, 400, ' playlist was found and updated succsefully')
     };
   })
 }
