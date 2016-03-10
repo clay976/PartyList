@@ -73,11 +73,9 @@ function retrieveAndPrepTokens (res, db, authOptions) {
       };
       // use the access token to access the Spotify Web API
       getHostInfo (res, db, options, access_token, refresh_token)
-      
-      res.redirect ('/#' +querystring.stringify({success: 'you have been added as a user'}));
       // we can also pass the token to the browser to make requests from there
     }else{
-      res.redirect ('/#' +querystring.stringify({error: 'could not add host to database'}))
+      res.redirect ('/#' +querystring.stringify({error: 'could_not_add_host_to_database'}))
       console.log (error)
     }
   })
@@ -86,7 +84,7 @@ function retrieveAndPrepTokens (res, db, authOptions) {
 function getHostInfo (res, db, options, access_token, refresh_token) {
   request.get(options, db, function (error, response, body){
     if (error){
-      res.redirect ('/#' +querystring.stringify({error: 'could not add host to database'}))
+      res.redirect ('/#' +querystring.stringify({error: 'could_not_add_host_to_database'}))
     }else{
       host = (body.id).toString();
       docuSearch = query.findHost (host);
@@ -104,10 +102,12 @@ function updateOrInsert (res, db, host, docuSearch, access_token, refresh_token)
       // found host so we will update their tokens to access api
       var updateInfo = update.bothTokens (access_token, refresh_token);
       update.updater (host, found, updateInfo,db, updateResponseHandler);
+      res.redirect ('/#' +querystring.stringify({success: 'welcome back'}));
     }else{
       console.log ('creating new user');
       var docuInsert = insert.apiInfo (host,access_token, refresh_token);
       insert.insert (host, docuInsert, db, insertResponseHandler);
+      res.redirect ('/#' +querystring.stringify({success: 'you have been added as a host user'}));
     }
   })
 }
