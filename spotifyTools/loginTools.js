@@ -113,7 +113,7 @@ function loginRedirect (res, statusCode, message){
 
 function homePageRedirect (res, statusCode, message, access_token, refresh_token){
   console.log (message)
-  res.redirect ('/callback'}))
+  res.redirect ('/callback')
 }
 
 //exports for external modules to use.
