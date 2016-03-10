@@ -114,8 +114,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
     removeSonglist (db);
   });
 
-  app.post('/message', function (req, res){
-    if (host){  
+  app.post('/message', function (req, res){ 
       //TODO: delete these console logs and produce real messages to the user on the application side of things so..
       //that they actually know whats going on in the party instead of this coming to us as devs. 
 
@@ -273,9 +272,6 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
           console.log ('a non-guest tried to add to the playlist');
         };
       });
-    }else{
-      res.redirect('/'); 
-    };
   });
 
   app.listen(80);
