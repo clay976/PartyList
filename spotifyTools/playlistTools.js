@@ -12,7 +12,7 @@ function createPlaylist (res, db, playlistName, host){
       if (playlistName) {
         preparePlaylistRequest (res, db, playlistName, host, access_token, refresh_token)
       }else{
-        loginTool.homePageRedirect (res, 400, 'a user tried to create a blank named playlist', access_token, refresh_token)
+        loginTool.homePageRedirect (res, 400, 'a user tried to create a blank named playlist')
       }
     }else{
       loginTool.loginRedirect (res, 401, 'a user with invalid tokens tried to create a playlist with bad tokens')
@@ -35,7 +35,7 @@ function preparePlaylistRequest (res, db, playlistName, host, access_token, refr
     }
   }
   request.post(options, postPLaylistResponseHandler)
-  loginTool.homePageRedirect (res, 200, 'playlsit was created succsefully', access_token, refresh_token)
+  loginTool.homePageRedirect (res, 200, 'playlsit was created succsefully')
 }
 
 //TODO: add comments

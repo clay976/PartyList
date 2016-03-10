@@ -108,12 +108,12 @@ function getHostInfo (res, db, options, access_token, refresh_token) {
 
 function loginRedirect (res, statusCode, message){
   console.log (message)
-  res.redirect (statusCode, '/')
+  res.redirect ('/')
 }
 
-function homePageRedirect (res, statusCode, message, access_token, refresh_token){
+function homePageRedirect (res, statusCode, message){
   console.log (message)
-  res.redirect (statusCode, '/#' +querystring.stringify({access_token: access_token,refresh_token: refresh_token}))
+  res.sendStatus (statusCode)
 }
 
 //exports for external modules to use.
