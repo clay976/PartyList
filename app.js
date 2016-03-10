@@ -87,26 +87,23 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   });
 
   app.post('/addGuest', function (req, res){
-    if (host){
-      var guestNum = req.body.guestNum;
-      if (guestNum){
-        var guestNum = '+1'+ guestNum;
-        var guest2Find = query.findGuest (guestNum);
-        query.search ('guests', guest2Find, db, function (guestFound){
-          if (guestFound){
-            res.send ('you already added this guest');
-          }else{
-            guest2Add = insert.guest (host, guestNum);
-            insert.insert ('guests', guest2Add, db, function (result){
-              res.redirect('/#' +querystring.stringify({access_token: docFound.access_token,refresh_token: docFound.refresh_token}));
-            });
-          };
-        });  
-      }else{
-        res.send ('you did not put a number in')
-      };
+    var host = req.body.host
+    var guestNum = req.body.guestNum;
+    if (guestNum){
+      var guestNum = '+1'+ guestNum;
+      var guest2Find = query.findGuest (guestNum);
+      query.search ('guests', guest2Find, db, function (guestFound){
+        if (guestFound){
+          res.send ('you already added this guest');
+        }else{
+          guest2Add = insert.guest (host, guestNum);
+          insert.insert ('guests', guest2Add, db, function (result){
+            res.redirect('/#' +querystring.stringify({access_token: docFound.access_token,refresh_token: docFound.refresh_token}));
+          });
+        };
+      });  
     }else{
-      res.redirect('/');
+      res.send ('you did not put a number in')
     };
   });
 
