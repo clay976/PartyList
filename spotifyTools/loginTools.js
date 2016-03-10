@@ -93,7 +93,7 @@ function getHostInfo (res, db, options, access_token, refresh_token) {
       updateOrInsert (res, db, host, docuSearch, access_token, refresh_token)
       //database call to save the tokens and user id as a host collection document
     }
-  }
+  })
 }
 
 function updateOrInsert (res, db, host, docuSearch, access_token, refresh_token){
