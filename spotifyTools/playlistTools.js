@@ -12,10 +12,10 @@ function createPlaylist (res, db, playlistName, host){
       if (playlistName) {
         preparePlaylistRequest (res, db, playlistName, host, access_token, refresh_token)
       }else{
-        loginTool.homePageRedirect (res, 400, 'a user tried to create a blank named playlist')
+        loginTool.homePageRedirect (res, 400, ' a user tried to create a blank named playlist')
       }
     }else{
-      loginTool.loginRedirect (res, 401, 'a user with invalid tokens tried to create a playlist with bad tokens')
+      loginTool.loginRedirect (res, 401, ' a user with invalid tokens tried to create a playlist with bad tokens')
     }
   })
 }
@@ -34,21 +34,25 @@ function preparePlaylistRequest (res, db, playlistName, host, access_token, refr
       'Content-Type': 'application/json',
     }
   }
-  request.post(options, postPLaylistResponseHandler)
-  loginTool.homePageRedirect (res, 200, 'playlsit was created succsefully')
+  postPlaylist (res, options, access_token, refresh_token)
 }
 
-//TODO: add comments
-function postPLaylistResponseHandler (error, response, body) {
-  if (error){
-    console.log ('there was an error creating a playlist, ' + error);
-  }else{
-    console.log ('a playlist was created succsefully,' + body);
-  }
+function postPlaylist (res, options, access_token, refresh_token){
+  request.post(options, function (error, response, body){
+    if (error){
+      console.log (error)
+      loginTool.homePageRedirect (res, 500, ' there was an error creating a playlist on spotify\'s end, ');
+    }else{
+      console.log ('a playlist was created succsefully,' + body);
+      loginTool.homePageRedirect (res, 200, ' playlsit was created succsefully')
+    }
+  })
 }
+
 
 module.exports = {
   createPlaylist: createPlaylist,
   preparePlaylistRequest: preparePlaylistRequest,
   postPLaylistResponseHandler: postPLaylistResponseHandler,
+  postPlaylist: postPlaylist
 }

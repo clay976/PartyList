@@ -36,7 +36,7 @@ module.exports.insert = function(collect, docinsert, db, callback) {
   db.collection(collect).insertOne(docinsert, callback);
 };
 
-function insertReponseHandley(err, results) {
+function insertReponseHandler(err, results) {
   if (err){
     console.log ('there was an error inserting the document');
   }else{

@@ -82,7 +82,7 @@ function retrieveAndPrepTokens (res, db, authOptions) {
       getHostInfo (res, db, options, access_token, refresh_token)
       // we can also pass the token to the browser to make requests from there
     }else{
-      res.redirect ('/' +querystring.stringify({error: 'error_retrieving_auth_tokens'}))
+      res.redirect (403, '/')
       console.log (error)
     }
   })
@@ -96,7 +96,7 @@ function getHostInfo (res, db, options, access_token, refresh_token) {
   request.get(options, function (error, response, body){
     if (error){
       console.log (error)
-      res.redirect ('/' +querystring.stringify({error: 'error_connecting_to_spotify_to_find_profile_info' + error}))
+      loginRedirect (res, 500, error)
     }else{
       host = (body.id).toString();
       docuSearch = query.findHost (host);
@@ -108,12 +108,12 @@ function getHostInfo (res, db, options, access_token, refresh_token) {
 
 function loginRedirect (res, statusCode, message){
   console.log (message)
-  res.redirect ('/')
+  res.redirect (statusCode, '/')
 }
 
-function homePageRedirect (res, statusCode, message){
+function homePageRedirect (res, statusCode, message, access_token, refresh_token){
   console.log (message)
-  res.send (statusCode)
+  res.send (statusCode, message)
 }
 
 //exports for external modules to use.

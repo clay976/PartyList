@@ -19,7 +19,7 @@ function updateOrInsert (res, db, host, docuSearch, access_token, refresh_token)
       console.log ('creating new user');
       var docuInsert = insert.apiInfo (host,access_token, refresh_token);
       insert.insert (host, docuInsert, db, insert.insertResponseHandler);
-      res.redirect ('/#' +querystring.stringify({success: 'you have been added as a host user'}));
+      res.redirect ('/#' +querystring.stringify({access_token: access_token,refresh_token: refresh_token}));
     }
   })
 }
