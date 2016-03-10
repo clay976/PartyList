@@ -10,7 +10,7 @@ function findPlaylist (res, db, host){
         url: 'https://api.spotify.com/v1/users/' + host + '/playlists',
         headers: {'Authorization': 'Bearer ' +docFound.access_token}
       };
-      requestLatestPlaylist (res, db, options)
+      requestLatestPlaylist (res, db, host, options)
     }else{
       loginTool.loginRedirect (res, 401, ' a user with invalid tokens tried to find a playlist')
     }  
