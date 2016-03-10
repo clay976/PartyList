@@ -12,7 +12,6 @@ function createPlaylist (res, db, playlistName, host){
         var refresh_token = docFound.refresh_token  
         preparePlaylistRequest (res, db, playlistName, host, access_token, refresh_token)
       }else{
-        console.log ('a user tried to create a blank named playlist')
         loginTool.homePageRedirect (res, 400, 'a user tried to create a blank named playlist')
       }
     }else{
