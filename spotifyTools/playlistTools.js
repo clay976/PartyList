@@ -2,11 +2,10 @@ var validateToken = require ('../databasetools/checkToken');
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 
-function createPlaylist (req, res, host, db){
+function createPlaylist (req, res, db){
   if (req.body.playName) {
     var playlistName = req.body.playName;
     var host = req.body.host
-    console.log (host)
     //database call to obtain access token, if access token is expired then
     //obtain new access token by using refresh token
     preparePlaylistRequest (res, db, playlistName, host)
