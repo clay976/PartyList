@@ -5,6 +5,7 @@ var querystring = require('querystring');
 function createPlaylist (req, res, host, db){
   if (req.body.playName) {
     var playlistName = req.body.playName;
+    var host = req.body.host
     //database call to obtain access token, if access token is expired then
     //obtain new access token by using refresh token
     preparePlaylistRequest (res, playlistName, host, db)
