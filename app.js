@@ -64,7 +64,9 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
     spotifyLoginTools.callback (req, res, db)
   })
 
-  app.post('/createPlaylist', spotifyPlaylistTools.createPlaylist);
+  app.post('/createPlaylist', function (req, res){
+    spotifyPlaylistTools.createPlaylist (req, res, db)
+  });
 
 
   app.post('/findPlaylist', function (req, res){
