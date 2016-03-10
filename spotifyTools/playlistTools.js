@@ -78,7 +78,8 @@ function postPlaylist (res, options, docFound){
     }
   })
 }
-function updatePlaylist (db, host, docFound, playlistID)
+
+function updatePlaylist (db, host, docFound, playlistID){
   var updateInfo = update.playlistID (playlistID)
   update.updater (host, docFound, updateInfo, db, function (err){
     if (err){
@@ -87,10 +88,12 @@ function updatePlaylist (db, host, docFound, playlistID)
       console.log ("playlist updated");
     };
   });
+}
 
 module.exports = {
   findPlaylist: findPlaylist,
   createPlaylist: createPlaylist,
   preparePlaylistRequest: preparePlaylistRequest,
-  postPlaylist: postPlaylist
+  postPlaylist: postPlaylist,
+  updatePlaylist: updatePlaylist
 }
