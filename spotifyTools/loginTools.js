@@ -105,7 +105,7 @@ function updateOrInsert (res, db, host, docuSearch, access_token, refresh_token)
       // found host so we will update their tokens to access api
       var updateInfo = update.bothTokens (access_token, refresh_token);
       update.updater (host, found, updateInfo,db, update.updateResponseHandler);
-      res.redirect ('/#' +querystring.stringify({access_token: docFound.access_token,refresh_token: docFound.refresh_token}));
+      res.redirect ('/#' +querystring.stringify({access_token: access_token,refresh_token: refresh_token}));
     }else{
       console.log ('creating new user');
       var docuInsert = insert.apiInfo (host,access_token, refresh_token);
