@@ -33,7 +33,7 @@ function login (req, res) {
 // authorization tokens for the spotify API.
 // requests refresh and access tokens for the user
 // after checking the state parameter
-function getToHomePage (error, req, res, db) {
+function getToHomePage (req, res, db) {
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
@@ -55,50 +55,61 @@ function getToHomePage (error, req, res, db) {
     };
     // this request will use the object we just created to obtain the access
     // and refresh tokens for the specific user.
-    request.post(authOptions, db, res, prepareTokenAccess)
-  }
-  
-}
-
-function prepareTokenAccess (error, response, body, db, res) {
-  if (!error && response.statusCode === 200) {
-    var access_token = body.access_token;
-    var refresh_token = body.refresh_token;
-    //databasecalls to save access and refresh tokens in the partyList collection
-    //under the tokens document
-    var options = {
-      url: 'https://api.spotify.com/v1/me',
-      headers: { 'Authorization': 'Bearer ' + access_token },
-      json: true
-    };
-    // use the access token to access the Spotify Web API
-    request.get(options, db, getHostInfo);
-    res.redirect ('/callback');
-    // we can also pass the token to the browser to make requests from there
-  }else{
-    console.log (error)
+    retrieveAndPrepTokens (db, res, authOptions);
   }
 }
 
-function getHostInfo (error, response, body, access_token, refresh_token, db) {
-  host = (body.id).toString();
-  docuSearch = query.findHost (host);
-  //database call to save the tokens and user id as a host collection document
-  query.search (host, docuSearch, db, updateOrInsert);
+function retrieveAndPrepTokens (res, db, authOptions) {
+  request.post(authOptions, function (error, response, body){
+    if (!error && response.statusCode === 200) {
+      var access_token = body.access_token;
+      var refresh_token = body.refresh_token;
+      //databasecalls to save access and refresh tokens in the partyList collection
+      //under the tokens document
+      var options = {
+        url: 'https://api.spotify.com/v1/me',
+        headers: { 'Authorization': 'Bearer ' + access_token },
+        json: true
+      };
+      // use the access token to access the Spotify Web API
+      getHostInfo (access_token, refresh_token,)
+      
+      res.redirect ('/#' +querystring.stringify({success: 'you have been added as a user'}));
+      // we can also pass the token to the browser to make requests from there
+    }else{
+      res.redirect ('/#' +querystring.stringify({error: 'could not add host to database'}))
+      console.log (error)
+    }
+  }
 }
 
-function updateOrInsert (found, access_token, refresh_token, db){
-  //error handling within the found funtion itself 
-  if (found != null){
-    console.log ('user has been found');
-    // found host so we will update their tokens to access api
-    var updateInfo = update.bothTokens (access_token, refresh_token);
-    update.updater (host, found, updateInfo,db, updateResponseHandler);
-  }else{
-    console.log ('creating new user');
-    var docuInsert = insert.apiInfo (host,access_token, refresh_token);
-    insert.insert (host, docuInsert, db, insertResponseHandler);
-  };
+function getHostInfo (res, db, options, access_token, refresh_token) {
+  request.get(options, db, function (error, response body){
+    if (error){
+      res.redirect ('/#' +querystring.stringify({error: 'could not add host to database'}))
+    }else{
+      host = (body.id).toString();
+      docuSearch = query.findHost (host);
+      updateOrInsert (res, db, host, docuSearch, access_token, refresh_token)
+      //database call to save the tokens and user id as a host collection document
+    }
+  }
+}
+
+function updateOrInsert (res, db, host, docuSearch, access_token, refresh_token){
+  query.search (host, docuSearch, db, function (found){
+    //error handling within the found funtion itself 
+    if (found != null){
+      console.log ('user has been found');
+      // found host so we will update their tokens to access api
+      var updateInfo = update.bothTokens (access_token, refresh_token);
+      update.updater (host, found, updateInfo,db, updateResponseHandler);
+    }else{
+      console.log ('creating new user');
+      var docuInsert = insert.apiInfo (host,access_token, refresh_token);
+      insert.insert (host, docuInsert, db, insertResponseHandler);
+    }
+  })
 }
 
 module.exports = {

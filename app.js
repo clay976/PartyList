@@ -47,15 +47,19 @@ var mongoUrl = 'mongodb://localhost:27017/party';
 //connect to the database, this happens when api starts, and the conection doesn't close until the API shuts down/crashes
 MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   assert.equal(null, err);
-  var stateKey = 'spotify_auth_state';
   app.use(express.static(__dirname + '/public')).use(cookieParser());
+
   //login function (this will be handles by the fron end soon)
   //the hosts spotify ID needs to be saved as a session varaible on the front end and passes back to the API
   //with every request so we know who is actually making the requests...
-  app.get('/login', spotifyLoginTools.login)
+  app.get('/login', function (req, res){
+    spotifyLoginTools.login(req, res)
+  })
 
   //callback will save the hosts data and some other stuff to be queried in the db later.
-  app.get('/callback', spotifyLoginTools.getToHomePage);
+  app.get('/callback', function (req, res){
+    spotifyLoginTools.getToHomePage (req, res, db)
+  })
 
   app.post('/createPlaylist', spotifyPlaylistTools.createPlaylist);
 
@@ -156,9 +160,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
                   if (!err){
                     messageBody = ('\n\nThis track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +( trackDocFound.numRequests+1) + ' requests!');
                     messageObject = messageTool.message (sender, messageBody);
-                    twilio.sendMessage(messageObject, function (err, responseData) {
-                      messageTool.responseHandler (err, responseData);
-                    });
+                    twilio.sendMessage(messageObject, messageTool.responseHandler (err, responseData));
                   }else{
                     console.log (err);
                   };
@@ -168,9 +170,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
                 insert.insert ('tracks', track2Insert, db, function (result){
                   messageBody = ('\n\nYour request is new, it has been added to the play queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +1+ ' request!');
                   messageObject = messageTool.message (sender, messageBody);
-                  twilio.sendMessage(messageObject, function (err, responseData) {
-                    messageTool.responseHandler (err, responseData);
-                  });
+                  twilio.sendMessage(messageObject, messageTool.responseHandler (err, responseData));
                 });
               };
 
@@ -297,7 +297,9 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
       res.redirect('/'); 
     };
   });
+
   app.listen(80);
+
   setInterval(function refreshToken (req, res) {
     if (host){
       // requesting access token from refresh token
@@ -322,11 +324,6 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
             var updateInfo = update.accessToken (access_token);
             update.updater (host, documUpdate, updateInfo,db, function (error){
               console.log ('updated the access token:');
-              query.search (host, doc, db, function (found){ 
-                if (found != null){
-                  console.log (found.access_token);
-                };
-              });
             });
           };
         });

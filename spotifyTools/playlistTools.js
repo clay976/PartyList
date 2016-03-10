@@ -13,7 +13,7 @@ function createPlaylist (req, res, host, db){
   };
 };
 
-function preparePlaylistRequest (tokenValid, docFound, playlistName, res){
+function preparePlaylistRequest (req, res, tokenValid, docFound, playlistName, res){
   if (tokenValid){   
     var options = {
       url: 'https://api.spotify.com/v1/users/' +host+ '/playlists',
@@ -33,10 +33,10 @@ function preparePlaylistRequest (tokenValid, docFound, playlistName, res){
   };
 }
 
-function postPLaylistResponseHandler (error, res, body) {
+function postPLaylistResponseHandler (error, response, body) {
   if (error){
     console.log ('there was an error creating a playlist, ' + error);
-    res.redirect('/' +querystring.stringify({error: 'there was an error creating this playlist'}));
+    res.redirect('/#' +querystring.stringify({error: 'there was an error creating this playlist'}));
   }else{
     console.log ('a playlist was created succsefully,' + body);
     res.redirect('/#' +querystring.stringify({reponse: 'Success!'}));

@@ -57,7 +57,7 @@ module.exports.updater = function (collection, doc, info,db, callback){
   db.collection(collection).updateOne(doc,info,callback);
 };
 
-function updateReponseHandley(err, results) {
+function updateReponseHandler(err, results) {
   if (err){
     console.log ('there was an error updating the document');
   }else{
