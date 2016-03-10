@@ -112,12 +112,7 @@ function loginRedirect (res, statusCode, message){
 }
 
 function homePageRedirect (res, statusCode, message, access_token, refresh_token){
-  console.log (message)
-  console.log (access_token)
-  res.redirect ('/#' +querystring.stringify({access_token: access_token,refresh_token: refresh_token}))
-  if (statusCode !== 200){
-    res.send (statusCode, message)
-  }
+  res.send (statusCode, message)
 }
 
 //exports for external modules to use.
