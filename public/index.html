@@ -28,15 +28,15 @@
           <label for="filename">Playlist</label>
           <form id="input" action="/findPlaylist" method="POST">
             <input type="submit" value="find current playlists">
+            <input type="hidden" name="host" value= "clay976">
           </form>
           <form id="input" action="/createPlaylist" method="POST">
-          <body>
             <input type="text" name="playName" placeholder="new playlist Name">
             <input type="hidden" name="host" value= "clay976">
-          </body>
             <input type="submit" value="create">
           </form>
           <form id="input" action="/resetSonglist" method="POST">
+          <input type="hidden" name="host" value= "clay976">
             <input type="submit" value="reset song requests">
           </form>
           <label for="filename">Guest Manipulation</label>

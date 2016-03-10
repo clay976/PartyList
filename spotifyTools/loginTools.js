@@ -106,6 +106,15 @@ function getHostInfo (res, db, options, access_token, refresh_token) {
   })
 }
 
+function loginRedirect (res, statusCode, message){
+  console.log (message)
+  res.redirect (statusCode, '/')
+}
+
+function homePageRedirect (res, statusCode, message, access_token, refresh_token){
+  console.log (message)
+  res.redirect (statusCode, '/#' +querystring.stringify({access_token: access_token,refresh_token: refresh_token}))
+}
 
 //exports for external modules to use.
 module.exports = {
@@ -113,4 +122,6 @@ module.exports = {
   callback: callback,
   retrieveAndPrepTokens: retrieveAndPrepTokens,
   getHostInfo: getHostInfo,
+  loginRedirect: loginRedirect,
+  homePageRedirect: homePageRedirect
 }

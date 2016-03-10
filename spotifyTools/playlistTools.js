@@ -1,50 +1,52 @@
+var loginTool = require ('./loginTools');
 var validateToken = require ('../databasetools/checkToken');
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
 
-function createPlaylist (req, res, db){
-  if (req.body.playName) {
-    var playlistName = req.body.playName;
-    var host = req.body.host
-    //database call to obtain access token, if access token is expired then
-    //obtain new access token by using refresh token
-    preparePlaylistRequest (res, db, playlistName, host)
-  }else{
-    console.log ('a user tried to create a blank nemed playlist')
-    res.redirect('/#');
+//TODO: add comments
+function createPlaylist (res, db, playlistName, host){
+  validateToken.checkToken (host, db, function (tokenValid, docFound){
+    if (tokenValid){
+      if (playlistName) {
+        var access_token = docFound.access_token
+        var refresh_token = docFound.refresh_token  
+        preparePlaylistRequest (res, db, playlistName, host, access_token, refresh_token)
+      }else{
+        console.log ('a user tried to create a blank named playlist')
+        loginTool.homePageRedirect (res, 400, 'a user tried to create a blank named playlist')
+      }
+    }else{
+      loginTool.loginRedirect (res, 401, 'a user with invalid tokens tried to create a playlist with bad tokens')
+    }
   }
 }
 
-function preparePlaylistRequest (res, db, playlistName, host){
-  console.log (host)
-  validateToken.checkToken (host, db, function (tokenValid, docFound){
-    if (tokenValid){   
-      var options = {
-        url: 'https://api.spotify.com/v1/users/' +host+ '/playlists',
-        body: JSON.stringify({
-          'name': playlistName,
-          'public': false
-        }),
-        dataType:'json',
-        headers: {
-          'Authorization': 'Bearer ' + docFound.access_token,
-          'Content-Type': 'application/json',
-        }
-      }
-      request.post(options, postPLaylistResponseHandler)
-      res.redirect('/#' +querystring.stringify({access_token: docFound.access_token,refresh_token: docFound.refresh_token}))
-    }else{
-      res.redirect('/' +querystring.stringify({error: 'token_has_expired_or_is_invalid'}))
+//TODO: add comments
+function preparePlaylistRequest (res, db, playlistName, host, access_token, refresh_token){
+  var options = {
+    url: 'https://api.spotify.com/v1/users/' +host+ '/playlists',
+    body: JSON.stringify({
+      'name': playlistName,
+      'public': false
+    }),
+    dataType:'json',
+    headers: {
+      'Authorization': 'Bearer ' + access_token,
+      'Content-Type': 'application/json',
     }
+  }
+  postPlaylist (res, db)
+  request.post(options, postPLaylistResponseHandler)
+  loginTool.homePageRedirect (res, 200, 'playlsit was created succsefully', access_token, refresh_token)
   })
 }
 
+//TODO: add comments
 function postPLaylistResponseHandler (error, response, body) {
   if (error){
     console.log ('there was an error creating a playlist, ' + error);
   }else{
     console.log ('a playlist was created succsefully,' + body);
-    
   }
 }
 
