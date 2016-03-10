@@ -73,7 +73,7 @@ function prepareTokenAccess (error, response, body, db, res) {
     };
     // use the access token to access the Spotify Web API
     request.get(options, db, getHostInfo);
-    res.redirect ('/#');
+    res.redirect ('/callback');
     // we can also pass the token to the browser to make requests from there
   }else{
     console.log (error)
