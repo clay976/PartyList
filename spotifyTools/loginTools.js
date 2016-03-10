@@ -72,7 +72,7 @@ function retrieveAndPrepTokens (res, db, authOptions) {
         json: true
       };
       // use the access token to access the Spotify Web API
-      getHostInfo (access_token, refresh_token,)
+      getHostInfo (access_token, refresh_token)
       
       res.redirect ('/#' +querystring.stringify({success: 'you have been added as a user'}));
       // we can also pass the token to the browser to make requests from there
