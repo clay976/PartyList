@@ -38,7 +38,7 @@ function preparePlaylistRequest (res, db, playlistName, host, access_token, refr
   postPlaylist (res, db)
   request.post(options, postPLaylistResponseHandler)
   loginTool.homePageRedirect (res, 200, 'playlsit was created succsefully', access_token, refresh_token)
-  })
+  }
 }
 
 //TODO: add comments
