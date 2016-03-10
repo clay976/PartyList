@@ -106,7 +106,7 @@ function getHostInfo (res, db, options, access_token, refresh_token) {
 
 //exports for external modules to use.
 module.exports = {
-  login: login,
+  preLoginScope: preLoginScope,
   callback: callback,
   retrieveAndPrepTokens: retrieveAndPrepTokens,
   getHostInfo: getHostInfo,
