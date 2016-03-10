@@ -4,12 +4,12 @@ var querystring = require('querystring');
 
 function createPlaylist (req, res, host, db){
   if (req.body.playName) {
-    console.log (req)
     var playlistName = req.body.playName;
     var host = req.body.host
+    console.log (host)
     //database call to obtain access token, if access token is expired then
     //obtain new access token by using refresh token
-    preparePlaylistRequest (res, playlistName, host, db)
+    preparePlaylistRequest (res, db, playlistName, host)
   }else{
     console.log ('a user tried to create a blank nemed playlist')
     res.redirect('/#');
