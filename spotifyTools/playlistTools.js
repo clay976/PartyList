@@ -17,6 +17,7 @@ function createPlaylist (req, res, host, db){
 }
 
 function preparePlaylistRequest (res, db, playlistName, host){
+  console.log (host)
   validateToken.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){   
       var options = {
