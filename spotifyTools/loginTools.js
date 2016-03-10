@@ -79,15 +79,14 @@ function prepareTokenAccess (error, res, body) {
   }
 }
 
-function getHostInfo (error, response, body, access_token, refresh_token) {
+function getHostInfo (error, response, body, access_token, refresh_token, db) {
   host = (body.id).toString();
   docuSearch = query.findHost (host);
-  var docuInsert = insert.apiInfo (host,access_token, refresh_token);
   //database call to save the tokens and user id as a host collection document
   query.search (host, docuSearch, db, updateOrInsert);
 }
 
-function updateOrInsert (found, access_token, refresh_token){
+function updateOrInsert (found, access_token, refresh_token, db){
   //error handling within the found funtion itself 
   if (found != null){
     console.log ('user has been found');
