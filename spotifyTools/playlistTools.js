@@ -24,8 +24,7 @@ function requestLatestPlaylist (res, db, host, options){
     }else{
       playlistItems= JSON.parse (body);
       var playlistID = playlistItems.items[0].id;
-
-      updatePLaylist (db, host, docFound, playlistID)
+      updatePlaylist (db, host, docFound, playlistID)
       res.redirect('/#' +querystring.stringify({access_token: docFound.access_token,refresh_token: docFound.refresh_token}));
     };
   })
