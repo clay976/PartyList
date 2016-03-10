@@ -64,46 +64,23 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
     spotifyLoginTools.callback (req, res, db)
   })
 
+  // createPlaylist endpoint and function
+  // extracts the information from the request
+  // to name the playlist and check who the
+  // host is. then goes through spotify to 
+  // make the playlist on their account
   app.post('/createPlaylist', function (req, res){
     var playlistName = req.body.playName;
     var host = req.body.host
     spotifyPlaylistTools.createPlaylist (res, db, playlistName, host)
-  });
+  })
 
 
   app.post('/findPlaylist', function (req, res){
-      removeSonglist (db);
-      validateToken.checkToken (host, db, function (tokenValid, docFound){
-        if (tokenValid){  
-          var options = {
-            url: 'https://api.spotify.com/v1/users/' + host + '/playlists',
-            headers: {'Authorization': 'Bearer ' +docFound.access_token}
-          };
-          request.get(options, function (error, response, body) {
-            if (!error) {
-              playlistItems= JSON.parse (body);
-              var playLid = playlistItems.items[0].id;
-              console.log ("using latest playlist: "+ playlistItems.items[0].name);
-              console.log ("playlist id: " +playLid);
-              //updating the users current playlist id with the lastest playlist that was just found.
-              var updateInfo = update.playlistID (playLid)
-              update.updater (host, docFound, updateInfo, db, function (err){
-                if (err){
-                  console.log (err);
-                }else{
-                  console.log ("playlist updated");
-                };
-              });
-              res.redirect('/#' +querystring.stringify({access_token: docFound.access_token,refresh_token: docFound.refresh_token}));
-            }else{
-              console.log (error);
-            };
-          });
-        }else{
-          res.redirect('/');
-        };  
-      });
-  });
+    var host = req.body.host
+    removeSonglist (db);
+    spotifyPlaylistTools.findPlaylist (res, db, host)
+  })
 
   app.post ('/resetAllGuests', function (req, res){
     db.clay976.drop();
@@ -303,7 +280,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
 
   app.listen(80);
 
-  setInterval(function refreshToken (req, res) {
+  /*setInterval(function refreshToken (req, res) {
     if (host){
       // requesting access token from refresh token
       doc = query.findHost (host);
@@ -332,5 +309,5 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
         });
       });
     };
-  }, 3540000);
+  }, 3540000);*/
 });
