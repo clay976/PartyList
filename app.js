@@ -144,6 +144,8 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
                   };
                 });
               }else{
+                console.log (trackID)
+                console.log (host)
                 var track2Insert = insert.track (trackID);
                 insert.insert ('tracks', track2Insert, db, function (result){
                   messageBody = ('\n\nYour request is new, it has been added to the play queue!\n\n Requests before next ad: ' +guestRequestsLeft+ '\n\n This song now has ' +1+ ' request!');
