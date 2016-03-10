@@ -84,7 +84,8 @@ function retrieveAndPrepTokens (res, db, authOptions) {
 function getHostInfo (res, db, options, access_token, refresh_token) {
   request.get(options, db, function (error, response, body){
     if (error){
-      res.redirect ('/#' +querystring.stringify({error: 'error_connecting_to_database_to_find_existing_users'}))
+      console.log (error)
+      res.redirect ('/#' +querystring.stringify({error: 'error_connecting_to_database_to_find_existing_users' + error}))
     }else{
       host = (body.id).toString();
       docuSearch = query.findHost (host);
