@@ -1,6 +1,7 @@
 var query = require ('../databasetools/querydb');
 var insert = require ('../databasetools/insert');
 var update = require ('../databasetools/update');
+var querystring = require('querystring');
 
 // searches the database and sees wheter the someone
 // who is already a host needs to just update the tokens
