@@ -49,16 +49,19 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   assert.equal(null, err);
   app.use(express.static(__dirname + '/public')).use(cookieParser());
 
-  //login function (this will be handles by the fron end soon)
-  //the hosts spotify ID needs to be saved as a session varaible on the front end and passes back to the API
-  //with every request so we know who is actually making the requests...
+  // login endpoint and function:
+  // login endpoint is hit by the front end when someone has never saved a login
+  // info for our application
+  // the are handed the scope of our app and asked to agree before actually loggin in.
   app.get('/login', function (req, res){
-    spotifyLoginTools.login(req, res)
+    spotifyLoginTools.preLoginScope(req, res)
   })
 
-  //callback will save the hosts data and some other stuff to be queried in the db later.
+  // callback endpoint and function:
+  // endpoint will get hit when a user is trying to login and
+  // has already accepted the scope of our application
   app.get('/callback', function (req, res){
-    spotifyLoginTools.getToHomePage (req, res, db)
+    spotifyLoginTools.callback (req, res, db)
   })
 
   app.post('/createPlaylist', spotifyPlaylistTools.createPlaylist);
