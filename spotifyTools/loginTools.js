@@ -33,7 +33,7 @@ function login (req, res) {
 // authorization tokens for the spotify API.
 // requests refresh and access tokens for the user
 // after checking the state parameter
-function getToHomePage (req, res, db) {
+function getToHomePage (error, req, res, db) {
   var code = req.query.code || null;
   var state = req.query.state || null;
   var storedState = req.cookies ? req.cookies[stateKey] : null;
