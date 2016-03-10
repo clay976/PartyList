@@ -7,9 +7,9 @@ var querystring = require('querystring');
 function createPlaylist (res, db, playlistName, host){
   validateToken.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){
+      var access_token = docFound.access_token
+      var refresh_token = docFound.refresh_token  
       if (playlistName) {
-        var access_token = docFound.access_token
-        var refresh_token = docFound.refresh_token  
         preparePlaylistRequest (res, db, playlistName, host, access_token, refresh_token)
       }else{
         loginTool.homePageRedirect (res, 400, 'a user tried to create a blank named playlist', access_token, refresh_token)
