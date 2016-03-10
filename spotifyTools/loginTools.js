@@ -10,6 +10,8 @@ var client_id = 'a000adffbd26453fbef24e8c1ff69c3b';
 var client_secret = '899b3ec7d52b4baabba05d6031663ba2'; // Your client secret
 var redirect_uri = 'http://104.131.215.55:80/callback';
 
+
+
 // this is what the user will see when the click login for the first
 // time, it tells them what our app will be allowed to access
 // and provides the location of where the app will go after login
@@ -102,12 +104,12 @@ function updateOrInsert (res, db, host, docuSearch, access_token, refresh_token)
       console.log ('user has been found');
       // found host so we will update their tokens to access api
       var updateInfo = update.bothTokens (access_token, refresh_token);
-      update.updater (host, found, updateInfo,db, updateResponseHandler);
+      update.updater (host, found, updateInfo,db, update.updateResponseHandler);
       res.redirect ('/#' +querystring.stringify({success: 'welcome back'}));
     }else{
       console.log ('creating new user');
       var docuInsert = insert.apiInfo (host,access_token, refresh_token);
-      insert.insert (host, docuInsert, db, insertResponseHandler);
+      insert.insert (host, docuInsert, db, insert.insertResponseHandler);
       res.redirect ('/#' +querystring.stringify({success: 'you have been added as a host user'}));
     }
   })
