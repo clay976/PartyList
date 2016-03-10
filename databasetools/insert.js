@@ -9,7 +9,7 @@ module.exports.guest = function(host,phoneNum){
   })
 };
 
-module.exports.track = function(host,trackID){
+module.exports.track = function(trackID){
   return({ 
     "trackId":trackID,
     numRequests:1,
