@@ -21,6 +21,6 @@ function updateOrInsert (res, db, host, docuSearch, access_token, refresh_token)
     }
   })
 }
-module.exports{
+module.exports = {
 	updateOrInsert: updateOrInsert
 }
