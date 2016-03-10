@@ -31,20 +31,20 @@ function preparePlaylistRequest (res, db, playlistName, host){
           'Content-Type': 'application/json',
         }
       }
-      request.post(options, postPLaylistResponseHandler);
+      request.post(options, postPLaylistResponseHandler)
+      res.redirect('/#' +querystring.stringify({access_token: docFound.access_token,refresh_token: docFound.refresh_token}))
     }else{
-      res.redirect('/' +querystring.stringify({error: 'token_has_expired_or_is_invalid'}));
+      res.redirect('/' +querystring.stringify({error: 'token_has_expired_or_is_invalid'}))
     }
   })
 }
 
-function postPLaylistResponseHandler (error, res, body) {
+function postPLaylistResponseHandler (error, response, body) {
   if (error){
     console.log ('there was an error creating a playlist, ' + error);
-    res.redirect('/#' +querystring.stringify({error: 'there_was_an_error_creating_this_playlist'}));
   }else{
     console.log ('a playlist was created succsefully,' + body);
-    res.redirect('/#' +querystring.stringify({reponse: 'Success!'}));
+    
   }
 }
 
