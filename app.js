@@ -126,6 +126,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
       var sender = req.body.From;
       var guest2Find = query.findGuest (sender);
       query.search ('guests', guest2Find, db, function (guestFound){
+        host = guestFound.host
         if (guestFound){
           var guestRequestsLeft = guestFound.numRequests;
           var trackID = guestFound.currentTrack;;
