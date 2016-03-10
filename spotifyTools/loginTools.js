@@ -75,7 +75,7 @@ function retrieveAndPrepTokens (res, db, authOptions) {
       getHostInfo (res, db, options, access_token, refresh_token)
       // we can also pass the token to the browser to make requests from there
     }else{
-      res.redirect ('/#' +querystring.stringify({error: 'could_not_add_host_to_database'}))
+      res.redirect ('/#' +querystring.stringify({error: 'error_retrieving_auth_tokens'}))
       console.log (error)
     }
   })
@@ -84,7 +84,7 @@ function retrieveAndPrepTokens (res, db, authOptions) {
 function getHostInfo (res, db, options, access_token, refresh_token) {
   request.get(options, db, function (error, response, body){
     if (error){
-      res.redirect ('/#' +querystring.stringify({error: 'could_not_add_host_to_database'}))
+      res.redirect ('/#' +querystring.stringify({error: 'error_connecting_to_database_to_find_existing_users'}))
     }else{
       host = (body.id).toString();
       docuSearch = query.findHost (host);
