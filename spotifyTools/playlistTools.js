@@ -2,7 +2,7 @@ var loginTool = require ('./loginTools');
 var validateToken = require ('../databasetools/checkToken');
 var request = require('request'); // "Request" library
 var querystring = require('querystring');
-var update = require ('./databasetools/update');
+var update = require ('../databasetools/update');
 
 function findPlaylist (res, db, host){
   validateToken.checkToken (host, db, function (tokenValid, docFound){
