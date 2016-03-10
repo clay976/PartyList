@@ -61,10 +61,10 @@ function preparePlaylistRequest (res, db, playlistName, host, docFound, access_t
       'Content-Type': 'application/json',
     }
   }
-  postPlaylist (res, options, docFound)
+  postPlaylist (res, db, options, docFound)
 }
 
-function postPlaylist (res, options, docFound){
+function postPlaylist (res, db, options, docFound){
   request.post(options, function (error, response, body){
     if (error){
       console.log (error)
