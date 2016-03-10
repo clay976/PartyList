@@ -72,7 +72,7 @@ function postPlaylist (res, options, docFound){
     }else{
       var playlist = JSON.parse (body);
       var playlistID = playlist.id
-      updatePLaylist (db, host, docFound, playlistID)
+      updatePlaylist (db, host, docFound, playlistID)
       loginTool.homePageRedirect (res, 200, ' playlsit was created succsefully')
       console.log ('a playlist was created succsefully,' + body);
     }
