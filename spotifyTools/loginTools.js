@@ -84,7 +84,7 @@ function retrieveAndPrepTokens (res, db, authOptions) {
 }
 
 function getHostInfo (res, db, options, access_token, refresh_token) {
-  request.get(options, db, function (error, response body){
+  request.get(options, db, function (error, response, body){
     if (error){
       res.redirect ('/#' +querystring.stringify({error: 'could not add host to database'}))
     }else{
