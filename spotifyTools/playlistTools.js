@@ -38,7 +38,7 @@ function preparePlaylistRequest (res, db, playlistName, host){
   })
 }
 
-function postPLaylistResponseHandler (error, response, body) {
+function postPLaylistResponseHandler (error, res, body) {
   if (error){
     console.log ('there was an error creating a playlist, ' + error);
     res.redirect('/#' +querystring.stringify({error: 'there_was_an_error_creating_this_playlist'}));
