@@ -55,7 +55,7 @@ function getToHomePage (req, res, db) {
     };
     // this request will use the object we just created to obtain the access
     // and refresh tokens for the specific user.
-    retrieveAndPrepTokens (db, res, authOptions);
+    retrieveAndPrepTokens (res, db authOptions);
   }
 }
 
