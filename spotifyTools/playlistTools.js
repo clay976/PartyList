@@ -53,6 +53,5 @@ function postPlaylist (res, options, access_token, refresh_token){
 module.exports = {
   createPlaylist: createPlaylist,
   preparePlaylistRequest: preparePlaylistRequest,
-  postPLaylistResponseHandler: postPLaylistResponseHandler,
   postPlaylist: postPlaylist
 }

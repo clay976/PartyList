@@ -43,3 +43,7 @@ function insertReponseHandler(err, results) {
     console.log ('document inserted succsefully');
   }
 }
+
+module.exports = {
+  insertReponseHandler: insertReponseHandler
+}
