@@ -11,7 +11,7 @@ function createPlaylist (req, res, host, db){
     //obtain new access token by using refresh token
     preparePlaylistRequest (res, playlistName, host, db)
   }else{
-    console.log ('a user tried to create a black nemed playlist')
+    console.log ('a user tried to create a blank nemed playlist')
     res.redirect('/#');
   }
 }
