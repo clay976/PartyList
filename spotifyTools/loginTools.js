@@ -115,7 +115,7 @@ function updateOrInsert (res, db, host, docuSearch, access_token, refresh_token)
 module.exports = {
   login: login,
   getToHomePage: getToHomePage,
-  prepareTokenAccess: prepareTokenAccess,
+  retrieveAndPrepTokens: retrieveAndPrepTokens,
   getHostInfo: getHostInfo,
   updateOrInsert: updateOrInsert
 }
