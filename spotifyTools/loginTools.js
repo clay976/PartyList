@@ -113,7 +113,7 @@ function loginRedirect (res, statusCode, message){
 
 function homePageRedirect (res, statusCode, message){
   console.log (message)
-  res.sendStatus (statusCode)
+  res.send (statusCode)
 }
 
 //exports for external modules to use.
