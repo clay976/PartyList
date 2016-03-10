@@ -56,11 +56,12 @@ function getToHomePage (req, res, db) {
     // this request will use the object we just created to obtain the access
     // and refresh tokens for the specific user.
     request.post(authOptions, prepareTokenAccess)
+    res.redirect ('/#');
   }
-  res.redirect ('/#');
+  
 }
 
-function prepareTokenAccess (error, res, body) {
+function prepareTokenAccess (error, res, body, db) {
   if (!error && res.statusCode === 200) {
     var access_token = body.access_token;
     var refresh_token = body.refresh_token;
