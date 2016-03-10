@@ -18,7 +18,7 @@ function createPlaylist (res, db, playlistName, host){
     }else{
       loginTool.loginRedirect (res, 401, 'a user with invalid tokens tried to create a playlist with bad tokens')
     }
-  }
+  })
 }
 
 //TODO: add comments
