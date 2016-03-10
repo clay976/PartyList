@@ -11,14 +11,13 @@ var client_id = 'a000adffbd26453fbef24e8c1ff69c3b';
 var client_secret = '899b3ec7d52b4baabba05d6031663ba2'; // Your client secret
 var redirect_uri = 'http://104.131.215.55:80/callback';
 
-
-
-// this is what the user will see when the click login for the first
+// this is what the user will see when they click login for the first
 // time, it tells them what our app will be allowed to access
 // and provides the location of where the app will go after login
 // with the redirect URI.
 // the state is what will be checked by the app when
-// we are trying to make calls afterward
+// we are trying to make calls afterward to make sure
+// they are still logged in
 function preLoginScope (req, res) {
   var state = tools.generateRandomString(16);
   res.cookie(stateKey, state);
@@ -65,6 +64,8 @@ function callback (req, res, db) {
 
 // makes a request to the spotify API to retrieve
 // the access and refresh tokens for the user
+// preps them in to an "options" object to
+// make another call for host info
 function retrieveAndPrepTokens (res, db, authOptions) {
   request.post(authOptions, function (error, response, body){
     if (!error && response.statusCode === 200) {
@@ -89,6 +90,8 @@ function retrieveAndPrepTokens (res, db, authOptions) {
 
 // makes another request to the spotify API to
 // obtain the rest of the host information and
+// calls the insertOrUpdate function to find them
+// and update them or straight insert them
 function getHostInfo (res, db, options, access_token, refresh_token) {
   request.get(options, function (error, response, body){
     if (error){
