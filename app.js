@@ -68,7 +68,6 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
 
 
   app.post('/findPlaylist', function (req, res){
-    if (host){
       removeSonglist (db);
       validateToken.checkToken (host, db, function (tokenValid, docFound){
         if (tokenValid){  
@@ -100,9 +99,6 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
           res.redirect('/');
         };  
       });
-    }else{
-      res.redirect('/');
-    };
   });
 
   app.post ('/resetAllGuests', function (req, res){
