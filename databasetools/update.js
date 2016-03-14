@@ -53,11 +53,11 @@ function accessToken (aToken){
   }}) 
 }
  
-function updater  (collection, doc, info,db, callback){ 
+function updater  (collection, doc, info, db, callback){ 
   db.collection(collection).updateOne(doc,info,callback)
 }
 
-function reponseHandler(error, results) {
+function reponseHandler(error) {
   if (error){
     console.log ('there was an erroror updating the document', error)
   }else{
