@@ -7,7 +7,7 @@ module.exports.guest = function(host,phoneNum){
     numRequests:4,
     "currentTrack":""
   })
-};
+}
 
 module.exports.track = function(trackID){
   return({ 
@@ -15,7 +15,7 @@ module.exports.track = function(trackID){
     numRequests:1,
     timePlayed:0 
   })
-};
+}
 
 module.exports.apiInfo = function (host, access, refresh){
   return({
@@ -30,20 +30,20 @@ module.exports.apiInfo = function (host, access, refresh){
     "playlistID":"",
     "tracks":[]
   })
-};
+}
 
 module.exports.insert = function(collect, docinsert, db, callback) {
-  db.collection(collect).insertOne(docinsert, callback);
-};
+  db.collection(collect).insertOne(docinsert, callback)
+}
 
-function insertReponseHandler(err, results) {
+function reponseHandler(err, results) {
   if (err){
-    console.log ('there was an error inserting the document');
+    console.log ('there was an error inserting the document')
   }else{
-    console.log ('document inserted succsefully');
+    console.log ('document inserted succsefully')
   }
 }
 
 module.exports = {
-  insertReponseHandler: insertReponseHandler
+  reponseHandler: reponseHandler
 }

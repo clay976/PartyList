@@ -1,5 +1,5 @@
-var twilio = require('twilio');
-http = require('http');
+var twilio = require('twilio')
+http = require('http')
 
 module.exports.message = function(toNum,body){
   return({
@@ -7,15 +7,14 @@ module.exports.message = function(toNum,body){
     from:"+12892161101",
     body:body
   })
-};
+}
 
 //message respopnse handler
-module.exports.responseHandler = function(err, responseData){
-  console.log("tring to send message"); 
+module.exports.sentHandler = function(err, responseData){
   if (!err) { // "err" is an error received during the request, if any
-    console.log(responseData.body); // outputs the body of the twilio response
+    console.log(responseData.body) // outputs the body of the twilio response
   }else{
-    console.log ("error sending message back");
-    console.log (err);
-  };
-};
+    console.log ("error sending message back")
+    console.log (err)
+  }
+}
