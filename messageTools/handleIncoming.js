@@ -1,3 +1,6 @@
+//node modules
+var request = require('request') // "Request" library
+
 // mongo variables
 var insert = require ('../databasetools/insert')
 var query = require ('../databasetools/querydb')
