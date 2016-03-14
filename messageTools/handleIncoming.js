@@ -33,12 +33,12 @@ function incoming (res, db, toNum, guestFound, messageBody){
       var options = {
         url: 'https://api.spotify.com/v1/search?q=' +messageBody+ '&type=track&limit=1'
       } 
-      searchRequest(res, db, options, guestFound, trackID)
+      searchRequest(res, db, toNum, options, guestFound, trackID)
     }
   }
 }
 
-function searchRequest(res, db, options, guestFound, trackID){  
+function searchRequest(res, db, toNum, options, guestFound, trackID){  
   request.get(options, function (error, response, body) {
     if (error) {
       respond.searchError (toNum)
