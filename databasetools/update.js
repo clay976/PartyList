@@ -59,7 +59,7 @@ function updater  (collection, doc, info, db, callback){
 
 function reponseHandler(error) {
   if (error){
-    console.log ('there was an erroror updating the document', error)
+    console.log ('there was an error updating the document', error)
   }else{
     console.log ('document updated succsefully')
   }

@@ -23,7 +23,7 @@ function requestLatestPlaylist (res, db, host, options, docFound){
     if (error) {
       loginTool.homePageRedirect (res, 500, ' there was an error finding the playlist on spotify\'s end, ')
     }else{
-      playlistItems= JSON.parse (body)
+      var playlistItems= JSON.parse (body)
       var playlistID = playlistItems.items[0].id
       updatePlaylist (db, host, docFound, playlistID)
       loginTool.homePageRedirect (res, 400, ' playlist was found and updated succsefully')
