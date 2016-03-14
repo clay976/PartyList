@@ -74,7 +74,7 @@ function postPlaylist (res, db, host, options, docFound, callback){
       var playlistID = playlist.id
       callback (db, host, docFound, playlistID)
       loginTool.homePageRedirect (res, 200, 'playlist was created succsefully')
-      console.log ('a playlist was created succsefully,')
+      console.log ('a playlist was created succsefully,'+ playlistID)
     }
   })
 }
