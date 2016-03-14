@@ -1,5 +1,7 @@
 module.exports = function(db){
 	db.collection('tracks').deleteMany (function(err, results){
-	      console.log(results)
+		if (err){
+			console.log (err, "error")
+		}
 	})
 }
