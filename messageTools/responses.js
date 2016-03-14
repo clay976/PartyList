@@ -20,7 +20,7 @@ function emptyConfirmation (toNum){
 }
 
 function requestedAlready (toNum, reqsLeft, trackRequests){
-  var responseBody = ('\n\nThis track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +reqsLeft+ '\n\n This song now has ' +trackRequests+ ' requests!')
+  var responseBody = ('\n\nThis track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +reqsLeft+ '\n\n This song now has ' +(trackRequests + 1)+ ' requests!')
   messageObject = messageTool.message (toNum, responseBody)
   twilio.sendMessage(messageObject, messageTool.sentHandler)
 }

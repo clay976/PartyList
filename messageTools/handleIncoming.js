@@ -62,7 +62,7 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
   var guestRequestsLeft = guestFound.numRequests
   var decrementGuest = update.guestConfirm ()
 
-  if (guestRequestsLeft < 2){
+  if (guestRequestsLeft < 1){
     dbTools.resetGuest (db, guestFound)
     respond.advertisment (toNum)
   }
