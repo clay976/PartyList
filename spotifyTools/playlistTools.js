@@ -32,8 +32,8 @@ function requestLatestPlaylist (res, db, host, options, docFound){
 }
 
 //TODO: add comments
-function createPlaylist (res, db, playlistName, host){
-  validateToken.checkToken (host, db, function (tokenValid, docFound, callback){
+function createPlaylist (res, db, playlistName, host, callback){
+  validateToken.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){
       var access_token = docFound.access_token
       if (playlistName) {
@@ -67,14 +67,14 @@ function preparePlaylistRequest (res, db, playlistName, host, docFound, access_t
 function postPlaylist (res, db, host, options, docFound, callback){
   request.post(options, function (error, response, body){
     if (error){
-      console.log (error)
+      console.log (error, "error")
       loginTool.homePageRedirect (res, 500, ' there was an error creating a playlist on spotify\'s end, ')
     }else{
       var playlist = JSON.parse (body)
       var playlistID = playlist.id
       callback (db, host, docFound, playlistID)
       loginTool.homePageRedirect (res, 200, ' playlist was created succsefully')
-      console.log ('a playlist was created succsefully,' + body)
+      console.log ('a playlist was created succsefully,')
     }
   })
 }
@@ -83,7 +83,7 @@ function updatePlaylist (db, host, docFound, playlistID){
   var updateInfo = update.playlistID (playlistID)
   update.updater (host, docFound, updateInfo, db, function (err){
     if (err){
-      console.log (err)
+      console.log (err, "error")
     }else{
       console.log ("playlist updated")
     }
