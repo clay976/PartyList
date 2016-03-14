@@ -20,7 +20,7 @@ app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-
 //var redirect_uri = 'http://104.131.215.55:80/callback' // Your redirect uri
 
 //required documents and tools
-var removeSonglist = require ('./databasetools/removeSonglist')
+var removeList = require ('./databasetools/removeList')
 var insert = require ('./databasetools/insert')
 var query = require ('./databasetools/querydb')
 var update = require ('./databasetools/update')
@@ -69,7 +69,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   })
 
   app.post ('/resetAllGuests', function (req, res){
-    db.clay976.drop()
+    removeList.guests (db)
   })
 
   app.post('/addGuest', function (req, res){
@@ -93,7 +93,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   })
 
   app.post('/resetSonglist', function (req, res){
-    removeSonglist (db)
+    removeList.songs (db)
   })
 
   app.post('/message', function (req, res){ 
