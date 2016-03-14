@@ -6,7 +6,7 @@ var messageTool = require ('./message')
 var query = require ('../databasetools/querydb')
 
 function notGuest (toNum){
-	var responseBody = ('sorry, you are not a guest of a party, you can send back a host code for a party. We have also send the host a text with your number in case they want to add it themselves')
+	var responseBody = ('\n\nsorry, you are not a guest of a party, you can send back a host code for a party. We have also send the host a text with your number in case they want to add it themselves')
 	messageObject = messageTool.message (toNum, responseBody)
 	twilio.sendMessage(messageObject, messageTool.sentHandler)
 }
@@ -36,7 +36,7 @@ function declineRequest (toNum){
 }
 
 function songNotFound (toNum){
-  var responseBody = ('sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
+  var responseBody = ('\n\nsorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
   messageObject = messageTool.message (sender, responseBody)
   twilio.sendMessage(messageObject, messageTool.sentHandler)
 }
@@ -62,7 +62,9 @@ function askConfirmation(db, toNum, trackAdd){
     }
     messageObject = messageTool.message (toNum, responseBody)
     console.log (responseBody)
-    twilio.sendMessage(messageObject, messageTool.sentHandler)
+    twilio.sendMessage(messageObject, function (err, responseBody){
+      console.log (responseBody)
+    })
   })
 }
 
