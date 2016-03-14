@@ -58,7 +58,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   app.post('/createPlaylist', function (req, res){
     var playlistName = req.body.playName
     var host = req.body.host
-    spotifyPlaylistTools.createPlaylist (res, db, playlistName, host, preparePlaylistRequest)
+    spotifyPlaylistTools.createPlaylist (res, db, playlistName, host, spotifyPlaylistTools.preparePlaylistRequest)
   })
 
 
