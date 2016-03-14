@@ -81,6 +81,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
       query.search ('guests', guest2Find, db, function (guestFound){
         if (guestFound){
           res.send ('you already added this guest')
+          console.log (guestFound)
         }else{
           guest2Add = insert.guest (host, guestNum)
           insert.insert ('guests', guest2Add, db, insert.responseHandler)
