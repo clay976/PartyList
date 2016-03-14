@@ -68,7 +68,7 @@ function askConfirmation(toNum, trackAdd){
 
 
 module.exports = {
-	notGuest:: notGuest,
+	notGuest: notGuest,
 	emptyConfirmation: emptyConfirmation,
 	requestedAlready: requestedAlready,
 	newRequest: newRequest,
