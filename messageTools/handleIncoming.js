@@ -39,6 +39,7 @@ function incoming (res, db, toNum, guestFound, messageBody){
 }
 
 function searchRequest(res, db, toNum, options, guestFound, trackID){  
+  console.log (guestFound)
   request.get(options, function (error, response, body) {
     if (error) {
       respond.searchError (toNum)

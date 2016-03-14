@@ -54,7 +54,6 @@ function accessToken (aToken){
 }
  
 function updater  (collection, doc, info, db, callback){ 
-  console.log ('document?')
   db.collection(collection).updateOne(doc,info,callback)
 }
 
