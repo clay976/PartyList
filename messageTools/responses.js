@@ -60,7 +60,7 @@ function askConfirmation(db, toNum, trackAdd){
       var currentSongRequests = trackDocFound.numRequests
       responseBody = ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\n Current number of requests: ' +currentSongRequests+ '\n\nSend back "Yes" to confirm, "No" to discard this request!')
     }else{
-      responseBody = ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\n This request is new!! \n\nSend back "Yes" to confirm, "No" to discard this request!')
+      responseBody = ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\n This request will be new!! \n\nSend back "Yes" to confirm, "No" to discard this request!')
     }
     messageObject = messageTool.message (toNum, responseBody)
     console.log (responseBody)
