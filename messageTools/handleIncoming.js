@@ -20,8 +20,8 @@ var dbTools = require ('../databasetools/abstractTools')
   //they are trying to confirm or decline a request they HAVE NOT made
 
 function incoming (res, db, toNum, guestFound, messageBody){
+  console.log (guestFound)
   var trackID = guestFound.currentTrack
-
   if ((messageBody.toLowerCase() === 'yes' || messageBody.toLowerCase() === 'no') && trackID === ''){
     respond.emptyConfirmation (toNum)
   }else{
@@ -39,7 +39,6 @@ function incoming (res, db, toNum, guestFound, messageBody){
 }
 
 function searchRequest(res, db, toNum, options, guestFound, trackID){  
-  console.log (guestFound)
   request.get(options, function (error, response, body) {
     if (error) {
       respond.searchError (toNum)
