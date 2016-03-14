@@ -7,7 +7,7 @@ var assert = require('assert')
 //my modules
 var spotifyLoginTools = require ('./spotifyTools/loginTools')
 var spotifyPlaylistTools = require ('./spotifyTools/playlistTools')
-var handleIncoming = require ('./messageTools/message')
+var handleIncoming = require ('./messageTools/handleIncoming')
 
 //app declaration and uses
 var app = express()
