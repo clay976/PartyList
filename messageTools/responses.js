@@ -33,19 +33,19 @@ function newRequest (toNum, reqsLeft){
 
 function declineRequest (toNum){
 	var responseBody = ('\n\nSorry about the wrong song, try modifying your search! Remember to not use any special characters.')
-	messageObject = messageTool.message (sender, responseBody)
+	messageObject = messageTool.message (toNum, responseBody)
 	twilio.sendMessage(messageObject, messageTool.sentHandler)
 }
 
 function songNotFound (toNum){
   var responseBody = ('\n\nsorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
-  messageObject = messageTool.message (sender, responseBody)
+  messageObject = messageTool.message (toNum, responseBody)
   twilio.sendMessage(messageObject, messageTool.sentHandler)
 }
 
 function advertisment (toNum){
 	var responseBody = ('\n\nYou are recieving an advertisment because you have made 5 successful request')
-	messageObject = messageTool.message (sender, responseBody)
+	messageObject = messageTool.message (toNum, responseBody)
 	twilio.sendMessage(messageObject, messageTool.sentHandler)
 }
 
