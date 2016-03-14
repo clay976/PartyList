@@ -58,7 +58,7 @@ function updater  (collection, doc, info, db, callback){
   db.collection(collection).updateOne(doc,info,callback)
 }
 
-function reponseHandler(error) {
+function responseHandler(error) {
   if (error){
     console.log (error, 'there was an error updating the document')
   }else{
@@ -75,5 +75,5 @@ module.exports = {
   bothTokens: bothTokens,
   accessToken: accessToken,
   updater: updater,
-  reponseHandler: reponseHandler
+  responseHandler: responseHandler
 }

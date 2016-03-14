@@ -81,13 +81,7 @@ function postPlaylist (res, db, host, options, docFound, callback){
 
 function updatePlaylist (db, host, docFound, playlistID){
   var updateInfo = update.playlistID (playlistID)
-  update.updater (host, docFound, updateInfo, db, function (err){
-    if (err){
-      console.log (err, "error")
-    }else{
-      console.log ("playlist updated")
-    }
-  })
+  update.updater (host, docFound, updateInfo, db, update.responseHandler)
 }
 
 module.exports = {
