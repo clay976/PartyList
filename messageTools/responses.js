@@ -64,9 +64,7 @@ function askConfirmation(db, toNum, trackAdd){
     }
     messageObject = messageTool.message (toNum, responseBody)
     console.log (responseBody)
-    twilio.sendMessage(messageObject, function (err, responseBody){
-      console.log (responseBody)
-    })
+    twilio.sendMessage(messageObject, messageTool.sentHandler)
   })
 }
 

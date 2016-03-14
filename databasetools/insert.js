@@ -1,6 +1,6 @@
 var assert = require('assert')
 
-module.exports.guest = function(host,phoneNum){
+function guest (host,phoneNum){
   return({
     "host": host,
     "phone":phoneNum,
@@ -9,7 +9,7 @@ module.exports.guest = function(host,phoneNum){
   })
 }
 
-module.exports.track = function(trackID){
+function track (trackID){
   return({ 
     "trackId":trackID,
     numRequests:1,
@@ -17,7 +17,7 @@ module.exports.track = function(trackID){
   })
 }
 
-module.exports.apiInfo = function (host, access, refresh){
+function apiInfo (host, access, refresh){
   return({
     "host":host,
     "clientId": "000adffbd26453fbef24e8c1ff69c3b",
@@ -32,7 +32,7 @@ module.exports.apiInfo = function (host, access, refresh){
   })
 }
 
-module.exports.insert = function(collect, docinsert, db, callback) {
+function insert (collect, docinsert, db, callback) {
   db.collection(collect).insertOne(docinsert, callback)
 }
 
@@ -45,5 +45,9 @@ function reponseHandler(err, results) {
 }
 
 module.exports = {
+  guest: guest,
+  track: track,
+  apiInfo: apiInfo,
+  insert: insert,
   reponseHandler: reponseHandler
 }
