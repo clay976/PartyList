@@ -47,7 +47,7 @@ function advertisment (toNum){
 	twilio.sendMessage(messageObject, sentHandler)
 }
 
-function askConfirmation(toNum, trackAdd){
+function askConfirmation(db, toNum, trackAdd){
 	var trackID =trackAdd.tracks.items[0].id
 	var trackTitle = trackAdd.tracks.items[0].name
 	var trackArtist = trackAdd.tracks.items[0].artists[0].name

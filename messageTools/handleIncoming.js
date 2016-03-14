@@ -48,7 +48,7 @@ function searchRequest(res, db, toNum, options, guestFound, trackID){
       if (trackAdd.tracks.total>0){
         var guestReqObj = update.guestRequest (trackID)
         update.updater ('guests', guestFound, guestReqObj, db, update.responseHandler)
-        respond.askConfirmation (toNum, trackAdd)
+        respond.askConfirmation (db, toNum, trackAdd)
       }else{
         respond.songNotFound (toNum)
       }
