@@ -1,66 +1,78 @@
 var assert = require('assert')
 
 //update playlist document
-module.exports.playlistID = function(ID){
+function playlistID (ID){
   return ({
     $set:{ "playlistID": ID }
   }) 
-};
+}
 
 //update guests functions
-module.exports.guestRequest = function(trackID){
+function guestRequest (trackID){
   return ({
     $set: { "currentTrack": trackID }
   }) 
-};
+}
 
-module.exports.guestConfirm = function(){
+function guestConfirm(){
   return ({
     $inc: { numRequests: -1},
     $set: { "currentTrack": "" }
   }) 
-};
+}
 
-module.exports.guestReset = function(){
+function guestReset(){
   return ({
     $set: { numRequests: 4}
   }) 
-};
+}
 
 //update tracks function 
-module.exports.tracksReqd = function(){
+function tracksReqd (){
   return ({
     $inc: { numRequests: 1}
   }) 
-};
+}
 
 //update api info functions
-module.exports.bothTokens = function(aToken, rToken){
-  var d = new Date();
-  time = d.getTime();
+function bothTokens (aToken, rToken){
+  var d = new Date()
+  time = d.getTime()
   return ({$set:{ 
     "access_token": aToken,
     "refresh_token": rToken,
     "time": time
   }}) 
-};
-module.exports.accessToken = function(aToken){
-  var d = new Date();
-  time = d.getTime();
+}
+function accessToken (aToken){
+  var d = new Date()
+  time = d.getTime()
   return ({$set:{ 
     "access_token": aToken,
     "time": time 
   }}) 
-};
+}
  
-module.exports.updater = function (collection, doc, info,db, callback){ 
-  db.collection(collection).updateOne(doc,info,callback);
-};
+function updater  (collection, doc, info, db, callback){ 
+  db.collection(collection).updateOne(doc,info,callback)
+}
 
-function updateReponseHandler(err, results) {
-  if (err){
-    console.log ('there was an error updating the document');
+function responseHandler(error) {
+  if (error){
+    console.log (error, 'there was an error updating the document')
   }else{
-    console.log ('document updated succsefully');
+    console.log ('document updated succsefully')
   }
+}
+
+module.exports = {
+  playlistID: playlistID,
+  guestRequest: guestRequest,
+  guestConfirm: guestConfirm,
+  guestReset: guestReset,
+  tracksReqd: tracksReqd,
+  bothTokens: bothTokens,
+  accessToken: accessToken,
+  updater: updater,
+  responseHandler: responseHandler
 }

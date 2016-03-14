@@ -1,23 +1,23 @@
 var assert = require('assert')
 
-module.exports.guest = function(host,phoneNum){
+function guest (host,phoneNum){
   return({
     "host": host,
     "phone":phoneNum,
     numRequests:4,
     "currentTrack":""
   })
-};
+}
 
-module.exports.track = function(trackID){
+function track (trackID){
   return({ 
     "trackId":trackID,
     numRequests:1,
     timePlayed:0 
   })
-};
+}
 
-module.exports.apiInfo = function (host, access, refresh){
+function apiInfo (host, access, refresh){
   return({
     "host":host,
     "clientId": "000adffbd26453fbef24e8c1ff69c3b",
@@ -30,20 +30,24 @@ module.exports.apiInfo = function (host, access, refresh){
     "playlistID":"",
     "tracks":[]
   })
-};
+}
 
-module.exports.insert = function(collect, docinsert, db, callback) {
-  db.collection(collect).insertOne(docinsert, callback);
-};
+function insert (collect, docinsert, db, callback) {
+  db.collection(collect).insertOne(docinsert, callback)
+}
 
-function insertReponseHandler(err, results) {
+function reponseHandler(err, results) {
   if (err){
-    console.log ('there was an error inserting the document');
+    console.log ('there was an error inserting the document')
   }else{
-    console.log ('document inserted succsefully');
+    console.log ('document inserted succsefully')
   }
 }
 
 module.exports = {
-  insertReponseHandler: insertReponseHandler
+  guest: guest,
+  track: track,
+  apiInfo: apiInfo,
+  insert: insert,
+  reponseHandler: reponseHandler
 }
