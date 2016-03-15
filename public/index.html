@@ -5,36 +5,47 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <style type="text/css">
       #login, #loggedin {
-        display: none;
+        display: none
       }
       .text-overflow {
-        overflow: hidden;
-        text-overflow: ellipsis;
-        white-space: nowrap;
-        width: 500px;
+        overflow: hidden
+        text-overflow: ellipsis
+        white-space: nowrap
+        width: 500px
       }
     </style>
   </head>
   <body>
     <div class="container" id= "contain">
       <div id="login">
-        <h1>Log in to let spoitify do awesome things</h1>
+        <h1>Log in to let spotify do awesome things</h1>
         <a href="/login" class="btn btn-primary">Log in</a>
       </div>
       <div id="loggedin">
         <div id="user-profile"></div>
           <button id= "obtain-new-token" name = "obtain new token"> obtain new token </button>
         <div id="oauth"></div>
-          <label for="filename">create new playlist</label>
+          <label for="filename">Playlist</label>
           <form id="input" action="/findPlaylist" method="POST">
             <input type="submit" value="find current playlists">
+            <input type="hidden" name="host" value= "clay976">
           </form>
           <form id="input" action="/createPlaylist" method="POST">
             <input type="text" name="playName" placeholder="new playlist Name">
+            <input type="hidden" name="host" value= "clay976">
             <input type="submit" value="create">
+          </form>
+          <form id="input" action="/resetSonglist" method="POST">
+          <input type="hidden" name="host" value= "clay976">
+            <input type="submit" value="reset song requests">
+          </form>
+          <label for="filename">Guest Manipulation</label>
+          <form id="input" action="/resetAllGuests" method="POST">
+            <input type="submit" value="Remove All Guests">
           </form>
           <form id="input" action="/addGuest" method="POST">
             <input type="text" name="guestNum" placeholder="ex. 9055554260">
+            <input type="hidden" name="host" value= "clay976">
             <input type="submit" value="add">
           </form>
         </div>
@@ -85,48 +96,48 @@
          * @return Object
          */
         function getHashParams() {
-          var hashParams = {};
-          var e, r = /([^&;=]+)=?([^&;]*)/g,
-              q = window.location.hash.substring(1);
+          var hashParams = {}
+          var e, r = /([^&=]+)=?([^&]*)/g,
+              q = window.location.hash.substring(1)
           while ( e = r.exec(q)) {
-             hashParams[e[1]] = decodeURIComponent(e[2]);
+             hashParams[e[1]] = decodeURIComponent(e[2])
           }
-          return hashParams;
+          return hashParams
         }
         var userProfileSource = document.getElementById('user-profile-template').innerHTML,
             userProfileTemplate = Handlebars.compile(userProfileSource),
-            userProfilePlaceholder = document.getElementById('user-profile');
+            userProfilePlaceholder = document.getElementById('user-profile')
         var oauthSource = document.getElementById('oauth-template').innerHTML,
             oauthTemplate = Handlebars.compile(oauthSource),
-            oauthPlaceholder = document.getElementById('oauth');
-        var params = getHashParams();
+            oauthPlaceholder = document.getElementById('oauth')
+        var params = getHashParams()
         var access_token = params.access_token,
             refresh_token = params.refresh_token,
-            error = params.error;
+            error = params.error
         if (error) {
-          alert('There was an error during the authentication');
+          alert('There was an error during the authentication')
         } else {
           if (access_token) {
             // render oauth info
             oauthPlaceholder.innerHTML = oauthTemplate({
               access_token: access_token,
               refresh_token: refresh_token
-            });
+            })
             $.ajax({
                 url: 'https://api.spotify.com/v1/me',
                 headers: {
                   'Authorization': 'Bearer ' + access_token
                 },
                 success: function(response) {
-                  userProfilePlaceholder.innerHTML = userProfileTemplate(response);
-                  $('#login').hide();
-                  $('#loggedin').show();
+                  userProfilePlaceholder.innerHTML = userProfileTemplate(response)
+                  $('#login').hide()
+                  $('#loggedin').show()
                 }
-            });
+            })
           } else {
               // render initial screen
-              $('#login').show();
-              $('#loggedin').hide();
+              $('#login').show()
+              $('#loggedin').hide()
           }
           document.getElementById('obtain-new-token').addEventListener('click', function() {
             $.ajax({
@@ -135,14 +146,14 @@
                 'refresh_token': refresh_token
               }
             }).done(function(data) {
-              access_token = data.access_token;
+              access_token = data.access_token
               oauthPlaceholder.innerHTML = oauthTemplate({
                 access_token: access_token,
                 refresh_token: refresh_token
-              });
-            });
-          }, false);
+              })
+            })
+          }, false)
         }
-      })();
+      })()
     </script>
 </html>
