@@ -24,7 +24,7 @@ var validateToken = require ('./databasetools/checkToken')
 
 //mongo database variables
 var MongoClient = require('mongodb').MongoClient
-var dbTools = require ('../databasetools/abstractTools')
+var dbTools = require ('./databasetools/abstractTools')
 var mongoUrl = 'mongodb://localhost:27017/party'
 
 
