@@ -15,11 +15,6 @@ var app = express()
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
-//global variables the api needs
-//var client_id = 'a000adffbd26453fbef24e8c1ff69c3b' // Your client id
-//var client_secret = '899b3ec7d52b4baabba05d6031663ba2' // Your client secret
-//var redirect_uri = 'http://104.131.215.55:80/callback' // Your redirect uri
-
 //required documents and tools
 var removeList = require ('./databasetools/removeList')
 var insert = require ('./databasetools/insert')
@@ -29,7 +24,9 @@ var validateToken = require ('./databasetools/checkToken')
 
 //mongo database variables
 var MongoClient = require('mongodb').MongoClient
+var dbTools = require ('../databasetools/abstractTools')
 var mongoUrl = 'mongodb://localhost:27017/party'
+
 
 //connect to the database, this happens when api starts, and the conection doesn't close until the API shuts down/crashes
 MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
@@ -62,13 +59,22 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
     spotifyPlaylistTools.createPlaylist (res, db, playlistName, host, spotifyPlaylistTools.preparePlaylistRequest)
   })
 
+  // searches the spotify account and sets
+  // their most recent playlist ID as the
+  // current playlist to add to.
 
+  // TODO: FIX THIS, so that it does not
+  // allow for a playlist that the user
+  // does not control.
   app.post('/findPlaylist', function (req, res){
     var host = req.body.host
     removeList.songs (db)
     spotifyPlaylistTools.findPlaylist (res, db, host)
   })
 
+  // resetAllGuests endpoint and function:
+  // removes all the guest from a current
+  // host's party
   app.post ('/resetAllGuests', function (req, res){
     removeList.guests (db)
   })
@@ -76,21 +82,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   app.post('/addGuest', function (req, res){
     var host = req.body.host
     var guestNum = req.body.guestNum
-    if (guestNum.length === 10){
-      var guestNum = '+1'+ guestNum
-      var guest2Find = query.findGuest (guestNum)
-      query.search ('guests', guest2Find, db, function (guestFound){
-        if (guestFound){
-          res.send ('you already added this guest')
-          console.log (guestFound)
-        }else{
-          guest2Add = insert.guest (host, guestNum)
-          insert.insert ('guests', guest2Add, db, insert.responseHandler)
-        }
-      })
-    }else{
-      res.send ('number recieved not in the right format, please retry with the format "1234567890" (no speacial characters)')
-    }
+    dbTools.addGuest (res, dc, host, guestNum)
   })
 
   app.post('/resetSonglist', function (req, res){
