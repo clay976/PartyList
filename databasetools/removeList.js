@@ -1,3 +1,5 @@
+var loginTool = require ('../spotifyTools/loginTools')
+
 function songs (db){
 	db.collection('tracks').deleteMany (function(err, results){
 		if (err){
