@@ -30,7 +30,7 @@ function resetGuest (db, guest2Find){
   update.updater ('guests', guest2Find, updateObj, db, update.responseHandler)
 }
 
-function addGuest (res, dc, host, guestNum){
+function addGuest (res, db, host, guestNum){
   if (guestNum.length === 10){
     var guestNum = '+1'+ guestNum
     var guest2Find = query.findGuest (guestNum)
@@ -50,5 +50,6 @@ function addGuest (res, dc, host, guestNum){
 
 module.exports = {
   UOIHost: UOIHost,
-  resetGuest: resetGuest
+  resetGuest: resetGuest,
+  addGuest: addGuest
 }
