@@ -83,7 +83,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   app.post('/addGuest', function (req, res){
     var host = req.body.host
     var guestNum = req.body.guestNum
-    dbTools.addGuest (res, dc, host, guestNum)
+    dbTools.addGuest (res, db, host, guestNum)
   })
 
   app.post('/resetSonglist', function (req, res){
