@@ -40,7 +40,7 @@ function preLoginScope (req, res) {
 // authorization tokens for the spotify API.
 // requests refresh and access tokens for the user
 // after checking the state parameter
-function callback (req, res, db, callback) {
+function homepage (req, res, db, callback) {
   var code = req.query.code || null
   var state = req.query.state || null
   var storedState = req.cookies ? req.cookies[stateKey] : null
