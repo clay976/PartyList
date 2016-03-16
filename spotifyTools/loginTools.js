@@ -40,7 +40,7 @@ function preLoginScope (req, res) {
 // authorization tokens for the spotify API.
 // requests refresh and access tokens for the user
 // after checking the state parameter
-function callback (req, res, db) {
+function callback (req, res, db, callback) {
   var code = req.query.code || null
   var state = req.query.state || null
   var storedState = req.cookies ? req.cookies[stateKey] : null
@@ -62,7 +62,7 @@ function callback (req, res, db) {
     }
     // this request will use the object we just created to obtain the access
     // and refresh tokens for the specific user.
-    retrieveAndPrepTokens (res, db, authOptions)
+    callback (res, db, authOptions, getHostInfo)
   }
 }
 
@@ -70,7 +70,7 @@ function callback (req, res, db) {
 // the access and refresh tokens for the user
 // preps them in to an "options" object to
 // make another call for host info
-function retrieveAndPrepTokens (res, db, authOptions) {
+function retrieveAndPrepTokens (res, db, authOptions, callback) {
   request.post(authOptions, function (error, response, body){
     if (!error && response.statusCode === 200) {
       var access_token = body.access_token
@@ -83,7 +83,7 @@ function retrieveAndPrepTokens (res, db, authOptions) {
         json: true
       }
       // use the access token to access the Spotify Web API
-      getHostInfo (res, db, options, access_token, refresh_token)
+      callback (res, db, options, access_token, refresh_token, dbTools.UOIHost)
       // we can also pass the token to the browser to make requests from there
     }else{
       res.redirect (403, '/')
@@ -96,7 +96,7 @@ function retrieveAndPrepTokens (res, db, authOptions) {
 // obtain the rest of the host information and
 // calls the insertOrUpdate function to find them
 // and update them or straight insert them
-function getHostInfo (res, db, options, access_token, refresh_token) {
+function getHostInfo (res, db, options, access_token, refresh_token, callback) {
   request.get(options, function (error, response, body){
     if (error){
       console.log (error)
@@ -104,7 +104,7 @@ function getHostInfo (res, db, options, access_token, refresh_token) {
     }else{
       host = (body.id).toString()
       docuSearch = query.findHost (host)
-      dbTools.UOIHost (res, db, host, docuSearch, access_token, refresh_token)
+      callback (res, db, host, docuSearch, access_token, refresh_token)
       //database call to save the tokens and user id as a host collection document
     }
   })

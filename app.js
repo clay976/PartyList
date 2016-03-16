@@ -45,7 +45,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // endpoint will get hit when a user is trying to login and
   // has already accepted the scope of our application
   app.get('/callback', function (req, res){
-    spotifyLoginTools.callback (req, res, db)
+    spotifyLoginTools.callback (req, res, db, spotifyPlaylistTools.retrieveAndPrepTokens)
   })
 
   // createPlaylist endpoint and function
@@ -76,7 +76,8 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // removes all the guest from a current
   // host's party
   app.post ('/resetAllGuests', function (req, res){
-    removeList.guests (db)
+    var host = req.body.host
+    removeList.guests (res, db, host)
   })
 
   app.post('/addGuest', function (req, res){

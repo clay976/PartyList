@@ -11,21 +11,21 @@ function findPlaylist (res, db, host){
         url: 'https://api.spotify.com/v1/users/' + host + '/playlists',
         headers: {'Authorization': 'Bearer ' +docFound.access_token}
       }
-      requestLatestPlaylist (res, db, host, options, docFound)
+      requestLatestPlaylist (res, db, host, options, docFound, updatePlaylist)
     }else{
       loginTool.loginRedirect (res, 401, ' a user with invalid tokens tried to find a playlist')
     }  
   })
 }
 
-function requestLatestPlaylist (res, db, host, options, docFound){
+function requestLatestPlaylist (res, db, host, options, docFound, callback){
   request.get(options, function (error, response, body) {
     var playlistItems= JSON.parse (body)
     if (error) {
       loginTool.homePageRedirect (res, 500, 'there was an error finding the playlist on spotify\'s end, ')
     }else{
       var playlistID = playlistItems.items[0].id
-      updatePlaylist (db, host, docFound, playlistID)
+      callback (db, host, docFound, playlistID)
       loginTool.homePageRedirect (res, 200, 'playlist was found and updated succsefully')
     }
   })
