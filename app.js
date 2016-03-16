@@ -68,7 +68,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // does not control.
   app.post('/findPlaylist', function (req, res){
     var host = req.body.host
-    removeList.songs (db)
+    removeList.songs (res, db, host)
     spotifyPlaylistTools.findPlaylist (res, db, host)
   })
 
