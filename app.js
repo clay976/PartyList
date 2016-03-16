@@ -87,7 +87,8 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   })
 
   app.post('/resetSonglist', function (req, res){
-    removeList.songs (db)
+    var host = req.body.host
+    removeList.songs (res, db, host)
   })
 
   app.post('/message', function (req, res){ 

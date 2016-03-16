@@ -1,6 +1,6 @@
 var loginTool = require ('../spotifyTools/loginTools')
 
-function songs (db){
+function songs (res, db, host){
 	db.collection('tracks').deleteMany (function(err, results){
 		if (err){
 			loginTool.homePageRedirect (res, 400, 'songs were not dropped from the database because of an error')
