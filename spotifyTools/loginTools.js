@@ -123,7 +123,7 @@ function homePageRedirect (res, statusCode, message){
 //exports for external modules to use.
 module.exports = {
   preLoginScope: preLoginScope,
-  callback: callback,
+  homepage: homepage,
   retrieveAndPrepTokens: retrieveAndPrepTokens,
   getHostInfo: getHostInfo,
   loginRedirect: loginRedirect,
