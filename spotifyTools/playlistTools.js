@@ -4,6 +4,7 @@ var request = require('request') // "Request" library
 var querystring = require('querystring')
 var update = require ('../databasetools/update')
 
+//TODO: add comments
 function findPlaylist (res, db, host){
   validateToken.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){
@@ -18,6 +19,7 @@ function findPlaylist (res, db, host){
   })
 }
 
+//TODO: add comments
 function requestLatestPlaylist (res, db, host, options, docFound, callback){
   request.get(options, function (error, response, body) {
     var playlistItems= JSON.parse (body)
@@ -64,6 +66,7 @@ function preparePlaylistRequest (res, db, playlistName, host, docFound, access_t
   callback (res, db, host, options, docFound, updatePlaylist)
 }
 
+//TODO: add comments
 function postPlaylist (res, db, host, options, docFound, callback){
   request.post(options, function (error, response, body){
     if (error){
