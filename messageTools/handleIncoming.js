@@ -49,7 +49,7 @@ function searchRequest(res, db, toNum, options, guestFound){
         var guestReqObj = update.guestRequest (trackID)
         console.log ('attempting to add song to guests document')
         update.updater ('guests', guestFound, guestReqObj, db, update.responseHandler)
-        respond.askConfirmation (db, toNum, trackAdd)
+        respond.askConfirmation (res, db, trackAdd)
       }else{
         respond.songNotFound (toNum)
       }
