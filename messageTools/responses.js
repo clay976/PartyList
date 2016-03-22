@@ -68,7 +68,7 @@ function askConfirmation(res, db, trackAdd){
 	var trackID =trackAdd.tracks.items[0].id
 	var trackTitle = trackAdd.tracks.items[0].name
 	var trackArtist = trackAdd.tracks.items[0].artists[0].name
-  res.set (200, {'Content-Type': 'text/xml'});
+  res.setHeader('Content-Type', 'text/xml')
 
   query.search ('tracks', trackObjID, db, function (trackDocFound){
     if (trackDocFound){
