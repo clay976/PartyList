@@ -23,7 +23,7 @@ function incoming (res, db, toNum, guestFound, messageBody){
   var trackID = guestFound.currentTrack
 
   if ((messageBody.toLowerCase() === 'yes' || messageBody.toLowerCase() === 'no') && trackID === ''){
-    respond.emptyConfirmation (toNum)
+    respond.emptyConfirmation (res)
   }else{
     if (messageBody.toLowerCase() === 'yes'){
       requestConfirmed (res, db, toNum, guestFound, trackID)
