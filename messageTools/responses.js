@@ -77,7 +77,7 @@ function askConfirmation(res, db, trackAdd){
     }else{
       resp.message ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\n This request will be new!! \n\nSend back "Yes" to confirm, "No" to discard this request!')
     }
-    res.send(resp.toString());
+    res.Message(resp.toString());
   })
 }
 
