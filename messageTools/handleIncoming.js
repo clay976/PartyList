@@ -30,7 +30,7 @@ function incoming (res, db, toNum, guestFound, messageBody){
     }else if (messageBody.toLowerCase() === 'no'){
       var guestReqObj = update.guestRequest ('')
 
-      respond.declineRequest (toNum)
+      respond.declineRequest (res)
       update.updater ('guests', guestFound, guestReqObj, db, update.responseHandler)
     }else{
       var options = {
@@ -45,7 +45,7 @@ function incoming (res, db, toNum, guestFound, messageBody){
 function searchRequest(res, db, toNum, options, guestFound){  
   request.get(options, function (error, response, body) {
     if (error) {
-      respond.searchError (toNum)
+      respond.searchError (res)
       console.log ('error searching spotify for the song on request')
     }else{
       trackAdd = JSON.parse(body)
@@ -57,7 +57,7 @@ function searchRequest(res, db, toNum, options, guestFound){
         update.updater ('guests', guestFound, guestReqObj, db, update.responseHandler)
         respond.askConfirmation (res, db, trackAdd)
       }else{
-        respond.songNotFound (toNum)
+        respond.songNotFound (res)
       }
     }
   })
@@ -77,12 +77,12 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
       var updateObj = update.tracksReqd ()
       var trackRequests = trackDocFound.numRequests
       
-      respond.requestedAlready (toNum, guestRequestsLeft, trackRequests)
+      respond.requestedAlready (res, guestRequestsLeft, trackRequests)
       update.updater ('tracks', trackDocFound, updateObj, db, update.responseHandler)
     }else{        
       var track2Insert = insert.track (trackID)
       
-      respond.newRequest (toNum, guestRequestsLeft)
+      respond.newRequest (res, guestRequestsLeft)
       insert.insert ('tracks', track2Insert, db, insert.responseHandler)
     }
   })

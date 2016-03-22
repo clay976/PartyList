@@ -1,6 +1,4 @@
 //node modules
-var twilioAccountSID = "AC85573f40ef0c3fb0c5aa58477f61b02e";
-var twilioAccountSecret = "fcea26b2b0ae541d904ba23e12e2c499";
 var twilio = require('twilio')
 
 //my modules
@@ -55,11 +53,14 @@ function songNotFound (res){
   res.send(resp.toString());
 }
 
-function advertisment (res){
+function advertisment (toNum){
+  var twilioAccountSID = "AC85573f40ef0c3fb0c5aa58477f61b02e";
+  var twilioAccountSecret = "fcea26b2b0ae541d904ba23e12e2c499";
+  var client = require('twilio/lib')(twilioAccountSID, twilioAccountSecret);
+  var responseBody = ('\n\nYou are recieving an advertisment because you have made 5 successful request')
 
-
-	var responseBody = ('\n\nYou are recieving an advertisment because you have made 5 successful request')
-	twilio.Message(responseBody, messageTool.sentHandler)
+  messageObject = messageTool.message (sender, responseBody)
+  client.sendMessage(messageObject, sentHandler)
 }
 
 function askConfirmation(res, db, trackAdd){
