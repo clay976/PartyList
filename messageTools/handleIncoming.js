@@ -21,17 +21,22 @@ var dbTools = require ('../databasetools/abstractTools')
 
 function incoming (res, db, toNum, guestFound, messageBody){
   var trackID = guestFound.currentTrack
+
   if ((messageBody.toLowerCase() === 'yes' || messageBody.toLowerCase() === 'no') && trackID === ''){
     respond.emptyConfirmation (toNum)
   }else{
     if (messageBody.toLowerCase() === 'yes'){
       requestConfirmed (res, db, toNum, guestFound, trackID)
     }else if (messageBody.toLowerCase() === 'no'){
+      var guestReqObj = update.guestRequest ('')
+
       respond.declineRequest (toNum)
+      update.updater ('guests', guestFound, guestReqObj, db, update.responseHandler)
     }else{
       var options = {
         url: 'https://api.spotify.com/v1/search?q=' +messageBody+ '&type=track&limit=1'
       } 
+
       searchRequest(res, db, toNum, options, guestFound)
     }
   }
@@ -47,6 +52,7 @@ function searchRequest(res, db, toNum, options, guestFound){
       if (trackAdd.tracks.total>0){
         var trackID = trackAdd.tracks.items[0].id; 
         var guestReqObj = update.guestRequest (trackID)
+        
         console.log ('attempting to add song to guests document')
         update.updater ('guests', guestFound, guestReqObj, db, update.responseHandler)
         respond.askConfirmation (res, db, trackAdd)

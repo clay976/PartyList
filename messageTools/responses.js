@@ -68,6 +68,7 @@ function askConfirmation(res, db, trackAdd){
 	var trackID =trackAdd.tracks.items[0].id
 	var trackTitle = trackAdd.tracks.items[0].name
 	var trackArtist = trackAdd.tracks.items[0].artists[0].name
+  resp.writeHead =(200, {'Content-Type': 'text/xml'});
 
   query.search ('tracks', trackObjID, db, function (trackDocFound){
     if (trackDocFound){
@@ -76,7 +77,7 @@ function askConfirmation(res, db, trackAdd){
     }else{
       resp.message = ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\n This request will be new!! \n\nSend back "Yes" to confirm, "No" to discard this request!')
     }
-    resp.writeHead =(200, {'Content-Type': 'text/xml'});
+    console.log (resp.toString())
     res.send(resp.toString());
   })
 }
