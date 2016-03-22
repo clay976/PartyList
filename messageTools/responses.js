@@ -1,7 +1,7 @@
 //node modules
 var twilioAccountSID = "AC85573f40ef0c3fb0c5aa58477f61b02e";
 var twilioAccountSecret = "fcea26b2b0ae541d904ba23e12e2c499";
-var twilio = require('twilio/lib')(twilioAccountSID, twilioAccountSecret);
+var twilio = require('twilio')
 
 //my modules
 var messageTool = require ('./message')
