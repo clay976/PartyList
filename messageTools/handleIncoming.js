@@ -75,6 +75,7 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
       update.updater ('tracks', trackDocFound, updateObj, db, update.responseHandler)
     }else{        
       var track2Insert = insert.track (trackID)
+      
       respond.newRequest (toNum, guestRequestsLeft)
       insert.insert ('tracks', track2Insert, db, insert.responseHandler)
     }

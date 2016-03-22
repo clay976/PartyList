@@ -63,11 +63,11 @@ function advertisment (res){
 }
 
 function askConfirmation(res, db, trackAdd){
+  var trackObjID = query.findTrack (trackID)
   var resp = new twilio.TwimlResponse();
 	var trackID =trackAdd.tracks.items[0].id
 	var trackTitle = trackAdd.tracks.items[0].name
 	var trackArtist = trackAdd.tracks.items[0].artists[0].name
-	var trackObjID = query.findTrack (trackID)
 
   query.search ('tracks', trackObjID, db, function (trackDocFound){
     if (trackDocFound){
