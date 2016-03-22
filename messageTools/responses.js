@@ -59,7 +59,7 @@ function advertisment (toNum){
   var client = require('twilio/lib')(twilioAccountSID, twilioAccountSecret);
   var responseBody = ('\n\nYou are recieving an advertisment because you have made 5 successful request')
 
-  messageObject = messageTool.message (sender, responseBody)
+  messageObject = messageTool.message (toNum, responseBody)
   client.sendMessage(messageObject, sentHandler)
 }
 
