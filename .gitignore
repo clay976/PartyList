@@ -24,4 +24,3 @@ spec/coverage
 ### Custom ignores ###
 config.js
 .idea
-twilio-node

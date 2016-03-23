@@ -4,8 +4,8 @@
   "description": "text a twilio number to add a song to a spotify playlist",
   "version": "0.0.1",
   "main": "app.js",
-  "repository":"https://github.com/BrentBrightling/PartyList.git",
-  "license":"MIT",
+  "repository": "https://github.com/BrentBrightling/PartyList.git",
+  "license": "",
   "dependencies": {
     "body-parser": "1.13.2",
     "jquery": "2.1.4",
@@ -16,5 +16,8 @@
     "querystring": "~0.2.0",
     "request": "~2.34.0",
     "twilio": "2.6.0"
+  },
+  "devDependencies": {
+    "gulp": "^3.9.1"
   }
 }

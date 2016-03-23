@@ -60,7 +60,7 @@ function advertisment (toNum){
   var responseBody = ('\n\nYou are recieving an advertisment because you have made 5 successful request')
 
   messageObject = messageTool.message (toNum, responseBody)
-  client.sendMessage(messageObject, sentHandler)
+  client.sendMessage(messageObject, messageTool.sentHandler)
 }
 
 function askConfirmation(res, db, trackAdd){

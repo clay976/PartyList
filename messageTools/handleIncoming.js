@@ -50,8 +50,7 @@ function searchRequest(res, db, toNum, options, guestFound){
     }else{
       trackAdd = JSON.parse(body)
       if (trackAdd.tracks.total>0){
-        var trackID = trackAdd.tracks.items[0].id; 
-        var guestReqObj = update.guestRequest (trackID)
+        var guestReqObj = update.guestRequest (trackAdd.tracks.items[0].id)
         
         console.log ('attempting to add song to guests document')
         update.updater ('guests', guestFound, guestReqObj, db, update.responseHandler)
