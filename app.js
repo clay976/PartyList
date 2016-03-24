@@ -75,7 +75,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // in the database
   app.post('/playlist/latest/party', function (req, res){
     var host = req.body.host
-    var host2Find = dbTools.findHost (host)
+    var host2Find = query.findHost (host)
 
     query.search (host, host2Find, db, function (hostFound){
       if (hostFound.playlistID != ''){
