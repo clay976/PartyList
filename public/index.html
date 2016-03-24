@@ -26,24 +26,24 @@
           <button id= "obtain-new-token" name = "obtain new token"> obtain new token </button>
         <div id="oauth"></div>
           <label for="filename">Playlist</label>
-          <form id="input" action="/findPlaylist" method="POST">
+          <form id="input" action="/playlist/findLatest" method="POST">
             <input type="submit" value="find current playlists">
             <input type="hidden" name="host" value= "clay976">
           </form>
-          <form id="input" action="/createPlaylist" method="POST">
+          <form id="input" action="/playlist/create" method="POST">
             <input type="text" name="playName" placeholder="new playlist Name">
             <input type="hidden" name="host" value= "clay976">
             <input type="submit" value="create">
           </form>
-          <form id="input" action="/resetSonglist" method="POST">
+          <form id="input" action="/songs/removeAll" method="POST">
           <input type="hidden" name="host" value= "clay976">
             <input type="submit" value="reset song requests">
           </form>
           <label for="filename">Guest Manipulation</label>
-          <form id="input" action="/resetAllGuests" method="POST">
+          <form id="input" action="/guests/removeAll" method="POST">
             <input type="submit" value="Remove All Guests">
           </form>
-          <form id="input" action="/addGuest" method="POST">
+          <form id="input" action="/guests/add" method="POST">
             <input type="text" name="guestNum" placeholder="ex. 9055554260">
             <input type="hidden" name="host" value= "clay976">
             <input type="submit" value="add">

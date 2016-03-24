@@ -45,14 +45,14 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // has already accepted the scope of our application
   app.get('/callback', function (req, res){
     spotifyLoginTools.homepage (req, res, db, spotifyLoginTools.retrieveAndPrepTokens)
-  })
+  })  
 
   // createPlaylist endpoint and function
   // extracts the information from the request
   // to name the playlist and check who the
   // host is. then goes through spotify to 
   // make the playlist on their account
-  app.post('/createPlaylist', function (req, res){
+  app.post('/playlist/create', function (req, res){
     var playlistName = req.body.playName
     var host = req.body.host
     spotifyPlaylistTools.createPlaylist (res, db, playlistName, host, spotifyPlaylistTools.preparePlaylistRequest)
@@ -65,7 +65,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // TODO: FIX THIS, so that it does not
   // allow for a playlist that the user
   // does not control.
-  app.post('/findPlaylist', function (req, res){
+  app.post('/playlist/findLatest', function (req, res){
     var host = req.body.host
     removeList.songs (res, db, host)
     spotifyPlaylistTools.findPlaylist (res, db, host)
@@ -74,18 +74,18 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // resetAllGuests endpoint and function:
   // removes all the guest from a current
   // host's party
-  app.post ('/resetAllGuests', function (req, res){
+  app.post ('/guests/removeAll', function (req, res){
     var host = req.body.host
     removeList.guests (res, db, host)
   })
 
-  app.post('/addGuest', function (req, res){
+  app.post('/guests/add', function (req, res){
     var host = req.body.host
     var guestNum = req.body.guestNum
     dbTools.addGuest (res, db, host, guestNum)
   })
 
-  app.post('/resetSonglist', function (req, res){
+  app.post('/songs/removeAll', function (req, res){
     var host = req.body.host
     removeList.songs (res, db, host)
   })

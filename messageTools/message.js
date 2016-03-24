@@ -1,9 +1,13 @@
 function message (toNum,body){
-  return({
-    to: toNum,
-    from:"+12892161101",
-    body:body
-  })
+  if (toNum && body){
+    return({
+      to: toNum,
+      from:'+12892161101',
+      body:body
+    })
+  }else{
+    return ('error, parameters incorrect for message object')
+  }
 }
 
 //message respopnse handler

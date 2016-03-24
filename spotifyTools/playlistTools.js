@@ -22,7 +22,7 @@ function findPlaylist (res, db, host){
 //TODO: add comments
 function requestLatestPlaylist (res, db, host, options, docFound, callback){
   request.get(options, function (error, response, body) {
-    var playlistItems= JSON.parse (body)
+    var playlistItems = JSON.parse (body)
     if (error) {
       loginTool.homePageRedirect (res, 500, 'there was an error finding the playlist on spotify\'s end, ')
     }else{
@@ -39,9 +39,10 @@ function createPlaylist (res, db, playlistName, host, callback){
     if (tokenValid){
       var access_token = docFound.access_token
       if (playlistName) {
-        callback (res, db, playlistName, host, docFound, access_token, postPlaylist)
+        var playlistReqObject = preparePlaylistRequest (playlistName, access_token)
+        postPlaylist (res, db, host, playlistReqObject, docFound, updatePlaylist)
       }else{
-        loginTool.homePageRedirect (res, 400, 'a user tried to create a blank named playlist')
+        loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
       }
     }else{
       loginTool.loginRedirect (res, 401, 'a user with invalid tokens tried to create a playlist')
@@ -50,7 +51,7 @@ function createPlaylist (res, db, playlistName, host, callback){
 }
 
 //TODO: add comments
-function preparePlaylistRequest (res, db, playlistName, host, docFound, access_token, callback){
+function preparePlaylistRequest (playlistName, access_token){
   var options = {
     url: 'https://api.spotify.com/v1/users/' +host+ '/playlists',
     body: JSON.stringify({
@@ -63,7 +64,7 @@ function preparePlaylistRequest (res, db, playlistName, host, docFound, access_t
       'Content-Type': 'application/json',
     }
   }
-  callback (res, db, host, options, docFound, updatePlaylist)
+  return (options)
 }
 
 //TODO: add comments
