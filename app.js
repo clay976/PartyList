@@ -65,10 +65,36 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // TODO: FIX THIS, so that it does not
   // allow for a playlist that the user
   // does not control.
-  app.post('/playlist/findLatest', function (req, res){
+  app.post('/playlist/latest/spotify', function (req, res){
     var host = req.body.host
-    removeList.songs (res, db, host)
     spotifyPlaylistTools.findPlaylist (res, db, host)
+  })
+
+  // choose the last playlist
+  // the host was using found
+  // in the database
+  app.post('/playlist/latest/party', function (req, res){
+    var host = req.body.host
+    var host2Find = dbTools.findHost (host)
+
+    query.search (host, host2Find, db, function (hostFound){
+      if (hostFound.playlistID != ''){
+        var message = 'hosts playlist has been found in DB'
+        console.log (message)
+        res.send (200, message)
+      }else{
+        message = 'sorry, host playlist not found in DB'
+        console.log (message)
+        res.send (401, message)
+      }
+    })
+  })
+
+  // choose a playlist from the list
+  // of avaliable playlists that the
+  // user controls
+  app.post('/playlist/choose', function (req, res){
+    
   })
 
   // resetAllGuests endpoint and function:
