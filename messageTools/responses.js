@@ -97,5 +97,6 @@ module.exports = {
 	declineRequest: declineRequest,
 	songNotFound: songNotFound,
 	advertisment: advertisment,
+  songAdded: songAdded,
   askConfirmation: askConfirmation
 }
