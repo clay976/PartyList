@@ -75,7 +75,7 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
 function addSongToPlaylist (host, trackID, toNum, db){
   query.search (host, query.findHost (host), db, function (found){
     var playlistID = found.playlistID
-    var access_token = found.access
+    var access_token = found.access_token
     console.log (access_token)
     console.log (playlistID)
 
