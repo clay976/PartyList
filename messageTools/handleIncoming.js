@@ -79,6 +79,9 @@ function addSongToPlaylist (host, trackID, toNum){
 
   console.log ('attempting to add song to playlist')
   request.post(makeJSON.addSongToPlaylist (host, playlistID, trackID, access_token), function(error, response, body) {
+    console.log ('error: 'error)
+    console.log ('response: 'response)
+    console.log ('body: 'body)
     if (error){
       responseBody = ('there was an error adding ' +trackTitle+ ' to the playlist, will provide more usefull erroror messages in the future')
     }else{
