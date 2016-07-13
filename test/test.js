@@ -1,4 +1,17 @@
+var request = require('supertest')
+  , express = require('express');
+ 
+var app = express();
 var assert = require('assert')
+
+describe('GET /guests/add', function(){
+  it('add a guest to the database', function(){
+    var guestNum = 1234567890
+    request(app)
+      .post('/guests/add?' +guestNum)
+      .expect (300)
+  })
+})
 
 describe('test building JSON object to send message with twilio', function(){
   it('should return a properly built message with body as "hello"', function(){

@@ -3,17 +3,14 @@ var querystring = require('querystring')
 var request = require('request') // "Request" library
 
 //my modules
-var tools = require ('../generalTools/tools')
 var insert = require ('../databasetools/insert')
 var query = require ('../databasetools/querydb')
 var update = require ('../databasetools/update')
 var dbTools = require ('../databasetools/abstractTools')
+var makeJSON = require ('../JSONobjects/makeJSON')
 
 //other variables
 var stateKey = 'spotify_auth_state'
-var client_id = 'a000adffbd26453fbef24e8c1ff69c3b'
-var client_secret = '899b3ec7d52b4baabba05d6031663ba2' // Your client secret
-var redirect_uri = 'http://104.131.215.55:80/callback'
 
 // this is what the user will see when they click login for the first
 // time, it tells them what our app will be allowed to access
@@ -22,18 +19,9 @@ var redirect_uri = 'http://104.131.215.55:80/callback'
 // the state is what will be checked by the app when
 // we are trying to make calls afterward to make sure
 // they are still logged in
-function preLoginScope (req, res) {
-  var state = tools.generateRandomString(16)
+function login (req, res) {
   res.cookie(stateKey, state)
-  // your application requests authorization
-  var scope = 'user-read-private user-read-email user-read-birthdate streaming playlist-modify-private playlist-modify-public playlist-read-private'
-  res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify({
-    response_type: 'code',
-    client_id: client_id,
-    scope: scope,
-    redirect_uri: redirect_uri,
-    state: state
-  }))
+  res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify(makeJSON.scope(state)))
 }
 
 // this will prepare the JSON object with our applications
@@ -48,20 +36,7 @@ function homepage (req, res, db, callback) {
     res.redirect('/' +querystring.stringify({error: 'state_mismatch'}))
   }else{
     res.clearCookie(stateKey)
-    var authOptions = {
-      url: 'https://accounts.spotify.com/api/token',
-      form: {
-        code: code,
-        redirect_uri: redirect_uri,
-        grant_type: 'authorization_code'
-      },
-      headers: {
-        'Authorization': 'Basic ' + (new Buffer(client_id + ':' + client_secret).toString('base64'))
-      },
-      json: true
-    }
-    // this request will use the object we just created to obtain the access
-    // and refresh tokens for the specific user.
+    var authOptions = makeJSON.authforTokens (code)
     callback (res, db, authOptions, getHostInfo)
   }
 }
@@ -75,16 +50,8 @@ function retrieveAndPrepTokens (res, db, authOptions, callback) {
     if (!error && response.statusCode === 200) {
       var access_token = body.access_token
       var refresh_token = body.refresh_token
-      //databasecalls to save access and refresh tokens in the partyList collection
-      //under the tokens document
-      var options = {
-        url: 'https://api.spotify.com/v1/me',
-        headers: { 'Authorization': 'Bearer ' + access_token },
-        json: true
-      }
-      // use the access token to access the Spotify Web API
+      var options = makeJSON.getHostInfo (access_token)
       callback (res, db, options, access_token, refresh_token, dbTools.UOIHost)
-      // we can also pass the token to the browser to make requests from there
     }else{
       res.redirect (403, '/')
       console.log (error)
@@ -110,9 +77,9 @@ function getHostInfo (res, db, options, access_token, refresh_token, callback) {
   })
 }
 
-function loginRedirect (res, message){
+function loginRedirect (res, code, message){
   console.log (message)
-  res.redirect ('/')
+  res.redirect ('/'+code)
 }
 
 function homePageRedirect (res, statusCode, message){

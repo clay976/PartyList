@@ -5,7 +5,7 @@
   "version": "0.0.1",
   "main": "app.js",
   "repository": "https://github.com/BrentBrightling/PartyList.git",
-  "license": "",
+  "license": "UNLICENSED",
   "dependencies": {
     "body-parser": "1.13.2",
     "jquery": "2.1.4",
@@ -19,6 +19,7 @@
   },
   "devDependencies": {
     "gulp": "^3.9.1",
-    "gulp-mocha": "^2.2.0"
+    "gulp-mocha": "^2.2.0",
+    "supertest": "^1.2.0"
   }
 }

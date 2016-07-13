@@ -40,7 +40,7 @@ function addGuest (res, db, host, guestNum){
       }else{
         guest2Add = insert.guest (host, guestNum)
         insert.insert ('guests', guest2Add, db, insert.responseHandler)
-        res.send ('Guest added succesfully, number: '+ guestNum)
+        res.send (200, 'Guest added succesfully, number: '+ guestNum)
       }
     })
   }else{
