@@ -51,9 +51,22 @@ function acessFromRefresh (refresh_token){
   }
 }
 
+function addSongToPlaylist (host, playlistID, trackID, access_token){
+  return{
+    url: "https://api.spotify.com/v1/users/" +host+ "/playlists/"+playlistID+ "/tracks",
+    body: JSON.stringify({"uris": ["spotify:track:"+trackID]}),
+    dataType:'json',
+    headers: {
+      Authorization: "Bearer " + access_token,
+      "Content-Type": "application/json",
+    }
+  }
+}
+
 module.exports = {
   buildScope: buildScope,
   authForTokens: authForTokens,
   getHostInfo: getHostInfo,
-  acessFromRefresh: acessFromRefresh
+  acessFromRefresh: acessFromRefresh,
+  addSongToPlaylist: addSongToPlaylist
 }

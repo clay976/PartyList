@@ -10,18 +10,11 @@ var update = require ('../databasetools/update')
 var respond = require ('./responses')
 var dbTools = require ('../databasetools/abstractTools')
 
-//they are making a request
-    //search spotify
-      //send back response of found song
-      //search the database for new or already requested
-        //send another response with number of requests
-  //they are confirming a request that they have made
-    //search songlist for the song from their document
-  //they are trying to confirm or decline a request they HAVE NOT made
+//my modules
+var makeJSON = require ('../JSONobjects/makeJSON')
 
 function incoming (res, db, toNum, guestFound, messageBody){
   var trackID = guestFound.currentTrack
-
   if ((messageBody.toLowerCase() === 'yes' || messageBody.toLowerCase() === 'no') && trackID === ''){
     respond.emptyConfirmation (res)
   }else{
@@ -58,6 +51,7 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
   var trackObjID = query.findTrack (trackID)
   var guestRequestsLeft = guestFound.numRequests
   var decrementGuest = update.guestConfirm ()
+  var host = guestFound.host
   if (guestRequestsLeft < 1){
     dbTools.resetGuest (db, guestFound)
     respond.advertisment (toNum)
@@ -74,45 +68,24 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
       insert.insert ('tracks', track2Insert, db, insert.responseHandler)
     }
   })
+  addSongToPlaylist (host, trackID)
   update.updater ('guests', guestFound, decrementGuest, db, update.responseHandler)
 }
 
+function addSongToPlaylist (host, trackID){
+  var docuFound = query.findHost (host)
+  var playlistID = docuFound.playlistID
+  var access_token = docuFound.access_token
+  request.post((makeJSON.addSongToPlaylist (host, playlistID, trackID, access_token)), function(error, response, body) {
+    if (error){
+      responseBody = ('there was an error adding ' +trackTitle+ ' to the playlist, will provide more usefull erroror messages in the future')
+    }
+    twilio.sendMessage(messageTool.message (sender, (trackTitle+ ' by ' +trackArtist+ ' has been added to the playlist')), messageTool.sendMessageCallback (error, responseData))
+  })
+}
 
 module.exports = {
   incoming: incoming,
   requestConfirmed: requestConfirmed,
   searchRequest: searchRequest
 }
-
-//this code needs to be changed so that it runs when we actually want to add a song to the playlist.
-        //right now it is running as soon as the track is found, where that does not allow us to minipulate
-        //the amount of requests that a song has!
-        /*validateToken.checkToken (host, db, function(tokenValid, docFound){
-          playlistID = docFound.playlistID
-          //these options create the object to make the spotify request
-          var options = {
-            url: "https://api.spotify.com/v1/users/" +host+ "/playlists/"+playlistID+ "/tracks",
-            body: JSON.stringify({"uris": ["spotify:track:"+trackID]}),
-            dataType:'json',
-            headers: {
-              Authorization: "Bearer " + docFound.access_token,
-              "Content-Type": "application/json",
-            }
-          }
-          //this request is actually adds  the song to the playlist
-          request.post(options, function(erroror, response, body) {
-            if (erroror){
-              responseBody = ('there was an erroror adding ' +trackTitle+ ' to the playlist, will provide more usefull erroror messages in the future')
-            }else{
-              console.log ('adding ' +trackTitle)
-              responseBody = (trackTitle+ ' by ' +trackArtist+ ' has been added to the playlist')
-            }
-            //logging the body of the spotify request will let the dev know if there are errorors connecting to spotify.
-            messageObject = messageTool.message (sender, responseBody) 
-            twilio.sendMessage(messageObject, function(error, responseData) {
-              messageTool.sendMessageCallback (error, responseData)
-            })
-          console.log (body)
-          })
-        })*/
-
