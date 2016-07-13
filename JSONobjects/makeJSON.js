@@ -6,7 +6,7 @@ var client_id = 'a000adffbd26453fbef24e8c1ff69c3b'
 var client_secret = '899b3ec7d52b4baabba05d6031663ba2' // Your client secret
 var redirect_uri = 'http://104.131.215.55:80/callback'
 
-function scope (state){
+function buildScope (state){
   return {
     response_type: 'code',
     client_id: client_id,
@@ -52,7 +52,7 @@ function acessFromRefresh (refresh_token){
 }
 
 module.exports = {
-  scope: scope,
+  buildScope: buildScope,
   authForTokens: authForTokens,
   getHostInfo: getHostInfo,
   acessFromRefresh: acessFromRefresh
