@@ -38,7 +38,7 @@ function homepage (req, res, db, callback) {
     res.redirect('/' +querystring.stringify({error: 'state_mismatch'}))
   }else{
     res.clearCookie(stateKey)
-    var authOptions = makeJSON.authforTokens (code)
+    var authOptions = makeJSON.authForTokens (code)
     callback (res, db, authOptions, getHostInfo)
   }
 }
