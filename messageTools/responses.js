@@ -1,5 +1,8 @@
 //node modules
 var twilio = require('twilio')
+var twilioAccountSID = "AC85573f40ef0c3fb0c5aa58477f61b02e";
+var twilioAccountSecret = "fcea26b2b0ae541d904ba23e12e2c499";
+var client = require('twilio/lib')(twilioAccountSID, twilioAccountSecret);
 
 //my modules
 var messageTool = require ('./message')
@@ -54,11 +57,13 @@ function songNotFound (res){
 }
 
 function advertisment (toNum){
-  var twilioAccountSID = "AC85573f40ef0c3fb0c5aa58477f61b02e";
-  var twilioAccountSecret = "fcea26b2b0ae541d904ba23e12e2c499";
-  var client = require('twilio/lib')(twilioAccountSID, twilioAccountSecret);
   var responseBody = ('\n\nYou are recieving an advertisment because you have made 5 successful request')
 
+  messageObject = messageTool.message (toNum, responseBody)
+  client.sendMessage(messageObject, messageTool.sentHandler)
+}
+
+function songAdded (toNum, responseBody){
   messageObject = messageTool.message (toNum, responseBody)
   client.sendMessage(messageObject, messageTool.sentHandler)
 }

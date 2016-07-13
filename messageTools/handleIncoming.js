@@ -1,6 +1,5 @@
 //node modules
 var request = require('request') // "Request" library
-var twilio = require('twilio')
 
 // mongo variables
 var insert = require ('../databasetools/insert')
@@ -12,7 +11,6 @@ var respond = require ('./responses')
 var dbTools = require ('../databasetools/abstractTools')
 
 //my modules
-var messageTool = require ('./message')
 var makeJSON = require ('../JSONobjects/makeJSON')
 
 function incoming (res, db, toNum, guestFound, messageBody){
@@ -86,7 +84,7 @@ function addSongToPlaylist (host, trackID, toNum){
     }else{
       responseBody = 'your song has been added to the playlist'
     }
-    twilio.sendMessage(messageTool.message (toNum, responseBody), messageTool.sentHandler (error))
+    respond.songAdded (toNum, responseBody)
   })
 }
 
