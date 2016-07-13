@@ -86,7 +86,7 @@ function addSongToPlaylist (host, trackID, toNum){
     }else{
       responseBody = 'your song has been added to the playlist'
     }
-    twilio.sendMessage(messageTool.message (toNum, responseBody), messageTool.sendMessageCallback (error, responseData))
+    twilio.sendMessage(messageTool.message (toNum, responseBody), messageTool.sentHandler (error))
   })
 }
 
