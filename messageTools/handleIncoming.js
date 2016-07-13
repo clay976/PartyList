@@ -76,11 +76,15 @@ function addSongToPlaylist (host, trackID){
   var docuFound = query.findHost (host)
   var playlistID = docuFound.playlistID
   var access_token = docuFound.access_token
+
+  console.log ('attempting to add song to playlist')
   request.post((makeJSON.addSongToPlaylist (host, playlistID, trackID, access_token)), function(error, response, body) {
     if (error){
       responseBody = ('there was an error adding ' +trackTitle+ ' to the playlist, will provide more usefull erroror messages in the future')
+    }else{
+      responseBody = 'your song has been added to the playlist'
     }
-    twilio.sendMessage(messageTool.message (sender, (trackTitle+ ' by ' +trackArtist+ ' has been added to the playlist')), messageTool.sendMessageCallback (error, responseData))
+    twilio.sendMessage(messageTool.message (sender, responseBody, messageTool.sendMessageCallback (error, responseData))
   })
 }
 
