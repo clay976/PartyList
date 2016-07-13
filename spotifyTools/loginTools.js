@@ -3,6 +3,7 @@ var querystring = require('querystring')
 var request = require('request') // "Request" library
 
 //my modules
+var tools = require ('../generalTools/tools')
 var insert = require ('../databasetools/insert')
 var query = require ('../databasetools/querydb')
 var update = require ('../databasetools/update')
@@ -20,6 +21,7 @@ var stateKey = 'spotify_auth_state'
 // we are trying to make calls afterward to make sure
 // they are still logged in
 function login (req, res) {
+  var state = tools.generateRandomString(16)
   res.cookie(stateKey, state)
   res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify(makeJSON.scope(state)))
 }
