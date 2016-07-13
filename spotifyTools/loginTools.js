@@ -89,7 +89,7 @@ function homePageRedirect (res, statusCode, message){
 
 //exports for external modules to use.
 module.exports = {
-  preLoginScope: preLoginScope,
+  login: login,
   homepage: homepage,
   retrieveAndPrepTokens: retrieveAndPrepTokens,
   getHostInfo: getHostInfo,
