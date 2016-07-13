@@ -52,7 +52,6 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
   var guestRequestsLeft = guestFound.numRequests
   var decrementGuest = update.guestConfirm ()
   var host = guestFound.host
-  console.log (host)
   if (guestRequestsLeft < 1){
     dbTools.resetGuest (db, guestFound)
     respond.advertisment (toNum)
@@ -74,16 +73,14 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
 }
 
 function addSongToPlaylist (host, trackID, toNum){
-  console.log (host)
   var docuFound = query.findHost (host)
   var playlistID = docuFound.playlistID
-  var access_token = docuFound.access_token
-  console.log (docuFound)
+  var access_token = docuFound.access
+  console.log (access_token)
+  console.log (playlistID)
 
   console.log ('attempting to add song to playlist')
   request.post(makeJSON.addSongToPlaylist (host, playlistID, trackID, access_token), function(error, response, body) {
-    console.log ('error: '+error)
-    console.log ('response: '+response)
     console.log ('body: '+body)
     if (error){
       responseBody = ('there was an error adding ' +trackTitle+ ' to the playlist, will provide more usefull erroror messages in the future')
