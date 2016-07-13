@@ -23,7 +23,7 @@ var stateKey = 'spotify_auth_state'
 function login (req, res) {
   var state = tools.generateRandomString(16)
   res.cookie(stateKey, state)
-  res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify(makeJSON.scope(state)))
+  res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify(makeJSON.buildScope(state)))
 }
 
 // this will prepare the JSON object with our applications
