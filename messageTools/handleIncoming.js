@@ -28,16 +28,10 @@ function incoming (res, db, toNum, guestFound, messageBody){
     if (messageBody.toLowerCase() === 'yes'){
       requestConfirmed (res, db, toNum, guestFound, trackID)
     }else if (messageBody.toLowerCase() === 'no'){
-      var guestReqObj = update.guestRequest ('')
-
       respond.declineRequest (res)
-      update.updater ('guests', guestFound, guestReqObj, db, update.responseHandler)
+      update.updater ('guests', guestFound, update.guestRequest (''), db, update.responseHandler)
     }else{
-      var options = {
-        url: 'https://api.spotify.com/v1/search?q=' +messageBody+ '&type=track&limit=1'
-      } 
-
-      searchRequest(res, db, toNum, options, guestFound)
+      searchRequest(res, db, toNum, {url: 'https://api.spotify.com/v1/search?q=' +messageBody+ '&type=track&limit=1'}, guestFound)
     }
   }
 }
@@ -51,8 +45,6 @@ function searchRequest(res, db, toNum, options, guestFound){
       trackAdd = JSON.parse(body)
       if (trackAdd.tracks.total>0){
         var guestReqObj = update.guestRequest (trackAdd.tracks.items[0].id)
-        
-        console.log ('attempting to add song to guests document')
         update.updater ('guests', guestFound, guestReqObj, db, update.responseHandler)
         respond.askConfirmation (res, db, trackAdd)
       }else{
@@ -66,7 +58,6 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
   var trackObjID = query.findTrack (trackID)
   var guestRequestsLeft = guestFound.numRequests
   var decrementGuest = update.guestConfirm ()
-
   if (guestRequestsLeft < 1){
     dbTools.resetGuest (db, guestFound)
     respond.advertisment (toNum)
@@ -75,18 +66,17 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
     if (trackDocFound){
       var updateObj = update.tracksReqd ()
       var trackRequests = trackDocFound.numRequests
-      
       respond.requestedAlready (res, guestRequestsLeft, trackRequests)
       update.updater ('tracks', trackDocFound, updateObj, db, update.responseHandler)
     }else{        
       var track2Insert = insert.track (trackID)
-      
       respond.newRequest (res, guestRequestsLeft)
       insert.insert ('tracks', track2Insert, db, insert.responseHandler)
     }
   })
   update.updater ('guests', guestFound, decrementGuest, db, update.responseHandler)
 }
+
 
 module.exports = {
   incoming: incoming,

@@ -119,18 +119,14 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   app.post('/message', function (req, res){ 
     var sender = req.body.From
     var messageBody = req.body.Body.toLowerCase()
-    if (messageBody.toLowerCase() === 'ask for invite'){
-      handleIncoming.addGuest (res, db, sender, messageBody)
-    }else{
-      var guest2Find = query.findGuest (sender)
-      query.search ('guests', guest2Find, db, function (guestFound){
-        if (!guestFound){
-          respond.notGuest (res, sender)
-        }else{
-          handleIncoming.incoming (res, db, sender, guestFound, messageBody)
-        }
-      })
-    }
+    var guest2Find = query.findGuest (sender)
+    query.search ('guests', guest2Find, db, function (guestFound){
+      if (!guestFound){
+        respond.notGuest (res, sender)
+      }else{
+        handleIncoming.incoming (res, db, sender, guestFound, messageBody)
+      }
+    })
   })
   app.listen(80)
 })

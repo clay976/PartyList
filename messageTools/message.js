@@ -9,11 +9,9 @@ function message (toNum,body){
     return ('error, parameters incorrect for message object')
   }
 }
-
-//message respopnse handler
 function sentHandler (err, responseData){
-  if (!err) { // "err" is an error received during the request, if any
-    console.log('message sent succesfully') // outputs the body of the twilio response
+  if (!err) {
+    console.log('message sent succesfully')
   }else{
     console.log (err)
     console.log ("error sending message back")
