@@ -68,26 +68,27 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
       insert.insert ('tracks', track2Insert, db, insert.responseHandler)
     }
   })
-  addSongToPlaylist (host, trackID, toNum)
+  addSongToPlaylist (host, trackID, toNum, db)
   update.updater ('guests', guestFound, decrementGuest, db, update.responseHandler)
 }
 
-function addSongToPlaylist (host, trackID, toNum){
-  var docuFound = query.findHost (host)
-  var playlistID = docuFound.playlistID
-  var access_token = docuFound.access
-  console.log (access_token)
-  console.log (playlistID)
+function addSongToPlaylist (host, trackID, toNum, db){
+  query.search (host, query.findHost (host), db, function (found){
+    var playlistID = found.playlistID
+    var access_token = found.access
+    console.log (access_token)
+    console.log (playlistID)
 
-  console.log ('attempting to add song to playlist')
-  request.post(makeJSON.addSongToPlaylist (host, playlistID, trackID, access_token), function(error, response, body) {
-    console.log ('body: '+body)
-    if (error){
-      responseBody = ('there was an error adding ' +trackTitle+ ' to the playlist, will provide more usefull erroror messages in the future')
-    }else{
-      responseBody = 'your song has been added to the playlist'
-    }
-    respond.songAdded (toNum, responseBody)
+    console.log ('attempting to add song to playlist')
+    request.post(makeJSON.addSongToPlaylist (host, playlistID, trackID, access_token), function(error, response, body) {
+      console.log ('body: '+body)
+      if (error){
+        responseBody = ('there was an error adding ' +trackTitle+ ' to the playlist, will provide more usefull erroror messages in the future')
+      }else{
+        responseBody = 'your song has been added to the playlist'
+      }
+      respond.songAdded (toNum, responseBody)
+    })
   })
 }
 
