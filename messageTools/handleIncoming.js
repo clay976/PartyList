@@ -1,5 +1,6 @@
 //node modules
 var request = require('request') // "Request" library
+var twilio = require('twilio')
 
 // mongo variables
 var insert = require ('../databasetools/insert')
@@ -11,6 +12,7 @@ var respond = require ('./responses')
 var dbTools = require ('../databasetools/abstractTools')
 
 //my modules
+var messageTool = require ('./message')
 var makeJSON = require ('../JSONobjects/makeJSON')
 
 function incoming (res, db, toNum, guestFound, messageBody){
@@ -68,11 +70,11 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
       insert.insert ('tracks', track2Insert, db, insert.responseHandler)
     }
   })
-  addSongToPlaylist (host, trackID)
+  addSongToPlaylist (host, trackID, toNum)
   update.updater ('guests', guestFound, decrementGuest, db, update.responseHandler)
 }
 
-function addSongToPlaylist (host, trackID){
+function addSongToPlaylist (host, trackID, toNum){
   var docuFound = query.findHost (host)
   var playlistID = docuFound.playlistID
   var access_token = docuFound.access_token
@@ -84,7 +86,7 @@ function addSongToPlaylist (host, trackID){
     }else{
       responseBody = 'your song has been added to the playlist'
     }
-    twilio.sendMessage(messageTool.message (sender, responseBody), messageTool.sendMessageCallback (error, responseData))
+    twilio.sendMessage(messageTool.message (toNum, responseBody), messageTool.sendMessageCallback (error, responseData))
   })
 }
 
