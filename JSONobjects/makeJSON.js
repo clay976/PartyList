@@ -50,3 +50,10 @@ function acessFromRefresh (refresh_token){
     json: true
   }
 }
+
+module.exports = {
+  scope: scope,
+  authForTokens: authForTokens,
+  getHostInfo: getHostInfo,
+  acessFromRefresh: acessFromRefresh
+}
