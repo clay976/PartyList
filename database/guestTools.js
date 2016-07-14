@@ -2,7 +2,6 @@ var search = require ('./query/search')
 var queryTemplate = require ('./query/JSONtemps')
 var updateTemplate = require ('./update/JSONtemps')
 var insertTemplate = require ('./insert/JSONtemps')
-var querystring = require('querystring')
 
 function addManyGuest (req, res, db){
   var body = JSON.parse(req)
@@ -19,7 +18,7 @@ function addGuest (res, db, host, guestNum){
     var guestNum = '+1'+ guestNum
     search.search ('guests', queryTemplate.findGuest (guestNum), db, function (guestFound){
       if (guestFound){
-        res.send ('you already added this guest' + guestNum)
+        res.status(200).send('you already added this guest' + guestNum)
       }else{
         db.collection('guests').insertOne(insertTemplate.guest (host, guestNum), insertResponseHandler)
         res.status(200).send('Guest added succesfully, number: '+ guestNum)

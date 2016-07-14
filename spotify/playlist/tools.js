@@ -34,7 +34,7 @@ function requestLatestPlaylist (res, db, host, options, docFound, callback){
 }
 
 //TODO: add comments
-function createPlaylist (res, db, playlistName, host, callback){
+function createPlaylist (res, db, playlistName, host){
   hostTools.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){
       if (playlistName) {

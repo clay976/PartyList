@@ -52,7 +52,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // host is. then goes through spotify to 
   // make the playlist on their account
   app.post('/playlist/create', function (req, res){
-    spotifyPlaylistTools.createPlaylist (res, db, req.body.playName, req.body.host, spotifyPlaylistTools.preparePlaylistRequest)
+    spotifyPlaylistTools.createPlaylist (res, db, req.body.playName, req.body.host)
   })
 
   // searches the spotify account and sets
