@@ -34,5 +34,6 @@ function createPlaylist (host, playlistName, access_token){
 
 module.exports = {
   auth: auth,
-  addSongToPlaylist: addSongToPlaylist
+  addSongToPlaylist: addSongToPlaylist,
+  createPlaylist: createPlaylist
 }
