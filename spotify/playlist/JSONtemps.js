@@ -30,7 +30,6 @@ function createPlaylist (host, playlistName, access_token){
       'Content-Type': 'application/json',
     }
   }
-  return (options)
 }
 
 module.exports = {
