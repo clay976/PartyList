@@ -56,9 +56,8 @@ function postPlaylist (res, db, host, options, docFound, callback){
       loginTool.homePageRedirect (res, 500, 'there was an error creating a playlist on spotify\'s end, ')
     }else{
       var playlist = JSON.parse (body)
-      var playlistID = playlist.id
-      callback (db, host, docFound, playlistID)
-      loginTool.homePageRedirect (res, 200, 'playlist was created succsefully '+ playlistID)
+      callback (db, host, docFound, playlist.id)
+      loginTool.homePageRedirect (res, 200, 'playlist was created succsefully '+ playlist.id)
     }
   })
 }
