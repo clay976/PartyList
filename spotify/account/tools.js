@@ -46,7 +46,7 @@ function getHostInfo (res, db, options, access_token, refresh_token, callback) {
     if (error){
       loginRedirect (res, 500, error)
     }else{
-      callback (res, db, (body.id).toString(), searchTemplate.host (host), access_token, refresh_token)
+      callback (res, db, (body.id).toString(), searchTemplate.host ((body.id).toString()), access_token, refresh_token)
     }
   })
 }
