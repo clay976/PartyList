@@ -30,7 +30,7 @@ function login (req, res) {
 function retrieveAndPrepTokens (res, db, authOptions, callback) {
   request.post(authOptions, function (error, response, body){
     if (!error && response.statusCode === 200) { 
-      callback (res, db, accountTemplate.getHostInfo (access_token), body.access_token, body.refresh_token, dbHostTools.UOIHost)
+      callback (res, db, accountTemplate.getHostInfo (body.access_token), body.access_token, body.refresh_token, dbHostTools.UOIHost)
     }else{
       res.redirect (403, '/')
     }
