@@ -6,13 +6,14 @@ var querystring = require('querystring')
 var loginTool = require ('../account/tools')
 var hostTools = require ('../../database/hostTools')
 var updateTemplate = require ('../../database/update/JSONtemps')
-var updateTemplate = require ('../playlist/JSONtemps')
+var playlistTemplate = require ('../playlist/JSONtemps')
+var accountTemplate = require ('../account/JSONtemps')
 
 //TODO: add comments
 function findPlaylist (res, db, host){
   hostTools.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){
-      requestLatestPlaylist (res, db, host, makeJSON.auth (host, access_token), docFound, updatePlaylist)
+      requestLatestPlaylist (res, db, host, accountTemplate.authForAccount (host, docFound.access_token), docFound, updatePlaylist)
     }else{
       loginTool.loginRedirect (res, 401, ' a user with invalid tokens tried to find a playlist')
     }  
@@ -37,7 +38,7 @@ function createPlaylist (res, db, playlistName, host, callback){
   hostTools.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){
       if (playlistName) {
-        postPlaylist (res, db, host, updateTemplate.createPlaylist (host, playlistName, docFound.access_token), docFound, updatePlaylist)
+        postPlaylist (res, db, host, playlistTemplate.createPlaylist (host, playlistName, docFound.access_token), docFound, updatePlaylist)
       }else{
         loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
       }

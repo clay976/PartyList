@@ -38,6 +38,13 @@ function getHostInfo (access_token){
   }
 }
 
+function authForAccount (host, access_token){
+  return {
+    url: 'https://api.spotify.com/v1/users/' + host + '/playlists',
+    headers: {'Authorization': 'Bearer ' +access_token}
+  }
+}
+
 function accessFromRefresh (refresh_token){
   return {
     url: 'https://accounts.spotify.com/api/token',
@@ -54,6 +61,7 @@ module.exports = {
   buildScope: buildScope,
   authForTokens: authForTokens,
   getHostInfo: getHostInfo,
+  authForAccount: authForAccount,
   accessFromRefresh: accessFromRefresh
 
 }
