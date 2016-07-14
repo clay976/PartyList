@@ -8,11 +8,7 @@ var update = require ('../databasetools/update')
 function findPlaylist (res, db, host){
   validateToken.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){
-      var options = {
-        url: 'https://api.spotify.com/v1/users/' + host + '/playlists',
-        headers: {'Authorization': 'Bearer ' +docFound.access_token}
-      }
-      requestLatestPlaylist (res, db, host, options, docFound, updatePlaylist)
+      requestLatestPlaylist (res, db, host, makeJSON.auth (host, access_token), docFound, updatePlaylist)
     }else{
       loginTool.loginRedirect (res, 401, ' a user with invalid tokens tried to find a playlist')
     }  

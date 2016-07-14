@@ -17,7 +17,6 @@ app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-
 
 //required documents and tools
 var removeList = require ('./databasetools/removeList')
-var insert = require ('./databasetools/insert')
 var query = require ('./databasetools/querydb')
 var update = require ('./databasetools/update')
 var validateToken = require ('./databasetools/checkToken')
@@ -105,17 +104,51 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
     removeList.guests (res, db, host)
   })
 
+/*
+add many guests to the party in a JSON block
+___________________________________________________________________
+TO BE SENT:
+  JSON from req.body{  :  type  :              Description                |
+    host               : string :  the username of their spotify account. |
+    guestNums          :  JSON  : phone numbers of the guest to be added  |
+      num: 1234567890,
+      num: etc,
+    }
+  }
+_______________________________________________________________________*/
+  app.post('/guests/addMany', function (req, res){
+    dbTools.addManyGuest (req, res, db, host, num)
+
+  })
+
+
+/*
+add a single guest to the party in a JSON block
+___________________________________________________________________
+TO BE SENT:
+  JSON from req.body{  :  type  :              Description                |
+    host               : string :  the username of their spotify account. |
+    guestNum           : string : phone number of the guest to be added   |
+  }
+_______________________________________________________________________*/
   app.post('/guests/add', function (req, res){
     var host = req.body.host
     var guestNum = req.body.guestNum
     dbTools.addGuest (res, db, host, guestNum)
   })
 
+/*________________________________________________________
+TO BE SENT:
+  body of request: 
+    host           : the username of their spotify account. |
+____________________________________________________________*/
   app.post('/songs/removeAll', function (req, res){
     var host = req.body.host
     removeList.songs (res, db, host)
   })
 
+  //this should only be coming from Twilio,
+  //to be fixed in gulp branch or something.
   app.post('/message', function (req, res){ 
     var sender = req.body.From
     var messageBody = req.body.Body.toLowerCase()

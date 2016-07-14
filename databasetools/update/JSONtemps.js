@@ -1,5 +1,3 @@
-var assert = require('assert')
-
 //update playlist document
 function playlistID (ID){
   return ({
@@ -52,17 +50,6 @@ function accessToken (aToken){
     "time": time 
   }}) 
 }
- 
-function updater  (collection, doc, info, db, callback){ 
-  db.collection(collection).updateOne(doc,info,callback)
-}
-
-function responseHandler(error) {
-  if (error){
-    console.log (error, 'there was an error updating the document')
-  }
-}
-
 module.exports = {
   playlistID: playlistID,
   guestRequest: guestRequest,

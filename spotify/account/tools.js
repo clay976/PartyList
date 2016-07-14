@@ -32,8 +32,6 @@ function login (req, res) {
 // after checking the state parameter
 function homepage (req, res, db, callback) {
   var code = req.query.code || null
-  var state = req.query.state || null
-  var storedState = req.cookies ? req.cookies[stateKey] : null
   if (state === null || state !== storedState) {
     res.redirect('/' +querystring.stringify({error: 'state_mismatch'}))
   }else{
@@ -89,6 +87,31 @@ function homePageRedirect (res, statusCode, message){
   res.send (statusCode, message)
 }
 
+function refreshToken () {
+  var refresh_token
+  query.search (host,doc, db, function (docum){
+    refresh_token = docum.refresh_token
+    request.post(makeJSON.accessFromRefresh(refresh_token), function (error, response, body) {
+      if (!error && response.statusCode === 200) {
+        update.updater (host, query.findHost (host), update.accessToken (body.access_token),db, function (error){
+          console.log ('updated the access token')
+        })
+      }
+    })
+  })
+}
+
+function checkToken (host, db, callback){
+  query.search (host, {'host':host}, db, function(found){ 
+    if (found != null){
+        callback (true, found)
+    }else{
+      console.log ('the user has not logged in properly')
+      callback (false, null)
+    }
+  })
+}
+
 //exports for external modules to use.
 module.exports = {
   login: login,
@@ -96,5 +119,6 @@ module.exports = {
   retrieveAndPrepTokens: retrieveAndPrepTokens,
   getHostInfo: getHostInfo,
   loginRedirect: loginRedirect,
-  homePageRedirect: homePageRedirect
+  homePageRedirect: homePageRedirect,
+  checkToken: checkToken
 }
