@@ -31,44 +31,61 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   assert.equal(null, err)
   app.use(express.static(__dirname + '/public')).use(cookieParser())
 
-  // login endpoint and function:
-  // login endpoint is hit by the front end when someone has never saved a login
-  // info for our application
-  // the are handed the scope of our app and asked to agree before actually loggin in.
+/*
+this will be hit if they are accessing our service from a browser
+_______________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description |
+  }
+________________________________________________________________________*/
   app.get('/login', function (req, res){
     spotifyAccountTools.login(req, res)
   })
 
-  // callback endpoint and function:
-  // endpoint will get hit when a user is trying to login and
-  // has already accepted the scope of our application
+/*
+log the user in to access the rest of our things, and to save their access and refresh tokens
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                      |
+    code                            : string :  the authorization code revieced from spotify |
+  }
+_____________________________________________________________________________________________*/
   app.get('/callback', function (req, res){
     spotifyAccountTools.retrieveAndPrepTokens (res, db, (spotifyAccountTemplate.authForTokens (req.query.code)), spotifyAccountTools.getHostInfo)
   })  
 
-  // createPlaylist endpoint and function
-  // extracts the information from the request
-  // to name the playlist and check who the
-  // host is. then goes through spotify to 
-  // make the playlist on their account
+/*
+create a new spotify playlist
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
   app.post('/playlist/create', function (req, res){
     spotifyPlaylistTools.createPlaylist (res, db, req.body.playName, req.body.host)
   })
 
-  // searches the spotify account and sets
-  // their most recent playlist ID as the
-  // current playlist to add to.
-
-  // TODO: FIX THIS, so that it does not
-  // allow for a playlist that the user
-  // does not control.
+/*
+find the user's latest spotify playlist
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
   app.post('/playlist/latest/spotify', function (req, res){
     spotifyPlaylistTools.findPlaylist (res, db, req.body.host)
   })
 
-  // choose the last playlist
-  // the host was using found
-  // in the database
+/*
+find this user's latest playlist held in our database
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
   app.post('/playlist/latest/party', function (req, res){
     search.search (req.body.host, query.findHost (req.body.host), db, function (hostFound){
       if (hostFound.playlistID != ''){
@@ -86,9 +103,14 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
     
   })
 
-  // resetAllGuests endpoint and function:
-  // removes all the guest from a current
-  // host's party
+/*
+remove every guest that is associated with this user
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
   app.post ('/guests/removeAll', function (req, res){
     removeList.guests (res, db, req.body.host)
   })
@@ -120,11 +142,14 @@ _______________________________________________________________________*/
     guestTools.addGuest (res, db, req.body.host, req.body.guestNum)
   })
 
-/*________________________________________________________
+/*
+remove the entire list of songs in our db for this user
+________________________________________________________________________________________
 TO BE SENT:
-  body of request: 
-    host           : the username of their spotify account. |
-____________________________________________________________*/
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
   app.post('/songs/removeAll', function (req, res){
     removeList.songs (res, db, req.body.host)
   })
