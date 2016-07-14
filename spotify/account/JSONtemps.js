@@ -50,3 +50,11 @@ function accessFromRefresh (refresh_token){
     json: true
   }
 }
+
+module.exports = {
+  buildScope: buildScope,
+  authForTokens: authForTokens,
+  getHostInfo: getHostInfo,
+  accessFromRefresh: accessFromRefresh
+
+}

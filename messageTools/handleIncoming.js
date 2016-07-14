@@ -2,16 +2,17 @@
 var request = require('request') // "Request" library
 
 // mongo variables
-var insert = require ('../databasetools/insert')
-var query = require ('../databasetools/querydb')
-var update = require ('../databasetools/update')
+var search = require ('../database/query/search')
+var updateResponseHandler = require ('../database/update/responseHandler')
+var updateTemplate = require ('../database/update/JSONtemps')
+var insertResponseHandler = require ('../database/insert/responseHandler')
+var insertTemplate = require ('../database/insert/JSONtemps')
 
 // message variables
 var respond = require ('./responses')
-var dbTools = require ('../databasetools/abstractTools')
 
 //my modules
-var makeJSON = require ('../JSONobjects/makeJSON')
+var SpotifyPlaylistJSON = require ('../spotify/playlist/JSONtemps')
 
 function incoming (res, db, toNum, guestFound, messageBody){
   var trackID = guestFound.currentTrack
@@ -22,7 +23,7 @@ function incoming (res, db, toNum, guestFound, messageBody){
       requestConfirmed (res, db, toNum, guestFound, trackID)
     }else if (messageBody.toLowerCase() === 'no'){
       respond.declineRequest (res)
-      update.updater ('guests', guestFound, update.guestRequest (''), db, update.responseHandler)
+      db.collection('guests').updateOne(guestFound, updateTemplate.guestRequest (''), updateResponseHandler)
     }else{
       searchRequest(res, db, toNum, {url: 'https://api.spotify.com/v1/search?q=' +messageBody+ '&type=track&limit=1'}, guestFound)
     }
@@ -33,12 +34,10 @@ function searchRequest(res, db, toNum, options, guestFound){
   request.get(options, function (error, response, body) {
     if (error) {
       respond.searchError (res)
-      console.log ('error searching spotify for the song on request')
     }else{
       trackAdd = JSON.parse(body)
       if (trackAdd.tracks.total>0){
-        var guestReqObj = update.guestRequest (trackAdd.tracks.items[0].id)
-        update.updater ('guests', guestFound, guestReqObj, db, update.responseHandler)
+        db.collection('guests').updateOne(guestFound, updateTemplate.guestRequest (trackAdd.tracks.items[0].id), updateResponseHandler)
         respond.askConfirmation (res, db, trackAdd)
       }else{
         respond.songNotFound (res)
@@ -56,31 +55,24 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
     dbTools.resetGuest (db, guestFound)
     respond.advertisment (toNum)
   }
-  query.search ('tracks', trackObjID, db, function (trackDocFound){
+  search ('tracks', trackObjID, db, function (trackDocFound){
     if (trackDocFound){
-      var updateObj = update.tracksReqd ()
-      var trackRequests = trackDocFound.numRequests
-      respond.requestedAlready (res, guestRequestsLeft, trackRequests)
-      update.updater ('tracks', trackDocFound, updateObj, db, update.responseHandler)
+      respond.requestedAlready (res, guestRequestsLeft, trackDocFound.numRequests)
+      db.collection('tracks').updateOne(trackDocFound, updateTemplate.tracksReqd, updateResponseHandler)
     }else{        
-      var track2Insert = insert.track (trackID)
       respond.newRequest (res, guestRequestsLeft)
-      insert.insert ('tracks', track2Insert, db, insert.responseHandler)
+      db.collection('tracks').insertOne(insertTemplate.track(trackID), insertResponseHandler)
     }
   })
   addSongToPlaylist (host, trackID, toNum, db)
-  update.updater ('guests', guestFound, decrementGuest, db, update.responseHandler)
+  db.collection('guests').updateOne(guestFound, decrementGuest, updateResponseHandler)
 }
 
 function addSongToPlaylist (host, trackID, toNum, db){
-  query.search (host, query.findHost (host), db, function (found){
+  search (host, query.findHost (host), db, function (found){
     var playlistID = found.playlistID
     var access_token = found.access_token
-    console.log (access_token)
-    console.log (playlistID)
-
-    console.log ('attempting to add song to playlist')
-    request.post(makeJSON.addSongToPlaylist (host, playlistID, trackID, access_token), function(error, response, body) {
+    request.post(SpotifyPlaylistJSON.addSongToPlaylist (host, playlistID, trackID, access_token), function(error, response, body) {
       console.log ('body: '+body)
       if (error){
         responseBody = ('there was an error adding ' +trackTitle+ ' to the playlist, will provide more usefull erroror messages in the future')

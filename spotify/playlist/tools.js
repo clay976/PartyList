@@ -1,12 +1,15 @@
-var loginTool = require ('./loginTools')
-var validateToken = require ('../databasetools/checkToken')
+//node modules
 var request = require('request') // "Request" library
 var querystring = require('querystring')
-var update = require ('../databasetools/update')
+
+//my modules
+var loginTool = require ('../account/tools')
+var hostTools = require ('../../database/hostTools')
+var updateTemps = require ('../../database/update/JSONtemps')
 
 //TODO: add comments
 function findPlaylist (res, db, host){
-  validateToken.checkToken (host, db, function (tokenValid, docFound){
+  hostTools.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){
       requestLatestPlaylist (res, db, host, makeJSON.auth (host, access_token), docFound, updatePlaylist)
     }else{
@@ -23,15 +26,15 @@ function requestLatestPlaylist (res, db, host, options, docFound, callback){
       loginTool.homePageRedirect (res, 500, 'there was an error finding the playlist on spotify\'s end, ')
     }else{
       var playlistID = playlistItems.items[0].id
-      callback (db, host, docFound, playlistID)
       loginTool.homePageRedirect (res, 200, 'playlist was found and updated succsefully')
+      callback (db, host, docFound, playlistID)
     }
   })
 }
 
 //TODO: add comments
 function createPlaylist (res, db, playlistName, host, callback){
-  validateToken.checkToken (host, db, function (tokenValid, docFound){
+  hostTools.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){
       var access_token = docFound.access_token
       if (playlistName) {
@@ -79,8 +82,7 @@ function postPlaylist (res, db, host, options, docFound, callback){
 }
 
 function updatePlaylist (db, host, docFound, playlistID){
-  var updateInfo = update.playlistID (playlistID)
-  update.updater (host, docFound, updateInfo, db, update.responseHandler)
+  updateTemps.playlistID (playlistID)
 }
 
 module.exports = {

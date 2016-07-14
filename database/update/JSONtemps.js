@@ -57,7 +57,5 @@ module.exports = {
   guestReset: guestReset,
   tracksReqd: tracksReqd,
   bothTokens: bothTokens,
-  accessToken: accessToken,
-  updater: updater,
-  responseHandler: responseHandler
+  accessToken: accessToken
 }

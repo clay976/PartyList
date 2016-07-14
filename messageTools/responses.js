@@ -6,7 +6,8 @@ var client = require('twilio/lib')(twilioAccountSID, twilioAccountSecret);
 
 //my modules
 var messageTool = require ('./message')
-var query = require ('../databasetools/querydb')
+var search = require ('../database/query/search')
+var searchTemps = require ('../database/query/JSONtemps')
 
 function notGuest (res){
   var resp = new twilio.TwimlResponse();
@@ -69,13 +70,13 @@ function songAdded (toNum, responseBody){
 }
 
 function askConfirmation(res, db, trackAdd){
-  var trackObjID = query.findTrack (trackID)
+  var trackObjID = searchTemps.track (trackID)
   var resp = new twilio.TwimlResponse();
 	var trackID =trackAdd.tracks.items[0].id
 	var trackTitle = trackAdd.tracks.items[0].name
 	var trackArtist = trackAdd.tracks.items[0].artists[0].name
 
-  query.search ('tracks', trackObjID, db, function (trackDocFound){
+  search ('tracks', trackObjID, db, function (trackDocFound){
     if (trackDocFound){
       var currentSongRequests = trackDocFound.numRequests
       resp.message ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\n Current number of requests: ' +currentSongRequests+ '\n\nSend back "Yes" to confirm, "No" to discard this request!')

@@ -29,3 +29,9 @@ function apiInfo (host, access, refresh){
     "tracks":[]
   }
 }
+
+module.exports = {
+  guest: guest,
+  track: track,
+  apiInfo: apiInfo
+}

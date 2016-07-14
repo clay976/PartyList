@@ -5,8 +5,9 @@ var bodyParser = require('body-parser')
 var assert = require('assert')
 
 //my modules
-var spotifyLoginTools = require ('./spotifyTools/loginTools')
-var spotifyPlaylistTools = require ('./spotifyTools/playlistTools')
+var spotifyAccountTools = require ('./spotify/account/tools')
+var spotifyAccountTemplate = require ('./spotify/account/JSONtemps')
+var spotifyPlaylistTools = require ('./spotify/playlist/tools')
 var handleIncoming = require ('./messageTools/handleIncoming')
 var respond = require ('./messageTools/responses')
 
@@ -16,14 +17,13 @@ app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 //required documents and tools
-var removeList = require ('./databasetools/removeList')
-var query = require ('./databasetools/querydb')
-var update = require ('./databasetools/update')
-var validateToken = require ('./databasetools/checkToken')
+var removeList = require ('./database/remove')
+var search = require ('./database/query/search')
+var queryTemplate = require ('./database/query/JSONtemps')
+var guestTools = require ('./database/guestTools')
 
 //mongo database variables
 var MongoClient = require('mongodb').MongoClient
-var dbTools = require ('./databasetools/abstractTools')
 var mongoUrl = 'mongodb://localhost:27017/party'
 
 //connect to the database, this happens when api starts, and the conection doesn't close until the API shuts down/crashes
@@ -36,14 +36,14 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // info for our application
   // the are handed the scope of our app and asked to agree before actually loggin in.
   app.get('/login', function (req, res){
-    spotifyLoginTools.login(req, res)
+    spotifyAccountTools.login(req, res)
   })
 
   // callback endpoint and function:
   // endpoint will get hit when a user is trying to login and
   // has already accepted the scope of our application
   app.get('/callback', function (req, res){
-    spotifyLoginTools.homepage (req, res, db, spotifyLoginTools.retrieveAndPrepTokens)
+    spotifyAccountTools.retrieveAndPrepTokens (res, db, SpotifyAccountTemplate.authForTokens (req.query.code), getHostInfo)
   })  
 
   // createPlaylist endpoint and function
@@ -52,9 +52,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // host is. then goes through spotify to 
   // make the playlist on their account
   app.post('/playlist/create', function (req, res){
-    var playlistName = req.body.playName
-    var host = req.body.host
-    spotifyPlaylistTools.createPlaylist (res, db, playlistName, host, spotifyPlaylistTools.preparePlaylistRequest)
+    spotifyPlaylistTools.createPlaylist (res, db, req.body.playName, req.body.host, spotifyPlaylistTools.preparePlaylistRequest)
   })
 
   // searches the spotify account and sets
@@ -65,26 +63,18 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // allow for a playlist that the user
   // does not control.
   app.post('/playlist/latest/spotify', function (req, res){
-    var host = req.body.host
-    spotifyPlaylistTools.findPlaylist (res, db, host)
+    spotifyPlaylistTools.findPlaylist (res, db, req.body.host)
   })
 
   // choose the last playlist
   // the host was using found
   // in the database
   app.post('/playlist/latest/party', function (req, res){
-    var host = req.body.host
-    var host2Find = query.findHost (host)
-
-    query.search (host, host2Find, db, function (hostFound){
+    search (req.body.host, query.findHost (req.body.host), db, function (hostFound){
       if (hostFound.playlistID != ''){
-        var message = 'hosts playlist has been found in DB'
-        console.log (message)
-        res.send (200, message)
+        res.send (200, 'hosts playlist has been found in DB')
       }else{
-        message = 'sorry, host playlist not found in DB'
-        console.log (message)
-        res.send (401, message)
+        res.send (401, 'sorry, host playlist not found in DB')
       }
     })
   })
@@ -100,25 +90,20 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // removes all the guest from a current
   // host's party
   app.post ('/guests/removeAll', function (req, res){
-    var host = req.body.host
-    removeList.guests (res, db, host)
+    removeList.guests (res, db, req.body.host)
   })
 
 /*
 add many guests to the party in a JSON block
-___________________________________________________________________
+________________________________________________________________________________________
 TO BE SENT:
-  JSON from req.body{  :  type  :              Description                |
-    host               : string :  the username of their spotify account. |
-    guestNums          :  JSON  : phone numbers of the guest to be added  |
-      num: 1234567890,
-      num: etc,
-    }
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+    guestNums [ 1234567890, etc, ]  : array  :  phone numbers of the guest to be added |
   }
-_______________________________________________________________________*/
+_______________________________________________________________________________________*/
   app.post('/guests/addMany', function (req, res){
-    dbTools.addManyGuest (req, res, db, host, num)
-
+    guestTools.addManyGuest (req, res, db)
   })
 
 
@@ -132,9 +117,7 @@ TO BE SENT:
   }
 _______________________________________________________________________*/
   app.post('/guests/add', function (req, res){
-    var host = req.body.host
-    var guestNum = req.body.guestNum
-    dbTools.addGuest (res, db, host, guestNum)
+    guestTools.addGuest (res, db, req.body.host, req.body.guestNum)
   })
 
 /*________________________________________________________
@@ -143,21 +126,17 @@ TO BE SENT:
     host           : the username of their spotify account. |
 ____________________________________________________________*/
   app.post('/songs/removeAll', function (req, res){
-    var host = req.body.host
-    removeList.songs (res, db, host)
+    removeList.songs (res, db, req.body.host)
   })
 
   //this should only be coming from Twilio,
   //to be fixed in gulp branch or something.
   app.post('/message', function (req, res){ 
-    var sender = req.body.From
-    var messageBody = req.body.Body.toLowerCase()
-    var guest2Find = query.findGuest (sender)
-    query.search ('guests', guest2Find, db, function (guestFound){
+    search ('guests', queryTemplate.findGuest (req.body.From), db, function (guestFound){
       if (!guestFound){
-        respond.notGuest (res, sender)
+        respond.notGuest (res, req.body.From)
       }else{
-        handleIncoming.incoming (res, db, sender, guestFound, messageBody)
+        handleIncoming.incoming (res, db, req.body.From, guestFound, req.body.Body.toLowerCase())
       }
     })
   })
