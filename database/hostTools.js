@@ -9,7 +9,7 @@ var querystring = require('querystring')
 // who is already a host needs to just update the tokens
 // or someone who is new who needs a new document
 function UOIHost (res, db, host, docuSearch, access_token, refresh_token){
-  search (host, docuSearch, db, function (found){
+  search.search (host, docuSearch, db, function (found){
     if (found != null){
       console.log ('user has been found')
       db.collection(host).updateOne(found, updateTemplate.bothTokens (access_token, refresh_token), updateResponseHandler)
