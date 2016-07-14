@@ -20,7 +20,7 @@ var stateKey = 'spotify_auth_state'
 // we are trying to make calls afterward to make sure
 // they are still logged in
 function login (req, res) {
-  res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify(accountTemplate.buildScope())
+  res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify(accountTemplate.buildScope()))
 }
 
 // makes a request to the spotify API to retrieve
