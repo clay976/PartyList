@@ -17,7 +17,7 @@ function addManyGuest (req, res, db){
 function addGuest (res, db, host, guestNum){
   if (guestNum.length === 10){
     var guestNum = '+1'+ guestNum
-    search ('guests', queryTemplate.findGuest (guestNum), db, function (guestFound){
+    search.search ('guests', queryTemplate.findGuest (guestNum), db, function (guestFound){
       if (guestFound){
         res.send ('you already added this guest' + guestNum)
       }else{

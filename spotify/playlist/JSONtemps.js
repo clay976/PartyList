@@ -17,6 +17,22 @@ function addSongToPlaylist (host, playlistID, trackID, access_token){
   }
 }
 
+function createPlaylist (host, playlistName, access_token){
+  return {
+    url: 'https://api.spotify.com/v1/users/' +host+ '/playlists',
+    body: JSON.stringify({
+      'name': playlistName,
+      'public': false
+    }),
+    dataType:'json',
+    headers: {
+      'Authorization': 'Bearer ' + access_token,
+      'Content-Type': 'application/json',
+    }
+  }
+  return (options)
+}
+
 module.exports = {
   auth: auth,
   addSongToPlaylist: addSongToPlaylist

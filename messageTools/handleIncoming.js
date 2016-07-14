@@ -47,33 +47,26 @@ function searchRequest(res, db, toNum, options, guestFound){
 }
 
 function requestConfirmed (res, db, toNum, guestFound, trackID){
-  var trackObjID = query.findTrack (trackID)
-  var guestRequestsLeft = guestFound.numRequests
-  var decrementGuest = update.guestConfirm ()
-  var host = guestFound.host
-  if (guestRequestsLeft < 1){
+  if (guestFound.numRequests < 1){
     dbTools.resetGuest (db, guestFound)
     respond.advertisment (toNum)
   }
-  search ('tracks', trackObjID, db, function (trackDocFound){
+  search.search ('tracks', searchTemplate.findTrack (trackID), db, function (trackDocFound){
     if (trackDocFound){
-      respond.requestedAlready (res, guestRequestsLeft, trackDocFound.numRequests)
+      respond.requestedAlready (res, guestFound.numRequests, trackDocFound.numRequests)
       db.collection('tracks').updateOne(trackDocFound, updateTemplate.tracksReqd, updateResponseHandler)
     }else{        
-      respond.newRequest (res, guestRequestsLeft)
+      respond.newRequest (res, guestFound.numRequests)
       db.collection('tracks').insertOne(insertTemplate.track(trackID), insertResponseHandler)
     }
   })
-  addSongToPlaylist (host, trackID, toNum, db)
-  db.collection('guests').updateOne(guestFound, decrementGuest, updateResponseHandler)
+  addSongToPlaylist (guestFound.host, trackID, toNum, db)
+  db.collection('guests').updateOne(guestFound, update.guestConfirm (), updateResponseHandler)
 }
 
 function addSongToPlaylist (host, trackID, toNum, db){
-  search (host, query.findHost (host), db, function (found){
-    var playlistID = found.playlistID
-    var access_token = found.access_token
-    request.post(SpotifyPlaylistJSON.addSongToPlaylist (host, playlistID, trackID, access_token), function(error, response, body) {
-      console.log ('body: '+body)
+  search.search (host, query.findHost (host), db, function (found){
+    request.post(SpotifyPlaylistJSON.addSongToPlaylist (host, found.playlistID, trackID, found.access_token), function(error, response, body) {
       if (error){
         responseBody = ('there was an error adding ' +trackTitle+ ' to the playlist, will provide more usefull erroror messages in the future')
       }else{

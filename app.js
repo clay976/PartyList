@@ -70,7 +70,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // the host was using found
   // in the database
   app.post('/playlist/latest/party', function (req, res){
-    search (req.body.host, query.findHost (req.body.host), db, function (hostFound){
+    search.search (req.body.host, query.findHost (req.body.host), db, function (hostFound){
       if (hostFound.playlistID != ''){
         res.send (200, 'hosts playlist has been found in DB')
       }else{

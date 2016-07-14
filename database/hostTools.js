@@ -22,7 +22,7 @@ function UOIHost (res, db, host, docuSearch, access_token, refresh_token){
 }
 
 function checkToken(host, db, callback){
-  search (host, {'host':host}, db, function(found){ 
+  search.search (host, {'host':host}, db, function(found){ 
     if (found != null){
         callback (true, found)
     }else{

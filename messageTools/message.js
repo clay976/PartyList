@@ -10,9 +10,7 @@ function message (toNum,body){
   }
 }
 function sentHandler (err, responseData){
-  if (!err) {
-    console.log('message sent succesfully')
-  }else{
+  if (err) {
     console.log (err)
     console.log ("error sending message back")
   }

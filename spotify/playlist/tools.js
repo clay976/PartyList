@@ -5,7 +5,8 @@ var querystring = require('querystring')
 //my modules
 var loginTool = require ('../account/tools')
 var hostTools = require ('../../database/hostTools')
-var updateTemps = require ('../../database/update/JSONtemps')
+var updateTemplate = require ('../../database/update/JSONtemps')
+var updateTemplate = require ('../playlist/JSONtemps')
 
 //TODO: add comments
 function findPlaylist (res, db, host){
@@ -25,9 +26,8 @@ function requestLatestPlaylist (res, db, host, options, docFound, callback){
     if (error) {
       loginTool.homePageRedirect (res, 500, 'there was an error finding the playlist on spotify\'s end, ')
     }else{
-      var playlistID = playlistItems.items[0].id
       loginTool.homePageRedirect (res, 200, 'playlist was found and updated succsefully')
-      callback (db, host, docFound, playlistID)
+      callback (db, host, docFound, playlistItems.items[0].id)
     }
   })
 }
@@ -36,10 +36,8 @@ function requestLatestPlaylist (res, db, host, options, docFound, callback){
 function createPlaylist (res, db, playlistName, host, callback){
   hostTools.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){
-      var access_token = docFound.access_token
       if (playlistName) {
-        var playlistReqObject = preparePlaylistRequest (playlistName, access_token)
-        postPlaylist (res, db, host, playlistReqObject, docFound, updatePlaylist)
+        postPlaylist (res, db, host, updateTemplate.createPlaylist (host, playlistName, docFound.access_token), docFound, updatePlaylist)
       }else{
         loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
       }
@@ -47,23 +45,6 @@ function createPlaylist (res, db, playlistName, host, callback){
       loginTool.loginRedirect (res, 401, 'a user with invalid tokens tried to create a playlist')
     }
   })
-}
-
-//TODO: add comments
-function preparePlaylistRequest (playlistName, access_token){
-  var options = {
-    url: 'https://api.spotify.com/v1/users/' +host+ '/playlists',
-    body: JSON.stringify({
-      'name': playlistName,
-      'public': false
-    }),
-    dataType:'json',
-    headers: {
-      'Authorization': 'Bearer ' + access_token,
-      'Content-Type': 'application/json',
-    }
-  }
-  return (options)
 }
 
 //TODO: add comments
@@ -82,13 +63,12 @@ function postPlaylist (res, db, host, options, docFound, callback){
 }
 
 function updatePlaylist (db, host, docFound, playlistID){
-  updateTemps.playlistID (playlistID)
+  updateTemplate.playlistID (playlistID)
 }
 
 module.exports = {
   findPlaylist: findPlaylist,
   createPlaylist: createPlaylist,
-  preparePlaylistRequest: preparePlaylistRequest,
   postPlaylist: postPlaylist,
   updatePlaylist: updatePlaylist
 }
