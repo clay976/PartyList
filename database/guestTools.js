@@ -22,11 +22,11 @@ function addGuest (res, db, host, guestNum){
         res.send ('you already added this guest' + guestNum)
       }else{
         db.collection('guests').insertOne(insertTemplate.guest (host, guestNum), insertResponseHandler)
-        res.send (200, 'Guest added succesfully, number: '+ guestNum)
+        res.status(200).send('Guest added succesfully, number: '+ guestNum)
       }
     })
   }else{
-    res.send ('number recieved not in the right format, please retry with the format "1234567890" (no speacial characters)')
+    res.status(400).send('number recieved not in the right format, please retry with the format "1234567890" (no speacial characters)')
   }
 }
 
