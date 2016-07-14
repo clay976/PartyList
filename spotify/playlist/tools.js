@@ -6,7 +6,7 @@ var querystring = require('querystring')
 var loginTool = require ('../account/tools')
 var hostTools = require ('../../database/hostTools')
 var updateTemplate = require ('../../database/update/JSONtemps')
-var playlistTemplate = require ('./playlist/JSONtemps')
+var playlistTemplate = require ('./JSONtemps')
 var accountTemplate = require ('../account/JSONtemps')
 
 //TODO: add comments
