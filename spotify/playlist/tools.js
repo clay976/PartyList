@@ -38,7 +38,7 @@ function createPlaylist (res, db, playlistName, host){
   hostTools.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){
       if (playlistName) {
-        postPlaylist (res, db, host, playlistTemplate.createPlaylist (host, playlistName, docFound.access_token), docFound, updatePlaylist)
+        postPlaylist (res, db, host, playlistTemplate.createPlaylist (host, playlistName, docFound.access_token), docFound)
       }else{
         loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
       }
