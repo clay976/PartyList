@@ -2,6 +2,7 @@ var search = require ('./query/search')
 var queryTemplate = require ('./query/JSONtemps')
 var updateTemplate = require ('./update/JSONtemps')
 var insertTemplate = require ('./insert/JSONtemps')
+insertResponseHandler = require ('./insert/responseHandler')
 
 function addManyGuest (req, res, db){
   var body = JSON.parse(req)
