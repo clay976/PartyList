@@ -43,7 +43,7 @@ MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
   // endpoint will get hit when a user is trying to login and
   // has already accepted the scope of our application
   app.get('/callback', function (req, res){
-    spotifyAccountTools.retrieveAndPrepTokens (res, db, (spotifyAccountTemplate.authForTokens (req.query.code)), getHostInfo)
+    spotifyAccountTools.retrieveAndPrepTokens (res, db, (spotifyAccountTemplate.authForTokens (req.query.code)), spotifyAccountTools.getHostInfo)
   })  
 
   // createPlaylist endpoint and function
