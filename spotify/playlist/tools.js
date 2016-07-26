@@ -55,10 +55,6 @@ function requestLatestPlaylist (res, db, host, options, docFound, callback){
   })
 }
 
-function loginRedirect (res, code, message){
-  res.redirect ('/'+code)
-}
-
 
 //TODO: add comments
 function postPlaylist (res, db, host, options, docFound, callback){
@@ -79,7 +75,6 @@ function updatePlaylist (db, host, docFound, playlistID){
 }
 
 module.exports = {
-  loginRedirect: loginRedirect,
   findPlaylist: findPlaylist,
   createPlaylist: createPlaylist,
   postPlaylist: postPlaylist,
