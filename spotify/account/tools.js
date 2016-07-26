@@ -41,16 +41,19 @@ function login (req, res) {
 // preps them in to an "options" object to
 // make another call for host info
 function homepage (req, res, db) {
-  var data = spotifyApi.authorizationCodeGrant(req.query.code)
-  var hostInfo = (spotifyApi.getMe(data.body['access_token']))
-  search.search (hostInfo.body.id, searchTemplate.findHost (hostInfo.body.id), db, function (found){
-    if (found != null){
-      db.collection(hostInfo.body.id).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']),update.responseHandler)
-    }else{
-      db.collection(hostInfo.body.id).insertOne(insertTemplate.apiInfo (hostInfo.body.id, data.body['access_token'], data.body['refresh_token']), insertResponseHandler)
-    }
+  var data 
+  var hostInfo
+  data = spotifyApi.authorizationCodeGrant(req.query.code).then(spotifyApi.setAccessToken(data.body['access_token']))
+  hostInfo = (spotifyApi.getMe(data.body['access_token'])).then (function(hostInfo, data) {
+    search.search (hostInfo.body.id, searchTemplate.findHost (hostInfo.body.id), db, function (found){
+      if (found != null){
+        db.collection(hostInfo.body.id).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']),update.responseHandler)
+      }else{
+        db.collection(hostInfo.body.id).insertOne(insertTemplate.apiInfo (hostInfo.body.id, data.body['access_token'], data.body['refresh_token']), insertResponseHandler)
+      }
+    })
+    res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
   })
-  res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
   .catch(function(err) {
     res.redirect ('/')
     console.log('Something went wrong', err.message);
