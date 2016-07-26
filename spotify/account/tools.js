@@ -9,9 +9,6 @@ var dbHostTools = require ('../../database/hostTools')
 var spotifyAccountTemplate = require ('./JSONtemps')
 
 //other variables
-var stateKey = 'spotify_auth_state'
-
-var scopes = ['user-read-private user-read-email user-read-birthdate streaming playlist-modify-private playlist-modify-public playlist-read-private']
 
 // Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
 
@@ -23,11 +20,7 @@ var credentials = {
   redirectUri : 'http://104.131.215.55:80/callback'
 };
 
-var state = 'state'
-
 var spotifyApi = new SpotifyWebApi(credentials);
-
-var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state)
 
 // this is what the user will see when they click login for the first
 // time, it tells them what our app will be allowed to access
@@ -45,7 +38,6 @@ function login (req, res) {
 // preps them in to an "options" object to
 // make another call for host info
 function homepage (req, res, db) {
-  console.log (credentials)
   console.log (req.query.code)
   spotifyApi.authorizationCodeGrant(req.query.code)
   .then(function(data) {
@@ -56,7 +48,6 @@ function homepage (req, res, db) {
   }, function(err) {
     res.redirect (403, '/')
     console.log('Something went wrong!', err);
-    console.log('Something went wrong!', err_description);
   });
 }
 
