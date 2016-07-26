@@ -6,6 +6,7 @@ var querystring = require('querystring')
 var loginTool = require ('../account/tools')
 var hostTools = require ('../../database/hostTools')
 var updateTemplate = require ('../../database/update/JSONtemps')
+var search = require ('../../database/query/search')
 var playlistTemplate = require ('./JSONtemps')
 var accountTemplate = require ('../account/JSONtemps')
 
@@ -13,11 +14,11 @@ var accountTemplate = require ('../account/JSONtemps')
 function createPlaylist (req, res, db){
   var playlistName = req.body.playName
   var hostID = req.body.host
-  var authToken = search.search (hostID, {'host':hostID}, db)
-  .then (function (authToken, hostID, playlistName){
-    if (authToken){
+  var hostInfo = search.search (hostID, {'host':hostID}, db)
+  .then (function (hostInfo, hostID, playlistName){
+    if (hostInfo){
       if (playlistName){
-        postPlaylist (res, db, host, playlistTemplate.createPlaylist (host, playlistName, docFound.access_token), docFound, updatePlaylist)
+        postPlaylist (res, db, hostID, playlistTemplate.createPlaylist (host, playlistName, hostInfo.access_token), hostInfo, updatePlaylist)
       }else{
         loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
       }
