@@ -9,8 +9,7 @@ var updateTemplate = require ('../../database/update/JSONtemps')
 var search = require ('../../database/query/search')
 var playlistTemplate = require ('./JSONtemps')
 var accountTemplate = require ('../account/JSONtemps')
-
-
+var model = require ('../../database/models')
 
 //TODO: add comments
 function createPlaylist (req, res, db){
