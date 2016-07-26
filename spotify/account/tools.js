@@ -5,13 +5,17 @@ var SpotifyWebApi = require('spotify-web-api-node');
 
 //my modules
 var searchTemplate = require ('../../database/query/JSONtemps')
-/*var search = require ('../../databasetools/query/search')
-var update = require ('../../databasetools/update')*/
 var dbHostTools = require ('../../database/hostTools')
 var spotifyAccountTemplate = require ('./JSONtemps')
 
 //other variables
 var stateKey = 'spotify_auth_state'
+
+var scopes = ['user-read-private user-read-email user-read-birthdate streaming playlist-modify-private playlist-modify-public playlist-read-private']
+var state = 'some-state-of-my-choice'
+
+// Create the authorization URL
+var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state)
 
 var credentials = {
   clientId : '000adffbd26453fbef24e8c1ff69c3b',
