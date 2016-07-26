@@ -16,7 +16,7 @@ var stateKey = 'spotify_auth_state'
 var credentials = {
   clientId : '000adffbd26453fbef24e8c1ff69c3b',
   clientSecret : '899b3ec7d52b4baabba05d6031663ba2',
-  redirectUri : 'http://localhost:80/callback'
+  redirectUri : 'http://104.131.215.55:80/callback'
 };
 
 var spotifyApi = new SpotifyWebApi(credentials)
