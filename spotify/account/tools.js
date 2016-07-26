@@ -1,6 +1,7 @@
 //node modules
 var querystring = require('querystring')
 var request = require('request') // "Request" library
+var SpotifyWebApi = require('spotify-web-api-node');
 
 //my modules
 var searchTemplate = require ('../../database/query/JSONtemps')
