@@ -43,7 +43,7 @@ function homepage (req, res, db) {
   .then (spotifyApi.getMe())
   .then(function(data) {
     getHostInfo (res, db, spotifyAccountTemplate.getHostInfo (data.body['access_token']), data.body['access_token'], data.body['refresh_token'], dbHostTools.UOIHost)
-    spotifyApi.getMe()
+    spotifyApi.getMe(data.body['access_token'])
       .then(function(data) {
         console.log('Some information about the authenticated user', data.body);
       }, function(err) {
