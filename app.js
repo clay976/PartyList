@@ -51,7 +51,7 @@ TO BE SENT:
   }
 _____________________________________________________________________________________________*/
   app.get('/callback', function (req, res){
-    spotifyAccountTools.retrieveAndPrepTokens (res, db, (spotifyAccountTemplate.authForTokens (req.query.code)), spotifyAccountTools.getHostInfo)
+    spotifyAccountTools.homepage (req, res, db)
   })  
 
 /*
