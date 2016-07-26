@@ -11,12 +11,6 @@ var search = require ('../../database/query/search')
 var dbHostTools = require ('../../database/hostTools')
 var spotifyAccountTemplate = require ('./JSONtemps')
 
-//other variables
-
-// Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
-
-// Create the authorization URL
-
 var credentials = {
   clientId : 'a000adffbd26453fbef24e8c1ff69c3b',
   clientSecret : '899b3ec7d52b4baabba05d6031663ba2',
@@ -25,24 +19,13 @@ var credentials = {
 
 var spotifyApi = new SpotifyWebApi(credentials);
 
-// this is what the user will see when they click login for the first
-// time, it tells them what our app will be allowed to access
-// and provides the location of where the app will go after login
-// with the redirect URI.
-// the state is what will be checked by the app when
-// we are trying to make calls afterward to make sure
-// they are still logged in
-function login (req, res) {
-  res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify(spotifyAccountTemplate.buildScope()))
-}
-
 // makes a request to the spotify API to retrieve
 // the access and refresh tokens for the user
 // preps them in to an "options" object to
 // make another call for host info
 function homepage (req, res, db) {
   var data = spotifyApi.authorizationCodeGrant(req.query.code)
-  .then(function(data) {
+  .then (function(data) {
     spotifyApi.setAccessToken(data.body['access_token'])
     var hostInfo = (spotifyApi.getMe())
     .then (function(hostInfo, data) {
@@ -54,14 +37,6 @@ function homepage (req, res, db) {
     res.redirect ('/')
     console.log('Something went wrong', err.message);
   })
-}
-
-function loginRedirect (res, code, message){
-  res.redirect ('/'+code)
-}
-
-function homePageRedirect (res, statusCode, message){
-  res.send (statusCode, message)
 }
 
 function refreshToken () {
@@ -84,18 +59,9 @@ function checkToken (host, db, callback){
   })
 }
 
-function generateRandomString (length) {
-  var text = ''
-  var possible = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789'
-  for (var i = 0; i < length; i++) {
-    text += possible.charAt(Math.floor(Math.random() * possible.length))
-  }
-  return text
-}
 
 //exports for external modules to use.
 module.exports = {
-  login: login,
   homepage: homepage,
   loginRedirect: loginRedirect,
   homePageRedirect: homePageRedirect,

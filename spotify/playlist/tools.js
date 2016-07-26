@@ -10,6 +10,23 @@ var playlistTemplate = require ('./JSONtemps')
 var accountTemplate = require ('../account/JSONtemps')
 
 //TODO: add comments
+function createPlaylist (req, res, db){
+  var playlistName = req.body.playName
+  var hostID = req.body.host
+  var authToken = search.search (hostID, {'host':hostID}, db)
+  .then (function (authToken, hostID, playlistName){
+    if (authToken){
+      if (playlistName){
+        postPlaylist (res, db, host, playlistTemplate.createPlaylist (host, playlistName, docFound.access_token), docFound, updatePlaylist)
+      }else{
+        loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
+      }
+    }else{
+      loginTool.loginRedirect (res, 401, 'a user with invalid tokens tried to create a playlist')
+    }
+  })
+}
+//TODO: add comments
 function findPlaylist (res, db, host){
   hostTools.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){
@@ -33,20 +50,6 @@ function requestLatestPlaylist (res, db, host, options, docFound, callback){
   })
 }
 
-//TODO: add comments
-function createPlaylist (res, db, playlistName, host){
-  hostTools.checkToken (host, db, function (tokenValid, docFound){
-    if (tokenValid){
-      if (playlistName) {
-        postPlaylist (res, db, host, playlistTemplate.createPlaylist (host, playlistName, docFound.access_token), docFound, updatePlaylist)
-      }else{
-        loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
-      }
-    }else{
-      loginTool.loginRedirect (res, 401, 'a user with invalid tokens tried to create a playlist')
-    }
-  })
-}
 
 //TODO: add comments
 function postPlaylist (res, db, host, options, docFound, callback){

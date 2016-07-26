@@ -1,10 +1,10 @@
-function search (collect, docu, db, callback){
+function search (collect, docu, db){
   var assert = require('assert')
   var cursor =db.collection(collect).find(docu)
   
   cursor.toArray(function (err, doc) {
     assert.equal(err, null)
-    callback (doc [0]) 
+    return (doc [0]) 
   })
 }
 module.exports = {

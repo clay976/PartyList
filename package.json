@@ -15,7 +15,8 @@
     "express": "~4.0.0",
     "querystring": "~0.2.0",
     "request": "~2.34.0",
-    "twilio": "2.6.0"
+    "twilio": "2.6.0",
+    "mongoose": "4.5.7"
   },
   "devDependencies": {
     "gulp": "^3.9.1",

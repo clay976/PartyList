@@ -39,7 +39,7 @@ TO BE SENT:
   }
 ________________________________________________________________________*/
   app.get('/login', function (req, res){
-    spotifyAccountTools.login(req, res)
+    res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify(spotifyAccountTemplate.buildScope()))
   })
 
 /*
@@ -63,7 +63,7 @@ TO BE SENT:
   }
 _______________________________________________________________________________________*/
   app.post('/playlist/create', function (req, res){
-    spotifyPlaylistTools.createPlaylist (res, db, req.body.playName, req.body.host)
+    spotifyPlaylistTools.createPlaylist (req, res, db)
   })
 
 /*
