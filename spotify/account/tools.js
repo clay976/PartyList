@@ -5,6 +5,7 @@ var SpotifyWebApi = require('spotify-web-api-node');
 
 //my modules
 var searchTemplate = require ('../../database/query/JSONtemps')
+var search = require ('../../database/query/search')
 var dbHostTools = require ('../../database/hostTools')
 var spotifyAccountTemplate = require ('./JSONtemps')
 
