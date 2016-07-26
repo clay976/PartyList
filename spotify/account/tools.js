@@ -40,7 +40,7 @@ function login (req, res) {
 function homepage (req, res, db) {
   console.log (req.query.code)
   spotifyApi.authorizationCodeGrant(req.query.code)
-  .then(spotifyApi.getMe()
+  .then (spotifyApi.getMe())
   .then(function(data) {
     console.log('Some information about the authenticated user', data.body)
     //getHostInfo (res, db, spotifyAccountTemplate.getHostInfo (data.body['access_token']), data.body['access_token'], data.body['refresh_token'], dbHostTools.UOIHost)
