@@ -45,12 +45,7 @@ function homepage (req, res, db) {
     console.log('Some information about the authenticated user', data.body);
   }, function(err) {
     console.log('Something went wrong!', err);
-  });
-    getHostInfo (res, db, spotifyAccountTemplate.getHostInfo (data.body['access_token']), data.body['access_token'], data.body['refresh_token'], dbHostTools.UOIHost)
-  }, function(err) {
-    res.redirect (403, '/')
-    console.log('Something went wrong!', err);
-  });
+  })  //getHostInfo (res, db, spotifyAccountTemplate.getHostInfo (data.body['access_token']), data.body['access_token'], data.body['refresh_token'], dbHostTools.UOIHost)
 }
 
 // makes another request to the spotify API to
