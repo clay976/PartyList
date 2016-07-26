@@ -3,6 +3,7 @@ var express = require('express') // Express web server framework
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var assert = require('assert')
+var querystring = require('querystring')
 
 //my modules
 var spotifyAccountTools = require ('./spotify/account/tools')
