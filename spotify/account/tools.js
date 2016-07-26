@@ -38,9 +38,8 @@ function login (req, res) {
 // preps them in to an "options" object to
 // make another call for host info
 function homepage (req, res, db) {
-  console.log (req.query.code)
   spotifyApi.authorizationCodeGrant(req.query.code)
-  .then(spotifyApi.getMe()
+  .then(spotifyApi.getMe())
   .then(function(data) {
     console.log('Some information about the authenticated user', data.body);
   }, function(err) {
