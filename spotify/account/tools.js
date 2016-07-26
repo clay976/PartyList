@@ -48,7 +48,7 @@ function homepage (req, res, db) {
     .then(function(hostInfo) {
       search.search (hostInfo.body.id, searchTemplate.findHost (hostInfo.body.id), db, function (found){
         if (found != null){
-          db.collection((hostInfo.body.id).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token'])),update.responseHandle)
+          db.collection((hostInfo.body.id).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token'])),update.responseHandler)
         }else{
           db.collection(hostInfo.body.id).insertOne(insertTemplate.apiInfo (hostInfo.body.id, data.body['access_token'], data.body['refresh_token']), insertResponseHandler)
         }
