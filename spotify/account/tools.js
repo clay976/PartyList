@@ -12,7 +12,8 @@ var spotifyAccountTemplate = require ('./JSONtemps')
 var stateKey = 'spotify_auth_state'
 
 var scopes = ['user-read-private user-read-email user-read-birthdate streaming playlist-modify-private playlist-modify-public playlist-read-private']
-var state = 'some-state-of-my-choice'
+
+// Setting credentials can be done in the wrapper's constructor, or using the API object's setters.
 
 // Create the authorization URL
 
@@ -22,7 +23,9 @@ var credentials = {
   redirectUri : 'http://104.131.215.55:80/callback'
 };
 
-var spotifyApi = new SpotifyWebApi(credentials)
+var state = 'state'
+
+var spotifyApi = new SpotifyWebApi(credentials);
 
 var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state)
 
