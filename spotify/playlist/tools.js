@@ -11,12 +11,13 @@ var playlistTemplate = require ('./JSONtemps')
 var accountTemplate = require ('../account/JSONtemps')
 var model = require ('../../database/models')
 
+
 //TODO: add comments
 function createPlaylist (req, res, db){
   var playlistName = req.body.playName
   var hostID = req.body.host
-  var hostInfo = (model.Host.findOne({ 'hostID': hostID })).exec()
-  hostInfo.then (function (hostInfo, hostID, playlistName){
+  var hostInfoPromise = (model.Host.findOne({ 'hostID': hostID })).exec()
+  hostInfoPromise.then (function (hostInfo, hostID, playlistName){
     if (hostInfo){
       if (playlistName){
         postPlaylist (res, db, hostID, playlistTemplate.createPlaylist (host, playlistName, hostInfo.access_token), hostInfo, updatePlaylist)
@@ -28,6 +29,7 @@ function createPlaylist (req, res, db){
     }
   })
 }
+
 //TODO: add comments
 function findPlaylist (res, db, host){
   hostTools.checkToken (host, db, function (tokenValid, docFound){
