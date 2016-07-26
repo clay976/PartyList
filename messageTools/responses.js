@@ -67,7 +67,7 @@ function askConfirmation(res, db, trackAdd){
 	var trackTitle = trackAdd.tracks.items[0].name
 	var trackArtist = trackAdd.tracks.items[0].artists[0].name
 
-  search.search ('tracks', searchTemps.track (trackAdd.tracks.items[0].id), db, function (trackDocFound){
+  search.search ('tracks', searchTemps.findTrack (trackAdd.tracks.items[0].id), db, function (trackDocFound){
     if (trackDocFound){
       var currentSongRequests = trackDocFound.numRequests
       resp.message ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\n Current number of requests: ' +currentSongRequests+ '\n\nSend back "Yes" to confirm, "No" to discard this request!')
