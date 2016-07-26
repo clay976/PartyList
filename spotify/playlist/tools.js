@@ -17,7 +17,7 @@ function createPlaylist (req, res, db){
   var playlistName = req.body.playName
   var hostID = req.body.host
   var hostInfoPromise = (model.Host.findOne({ 'hostID': hostID })).exec()
-  hostInfoPromise.then (function (hostInfo, hostID, playlistName){
+  hostInfoPromise.then (function (hostInfo){
     if (hostInfo){
       if (playlistName){
         postPlaylist (res, db, hostID, playlistTemplate.createPlaylist (host, playlistName, hostInfo.access_token), hostInfo, updatePlaylist)
