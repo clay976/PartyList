@@ -41,13 +41,13 @@ function login (req, res) {
 function homepage (req, res, db) {
   spotifyApi.authorizationCodeGrant(req.query.code)
   .then(function(data) {
-    spotifyApi.setAccessToken(data.body['access_token']);
+    spotifyApi.setAccessToken(data.body['access_token'])
     var hostInfo = spotifyApi.getMe()
     .then(function(hostInfo) {
       console.log (hostInfo.body)
-      console.log('Retrieved data for ' + hostInfo.body['display_name']);
-      console.log('Email is ' + hostInfo.body.email);
-      console.log('This user has a ' + hostInfo.body.product + ' account');
+      console.log('Retrieved data for ' + hostInfo.body['display_name'])
+      console.log('Email is ' + hostInfo.body.email)
+      console.log('This user has a ' + hostInfo.body.product + ' account')
       search.search (hostInfo.body['display_name'], searchTemplate.findHost (hostInfo.body['display_name']), db, function (found){
         if (found != null){
           console.log ('user has been found')
@@ -58,7 +58,7 @@ function homepage (req, res, db) {
         }
       })
       res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
-    }
+    })
     .catch(function(err) {
       res.redirect ('/')
       console.log('Something went wrong', err.message);
