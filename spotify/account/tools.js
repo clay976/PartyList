@@ -41,11 +41,12 @@ function login (req, res) {
 // preps them in to an "options" object to
 // make another call for host info
 function homepage (req, res, db) {
-  spotifyApi.authorizationCodeGrant(req.query.code)
+  var data = spotifyApi.authorizationCodeGrant(req.query.code)
   .then(function(data) {
     spotifyApi.setAccessToken(data.body['access_token'])
-    var hostInfo = spotifyApi.getMe()
-    .then(function(hostInfo) {
+  })
+  var hostInfo = (spotifyApi.getMe())
+  .then (function(hostInfo, data) {
       search.search (hostInfo.body.id, searchTemplate.findHost (hostInfo.body.id), db, function (found){
         if (found != null){
           db.collection(hostInfo.body.id).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']),update.responseHandler)
@@ -55,10 +56,9 @@ function homepage (req, res, db) {
       })
       res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
     })
-    .catch(function(err) {
-      res.redirect ('/')
-      console.log('Something went wrong', err.message);
-    })
+  .catch(function(err) {
+    res.redirect ('/')
+    console.log('Something went wrong', err.message);
   })
 }
 
