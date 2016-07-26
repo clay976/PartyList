@@ -16,7 +16,7 @@ var model = require ('../../database/models')
 function createPlaylist (req, res, db){
   var playlistName = req.body.playName
   var hostID = req.body.host
-  var hostInfoPromise = model.Host.findOne({ 'hostID': hostID }).exec()
+  var hostInfoPromise = model.Host.findOne({ hostID: hostID }).exec()
   hostInfoPromise.then (function (hostInfo){
     console.log (hostInfo)
     if (hostInfo){
