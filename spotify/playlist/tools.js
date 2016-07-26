@@ -16,7 +16,7 @@ var accountTemplate = require ('../account/JSONtemps')
 function createPlaylist (req, res, db){
   var playlistName = req.body.playName
   var hostID = req.body.host
-  var hostInfo = search.search (hostID, {'host':hostID}, db)
+  var hostInfo = model.Host.findOne({ 'hostID': hostID })
   .then (function (hostInfo, hostID, playlistName){
     if (hostInfo){
       if (playlistName){
