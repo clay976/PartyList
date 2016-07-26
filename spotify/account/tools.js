@@ -102,7 +102,6 @@ function generateRandomString (length) {
 module.exports = {
   login: login,
   homepage: homepage,
-  getHostInfo: getHostInfo,
   loginRedirect: loginRedirect,
   homePageRedirect: homePageRedirect,
   checkToken: checkToken
