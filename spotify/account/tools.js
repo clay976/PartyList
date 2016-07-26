@@ -11,6 +11,8 @@ var search = require ('../../database/query/search')
 var dbHostTools = require ('../../database/hostTools')
 var spotifyAccountTemplate = require ('./JSONtemps')
 
+var model = require ('../../database/models')
+
 var credentials = {
   clientId : 'a000adffbd26453fbef24e8c1ff69c3b',
   clientSecret : '899b3ec7d52b4baabba05d6031663ba2',
@@ -29,7 +31,7 @@ function homepage (req, res, db) {
     spotifyApi.setAccessToken(data.body['access_token'])
     var hostInfo = (spotifyApi.getMe())
     .then (function(hostInfo, data) {
-      db.collection(hostInfo.body.id).update(searchTemplate.findHost (hostInfo.body.id), updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']), {upsert: true})
+      model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']), {upsert:true})
     })
     res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
   })

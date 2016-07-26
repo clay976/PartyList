@@ -27,20 +27,18 @@ function guestReset(){
 
 //update tracks function 
 function tracksReqd (){
-  return ({
-    $inc: { numRequests: 1}
-  }) 
+  return ({ numRequests: 1}) 
 }
 
 //update api info functions
 function bothTokens (aToken, rToken){
   var d = new Date()
   time = d.getTime()
-  return ({$set:{ 
+  return ({ 
     "access_token": aToken,
     "refresh_token": rToken,
     "time": time
-  }}) 
+  }) 
 }
 function accessToken (aToken){
   var d = new Date()

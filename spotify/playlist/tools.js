@@ -10,6 +10,8 @@ var search = require ('../../database/query/search')
 var playlistTemplate = require ('./JSONtemps')
 var accountTemplate = require ('../account/JSONtemps')
 
+
+
 //TODO: add comments
 function createPlaylist (req, res, db){
   var playlistName = req.body.playName
