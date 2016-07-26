@@ -5,6 +5,7 @@ var SpotifyWebApi = require('spotify-web-api-node');
 
 //my modules
 var searchTemplate = require ('../../database/query/JSONtemps')
+var updateTemplate = require ('../../database/update/JSONtemps')
 var search = require ('../../database/query/search')
 var dbHostTools = require ('../../database/hostTools')
 var spotifyAccountTemplate = require ('./JSONtemps')
@@ -44,15 +45,10 @@ function homepage (req, res, db) {
     spotifyApi.setAccessToken(data.body['access_token'])
     var hostInfo = spotifyApi.getMe()
     .then(function(hostInfo) {
-      console.log('Retrieved data for ' + hostInfo.body.id)
-      console.log('Email is ' + hostInfo.body.email)
-      console.log('This user has a ' + hostInfo.body.product + ' account')
       search.search (hostInfo.body.id, searchTemplate.findHost (hostInfo.body.id), db, function (found){
         if (found != null){
-          console.log ('user has been found')
-          db.collection((hostInfo.body.id).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']), updateResponseHandler))
+          db.collection((hostInfo.body.id).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token'])))
         }else{
-          console.log ('creating new user')
           db.collection(hostInfo.body.id).insertOne(insertTemplate.apiInfo (hostInfo.body.id, data.body['access_token'], data.body['refresh_token']), insertResponseHandler)
         }
       })
@@ -62,20 +58,6 @@ function homepage (req, res, db) {
       res.redirect ('/')
       console.log('Something went wrong', err.message);
     })
-  })
-}
-
-// makes another request to the spotify API to
-// obtain the rest of the host information and
-// calls the insertOrUpdate function to find them
-// and update them or straight insert them
-function getHostInfo (res, db, options, access_token, refresh_token, callback) {
-  request.get(options, function (error, response, body){
-    if (error){
-      loginRedirect (res, 500, error)
-    }else{
-      callback (res, db, (body.id).toString(), searchTemplate.findHost ((body.id).toString()), access_token, refresh_token)
-    }
   })
 }
 
@@ -91,7 +73,7 @@ function refreshToken () {
   search (host,doc, db, function (docFound){
     request.post(spotifyAccountTemplate.accessFromRefresh(docFound.refresh_token), function (error, response, body) {
       if (!error && response.statusCode === 200) {
-        db.collection(host).updateOne(searchTemplate.findHost (host), update.accessToken (body.access_token), updateResponseHandler)
+        db.collection(host).updateOne(searchTemplate.findHost (host), update.accessToken (body.access_token))
       }
     })
   })
