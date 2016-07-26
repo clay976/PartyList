@@ -6,6 +6,7 @@ var SpotifyWebApi = require('spotify-web-api-node');
 //my modules
 var searchTemplate = require ('../../database/query/JSONtemps')
 var updateTemplate = require ('../../database/update/JSONtemps')
+var update = require (('../../database/update/responseHandler'))
 var search = require ('../../database/query/search')
 var dbHostTools = require ('../../database/hostTools')
 var spotifyAccountTemplate = require ('./JSONtemps')
@@ -47,7 +48,7 @@ function homepage (req, res, db) {
     .then(function(hostInfo) {
       search.search (hostInfo.body.id, searchTemplate.findHost (hostInfo.body.id), db, function (found){
         if (found != null){
-          db.collection((hostInfo.body.id).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token'])))
+          db.collection((hostInfo.body.id).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token'])),update.responseHandle)
         }else{
           db.collection(hostInfo.body.id).insertOne(insertTemplate.apiInfo (hostInfo.body.id, data.body['access_token'], data.body['refresh_token']), insertResponseHandler)
         }
