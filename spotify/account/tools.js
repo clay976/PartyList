@@ -42,7 +42,7 @@ function homepage (req, res, db) {
   .then(function(data) {
       spotifyApi.setAccessToken(data.body['access_token']);
       var hostInfo = spotifyApi.getMe()
-      .then(function() {
+      .then(function(hostInfo) {
       console.log('Retrieved data for ' + hostInfo.body['display_name']);
       // "Email is farukemresahin@gmail.com"
       console.log('Email is ' + hostInfo.body.email);
