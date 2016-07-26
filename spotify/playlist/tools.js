@@ -15,7 +15,7 @@ var model = require ('../../database/models')
 function createPlaylist (req, res, db){
   var playlistName = req.body.playName
   var hostID = req.body.host
-  var hostInfo = model.Host.findOne({ 'hostID': hostID })
+  var hostInfo = (model.Host.findOne({ 'hostID': hostID })).exec()
   hostInfo.then (function (hostInfo, hostID, playlistName){
     if (hostInfo){
       if (playlistName){
