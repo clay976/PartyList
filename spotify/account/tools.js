@@ -15,7 +15,6 @@ var scopes = ['user-read-private user-read-email user-read-birthdate streaming p
 var state = 'some-state-of-my-choice'
 
 // Create the authorization URL
-var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state)
 
 var credentials = {
   clientId : '000adffbd26453fbef24e8c1ff69c3b',
@@ -24,6 +23,8 @@ var credentials = {
 };
 
 var spotifyApi = new SpotifyWebApi(credentials)
+
+var authorizeURL = spotifyApi.createAuthorizeURL(scopes, state)
 
 // this is what the user will see when they click login for the first
 // time, it tells them what our app will be allowed to access
