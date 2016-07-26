@@ -41,29 +41,28 @@ function homepage (req, res, db) {
   spotifyApi.authorizationCodeGrant(req.query.code)
   .then(function(data) {
       spotifyApi.setAccessToken(data.body['access_token']);
-      return spotifyApi.getMe();
-    })
-    .then(function(data) {
-      search.search (data.body['display_name'], searchTemplate.findHost (data.body['display_name']), db, function (found){
+      var hostInfo = spotifyApi.getMe()
+      .then(function() {
+      console.log('Retrieved data for ' + hostInfo.body['display_name']);
+      // "Email is farukemresahin@gmail.com"
+      console.log('Email is ' + hostInfo.body.email);
+      // "This user has a premium account"
+      console.log('This user has a ' + hostInfo.body.product + ' account');
+      search.search (hostInfo.body['display_name'], searchTemplate.findHost (hostInfo.body['display_name']), db, function (found){
         if (found != null){
-          db.collection(data.body['display_name']).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']), updateResponseHandler)
+          console.log ('user has been found')
+          db.collection(hostInfo.body['display_name']).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']), updateResponseHandler)
         }else{
-          db.collection(data.body['display_name']).insertOne(insertTemplate.apiInfo (data.body['display_name'],access_token, refresh_token), insertResponseHandler)
+          console.log ('creating new user')
+          db.collection(hostInfo.body['display_name']).insertOne(insertTemplate.apiInfo (hostInfo.body['display_name'], data.body['access_token'], data.body['refresh_token']), insertResponseHandler)
         }
       })
-      res.redirect ('/#' +querystring.stringify({access_token: access_token,refresh_token: refresh_token}))
+      res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
     })
     .catch(function(err) {
       console.log('Something went wrong', err.message);
-    });
-
-
-  .then(function(data) {
-    getHostInfo (res, db, spotifyAccountTemplate.getHostInfo (data.body['access_token']), data.body['access_token'], data.body['refresh_token'], dbHostTools.UOIHost)
-  }, function(err) {
-    res.redirect (403, '/')
-    console.log('Something went wrong!', err);
-  });
+    })
+  })
 }
 
 // makes another request to the spotify API to
