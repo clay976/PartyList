@@ -44,11 +44,11 @@ function homepage (req, res, db) {
   var data = spotifyApi.authorizationCodeGrant(req.query.code)
   .then(function(data) {
     spotifyApi.setAccessToken(data.body['access_token'])
-  })
-  var hostInfo = (spotifyApi.getMe())
-  .then (function(hostInfo, data) {
-    db.collection(hostInfo.body.id).update(searchTemplate.findHost (hostInfo.body.id), updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']), {upsert: true})
-    res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
+    var hostInfo = (spotifyApi.getMe())
+    .then (function(hostInfo, data) {
+      db.collection(hostInfo.body.id).update(searchTemplate.findHost (hostInfo.body.id), updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']), {upsert: true})
+      res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
+    })
   })
   .catch(function(err) {
     res.redirect ('/')
