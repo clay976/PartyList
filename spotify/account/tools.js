@@ -38,9 +38,29 @@ function login (req, res) {
 // preps them in to an "options" object to
 // make another call for host info
 function homepage (req, res, db) {
-  console.log (req.query.code)
   spotifyApi.authorizationCodeGrant(req.query.code)
-  .then (getHostInfo (res, db, spotifyAccountTemplate.getHostInfo (data.body['access_token']), data.body['access_token'], data.body['refresh_token'], dbHostTools.UOIHost), function(err) {
+  .then(function(data) {
+      spotifyApi.setAccessToken(data.body['access_token']);
+      return spotifyApi.getMe();
+    })
+    .then(function(data) {
+      search.search (data.body['display_name'], searchTemplate.findHost (data.body['display_name']), db, function (found){
+        if (found != null){
+          db.collection(data.body['display_name']).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']), updateResponseHandler)
+        }else{
+          db.collection(data.body['display_name']).insertOne(insertTemplate.apiInfo (data.body['display_name'],access_token, refresh_token), insertResponseHandler)
+        }
+      })
+      res.redirect ('/#' +querystring.stringify({access_token: access_token,refresh_token: refresh_token}))
+    })
+    .catch(function(err) {
+      console.log('Something went wrong', err.message);
+    });
+
+
+  .then(function(data) {
+    getHostInfo (res, db, spotifyAccountTemplate.getHostInfo (data.body['access_token']), data.body['access_token'], data.body['refresh_token'], dbHostTools.UOIHost)
+  }, function(err) {
     res.redirect (403, '/')
     console.log('Something went wrong!', err);
   });
