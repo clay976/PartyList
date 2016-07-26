@@ -1,5 +1,6 @@
 var mongoose = require('mongoose');
 
+
 var guest = mongoose.Schema({
 	hostID				: String,
   phoneNum			: String,
