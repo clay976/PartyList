@@ -44,17 +44,16 @@ function homepage (req, res, db) {
     spotifyApi.setAccessToken(data.body['access_token'])
     var hostInfo = spotifyApi.getMe()
     .then(function(hostInfo) {
-      console.log (hostInfo.body)
-      console.log('Retrieved data for ' + hostInfo.body['display_name'])
+      console.log('Retrieved data for ' + hostInfo.body.id)
       console.log('Email is ' + hostInfo.body.email)
       console.log('This user has a ' + hostInfo.body.product + ' account')
-      search.search (hostInfo.body['display_name'], searchTemplate.findHost (hostInfo.body['display_name']), db, function (found){
+      search.search (hostInfo.body.id, searchTemplate.findHost (hostInfo.body.id), db, function (found){
         if (found != null){
           console.log ('user has been found')
-          db.collection((hostInfo.body['display_name']).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']), updateResponseHandler))
+          db.collection((hostInfo.body.id).updateOne(found, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']), updateResponseHandler))
         }else{
           console.log ('creating new user')
-          db.collection(hostInfo.body['display_name']).insertOne(insertTemplate.apiInfo (hostInfo.body['display_name'], data.body['access_token'], data.body['refresh_token']), insertResponseHandler)
+          db.collection(hostInfo.body.id).insertOne(insertTemplate.apiInfo (hostInfo.body.id, data.body['access_token'], data.body['refresh_token']), insertResponseHandler)
         }
       })
       res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
