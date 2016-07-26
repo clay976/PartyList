@@ -17,11 +17,11 @@ function createPlaylist (req, res, db){
   var playlistName = req.body.playName
   var hostID = req.body.host
   var hostInfoPromise = (model.Host.findOne({ 'hostID': hostID })).exec()
-  hostInfoPromise.then (function (hostInfo){
-    console.log (hostInfo)
-    if (hostInfo){
+  hostInfoPromise.then (function (hostInfoPromise){
+    console.log (hostInfoPromise)
+    if (hostInfoPromise){
       if (playlistName){
-        postPlaylist (res, db, hostID, playlistTemplate.createPlaylist (host, playlistName, hostInfo.access_token), hostInfo, updatePlaylist)
+        postPlaylist (res, db, hostID, playlistTemplate.createPlaylist (host, playlistName, hostInfoPromise.access_token), hostInfoPromise, updatePlaylist)
       }else{
         loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
       }

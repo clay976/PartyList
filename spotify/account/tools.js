@@ -52,7 +52,7 @@ function refreshToken () {
 }
 
 function loginRedirect (res, code, message){
-  res.redirect ('/?'+code)
+  res.redirect ('/?error:'+code)
 }
 
 function checkToken (host, db, callback){
