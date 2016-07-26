@@ -157,7 +157,7 @@ ________________________________________________________________________________
   //this should only be coming from Twilio,
   //to be fixed in gulp branch or something.
   app.post('/message', function (req, res){ 
-    search ('guests', queryTemplate.findGuest (req.body.From), db, function (guestFound){
+    search.search ('guests', queryTemplate.findGuest (req.body.From), db, function (guestFound){
       if (!guestFound){
         respond.notGuest (res, req.body.From)
       }else{
