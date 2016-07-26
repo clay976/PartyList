@@ -40,10 +40,12 @@ function login (req, res) {
 function homepage (req, res, db) {
   console.log (req.query.code)
   spotifyApi.authorizationCodeGrant(req.query.code)
+  .then(spotifyApi.getMe()
   .then(function(data) {
-    console.log('The token expires in ' + data.body['expires_in']);
-    console.log('The access token is ' + data.body['access_token']);
-    console.log('The refresh token is ' + data.body['refresh_token']);
+    console.log('Some information about the authenticated user', data.body);
+  }, function(err) {
+    console.log('Something went wrong!', err);
+  });
     getHostInfo (res, db, spotifyAccountTemplate.getHostInfo (data.body['access_token']), data.body['access_token'], data.body['refresh_token'], dbHostTools.UOIHost)
   }, function(err) {
     res.redirect (403, '/')
