@@ -37,8 +37,7 @@ function login (req, res) {
 // preps them in to an "options" object to
 // make another call for host info
 function homepage (req, res, db) {
-
-  spotifyApi.authorizationCodeGrant(code)
+  spotifyApi.authorizationCodeGrant(req.query.code)
   .then(function(data) {
     console.log('The token expires in ' + data.body['expires_in']);
     console.log('The access token is ' + data.body['access_token']);
