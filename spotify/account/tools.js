@@ -72,7 +72,6 @@ function checkToken (host, db, callback){
 //exports for external modules to use.
 module.exports = {
   loginRedirect: loginRedirect,
-  homePageRedirect: homePageRedirect,
   homepage: homepage,
   checkToken: checkToken
 }
