@@ -1,6 +1,5 @@
 var mongoose = require("mongoose");
-var Promise = require("bluebird");
-Promise.promisifyAll(mongoose);
+mongoose.Promise = require('bluebird');
 
 
 var guest = mongoose.Schema({
