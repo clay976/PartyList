@@ -29,6 +29,7 @@ var spotifyApi = new SpotifyWebApi(credentials);
 function homepage (req, res, db) {
   var data = spotifyApi.authorizationCodeGrant(req.query.code)
   .then (function(data) {
+    console.log (data.body)
     spotifyApi.setAccessToken(data.body['access_token'])
     var hostInfo = (spotifyApi.getMe())
     .then (function(hostInfo, data) {
