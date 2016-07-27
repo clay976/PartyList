@@ -18,7 +18,7 @@ function createPlaylist (req, res, db){
   var playlistName = req.body.playName
   var HostID = req.body.host
   console.log (HostID)
-  model.Host.findOne({ hostID: HostID }).exec()
+  model.Host.findOne({ 'hostID': HostID }).exec()
   .then (function (hostInfo){
     console.log (hostInfo)
     if (hostInfo){
