@@ -31,9 +31,9 @@ function createPlaylist (req, res, db){
       spotifyApi.setAccessToken(hostInfo.access_token)
       if (playlistName){
         spotifyApi.createPlaylist(HostID, playlistName, { public : true }).then (function(data){
-          model.Host.update({ 'hostID' : HostID }, { $set: 'playlistID' : data.body['id']}).exec()
+          model.Host.update({ 'hostID' : HostID }, { $set: {'playlistID' : data.body['id']}}).exec()
+          .then (res.redirect (hostInfo.homePage))
         })
-        .then (res.redirect (hostInfo.homePage))
       }
     }else{
       loginTool.loginRedirect (res, 401, 'error: you are not logged in properly')
