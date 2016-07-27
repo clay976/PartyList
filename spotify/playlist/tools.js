@@ -72,7 +72,9 @@ function findAllPlaylists (req, res, db){
   .then (function (hostInfo){
     spotifyApi.setAccessToken(hostInfo.access_token)
     spotifyApi.getUserPlaylists(hostInfo.hostID)
-    .then (function(data){(res.status(200).send (data))}
+    .then (function(data){
+      (res.status(200).send (data))
+    })
   })
   .catch (function (err){
     res.status(400).send ('something went wrong: '+err)
