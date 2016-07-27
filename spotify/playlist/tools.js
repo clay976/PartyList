@@ -28,9 +28,9 @@ function createPlaylist (req, res, db){
   var hostInfo = model.Host.findOne({ 'hostID' : HostID }).exec()
   .then (function (hostInfo){
     if (hostInfo){
+      spotifyApi.setAccessToken(hostInfo.access_token)
       if (playlistName){
-        spotifyApi.setAccessToken(hostInfo.access_token)
-        .then (spotifyApi.createPlaylist(HostID, playlistName, { public : true }))
+        spotifyApi.createPlaylist(HostID, playlistName, { public : true })
       }else{
         loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
       }
