@@ -59,13 +59,12 @@ function loginRedirect (res, code, message){
 }
 
 function validateHost (host){
-  var hostInfo = model.Host.findOne({ 'hostID' : host }).exec()
-  .then (function (hostInfo){
+  var hostInfo = (model.Host.findOne({ 'hostID' : host }).exec()).then (function (hostInfo){
     if (hostInfo){
       spotifyApi.setAccessToken(hostInfo.access_token)
       return hostInfo 
     }
-  }
+  })
 }
 
 

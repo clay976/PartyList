@@ -37,7 +37,6 @@ function createPlaylist (req, res, db){
   .catch (function (err){
     res.status(400).send ('something went wrong'+err)
   })
-
 }
 
 //TODO: add comments
