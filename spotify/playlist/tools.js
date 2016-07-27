@@ -31,7 +31,7 @@ function createPlaylist (req, res, db){
       spotifyApi.setAccessToken(hostInfo.access_token)
       if (playlistName){
         spotifyApi.createPlaylist(HostID, playlistName, { public : true })
-        .then (res.send ('playlist has been created') )
+        .then (res.redirect (hostInfo.homePage))
       }
     }else{
       loginTool.loginRedirect (res, 401, 'error: you are not logged in properly')

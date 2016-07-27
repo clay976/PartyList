@@ -58,10 +58,6 @@ function loginRedirect (res, code, message){
   res.redirect ('/?'+message+':'+code)
 }
 
-function homePageRedirect (res, code, message, tokens){
-  res.redirect (redirectUri+'?'+message +':'+code)
-}
-
 function checkToken (host, db, callback){
   search (host, {'host':host}, db, function(found){ 
     if (found != null){
