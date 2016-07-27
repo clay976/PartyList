@@ -30,7 +30,9 @@ function createPlaylist (req, res, db){
     if (hostInfo){
       spotifyApi.setAccessToken(hostInfo.access_token)
       if (playlistName){
-        spotifyApi.createPlaylist(HostID, playlistName, { public : true })
+        spotifyApi.createPlaylist(HostID, playlistName, { public : true }).then (function(data){
+          model.Host.update({ 'hostID' : HostID }, { $set: 'playlistID' : data.body['id']}).exec()
+        })
         .then (res.redirect (hostInfo.homePage))
       }
     }else{
@@ -44,7 +46,20 @@ function createPlaylist (req, res, db){
 }
 
 //TODO: add comments
-function findPlaylist (res, db, host){
+function requestLatestPlaylist (res, db, host, options, docFound, callback){
+  request.get(options, function (error, response, body) {
+    var playlistItems = JSON.parse (body)
+    if (error) {
+      
+    }else{
+      loginTool.homePageRedirect (res, 200, 'playlist was found and updated succsefully')
+      callback (db, host, docFound, playlistItems.items[0].id)
+    }
+  })
+}
+
+//TODO: add comments
+function findAllPlaylists (res, db, host){
   hostTools.checkToken (host, db, function (tokenValid, docFound){
     if (tokenValid){
       requestLatestPlaylist (res, db, host, accountTemplate.authForAccount (host, docFound.access_token), docFound, updatePlaylist)
@@ -52,23 +67,6 @@ function findPlaylist (res, db, host){
       loginTool.loginRedirect (res, 401, ' a user with invalid tokens tried to find a playlist')
     }  
   })
-}
-
-//TODO: add comments
-function requestLatestPlaylist (res, db, host, options, docFound, callback){
-  request.get(options, function (error, response, body) {
-    var playlistItems = JSON.parse (body)
-    if (error) {
-      
-    }else{
-      
-      callback (db, host, docFound, playlistItems.items[0].id)
-    }
-  })
-}
-
-function updatePlaylist (db, host, docFound, playlistID){
-  updateTemplate.playlistID (playlistID)
 }
 
 module.exports = {
