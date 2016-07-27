@@ -65,7 +65,7 @@ function validateHost (host){
       if (hostInfo){
         fulfill (hostInfo) 
       }else{
-        reject ('could not find this user in our databse, they may not be logged in properly.')
+        reject (' could not find this user in our databse. this is probably a problem on our end, sorry!')
       }
     })
   })
