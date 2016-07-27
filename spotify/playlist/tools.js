@@ -26,11 +26,11 @@ function createPlaylist (req, res, db){
         loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
       }
     }else{
-      loginTool.loginRedirect (res, 401, 'a user with invalid tokens tried to create a playlist')
+      loginTool.loginRedirect (res, 401, 'error:a user with invalid tokens tried to create a playlist')
     }
   })
   .catch (function (err){
-    loginTool.homePageRedirect (res, 400, 'something went wrong')
+    loginTool.homePageRedirect (res, 400, 'error:something went wrong')
   })
 
 }

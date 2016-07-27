@@ -58,7 +58,7 @@ function loginRedirect (res, code, message){
 }
 
 function homePageRedirect (res, code, message){
-  res.redirect ('/#?error:'+code)
+  res.redirect ('/#:'+message +':'code)
 }
 
 function checkToken (host, db, callback){
