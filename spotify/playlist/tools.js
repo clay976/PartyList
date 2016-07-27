@@ -68,6 +68,7 @@ function setSpecificPlaylist (req, res, db){
 
 //TODO: add comments
 function findAllPlaylists (req, res, db){
+  console.log ('finding playlists')
   loginTool.validateHost (req.body.host)
   .then (function (hostInfo){
     spotifyApi.setAccessToken(hostInfo.access_token)
@@ -78,7 +79,6 @@ function findAllPlaylists (req, res, db){
       for (var index = 1; index < length; index ++){
         playlists + ', { name: ' +data[index].name+ ', id : ' +data[index].id+ '}'
       }
-      console.log ('sending' +playlists)
       (res.status(200).send ('playlists: '+playlists))
     })
   })
