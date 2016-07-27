@@ -48,6 +48,9 @@ function setLatestPlaylist (req, res, db){
       .then (res.status(200).redirect (hostInfo.homePage))
     })
   })
+  .catch (function (err){
+    res.status(400).send ('something went wrong'+err)
+  })
 }
 
 function setSpecificPlaylist (req, res, db){
@@ -55,6 +58,9 @@ function setSpecificPlaylist (req, res, db){
   .then (function (hostInfo){
   model.Host.update({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : req.body.playlistID}}).exec()
     .then (res.status(200).redirect (hostInfo.homePage))
+  })
+  .catch (function (err){
+    res.status(400).send ('something went wrong'+err)
   })
 }
 
@@ -65,6 +71,9 @@ function findAllPlaylists (req, res, db){
     spotifyApi.setAccessToken(hostInfo.access_token)
     spotifyApi.getUserPlaylists(hostInfo.hostID)
     .then (res.status(200).send (data))
+  })
+  .catch (function (err){
+    res.status(400).send ('something went wrong'+err)
   })
 }
 
