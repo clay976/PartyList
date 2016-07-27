@@ -11,3 +11,7 @@ function Host (data){
 	})
 	return host
 }
+
+module.exports {
+	Host: Host
+}
