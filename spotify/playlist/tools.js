@@ -59,7 +59,7 @@ function setSpecificPlaylist (req, res, db){
 }
 
 //TODO: add comments
-function findAllPlaylists (res, db, host){
+function findAllPlaylists (req, res, db){
   loginTool.validateHost (req.body.host)
   .then (function (hostInfo){
     spotifyApi.setAccessToken(hostInfo.access_token)
