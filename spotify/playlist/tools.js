@@ -26,6 +26,7 @@ function createPlaylist (req, res, db){
   var playlistName = req.body.playName
   var hostInfo = loginTool.validateHost (req.body.host)
   .then (function (hostInfo){
+    spotifyApi.setAccessToken(hostInfo.access_token)
     if (playlistName){
       spotifyApi.createPlaylist(hostInfo.hostID, playlistName, { public : true }).then (function(data){
         model.Host.update({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : data.body['id']}}).exec()
