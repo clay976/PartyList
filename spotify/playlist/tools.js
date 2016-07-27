@@ -46,6 +46,7 @@ function setLatestPlaylist (req, res, db){
     spotifyApi.getUserPlaylists(hostInfo.hostID).then (function(data){
       console.log (data)
       (res.status(200).redirect (hostInfo.homePage))
+    })
   })
 }
 
