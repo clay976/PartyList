@@ -68,7 +68,7 @@ TO BE SENT:
     host                            : string :  the username of their spotify account. |
   }
 _______________________________________________________________________________________*/
-  app.post('/playlist/create', function (req, res){
+  app.post('/playlist/spotify/create', function (req, res){
     spotifyPlaylistTools.createPlaylist (req, res, db)
   })
 
@@ -80,9 +80,33 @@ TO BE SENT:
     host                            : string :  the username of their spotify account. |
   }
 _______________________________________________________________________________________*/
-  app.post('/playlist/latest/spotify', function (req, res){
+  app.post('/playlist/spotify/latest', function (req, res){
     spotifyPlaylistTools.setLatestPlaylist (req, res, db)
   })
+
+/*
+find all the user's spotify playlist to choose from.
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.get('/playlist/spotify/getAll', function (req, res){
+    spotifyPlaylistTools.findAllPlaylists (req, res, db)
+  })
+
+/*
+set a specif playlist id (most likely to be used after finding all the user's spotify playlists)
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.get('/playlist/spotify/set', function (req, res){
+    spotifyPlaylistTools.setSpecificPlaylist (req, res, db)
+  })  
 
 /*
 find this user's latest playlist held in our database
@@ -92,7 +116,7 @@ TO BE SENT:
     host                            : string :  the username of their spotify account. |
   }
 _______________________________________________________________________________________*/
-  app.post('/playlist/latest/party', function (req, res){
+  app.post('/playlist/partyList/latest', function (req, res){
     search.search (req.body.host, query.findHost (req.body.host), db, function (hostFound){
       if (hostFound.playlistID != ''){
         res.send (200, 'hosts playlist has been found in DB')
@@ -101,14 +125,6 @@ ________________________________________________________________________________
       }
     })
   })
-
-  // choose a playlist from the list
-  // of avaliable playlists that the
-  // user controls
-  app.post('/playlist/choose', function (req, res){
-    
-  })
-
 /*
 remove every guest that is associated with this user
 ________________________________________________________________________________________

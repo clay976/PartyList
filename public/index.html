@@ -25,20 +25,31 @@
         <div id="user-profile"></div>
           <button id= "obtain-new-token" name = "obtain new token"> obtain new token </button>
         <div id="oauth"></div>
-          <label for="filename">Playlist</label>
-          <form id="input" action="/playlist/latest/spotify" method="POST">
-            <input type="submit" value="find latest spotify playlist">
-            <input type="hidden" name="host" value= "clay976">
-          </form>
-          <form id="input" action="/playlist/latest/party" method="POST">
-            <input type="submit" value="find latest party playlist">
-            <input type="hidden" name="host" value= "clay976">
-          </form>
-          <form id="input" action="/playlist/create" method="POST">
+          <label for="filename">Spotify Playlist functions</label>
+          <form id="input" action="/playlist/spotify/create" method="POST">
             <input type="text" name="playName" placeholder="new playlist Name">
             <input type="hidden" name="host" value= "clay976">
             <input type="submit" value="create">
           </form>
+          <form id="input" action="/playlist/spotify/latest" method="POST">
+            <input type="submit" value="find latest spotify playlist">
+            <input type="hidden" name="host" value= "clay976">
+          </form>
+          <form id="input" action="/playlist/spotify/getAll" method="GET">
+            <input type="submit" value="retreive all spotify playlists in a list">
+            <input type="hidden" name="host" value= "clay976">
+          </form>
+          <form id="input" action="/playlist/spotify/set" method="POST">
+            <input type="text" name="playlistID" placeholder="playlist ID to be set as the partylist">
+            <input type="submit" value="find latest party playlist">
+            <input type="hidden" name="host" value= "clay976">
+          </form>
+          <label for="filename">partyList playlist functions</label>
+          <form id="input" action="/playlist/partyList/latest" method="POST">
+            <input type="submit" value="find latest party playlist">
+            <input type="hidden" name="host" value= "clay976">
+          </form>
+          <label for="filename">Songs</label>
           <form id="input" action="/songs/removeAll" method="POST">
           <input type="hidden" name="host" value= "clay976">
             <input type="submit" value="reset song requests">

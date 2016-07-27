@@ -30,9 +30,7 @@ function createPlaylist (req, res, db){
         model.Host.update({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : data.body['id']}}).exec()
         .then (res.status(200).redirect (hostInfo.homePage))
       })
-    }else{
-      res.status(401).redirect ('/')
-    }
+    }else res.status(401).redirect (hostInfo.homePage)
   })      
   .catch (function (err){
     res.status(400).send ('something went wrong'+err)
@@ -41,28 +39,40 @@ function createPlaylist (req, res, db){
 
 //TODO: add comments
 function setLatestPlaylist (req, res, db){
-  loginTool.validateHost (req.body.host).then (function (hostInfo){
+  loginTool.validateHost (req.body.host)
+  .then (function (hostInfo){
     spotifyApi.setAccessToken(hostInfo.access_token)
-    spotifyApi.getUserPlaylists(hostInfo.hostID).then (function(data){
-      console.log (data.body.items[0].id)
-      (res.status(200).redirect (hostInfo.homePage))
+    spotifyApi.getUserPlaylists(hostInfo.hostID)
+    .then (function(data){
+      model.Host.update({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : data.body.items[0].id}}).exec()
+      .then (res.status(200).redirect (hostInfo.homePage))
     })
+  })
+}
+
+function setSpecificPlaylist (req, res, db){
+  loginTool.validateHost (req.body.host)
+  .then (function (hostInfo){
+  model.Host.update({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : req.body.playlistID}}).exec()
+    .then (res.status(200).redirect (hostInfo.homePage))
   })
 }
 
 //TODO: add comments
 function findAllPlaylists (res, db, host){
-  hostTools.checkToken (host, db, function (tokenValid, docFound){
-    if (tokenValid){
-      requestLatestPlaylist (res, db, host, accountTemplate.authForAccount (host, docFound.access_token), docFound, updatePlaylist)
-    }else{
-      loginTool.loginRedirect (res, 401, ' a user with invalid tokens tried to find a playlist')
-    }  
+  loginTool.validateHost (req.body.host)
+  .then (function (hostInfo){
+    spotifyApi.setAccessToken(hostInfo.access_token)
+    spotifyApi.getUserPlaylists(hostInfo.hostID)
+    .then (function(data){
+      .then (res.status(200).send (data))
+    })
   })
 }
 
 module.exports = {
   createPlaylist: createPlaylist,
   setLatestPlaylist: setLatestPlaylist,
+  setSpecificPlaylist: setSpecificPlaylist,
   findAllPlaylists: findAllPlaylists
 }
