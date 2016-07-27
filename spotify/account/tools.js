@@ -66,10 +66,10 @@ function validateHost (host){
         spotifyApi.setAccessToken(hostInfo.access_token)
         fulfill (hostInfo) 
       }else{
-        throw ('could not find this user in our databse, thye may not be logged in properly.')
+        throw new err ('could not find this user in our databse, thye may not be logged in properly.')
       }
     })
-  }
+  })
 }
 
 
