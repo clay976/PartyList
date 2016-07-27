@@ -17,7 +17,7 @@ var credentials = {
   clientSecret : '899b3ec7d52b4baabba05d6031663ba2',
   redirectUri : 'http://104.131.215.55:80/callback'
 };
-
+var SpotifyWebApi = require('spotify-web-api-node');
 var spotifyApi = new SpotifyWebApi(credentials);
 
 
