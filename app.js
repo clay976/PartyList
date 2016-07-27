@@ -75,7 +75,7 @@ ________________________________________________________________________________
 /*
 find the user's latest spotify playlist
 ________________________________________________________________________________________
-TO BE SENT:
+TO BE SENT: a JSON object in the body of the request
   JSON from req.body{               :  type  :              Description                |
     host                            : string :  the username of their spotify account. |
   }
@@ -88,9 +88,21 @@ ________________________________________________________________________________
 find all the user's spotify playlist to choose from.
 ________________________________________________________________________________________
 TO BE SENT:
-  JSON from req.body{               :  type  :              Description                |
-    host                            : string :  the username of their spotify account. |
-  }
+  JSON from req.body{               :  type  :              Description                 |
+    host                            : string :  the username of their spotify account.  |
+  }                                                                                     |
+                                                                                        |
+RETURNED: properly formatted JSON object containing the name and spotify ID of the      |
+          playlist of playlist that the user controls.                                  |
+  {playlists"[                                                                          |                     
+    { name  : foo,                                                                      |
+      id    : fwe98ffew78fyweb                                                          |
+    },                                                                                  |
+    { name  : bar,                                                                      |
+      id    : feioqf98yfefhc                                                            |
+    }                                                                                   |
+
+  ]}
 _______________________________________________________________________________________*/
   app.post('/playlist/spotify/getAll', function (req, res){
     spotifyPlaylistTools.findAllPlaylists (req, res, db)
