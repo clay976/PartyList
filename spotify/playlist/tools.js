@@ -64,9 +64,7 @@ function findAllPlaylists (res, db, host){
   .then (function (hostInfo){
     spotifyApi.setAccessToken(hostInfo.access_token)
     spotifyApi.getUserPlaylists(hostInfo.hostID)
-    .then (function(data){
-      .then (res.status(200).send (data))
-    })
+    .then (res.status(200).send (data))
   })
 }
 
