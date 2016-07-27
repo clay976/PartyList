@@ -34,10 +34,9 @@ function homepage (req, res, db) {
     var access_token = data.body['access_token']
     var refresh_token = data.body['refresh_token']
     var hostInfo = (spotifyApi.getMe()).then (function (hostInfo){
-      model.Host.findOneAndUpdate({'hostID': hostInfo.body.id}, upsertTemplate.Host (hostInfo, access_token, refresh_token), {upsert:true})
+      model.Host.findOneAndUpdate({'hostID': hostInfo.body.id}, upsertTemplate.Host (hostInfo.body.id, access_token, refresh_token), {upsert:true})
     })
-  })
-  .catch(function(err) {
+  }).catch (function(err) {
     res.redirect ('/')
     console.log('Something went wrong', err.message);
   })
