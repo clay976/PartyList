@@ -77,7 +77,8 @@ function findAllPlaylists (req, res, db){
       var playlists = data.body.items
       var totalItems = data.body.total
       var playlistJSON = playlistTemplate.userPlaylists (playlists, totalItems)
-      (res.status(200).send (playlistJSON))
+      console.log (playlistJSON)
+      (res.status(200).json (playlistJSON))
     })
   })
   .catch (function (err){
