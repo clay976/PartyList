@@ -33,7 +33,10 @@ function homepage (req, res, db) {
     spotifyApi.setRefreshToken(data.body['refresh_token'])
     res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
     var hostInfo = (spotifyApi.getMe())
-    .then (model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, upsertTemplate.Host (hostInfo, spotifyApi.getAccessToken, spotifyApi.getRefreshToken), {upsert:true}))
+    .then (function (hostInfo){
+      console.log (hostInfo)
+      model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, upsertTemplate.Host (hostInfo, spotifyApi.getAccessToken, spotifyApi.getRefreshToken), {upsert:true})
+    })
   })
   .catch(function(err) {
     res.redirect ('/')
