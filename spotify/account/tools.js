@@ -36,7 +36,7 @@ function homepage (req, res, db) {
     .then (function (hostInfo){
       var updateInfo = upsertTemplate.Host (hostInfo, spotifyApi.getAccessToken, spotifyApi.getRefreshToken)
       .then (function (updateInfo){ 
-        model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, , {upsert:true})
+        model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, updateInfo, {upsert:true})
       })
     })
   })
