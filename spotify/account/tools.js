@@ -6,6 +6,7 @@ var SpotifyWebApi = require('spotify-web-api-node');
 //my modules
 var searchTemplate = require ('../../database/query/JSONtemps')
 var updateTemplate = require ('../../database/update/JSONtemps')
+var upsertTemplate = require ('../../database/upsert/JSONtemps')
 var update = require (('../../database/update/responseHandler'))
 var search = require ('../../database/query/search')
 var dbHostTools = require ('../../database/hostTools')
@@ -31,7 +32,7 @@ function homepage (req, res, db) {
     spotifyApi.setAccessToken(data.body['access_token'])
     var hostInfo = (spotifyApi.getMe())
     .then (function(hostInfo, data) {
-      model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, updateTemplate.bothTokens (data.body['access_token'], data.body['refresh_token']), {upsert:true})
+      model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, upsertTemplate.Host (data.body), {upsert:true})
     })
     res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
   })
