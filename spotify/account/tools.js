@@ -54,11 +54,11 @@ function refreshToken () {
 }
 
 function loginRedirect (res, code, message){
-  res.redirect ('/?error:'+code)
+  res.redirect ('/?'+message+':'+code)
 }
 
 function homePageRedirect (res, code, message){
-  res.redirect ('/#:'+message +':'code)
+  res.redirect ('/#?:'+message +':'+code)
 }
 
 function checkToken (host, db, callback){
