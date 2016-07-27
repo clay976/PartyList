@@ -29,7 +29,7 @@ function createPlaylist (req, res, db){
   .then (function (hostInfo){
     if (hostInfo){
       if (playlistName){
-        spotifyApi.createPlaylist(HostID, playlistName, { public : true }).then(function(createdPlaylistPromise) {
+        var createdPlaylistPromise = spotifyApi.createPlaylist(HostID, playlistName, { public : true }).exec().then(function(createdPlaylistPromise) {
           console.log ('has this been created')
           console.log (createdPlaylistPromise)
           res.send (createdPlaylistPromise)
