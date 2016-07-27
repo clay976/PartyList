@@ -27,7 +27,7 @@ function createPlaylist (host, playlistName, access_token){
     dataType:'json',
     headers: {
       'Authorization': 'Bearer ' + access_token,
-      'Content-Type': 'application/json',
+      'Content-Type': 'application/json'
     }
   }
 }

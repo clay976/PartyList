@@ -42,8 +42,7 @@ function createPlaylist (req, res, db){
 //TODO: add comments
 function setLatestPlaylist (req, res, db){
   var hostInfo = loginTool.validateHost (req.body.host).then (function (hostInfo){
-
-  }
+  })
 }
 
 //TODO: add comments
