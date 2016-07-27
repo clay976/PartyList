@@ -3,7 +3,6 @@ function userPlaylists (playlists, length){
   for (var index = 1; index < length; index ++){
     playlistJSON = playlistJSON + ', {"name": "' +playlists[index].name+ '", "id" : "' +playlists[index].id+ '"}'
   }
-  console.log (playlistJSON+ ']}')
   return (JSON.parse (playlistJSON + ']}'))
 }
 
