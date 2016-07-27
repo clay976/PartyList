@@ -44,7 +44,7 @@ function setLatestPlaylist (req, res, db){
   loginTool.validateHost (req.body.host).then (function (hostInfo){
     spotifyApi.setAccessToken(hostInfo.access_token)
     spotifyApi.getUserPlaylists(hostInfo.hostID).then (function(data){
-      console.log (data)
+      console.log (data.body.items[0].id)
       (res.status(200).redirect (hostInfo.homePage))
     })
   })
