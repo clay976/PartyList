@@ -18,9 +18,7 @@ function createPlaylist (req, res, db){
   var playlistName = req.body.playName
   var HostID = req.body.host
   var hostInfoPromise = model.Host.findOne({ hostID: HostID })
-
-  mongoose.Promise = require('bluebird');
-  assert.equal(query.exec().constructor, require('bluebird'));
+  assert.equal(hostInfoPromise.exec().constructor, require('bluebird'));
 
   hostInfoPromise
   .then (function (hostInfo){
