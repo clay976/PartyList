@@ -1,4 +1,4 @@
-var bluebird = require('bluebird');
+var Promise = require('bluebird');
 var mongoose = Promise.promisifyAll(require("mongoose"))
 
 
