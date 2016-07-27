@@ -30,7 +30,7 @@ function createPlaylist (req, res, db){
     if (hostInfo){
       spotifyApi.setAccessToken(hostInfo.access_token)
       if (playlistName){
-        spotifyApi.createPlaylist(HostID, playlistName, { public : true }).exec()
+        spotifyApi.createPlaylist(HostID, playlistName, { public : true })
         .then (res.send ('playlist has been created') )
       }else{
         loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
