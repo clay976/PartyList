@@ -76,8 +76,8 @@ function findAllPlaylists (req, res, db){
     .then (function(data){
       var length = data.total
       var items = data.items
-      console.log (length)
-      console.log (items[0])
+      console.log ('length' + length)
+      console.log ('items' + items[0])
 
       var playlists = '{ playlists: { name: ' +data[0].name+ ', id : ' +data[0].id+ '}'
       for (var index = 1; index < length; index ++){
