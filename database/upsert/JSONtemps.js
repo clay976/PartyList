@@ -1,6 +1,3 @@
-var mongoose = require("mongoose");
-mongoose.Promise = require('bluebird');
-
 function Host (data, accessToken, refreshToken){
 	var host = {
 	  'hostID' 				: data,
