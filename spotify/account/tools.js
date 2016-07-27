@@ -63,6 +63,7 @@ function validateHost (host){
     var hostInfo = (model.Host.findOne({ 'hostID' : host }).exec())
     .then (function (hostInfo){
       if (hostInfo){
+        spotifyApi.setAccessToken(hostInfo.access_token)
         fulfill (hostInfo) 
       }else{
         throw new err ('could not find this user in our databse, thye may not be logged in properly.')
