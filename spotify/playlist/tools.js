@@ -74,10 +74,11 @@ function findAllPlaylists (req, res, db){
     spotifyApi.setAccessToken(hostInfo.access_token)
     spotifyApi.getUserPlaylists(hostInfo.hostID)
     .then (function(data){
+      data = JSON.parse (data)
       var length = data.total
       var items = data.items
-      console.log ('length' + length)
-      console.log ('items' + items[0])
+      console.log ('length ' + length)
+      console.log ('items ' + items[0])
 
       var playlists = '{ playlists: { name: ' +data[0].name+ ', id : ' +data[0].id+ '}'
       for (var index = 1; index < length; index ++){
