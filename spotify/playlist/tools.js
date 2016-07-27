@@ -75,7 +75,7 @@ function findAllPlaylists (req, res, db){
     .then (function(data){
       console.log (data.body)
       var playlists = data.body.items
-      (res.status(200).send ('playlists: 'playlists))
+      (res.status(200).send ('playlists: '+playlists))
     })
   })
   .catch (function (err){
