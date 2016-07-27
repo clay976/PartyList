@@ -17,7 +17,7 @@ var model = require ('../../database/models')
 function createPlaylist (req, res, db){
   var playlistName = req.body.playName
   var HostID = req.body.host
-  var hostInfoPromise = model.Host.findOne({ hostID: HostID }).exec()
+  var hostInfoPromise = model.Host.findOne({ hostID: HostID })
 
   assert.equal(hostInfoPromise.exec().constructor, require('bluebird'));
 
