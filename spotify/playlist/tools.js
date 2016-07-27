@@ -17,11 +17,11 @@ var model = require ('../../database/models')
 function createPlaylist (req, res, db){
   var playlistName = req.body.playName
   var HostID = req.body.host
-  var hostInfo = model.Host.findOne({ 'hostID' : HostID }).exec().then (function (hostInfo){
-    console.log (hostInfo)
+  var hostInfo = model.Host.findOne({ 'hostID' : HostID }).exec()
+  .then (function (hostInfo){
     if (hostInfo){
       if (playlistName){
-        postPlaylist (res, db, hostID, playlistTemplate.createPlaylist (host, playlistName, hostInfo.access_token), hostInfo, updatePlaylist)
+        console.log ('trying to create playlist')
       }else{
         loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
       }
@@ -59,21 +59,6 @@ function requestLatestPlaylist (res, db, host, options, docFound, callback){
   })
 }
 
-
-//TODO: add comments
-function postPlaylist (res, db, host, options, docFound, callback){
-  request.post(options, function (error, response, body){
-    if (error){
-      console.log (error, "error")
-      loginTool.homePageRedirect (res, 500, 'there was an error creating a playlist on spotify\'s end, ')
-    }else{
-      var playlist = JSON.parse (body)
-      callback (db, host, docFound, playlist.id)
-      loginTool.homePageRedirect (res, 200, 'playlist was created succsefully '+ playlist.id)
-    }
-  })
-}
-
 function updatePlaylist (db, host, docFound, playlistID){
   updateTemplate.playlistID (playlistID)
 }
@@ -81,6 +66,5 @@ function updatePlaylist (db, host, docFound, playlistID){
 module.exports = {
   findPlaylist: findPlaylist,
   createPlaylist: createPlaylist,
-  postPlaylist: postPlaylist,
   updatePlaylist: updatePlaylist
 }
