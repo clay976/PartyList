@@ -30,12 +30,13 @@ function homepage (req, res, db) {
   var data = spotifyApi.authorizationCodeGrant(req.query.code).then (function(data) {
     spotifyApi.setAccessToken(data.body['access_token'])
     spotifyApi.setRefreshToken(data.body['refresh_token'])
-    res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
+    var homePage = '/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']})
+    res.redirect (homePage)
     var access_token = data.body['access_token']
     var refresh_token = data.body['refresh_token']
     var hostInfo = (spotifyApi.getMe()).then (function (hostInfo){
       var query = {hostID: hostInfo.body.id}
-      model.Host.findOneAndUpdate(query, upsertTemplate.Host (hostInfo.body.id, access_token, refresh_token), {upsert:true}).exec()
+      model.Host.findOneAndUpdate(query, upsertTemplate.Host (hostInfo.body.id, access_token, refresh_token, homePage), {upsert:true}).exec()
     })
   }).catch (function(err) {
     res.redirect ('/')

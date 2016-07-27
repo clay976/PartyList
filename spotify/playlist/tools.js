@@ -32,11 +32,9 @@ function createPlaylist (req, res, db){
       if (playlistName){
         spotifyApi.createPlaylist(HostID, playlistName, { public : true })
         .then (res.send ('playlist has been created') )
-      }else{
-        loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
       }
     }else{
-      loginTool.loginRedirect (res, 401, 'error:a user with invalid tokens tried to create a playlist')
+      loginTool.loginRedirect (res, 401, 'error: you are not logged in properly')
     }
   })
   .catch (function (err){

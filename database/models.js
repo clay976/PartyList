@@ -20,7 +20,8 @@ var host = mongoose.Schema({
   access_token	: String,
   expires_in		: Number,
   refresh_token	: String,
-  playlistID		: String
+  playlistID		: String,
+  homePage      : String
 })
 
 var Guest = mongoose.model('Guest', guest);
