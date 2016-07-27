@@ -81,7 +81,7 @@ TO BE SENT:
   }
 _______________________________________________________________________________________*/
   app.post('/playlist/latest/spotify', function (req, res){
-    spotifyPlaylistTools.findPlaylist (res, db, req.body.host)
+    spotifyPlaylistTools.setLatestPlaylist (req, res, db)
   })
 
 /*

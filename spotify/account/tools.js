@@ -58,14 +58,14 @@ function loginRedirect (res, code, message){
   res.redirect ('/?'+message+':'+code)
 }
 
-function checkToken (host, db, callback){
-  search (host, {'host':host}, db, function(found){ 
-    if (found != null){
-      callback (true, found)
-    }else{
-      callback (false, null)
+function validateHost (host){
+  var hostInfo = model.Host.findOne({ 'hostID' : host }).exec()
+  .then (function (hostInfo){
+    if (hostInfo){
+      spotifyApi.setAccessToken(hostInfo.access_token)
+      return hostInfo 
     }
-  })
+  }
 }
 
 
@@ -73,5 +73,5 @@ function checkToken (host, db, callback){
 module.exports = {
   loginRedirect: loginRedirect,
   homepage: homepage,
-  checkToken: checkToken
+  validateHost: validateHost
 }

@@ -24,38 +24,27 @@ var spotifyApi = new SpotifyWebApi(credentials);
 //TODO: add comments
 function createPlaylist (req, res, db){
   var playlistName = req.body.playName
-  var HostID = req.body.host
-  var hostInfo = model.Host.findOne({ 'hostID' : HostID }).exec()
-  .then (function (hostInfo){
-    if (hostInfo){
-      spotifyApi.setAccessToken(hostInfo.access_token)
-      if (playlistName){
-        spotifyApi.createPlaylist(HostID, playlistName, { public : true }).then (function(data){
-          model.Host.update({ 'hostID' : HostID }, { $set: {'playlistID' : data.body['id']}}).exec()
-          .then (res.redirect (hostInfo.homePage))
-        })
-      }
+  var hostInfo = loginTool.validateHost (req.body.host).then (function (hostInfo){
+    if (playlistName){
+      spotifyApi.createPlaylist(hostInfo.hostID, playlistName, { public : true }).then (function(data){
+        model.Host.update({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : data.body['id']}}).exec()
+        .then (res.status(200).redirect (hostInfo.homePage))
+      })
     }else{
-      loginTool.loginRedirect (res, 401, 'error: you are not logged in properly')
+      res.status(401).redirect ('/')
     }
-  })
+  })      
   .catch (function (err){
-    res.send (400, 'something went wrong'+err)
+    res.status(400).send ('something went wrong'+err)
   })
 
 }
 
 //TODO: add comments
-function requestLatestPlaylist (res, db, host, options, docFound, callback){
-  request.get(options, function (error, response, body) {
-    var playlistItems = JSON.parse (body)
-    if (error) {
-      
-    }else{
-      loginTool.homePageRedirect (res, 200, 'playlist was found and updated succsefully')
-      callback (db, host, docFound, playlistItems.items[0].id)
-    }
-  })
+function setLatestPlaylist (req, res, db){
+  var hostInfo = loginTool.validateHost (req.body.host).then (function (hostInfo){
+
+  }
 }
 
 //TODO: add comments
@@ -70,6 +59,7 @@ function findAllPlaylists (res, db, host){
 }
 
 module.exports = {
-  findAllPlaylists: findAllPlaylists,
-  createPlaylist: createPlaylist
+  createPlaylist: createPlaylist,
+  setLatestPlaylist: setLatestPlaylist,
+  findAllPlaylists: findAllPlaylists
 }
