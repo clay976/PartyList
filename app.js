@@ -25,7 +25,8 @@ var guestTools = require ('./database/guestTools')
 
 //mongo database variables
 var MongoClient = require('mongodb').MongoClient
-var mongoose = require('mongoose');
+var Promise = require('bluebird');
+var mongoose = Promise.promisifyAll(require("mongoose"))
 var mongoUrl = 'mongodb://localhost:27017/party'
 
 //connect to the database, this happens when api starts, and the conection doesn't close until the API shuts down/crashes
