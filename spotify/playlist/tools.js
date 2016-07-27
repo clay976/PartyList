@@ -1,6 +1,7 @@
 //node modules
 var request = require('request') // "Request" library
 var querystring = require('querystring')
+var assert = require('assert')
 
 //my modules
 var loginTool = require ('../account/tools')
@@ -19,7 +20,7 @@ function createPlaylist (req, res, db){
   var hostInfoPromise = model.Host.findOne({ hostID: HostID }).exec()
 
   assert.equal(hostInfoPromise.exec().constructor, require('bluebird'));
-  
+
   hostInfoPromise.then (function (hostInfo){
     console.log (hostInfo)
     if (hostInfo){
