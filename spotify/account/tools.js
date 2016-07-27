@@ -31,12 +31,10 @@ function homepage (req, res, db) {
   .then (function(data) {
     spotifyApi.setAccessToken(data.body['access_token'])
     spotifyApi.setRefreshToken(data.body['refresh_token'])
+    res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
+    var hostInfo = (spotifyApi.getMe())
+    .then (model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, upsertTemplate.Host (hostInfo, spotifyApi.getAccessToken, spotifyApi.getRefreshToken), {upsert:true}))
   })
-  var hostInfo = (spotifyApi.getMe())
-  .then (function(hostInfo) {
-    model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, upsertTemplate.Host (hostInfo, spotifyApi.getAccessToken, spotifyApi.getRefreshToken), {upsert:true})
-  })
-  res.redirect ('/#' +querystring.stringify({access_token: spotifyApi.getAccessToken,refresh_token: spotifyApi.getRefreshToken}))
   .catch(function(err) {
     res.redirect ('/')
     console.log('Something went wrong', err.message);
