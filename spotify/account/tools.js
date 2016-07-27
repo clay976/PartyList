@@ -40,7 +40,7 @@ function homepage (req, res, db) {
     })
   }).catch (function(err) {
     res.redirect ('/')
-    console.log('Something went wrong', err.message);
+    console.log('Something went wrong: ', err.message);
   })
 }
 
@@ -65,7 +65,7 @@ function validateHost (host){
       if (hostInfo){
         fulfill (hostInfo) 
       }else{
-        reject (' could not find this user in our databse. this is probably a problem on our end, sorry!')
+        reject ('could not find this user in our databse. this is probably a problem on our end, sorry!')
       }
     })
   })

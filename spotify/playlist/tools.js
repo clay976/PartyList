@@ -35,7 +35,7 @@ function createPlaylist (req, res, db){
     }else res.status(401).redirect (hostInfo.homePage)
   })      
   .catch (function (err){
-    res.status(400).send ('something went wrong'+err)
+    res.status(400).send ('something went wrong: '+err)
   })
 }
 
@@ -51,7 +51,7 @@ function setLatestPlaylist (req, res, db){
     })
   })
   .catch (function (err){
-    res.status(400).send ('something went wrong'+err)
+    res.status(400).send ('something went wrong: '+err)
   })
 }
 
@@ -62,12 +62,13 @@ function setSpecificPlaylist (req, res, db){
     .then (res.status(200).redirect (hostInfo.homePage))
   })
   .catch (function (err){
-    res.status(400).send ('something went wrong'+err)
+    res.status(400).send ('something went wrong: '+err)
   })
 }
 
 //TODO: add comments
 function findAllPlaylists (req, res, db){
+  console.log (req.body.host)
   loginTool.validateHost (req.body.host)
   .then (function (hostInfo){
     spotifyApi.setAccessToken(hostInfo.access_token)
@@ -75,7 +76,7 @@ function findAllPlaylists (req, res, db){
     .then (res.status(200).send (data))
   })
   .catch (function (err){
-    res.status(400).send ('something went wrong'+err)
+    res.status(400).send ('something went wrong: '+err)
   })
 }
 
