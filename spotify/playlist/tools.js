@@ -19,9 +19,8 @@ function createPlaylist (req, res, db){
   var HostID = req.body.host
   var hostInfoPromise = model.Host.findOne({ hostID: HostID })
 
-  assert.equal(hostInfoPromise.exec().constructor, require('bluebird'));
-
-  hostInfoPromise.then (function (hostInfo){
+  hostInfoPromise
+  .then (function (hostInfo){
     console.log (hostInfo)
     if (hostInfo){
       if (playlistName){
@@ -33,6 +32,10 @@ function createPlaylist (req, res, db){
       loginTool.loginRedirect (res, 401, 'a user with invalid tokens tried to create a playlist')
     }
   })
+  .catch (function (err){
+    loginTool.homePageRedirect (res, 400, 'something went wrong')
+  })
+
 }
 
 //TODO: add comments

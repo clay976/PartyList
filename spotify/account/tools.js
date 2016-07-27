@@ -55,6 +55,10 @@ function loginRedirect (res, code, message){
   res.redirect ('/?error:'+code)
 }
 
+function homePageRedirect (res, code, message){
+  res.redirect ('/#?error:'+code)
+}
+
 function checkToken (host, db, callback){
   search (host, {'host':host}, db, function(found){ 
     if (found != null){
@@ -69,6 +73,7 @@ function checkToken (host, db, callback){
 //exports for external modules to use.
 module.exports = {
   loginRedirect: loginRedirect,
+  homePageRedirect: homePageRedirect,
   homepage: homepage,
   checkToken: checkToken
 }
