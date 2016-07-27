@@ -34,6 +34,7 @@ function homepage (req, res, db) {
     res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
     var hostInfo = (spotifyApi.getMe())
     .then (model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, upsertTemplate.Host (hostInfo, spotifyApi.getAccessToken, spotifyApi.getRefreshToken), {upsert:true}))
+  })
   .catch(function(err) {
     res.redirect ('/')
     console.log('Something went wrong', err.message);
