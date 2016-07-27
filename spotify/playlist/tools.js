@@ -68,12 +68,11 @@ function setSpecificPlaylist (req, res, db){
 
 //TODO: add comments
 function findAllPlaylists (req, res, db){
-  console.log (req)
   loginTool.validateHost (req.body.host)
   .then (function (hostInfo){
     spotifyApi.setAccessToken(hostInfo.access_token)
     spotifyApi.getUserPlaylists(hostInfo.hostID)
-    .then (res.status(200).send (data))
+    .then (function(data){(res.status(200).send (data))}
   })
   .catch (function (err){
     res.status(400).send ('something went wrong: '+err)
