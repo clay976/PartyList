@@ -30,7 +30,7 @@ function createPlaylist (req, res, db){
     }
   })
   .catch (function (err){
-    loginTool.homePageRedirect (res, 400, 'error:something went wrong')
+    res.send (400, 'something went wrong')
   })
 
 }
