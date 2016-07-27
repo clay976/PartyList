@@ -32,6 +32,7 @@ function homepage (req, res, db) {
     spotifyApi.setAccessToken(data.body['access_token'])
     var hostInfo = (spotifyApi.getMe())
     .then (function(hostInfo, data) {
+      console.log (data.body)
       model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, upsertTemplate.Host (data.body), {upsert:true})
     })
     res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
