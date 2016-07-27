@@ -23,10 +23,10 @@ var spotifyApi = new SpotifyWebApi(credentials);
 
 //TODO: add comments
 function createPlaylist (req, res, db){
-  var playlistName = req.body.playName
   loginTool.validateHost (req.body.host).then (function (hostInfo){
-    if (playlistName){
-      spotifyApi.createPlaylist(hostInfo.hostID, playlistName, { public : true }).then (function(data){
+    spotifyApi.setAccessToken(hostInfo.access_token)
+    if (req.body.playName){
+      spotifyApi.createPlaylist(hostInfo.hostID, req.body.playName, { public : true }).then (function(data){
         model.Host.update({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : data.body['id']}}).exec()
         .then (res.status(200).redirect (hostInfo.homePage))
       })
@@ -41,7 +41,11 @@ function createPlaylist (req, res, db){
 
 //TODO: add comments
 function setLatestPlaylist (req, res, db){
-  var hostInfo = loginTool.validateHost (req.body.host).then (function (hostInfo){
+  loginTool.validateHost (req.body.host).then (function (hostInfo){
+    spotifyApi.setAccessToken(hostInfo.access_token)
+    spotifyApi.getUserPlaylists(hostInfo.hostID).then (function(data){
+      console.log (data)
+      (res.status(200).redirect (hostInfo.homePage))
   })
 }
 
