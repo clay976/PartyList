@@ -3,15 +3,15 @@ mongoose.Promise = require('bluebird');
 
 
 function Host (data, accessToken, refreshToken){
-	console.log (data)
-	console.log (accessToken)
-	console.log (refreshToken)
+	console.log (data.body.id)
+	console.log ('access'+ accessToken)
+	console.log ('refresh'+ refreshToken)
 	var host = {
-	  hostID 				: String,
-	  access_token	: String,
-	  expires_in		: Number,
-	  refresh_token	: String,
-	  playlistID		: String
+	  hostID 				: data.body.id,
+	  access_token	: accessToken,
+	  expires_in		: 3600,
+	  refresh_token	: refreshToken,
+	  playlistID		: ''
 	}
 	return host
 }
