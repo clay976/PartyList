@@ -92,7 +92,7 @@ TO BE SENT:
     host                            : string :  the username of their spotify account. |
   }
 _______________________________________________________________________________________*/
-  app.get('/playlist/spotify/getAll', function (req, res){
+  app.post('/playlist/spotify/getAll', function (req, res){
     spotifyPlaylistTools.findAllPlaylists (req, res, db)
   })
 
@@ -104,7 +104,7 @@ TO BE SENT:
     host                            : string :  the username of their spotify account. |
   }
 _______________________________________________________________________________________*/
-  app.get('/playlist/spotify/set', function (req, res){
+  app.post('/playlist/spotify/set', function (req, res){
     spotifyPlaylistTools.setSpecificPlaylist (req, res, db)
   })  
 
