@@ -1,6 +1,8 @@
+var mongoose = require("mongoose");
+mongoose.Promise = require('bluebird');
+
 
 function Host (data){
-
 	console.log (data)
 	var host = mongoose.Schema({
 	  hostID 				: String,
@@ -12,6 +14,6 @@ function Host (data){
 	return host
 }
 
-module.exports {
+module.exports = {
 	Host: Host
 }
