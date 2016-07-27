@@ -70,7 +70,6 @@ function findAllPlaylists (res, db, host){
 }
 
 module.exports = {
-  findPlaylist: findPlaylist,
-  createPlaylist: createPlaylist,
-  updatePlaylist: updatePlaylist
+  findAllPlaylists: findAllPlaylists,
+  createPlaylist: createPlaylist
 }
