@@ -29,9 +29,9 @@ function createPlaylist (req, res, db){
   .then (function (hostInfo){
     if (hostInfo){
       if (playlistName){
-        console.log ('trying to create playlist')
-        spotifyApi.createPlaylist(HostID, playlistName, { public : true })
-        .then (res.send ('sucess'))
+        spotifyApi.createPlaylist(HostID, playlistName, { public : true }).then(function(data) {
+        .then (res.send (data))
+        })
       }else{
         loginTool.homePageRedirect (res, 400, 'a user tried to create a playlist with an invalid name')
       }
