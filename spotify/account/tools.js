@@ -29,15 +29,13 @@ var spotifyApi = new SpotifyWebApi(credentials);
 function homepage (req, res, db) {
   var data = spotifyApi.authorizationCodeGrant(req.query.code)
   .then (function(data) {
-    console.log (data)
     spotifyApi.setAccessToken(data.body['access_token'])
+    spotifyApi.setRefreshToken(data.body['refresh_token'])
     var hostInfo = (spotifyApi.getMe())
-    .then (function(hostInfo, data) {
-      console.log ('host info:'+ hostInfo)
-      console.log ('hopfully tokens' + data.body)
-      model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, upsertTemplate.Host (hostInfo), {upsert:true})
+    .then (function(hostInfo) {
+      model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, upsertTemplate.Host (hostInfo,spotifyApi.getAccessToken,refresh_token: spotifyApi.getRefreshToken), {upsert:true})
     })
-    res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
+    res.redirect ('/#' +querystring.stringify({access_token: spotifyApi.getAccessToken,refresh_token: spotifyApi.getRefreshToken}))
   })
   .catch(function(err) {
     res.redirect ('/')
