@@ -1,10 +1,12 @@
 function userPlaylists (data){
-  var length = data.total
-  var playlists = '{ playlists: { name: ' +data[0].name+ ', id : ' +data[0].id+ '}'
+  var length = data.body.total
+  var playlists = playlists.body.items
+
+  playlistJSON = '{ playlists: { name: ' +playlists[0].name+ ', id : ' +playlists[0].id+ '}'
   for (var index = 1; index < length; index ++){
-    playlists + ', { name: ' +data[index].name+ ', id : ' +data[index].id+ '}'
+    playlistJSON = playlistJSON + ', { name: ' +playlists[index].name+ ', id : ' +playlists[index].id+ '}'
   }
-  return (playlists + '}')
+  return playlistJSON
 }
 
 module.exports = {
