@@ -42,7 +42,7 @@ function createPlaylist (req, res, db){
     }
   })
   .catch (function (err){
-    res.send (400, 'something went wrong')
+    res.send (400, 'something went wrong'+err)
   })
 
 }
