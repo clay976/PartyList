@@ -27,15 +27,14 @@ var spotifyApi = new SpotifyWebApi(credentials);
 // preps them in to an "options" object to
 // make another call for host info
 function homepage (req, res, db) {
-  var data = spotifyApi.authorizationCodeGrant(req.query.code)
-  .then (function(data) {
+  var data = spotifyApi.authorizationCodeGrant(req.query.code).then (function(data) {
     spotifyApi.setAccessToken(data.body['access_token'])
     spotifyApi.setRefreshToken(data.body['refresh_token'])
     res.redirect ('/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']}))
-    var hostInfo = (spotifyApi.getMe())
-    .then (function (hostInfo){
-      var updateInfo = upsertTemplate.Host (hostInfo, spotifyApi.getAccessToken, spotifyApi.getRefreshToken)
-      .then (function (updateInfo){ 
+    var access_token = data.body['access_token']
+    var refresh_token = data.body['refresh_token']
+    var hostInfo = (spotifyApi.getMe()).then (function (hostInfo){
+      var updateInfo = upsertTemplate.Host (hostInfo, access_token, refresh_token).then (function (updateInfo){ 
         model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, updateInfo, {upsert:true})
       })
     })
