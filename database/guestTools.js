@@ -50,5 +50,5 @@ module.exports = {
   addManyGuest : addManyGuest,
   resetGuest: resetGuest,
   addGuest: addGuest,
-  validateGuest
+  validateGuest: validateGuest
 }
