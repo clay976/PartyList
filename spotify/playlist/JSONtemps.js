@@ -1,7 +1,12 @@
-function userPlaylists (playlists, length){
-  var playlistJSON = '{ "playlists": [{"name": "' +playlists[0].name+ '", "id" : "' +playlists[0].id+ '"}'
+function userPlaylists (host, playlists, length){
+	var playlistJSON = '{ "playlists": ['
+	if playlists[0].owner.id = host {
+  	playlistJSON = playlistJSON+ '{"name": "' +playlists[0].name+ '", "id" : "' +playlists[0].id+ '"}'
+  }
   for (var index = 1; index < length; index ++){
-    playlistJSON = playlistJSON + ', {"name": "' +playlists[index].name+ '", "id" : "' +playlists[index].id+ '"}'
+  	if playlists[index].owner.id = host
+    	playlistJSON = playlistJSON + ', {"name": "' +playlists[index].name+ '", "id" : "' +playlists[index].id+ '"}'
+ 		}
   }
   return (JSON.parse (playlistJSON + ']}'))
 }

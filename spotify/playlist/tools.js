@@ -68,13 +68,14 @@ function setSpecificPlaylist (req, res, db){
 
 //TODO: add comments
 function findAllPlaylists (req, res, db){
-  console.log ('finding playlists')
   loginTool.validateHost (req.body.host)
   .then (function (hostInfo){
     spotifyApi.setAccessToken(hostInfo.access_token)
     spotifyApi.getUserPlaylists(hostInfo.hostID)
     .then (function(data){
-      (res.status(200).json (playlistTemplate.userPlaylists (data.body.items, data.body.total)))
+      var playlistJSON = playlistTemplate.userPlaylists (hostInfo.hostID, data.body.items, data.body.total)
+      console.log (playlistJSON)
+      (res.status(200).json (playlistJSON))
     })
   })
   .catch (function (err){
