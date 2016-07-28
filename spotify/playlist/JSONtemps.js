@@ -5,7 +5,7 @@ function userPlaylists (host, playlists, length){
   }
   for (var index = 1; index < length; index ++){
   	if (playlists[index].owner.id = host){
-    	playlistJSON = playlistJSON + ', {"name": "' +playlists[index].name+ '", "id" : "' +playlists[index].id+ '"}'
+    	playlistJSON = playlistJSON + ', {"name": "' +playlists[index].name+ '", "id" : "' +playlists[index].id+ ', "owner": "'+playlists[index].owner.id+'"}'
  		}
   }
   return (JSON.parse (playlistJSON + ']}'))
