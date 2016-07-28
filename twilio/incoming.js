@@ -1,35 +1,62 @@
 //node modules
-var request = require('request') // "Request" library
+var twilio = require('twilio')
+var SpotifyWebApi = require('spotify-web-api-node');
 
+var credentials = {
+  clientId : 'a000adffbd26453fbef24e8c1ff69c3b',
+  clientSecret : '899b3ec7d52b4baabba05d6031663ba2',
+  redirectUri : 'http://104.131.215.55:80/callback'
+};
+
+var spotifyApi = new SpotifyWebApi(credentials);
 // mongo variables
-var search = require ('../database/query/search')
-var updateResponseHandler = require ('../database/update/responseHandler')
-var updateTemplate = require ('../database/update/JSONtemps')
-var insertResponseHandler = require ('../database/insert/responseHandler')
-var insertTemplate = require ('../database/insert/JSONtemps')
-
+var guestTools = require ('../database/guestTools')
+var upsertTemplate = require ('../database/upsert/JSONtemps')
 // message variables
-var respond = require ('./responses')
-
-//my modules
-var SpotifyPlaylistJSON = require ('../spotify/playlist/JSONtemps')
+var respond = require ('./outgoing/responses')
 
 function businessLogic (req, res, db){
-  
-  if ((messageBody.toLowerCase() === 'yes' || messageBody.toLowerCase() === 'no') && trackID === ''){
-    respond.emptyConfirmation (res)
-  }else{
-    if (messageBody.toLowerCase() === 'yes'){
-      requestConfirmed (res, db, toNum, guestFound, trackID)
-    }else if (messageBody.toLowerCase() === 'no'){
-      respond.declineRequest (res)
-      db.collection('guests').updateOne(guestFound, updateTemplate.guestRequest (''), updateResponseHandler)
+  guestTools.validateGuest (req.body)
+  .then (function (guestInfo){ // change to: .then (decideResponse (guestInfo))
+    var resp = new twilio.TwimlResponse();
+
+    var messageBody = guestInfo.lastMessage
+    if ((messageBody === 'yes' || messageBody === 'no') && guestInfo.trackID === ''){
+      addResponse.emptyConfirmation (resp)
+      return resp
+    }else if (messageBody === 'yes'){
+      if (guestInfo.numRequests < 1){
+        addResponse.advertisment (resp)
+        model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, {$set: { numRequests: 4}}).exec()
+      }
+      model.Track.findOneAndUpdate({trackID: guestInfo.trackID}, {$inc: { numRequests: 1}}).exec()
+      addResponse.advertisment (resp)
+      return resp
+    }else if (messageBody === 'no'){
+      model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : ''}}).exec()
+      addResponse.declineRequest (resp)
+      return resp
     }else{
-      searchRequest(res, db, toNum, {url: 'https://api.spotify.com/v1/search?q=' +messageBody+ '&type=track&limit=1'}, guestFound)
+      spotifyApi.searchTracks (messageBody, { limit : 1 })
+      .then (function (tracksFound){
+        console.log (tracksFound)
+        model.Track.findOneandUpdate({trackID: trackAdd.tracks.items[0].id}, upsertTemplate (trackAdd.tracks.items[0].id), {upsert:true}).exec()
+        .then (function (trackFound){
+          if (trackFound) requests = trackFound.numRequests
+          else requests = 0
+          addResponse.trackFound (resp, tracksFound.tracks.items[0].name, trackAdd.tracks.items[0].artists[0].name)
+          return resp
+        })
+      })
     }
-  }
+  })
+  .then (res.send (resp.toString()))
+  .catch (function (err){
+    res.status(400).send ('something went wrong: '+err)
+  })
 }
 
+/*
 function searchRequest(res, db, toNum, options, guestFound){  
   request.get(options, function (error, response, body) {
     if (error) {
@@ -47,10 +74,7 @@ function searchRequest(res, db, toNum, options, guestFound){
 }
 
 function requestConfirmed (res, db, toNum, guestFound, trackID){
-  if (guestFound.numRequests < 1){
-    dbTools.resetGuest (db, guestFound)
-    respond.advertisment (toNum)
-  }
+  
   search.search ('tracks', searchTemplate.findTrack (trackID), db, function (trackDocFound){
     if (trackDocFound){
       respond.requestedAlready (res, guestFound.numRequests, trackDocFound.numRequests)
@@ -76,9 +100,7 @@ function addSongToPlaylist (host, trackID, toNum, db){
     })
   })
 }
-
+*/
 module.exports = {
-  incoming: incoming,
-  requestConfirmed: requestConfirmed,
-  searchRequest: searchRequest
+  businessLogic: businessLogic
 }

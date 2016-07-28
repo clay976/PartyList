@@ -2,15 +2,14 @@
 var express = require('express') // Express web server framework
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
-var assert = require('assert')
 var querystring = require('querystring')
 
 //my modules
 var spotifyAccountTools = require ('./spotify/account/tools')
-var spotifyAccountTemplate = require ('./spotify/account/JSONtemps')
 var spotifyPlaylistTools = require ('./spotify/playlist/tools')
-var handleIncoming = require ('./messageTools/handleIncoming')
-var respond = require ('./messageTools/responses')
+var spotifyAccountTemplate = require ('./spotify/account/JSONtemps')
+
+var twilioIncoming = require ('./twilio/incoming')
 
 //app declaration and uses
 var app = express()
@@ -19,8 +18,6 @@ app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-
 
 //required documents and tools
 var removeList = require ('./database/remove')
-var search = require ('./database/query/search')
-var queryTemplate = require ('./database/query/JSONtemps')
 var guestTools = require ('./database/guestTools')
 
 //mongo database variables
@@ -129,13 +126,6 @@ TO BE SENT:
   }
 _______________________________________________________________________________________*/
   app.post('/playlist/partyList/latest', function (req, res){
-    search.search (req.body.host, query.findHost (req.body.host), db, function (hostFound){
-      if (hostFound.playlistID != ''){
-        res.send (200, 'hosts playlist has been found in DB')
-      }else{
-        res.send (401, 'sorry, host playlist not found in DB')
-      }
-    })
   })
 /*
 remove every guest that is associated with this user
@@ -174,7 +164,7 @@ TO BE SENT:
   }
 _______________________________________________________________________*/
   app.post('/guests/add', function (req, res){
-    guestTools.addGuest (res, db, req.body.host, req.body.guestNum)
+    guestTools.addGuest (req, res, db)
   })
 
 /*
@@ -192,7 +182,7 @@ ________________________________________________________________________________
   //this should only be coming from Twilio,
   //to be fixed in gulp branch or something.
   app.post('/message', function (req, res){
-    twilio.incoming.businessLogic (req, res, db)
+    twilioIncoming.businessLogic (req, res, db)
   })
   app.listen(80)
 })

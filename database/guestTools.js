@@ -1,8 +1,7 @@
 var search = require ('./query/search')
 var queryTemplate = require ('./query/JSONtemps')
-var updateTemplate = require ('./update/JSONtemps')
-var insertTemplate = require ('./insert/JSONtemps')
-insertResponseHandler = require ('./insert/responseHandler')
+var upsertTemplate = require ('./upsert/JSONtemps')
+var model = require ('./models')
 
 function addManyGuest (req, res, db){
   var body = JSON.parse(req)
@@ -14,16 +13,15 @@ function addManyGuest (req, res, db){
   }
 }
 
-function addGuest (res, db, host, guestNum){
-  if (guestNum.length === 10){
-    var guestNum = '+1'+ guestNum
-    search.search ('guests', queryTemplate.findGuest (guestNum), db, function (guestFound){
-      if (guestFound){
-        res.status(200).send('you already added this guest' + guestNum)
-      }else{
-        db.collection('guests').insertOne(insertTemplate.guest (host, guestNum), insertResponseHandler)
-        res.status(200).send('Guest added succesfully, number: '+ guestNum)
-      }
+function addGuest (req, res, db){ 
+  if (req.body.guestNum.length === 10){
+    model.Guest.findOneAndUpdate({phoneNum: req.body.guestNum},upsertTemplate.Guest (req.body.host, req.body.guestNum)).exec()
+    .then (function (guestInfo){
+      res.status(200).send ('guest added succsefully')
+    })
+    .catch (function(err) {
+      res.status(400).send ('sorry something went wrong: '+ err.message)
+      console.log('Something went wrong: ', err.message);
     })
   }else{
     res.status(400).send('number recieved not in the right format, please retry with the format "1234567890" (no speacial characters)')
@@ -31,11 +29,25 @@ function addGuest (res, db, host, guestNum){
 }
 
 function resetGuest (db, guest2Find){
-  db.collection('guest').updateOne(guest2Find, updateTemplate.guestReset(), updateResponseHandler)
+}
+
+function validateGuest (body){
+  return new Promise (function (fulfill, reject){
+    (model.Host.findOne({ 'phoneNum' : body.From }).exec())
+    .then (function (guestInfo){
+      if (guestInfo.hostID){
+        guestInfo.lastMessage = (body.Body).toLowerCare()
+        fulfill (guestInfo) 
+      }else{
+        reject ('could not find this document in our database, this may be a problem on our end, sorry!')
+      }
+    })
+  })
 }
 
 module.exports = {
   addManyGuest : addManyGuest,
   resetGuest: resetGuest,
-  addGuest: addGuest
+  addGuest: addGuest,
+  validateGuest: validateGuest
 }

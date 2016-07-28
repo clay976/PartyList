@@ -10,6 +10,25 @@ function Host (data, accessToken, refreshToken, homePage){
 	return host
 }
 
+function Guest (host, number){
+	var guest = {
+  	'hostID'				: host,
+    'phoneNum'			: number
+	}
+	return guest
+}
+
+function Track (TrackID){
+	var track = {
+  trackId				: TrackID,
+  numRequests		: { type: Number, default: 0 },
+  timePlayed		: Number 
+}
+	return track
+}
+
 module.exports = {
-	Host: Host
+	Host: Host,
+	Guest: Guest,
+	Track: Track
 }

@@ -1,17 +1,9 @@
 //node modules
 var querystring = require('querystring')
-var request = require('request') // "Request" library
 var SpotifyWebApi = require('spotify-web-api-node');
 
 //my modules
-var searchTemplate = require ('../../database/query/JSONtemps')
-var updateTemplate = require ('../../database/update/JSONtemps')
 var upsertTemplate = require ('../../database/upsert/JSONtemps')
-var update = require (('../../database/update/responseHandler'))
-var search = require ('../../database/query/search')
-var dbHostTools = require ('../../database/hostTools')
-var spotifyAccountTemplate = require ('./JSONtemps')
-
 var model = require ('../../database/models')
 
 var credentials = {
@@ -28,7 +20,7 @@ var spotifyApi = new SpotifyWebApi(credentials);
 // make another call for host info
 function homepage (req, res, db) {
   spotifyApi.authorizationCodeGrant(req.query.code)
-  .then (function(data) {
+  .then (function(data) { //change to: .then (setUpHostInfo(data))
     spotifyApi.setAccessToken(data.body['access_token'])
     spotifyApi.setRefreshToken(data.body['refresh_token'])
     var homePage = '/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']})
@@ -36,7 +28,7 @@ function homepage (req, res, db) {
     var access_token = data.body['access_token']
     var refresh_token = data.body['refresh_token']
     spotifyApi.getMe()
-    .then (function (hostInfo){
+    .then (function (hostInfo){ //change to: .then (updateOrInsertOnLogin (hostInfo))
       model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, upsertTemplate.Host (hostInfo.body.id, access_token, refresh_token, homePage), {upsert:true}).exec()
     })
   }).catch (function(err) {
@@ -47,12 +39,12 @@ function homepage (req, res, db) {
 
 function validateHost (host){
   return new Promise (function (fulfill, reject){
-    var hostInfo = (model.Host.findOne({ 'hostID' : host }).exec())
+    (model.Host.findOne({ 'hostID' : host }).exec())
     .then (function (hostInfo){
       if (hostInfo){
         fulfill (hostInfo) 
       }else{
-        reject ('could not find this user in our databse. this is probably a problem on our end, sorry!')
+        reject ('could not find this document in our database, this may be a problem on our end, sorry!')
       }
     })
   })

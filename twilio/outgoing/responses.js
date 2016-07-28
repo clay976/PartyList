@@ -1,62 +1,38 @@
 //node modules
-var twilio = require('twilio')
-var twilioAccountSID = "AC85573f40ef0c3fb0c5aa58477f61b02e";
-var twilioAccountSecret = "fcea26b2b0ae541d904ba23e12e2c499";
-var client = require('twilio/lib')(twilioAccountSID, twilioAccountSecret);
+
+var client = require('twilio/lib')("AC85573f40ef0c3fb0c5aa58477f61b02e", "fcea26b2b0ae541d904ba23e12e2c499");
 
 //my modules
-var messageTool = require ('./message')
-var search = require ('../database/query/search')
-var searchTemps = require ('../database/query/JSONtemps')
-
-function notGuest (res){
-  var resp = new twilio.TwimlResponse();
+function notGuest (resp){
   resp.message('\n\nsorry, you are not a guest of a party, you can send back a host code for a party. We have also send the host a text with your number in case they want to add it themselves');
-  res.setHeader('Content-Type', 'text/xml')
-  res.send(resp.toString());
+  return resp
 }
 
-function emptyConfirmation (res){
-  var resp = new twilio.TwimlResponse();
+function emptyConfirmation (resp){
   resp.message('\n\nWe don\'t have a request for you to confirm or decline. \n\nIf you song is just "yes", or "no", add an artist name to search')
-  res.setHeader('Content-Type', 'text/xml')
-  res.send(resp.toString());
+  return resp
 }
 
-function requestedAlready (res, reqsLeft, trackRequests){
-  var resp = new twilio.TwimlResponse();
-  var responseBody = ('\n\nThis track has already been requested, Your request will bump it up in the queue!\n\n Requests before next ad: ' +reqsLeft+ '\n\n This song now has ' +(trackRequests + 1)+ ' requests!')
-  res.setHeader('Content-Type', 'text/xml')
-  res.send(resp.toString());
+function trackFound (resp, title, artist, numRequests){
+  resp.message ('\n\n We found: ' +title+ ', by: ' +artist+ 'This Track has ' +numRequests+ ' requests!')
+  return resp
 }
 
-function newRequest (res, reqsLeft){
-  var resp = new twilio.TwimlResponse();
-  resp.message ('\n\nThis track is new!! \n\n Requests before next ad: ' +reqsLeft+ '\n\n This song now has 1 request!')
-  res.setHeader('Content-Type', 'text/xml')
-  res.send(resp.toString());
-}
-
-function declineRequest (res){
-  var resp = new twilio.TwimlResponse();
+function declineRequest (resp){
 	resp.message ('\n\nSorry about the wrong song, try modifying your search! Remember to not use any special characters.')
-  res.setHeader('Content-Type', 'text/xml')
-  res.send(resp.toString());
+  return resp
 }
 
-function songNotFound (res){
-  var resp = new twilio.TwimlResponse();
+function songNotFound (resp){
   resp.message ('\n\nsorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
-  res.setHeader('Content-Type', 'text/xml')
-  res.send(resp.toString());
+  return resp
 }
 
-function advertisment (toNum){
-  var responseBody = ('\n\nYou are recieving an advertisment because you have made 5 successful request')
-  messageObject = messageTool.message (toNum, responseBody)
-  client.sendMessage(messageObject, messageTool.sentHandler)
+function advertisment (resp){
+  resp.message  ('\n\nYou are recieving an advertisment because you have made 5 successful request')
+  return resp
 }
-
+/*
 function songAdded (toNum, responseBody){
   messageObject = messageTool.message (toNum, responseBody)
   client.sendMessage(messageObject, messageTool.sentHandler)
@@ -64,9 +40,6 @@ function songAdded (toNum, responseBody){
 
 function askConfirmation(res, db, trackAdd){
   var resp = new twilio.TwimlResponse();
-	var trackTitle = trackAdd.tracks.items[0].name
-	var trackArtist = trackAdd.tracks.items[0].artists[0].name
-
   search.search ('tracks', searchTemps.findTrack (trackAdd.tracks.items[0].id), db, function (trackDocFound){
     if (trackDocFound){
       var currentSongRequests = trackDocFound.numRequests
@@ -77,18 +50,14 @@ function askConfirmation(res, db, trackAdd){
     res.setHeader('Content-Type', 'text/xml')
     res.send(resp.toString())
   })
-}
-
+}*/
 
 
 module.exports = {
 	notGuest: notGuest,
 	emptyConfirmation: emptyConfirmation,
-	requestedAlready: requestedAlready,
-	newRequest: newRequest,
+	trackFound: trackFound,
 	declineRequest: declineRequest,
 	songNotFound: songNotFound,
-	advertisment: advertisment,
-  songAdded: songAdded,
-  askConfirmation: askConfirmation
+	advertisment: advertisment
 }

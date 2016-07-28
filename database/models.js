@@ -5,22 +5,23 @@ mongoose.Promise = require('bluebird');
 var guest = mongoose.Schema({
 	hostID				: String,
   phoneNum			: String,
-  numRequests		: Number,
-  currentTrack	: String 
+  numRequests		: { type: Number, default: 4 },
+  currentTrack	: { type: String, default: '' },
+  lastMessage   : { type: String, default: '' } 
 })
 
 var track = mongoose.Schema({
   trackId				: String,
-  numRequests		: Number,
+  numRequests		: { type: Number, default: 0 },
   timePlayed		: Number 
 })
 
 var host = mongoose.Schema({
   hostID 				: String,
   access_token	: String,
-  expires_in		: Number,
+  expires_in		: { type: Number, default: 3600 },
   refresh_token	: String,
-  playlistID		: String,
+  playlistID		: { type: String, default: '' },
   homePage      : String
 })
 
