@@ -10,6 +10,15 @@ function Host (data, accessToken, refreshToken, homePage){
 	return host
 }
 
+function Track (TrackID){
+	var track = {
+  trackId				: TrackID,
+  numRequests		: { type: Number, default: 0 },
+  timePlayed		: Number 
+}
+	return track
+}
+
 module.exports = {
 	Host: Host
 }

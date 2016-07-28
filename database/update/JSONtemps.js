@@ -19,12 +19,6 @@ function guestConfirm(){
   }) 
 }
 
-function guestReset(){
-  return ({
-    $set: { numRequests: 4}
-  }) 
-}
-
 //update tracks function 
 function tracksReqd (){
   return ({ numRequests: 1}) 
@@ -52,7 +46,6 @@ module.exports = {
   playlistID: playlistID,
   guestRequest: guestRequest,
   guestConfirm: guestConfirm,
-  guestReset: guestReset,
   tracksReqd: tracksReqd,
   bothTokens: bothTokens,
   accessToken: accessToken

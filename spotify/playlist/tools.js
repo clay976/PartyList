@@ -1,17 +1,9 @@
-//node modules
-var request = require('request') // "Request" library
-var querystring = require('querystring')
-var assert = require('assert')
-
 //my modules
-var loginTool = require ('../account/tools')
-var hostTools = require ('../../database/hostTools')
-var updateTemplate = require ('../../database/update/JSONtemps')
-var search = require ('../../database/query/search')
+var hostAcountTools = require ('../account/tools')
 var playlistTemplate = require ('./JSONtemps')
-var accountTemplate = require ('../account/JSONtemps')
 var model = require ('../../database/models')
 
+//node modules
 var credentials = {
   clientId : 'a000adffbd26453fbef24e8c1ff69c3b',
   clientSecret : '899b3ec7d52b4baabba05d6031663ba2',
@@ -23,7 +15,7 @@ var spotifyApi = new SpotifyWebApi(credentials);
 
 //TODO: add comments
 function createPlaylist (req, res, db){
-  loginTool.validateHost (req.body.host)
+  hostAcountTools.validateHost (req.body.host)
   .then (function (hostInfo){
     spotifyApi.setAccessToken(hostInfo.access_token)
     if (req.body.playName){
@@ -41,7 +33,7 @@ function createPlaylist (req, res, db){
 
 //TODO: add comments
 function setLatestPlaylist (req, res, db){
-  loginTool.validateHost (req.body.host)
+  hostAcountTools.validateHost (req.body.host)
   .then (function (hostInfo){
     spotifyApi.setAccessToken(hostInfo.access_token)
     spotifyApi.getUserPlaylists(hostInfo.hostID)
@@ -56,7 +48,7 @@ function setLatestPlaylist (req, res, db){
 }
 
 function setSpecificPlaylist (req, res, db){
-  loginTool.validateHost (req.body.host)
+  hostAcountTools.validateHost (req.body.host)
   .then (function (hostInfo){
     model.Host.update({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : req.body.playlistID}}).exec()
     .then (res.status(200).redirect (hostInfo.homePage))
@@ -68,7 +60,7 @@ function setSpecificPlaylist (req, res, db){
 
 //TODO: add comments
 function findAllPlaylists (req, res, db){
-  loginTool.validateHost (req.body.host)
+  hostAcountTools.validateHost (req.body.host)
   .then (function (hostInfo){
     spotifyApi.setAccessToken(hostInfo.access_token)
     spotifyApi.getUserPlaylists(hostInfo.hostID)
