@@ -13,10 +13,7 @@ function Host (data, accessToken, refreshToken, homePage){
 function Guest (host, number){
 	var guest = {
   	'hostID'				: host,
-    'phoneNum'			: number,
-    'numRequests'		: { type: Number, default: 4 },
-    'currentTrack'	: { type: String, default: '' },
-    'lastMessage'   : { type: String, default: '' } 
+    'phoneNum'			: number
 	}
 	return guest
 }
