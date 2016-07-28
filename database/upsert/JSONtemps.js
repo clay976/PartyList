@@ -31,5 +31,7 @@ function Track (TrackID){
 }
 
 module.exports = {
-	Host: Host
+	Host: Host,
+	Guest: Guest,
+	Track: Track
 }
