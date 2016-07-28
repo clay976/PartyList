@@ -29,7 +29,7 @@ function businessLogic (req, res, db){
         addResponse.advertisment (resp)
         model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, {$set: { numRequests: 4}}).exec()
       }
-      model.Track.findOneAndUpdate({trackID: guestInfo.trackID}, {$inc: { numRequests}}).exec()
+      model.Track.findOneAndUpdate({trackID: guestInfo.trackID}, {$inc: { numRequests: 1}}).exec()
       addResponse.advertisment (resp)
       return resp
     }else if (messageBody === 'no'){
