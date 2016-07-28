@@ -27,35 +27,22 @@ var spotifyApi = new SpotifyWebApi(credentials);
 // preps them in to an "options" object to
 // make another call for host info
 function homepage (req, res, db) {
-  var data = spotifyApi.authorizationCodeGrant(req.query.code).then (function(data) {
+  spotifyApi.authorizationCodeGrant(req.query.code)
+  .then (function(data) {
     spotifyApi.setAccessToken(data.body['access_token'])
     spotifyApi.setRefreshToken(data.body['refresh_token'])
     var homePage = '/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']})
     res.redirect (homePage)
     var access_token = data.body['access_token']
     var refresh_token = data.body['refresh_token']
-    var hostInfo = (spotifyApi.getMe()).then (function (hostInfo){
-      var query = {hostID: hostInfo.body.id}
-      model.Host.findOneAndUpdate(query, upsertTemplate.Host (hostInfo.body.id, access_token, refresh_token, homePage), {upsert:true}).exec()
+    spotifyApi.getMe()
+    .then (function (hostInfo){
+      model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, upsertTemplate.Host (hostInfo.body.id, access_token, refresh_token, homePage), {upsert:true}).exec()
     })
   }).catch (function(err) {
-    res.redirect ('/')
+    res.status(400).redirect ('/?'+err.message)
     console.log('Something went wrong: ', err.message);
   })
-}
-
-function refreshToken () {
-  search (host,doc, db, function (docFound){
-    request.post(spotifyAccountTemplate.accessFromRefresh(docFound.refresh_token), function (error, response, body) {
-      if (!error && response.statusCode === 200) {
-        db.collection(host).updateOne(searchTemplate.findHost (host), update.accessToken (body.access_token))
-      }
-    })
-  })
-}
-
-function loginRedirect (res, code, message){
-  res.redirect ('/?'+message+':'+code)
 }
 
 function validateHost (host){
@@ -74,7 +61,6 @@ function validateHost (host){
 
 //exports for external modules to use.
 module.exports = {
-  loginRedirect: loginRedirect,
   homepage: homepage,
   validateHost: validateHost
 }

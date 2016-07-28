@@ -153,9 +153,10 @@ ________________________________________________________________________________
 add many guests to the party in a JSON block
 ________________________________________________________________________________________
 TO BE SENT:
-  JSON from req.body{               :  type  :              Description                |
-    host                            : string :  the username of their spotify account. |
-    guestNums [ 1234567890, etc, ]  : array  :  phone numbers of the guest to be added |
+  JSON from req.body{                     :  type  :              Description                |
+    host                                  : string :  the username of their spotify account. |
+    guestNums [ {number : 1234567890}, 
+                {number : 4169834260} ]   : array  :  phone numbers of the guest to be added |
   }
 _______________________________________________________________________________________*/
   app.post('/guests/addMany', function (req, res){
@@ -190,14 +191,8 @@ ________________________________________________________________________________
 
   //this should only be coming from Twilio,
   //to be fixed in gulp branch or something.
-  app.post('/message', function (req, res){ 
-    search.search ('guests', queryTemplate.findGuest (req.body.From), db, function (guestFound){
-      if (!guestFound){
-        respond.notGuest (res, req.body.From)
-      }else{
-        handleIncoming.incoming (res, db, req.body.From, guestFound, req.body.Body.toLowerCase())
-      }
-    })
+  app.post('/message', function (req, res){
+    twilio.incoming.businessLogic (req, res, db)
   })
   app.listen(80)
 })

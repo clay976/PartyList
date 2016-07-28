@@ -58,7 +58,7 @@ function setLatestPlaylist (req, res, db){
 function setSpecificPlaylist (req, res, db){
   loginTool.validateHost (req.body.host)
   .then (function (hostInfo){
-  model.Host.update({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : req.body.playlistID}}).exec()
+    model.Host.update({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : req.body.playlistID}}).exec()
     .then (res.status(200).redirect (hostInfo.homePage))
   })
   .catch (function (err){

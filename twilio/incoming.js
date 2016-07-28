@@ -14,8 +14,8 @@ var respond = require ('./responses')
 //my modules
 var SpotifyPlaylistJSON = require ('../spotify/playlist/JSONtemps')
 
-function incoming (res, db, toNum, guestFound, messageBody){
-  var trackID = guestFound.currentTrack
+function businessLogic (req, res, db){
+  
   if ((messageBody.toLowerCase() === 'yes' || messageBody.toLowerCase() === 'no') && trackID === ''){
     respond.emptyConfirmation (res)
   }else{
