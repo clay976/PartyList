@@ -1,6 +1,6 @@
 var search = require ('./query/search')
 var queryTemplate = require ('./query/JSONtemps')
-var updateTemplate = require ('./update/JSONtemps')
+var upsertTemplate = require ('./upsert/JSONtemps')
 
 function addManyGuest (req, res, db){
   var body = JSON.parse(req)
@@ -12,16 +12,15 @@ function addManyGuest (req, res, db){
   }
 }
 
-function addGuest (res, db, host, guestNum){
-  if (guestNum.length === 10){
-    var guestNum = '+1'+ guestNum
-    search.search ('guests', queryTemplate.findGuest (guestNum), db, function (guestFound){
-      if (guestFound){
-        res.status(200).send('you already added this guest' + guestNum)
-      }else{
-        //db.collection('guests').insertOne(insertTemplate.guest (host, guestNum), insertResponseHandler)
-        res.status(200).send('Guest added succesfully, number: '+ guestNum)
-      }
+function addGuest (req, res, db){ 
+  if (req.body.guestNum.length === 10){
+    model.Guest.findOneAndUpdate({phoneNum: req.body.guestNum},upsertTemplate.Guest (req.body.host, req.body.guestNum)).exec()
+    .then (function (guestInfo){
+
+    })
+    .catch (function(err) {
+      res.status(400).send ('sorry something went wrong')
+      console.log('Something went wrong: ', err.message);
     })
   }else{
     res.status(400).send('number recieved not in the right format, please retry with the format "1234567890" (no speacial characters)')
@@ -29,7 +28,6 @@ function addGuest (res, db, host, guestNum){
 }
 
 function resetGuest (db, guest2Find){
-  db.collection('guest').updateOne(guest2Find, updateTemplate.guestReset(), updateResponseHandler)
 }
 
 function validateGuest (body){

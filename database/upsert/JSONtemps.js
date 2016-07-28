@@ -10,6 +10,17 @@ function Host (data, accessToken, refreshToken, homePage){
 	return host
 }
 
+function Guest (host, number){
+	var guest = {
+  	'hostID'				: host,
+    'phoneNum'			: number,
+    'numRequests'		: { type: Number, default: 4 },
+    'currentTrack'	: { type: String, default: '' },
+    'lastMessage'   : { type: String, default: '' } 
+	}
+	return guest
+}
+
 function Track (TrackID){
 	var track = {
   trackId				: TrackID,

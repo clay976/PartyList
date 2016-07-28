@@ -164,7 +164,7 @@ TO BE SENT:
   }
 _______________________________________________________________________*/
   app.post('/guests/add', function (req, res){
-    guestTools.addGuest (res, db, req.body.host, req.body.guestNum)
+    guestTools.addGuest (req, res, db)
   })
 
 /*
