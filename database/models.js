@@ -5,7 +5,7 @@ mongoose.Promise = require('bluebird');
 var guest = mongoose.Schema({
 	hostID				: String,
   phoneNum			: String,
-  numRequests		: Number,
+  numRequests		: { type: Number, default: 4 },
   currentTrack	: { type: String, default: '' },
   lastMessage   : { type: String, default: '' } 
 })

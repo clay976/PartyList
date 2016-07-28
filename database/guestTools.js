@@ -17,10 +17,10 @@ function addGuest (req, res, db){
   if (req.body.guestNum.length === 10){
     model.Guest.findOneAndUpdate({phoneNum: req.body.guestNum},upsertTemplate.Guest (req.body.host, req.body.guestNum)).exec()
     .then (function (guestInfo){
-
+      res.status(200).send ('guest added succsefully')
     })
     .catch (function(err) {
-      res.status(400).send ('sorry something went wrong')
+      res.status(400).send ('sorry something went wrong: '+ err.message)
       console.log('Something went wrong: ', err.message);
     })
   }else{
