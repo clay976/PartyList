@@ -33,9 +33,9 @@ function resetGuest (db, guest2Find){
 
 function validateGuest (body){
   return new Promise (function (fulfill, reject){
-    model.Host.findOne({ 'phoneNum' : body.From }).exec()
+    var guestInfo = model.Host.findOne({ 'phoneNum' : body.From }).exec()
     .then (function (guestInfo){
-      if (guestInfo.hostID != null){
+      if (guestInfo.hostID){
         guestInfo.lastMessage = (body.Body).toLowerCare()
         fulfill (guestInfo) 
       }else{
