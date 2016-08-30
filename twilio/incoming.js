@@ -49,8 +49,8 @@ function businessLogic (req, res, db){
         })
       })
     }
+    res.send (resp.toString())
   })
-  .then (res.send (resp.toString()))
   .catch (function (err){
     res.status(400).send ('something went wrong: '+err)
   })
