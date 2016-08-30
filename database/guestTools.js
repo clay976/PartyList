@@ -35,7 +35,7 @@ function validateGuest (body){
   return new Promise (function (fulfill, reject){
     model.Host.findOne({ 'phoneNum' : body.From }).exec()
     .then (function (guestInfo){
-      if (guestInfo.hostID){
+      if (guestInfo.hostID != null){
         guestInfo.lastMessage = (body.Body).toLowerCare()
         fulfill (guestInfo) 
       }else{
