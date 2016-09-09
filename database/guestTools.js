@@ -20,8 +20,8 @@ function addGuest (req, res, db){
       res.status(200).send ('guest added succsefully')
     })
     .catch (function(err) {
-      res.status(400).send ('sorry something went wrong: '+ err.message)
       console.log('Something went wrong: ', err.message);
+      res.status(400).send ('sorry something went wrong: '+ err.message)
     })
   }else{
     res.status(400).send('number recieved not in the right format, please retry with the format "1234567890" (no speacial characters)')
@@ -35,9 +35,9 @@ function validateGuest (body){
   return new Promise (function (fulfill, reject){
     (model.Guest.findOne({ 'phoneNum' : body.From }).exec())
     .then (function (guestInfo){
-      console.log ('guest ' +guestInfo)
-      guestInfo.lastMessage = (body.Body).toLowerCare()
       if (guestInfo){
+        console.log ('guest ' +guestInfo)
+        guestInfo.lastMessage = (body.Body).toLowerCare()
         fulfill (guestInfo) 
       }else{
         reject ('could not find this document in our database, this may be a problem on our end, sorry!')
