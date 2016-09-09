@@ -35,8 +35,7 @@ function validateGuest (body){
   return new Promise (function (fulfill, reject){
     (model.Guest.findOne({ 'phoneNum' : body.From }).exec())
     .then (function (guestInfo){
-      console.log ('validating guest')
-      console.log ('guest' +guestInfo)
+      console.log ('guest ' +guestInfo)
       guestInfo.lastMessage = (body.Body).toLowerCare()
       if (guestInfo){
         fulfill (guestInfo) 
@@ -45,19 +44,6 @@ function validateGuest (body){
       }
     })
     .catch (console.log ('validating guest'))
-  })
-
-  return new Promise (function (fulfill, reject){
-    var guestInfo = model.Host.findOne({ 'phoneNum' : body.From }).exec()
-    .then (function (guestInfo){
-      console.log (guestInfo)
-      if (guestInfo.hostID){
-        guestInfo.lastMessage = (body.Body).toLowerCare()
-        fulfill (guestInfo) 
-      }else{
-        reject ('could not find this document in our database, this may be a problem on our end, sorry!')
-      }
-    })
   })
 }
 

@@ -41,6 +41,7 @@ function validateHost (host){
   return new Promise (function (fulfill, reject){
     (model.Host.findOne({ 'hostID' : host }).exec())
     .then (function (hostInfo){
+      console.log (hostInfo)
       if (hostInfo){
         fulfill (hostInfo) 
       }else{
