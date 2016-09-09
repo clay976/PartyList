@@ -21,7 +21,7 @@ function createPlaylist (req, res, db){
     if (req.body.playName){
       spotifyApi.createPlaylist(hostInfo.hostID, req.body.playName, { public : true })
       .then (function(data){
-        model.Host.update({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : data.body['id']}}).exec()
+        model.Host.findOneAndUpdate({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : data.body['id']}}).exec()
         .then (res.status(200).redirect (hostInfo.homePage))
       })
     }else res.status(401).redirect (hostInfo.homePage)
@@ -38,7 +38,7 @@ function setLatestPlaylist (req, res, db){
     spotifyApi.setAccessToken(hostInfo.access_token)
     spotifyApi.getUserPlaylists(hostInfo.hostID)
     .then (function(data){
-      model.Host.update({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : data.body.items[0].id}}).exec()
+      model.Host.findOneAndUpdate({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : data.body.items[0].id}}).exec()
       .then (res.status(200).redirect (hostInfo.homePage))
     })
   })
@@ -50,7 +50,7 @@ function setLatestPlaylist (req, res, db){
 function setSpecificPlaylist (req, res, db){
   hostAcountTools.validateHost (req.body.host)
   .then (function (hostInfo){
-    model.Host.update({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : req.body.playlistID}}).exec()
+    model.Host.findOneAndUpdate({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : req.body.playlistID}}).exec()
     .then (res.status(200).redirect (hostInfo.homePage))
   })
   .catch (function (err){
