@@ -42,11 +42,13 @@ function validateHost (host){
     (model.Host.findOne({ 'hostID' : host }).exec())
     .then (function (hostInfo){
       if (hostInfo){
+        console.log (hostInfo)
         fulfill (hostInfo) 
       }else{
         reject ('could not find this document in our database, this may be a problem on our end, sorry!')
       }
     })
+    .catch (console.log ('validating host failed')
   })
 }
 

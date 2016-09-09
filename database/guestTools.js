@@ -35,13 +35,13 @@ function validateGuest (body){
   return new Promise (function (fulfill, reject){
     (model.Guest.findOne({ 'phoneNum' : body.From }).exec())
     .then (function (guestInfo){
-      console.log (guestInfo)
       console.log (body.From)
       if (guestInfo){
         console.log ('guest ' +guestInfo)
         guestInfo.lastMessage = (body.Body).toLowerCare()
         fulfill (guestInfo) 
       }else{
+        console.log ('rejecting inside validation')
         reject ('could not find this document in our database, this may be a problem on our end, sorry!')
       }
     })
