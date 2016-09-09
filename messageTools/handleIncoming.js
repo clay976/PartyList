@@ -7,6 +7,7 @@ var updateResponseHandler = require ('../database/update/responseHandler')
 var updateTemplate = require ('../database/update/JSONtemps')
 var insertResponseHandler = require ('../database/insert/responseHandler')
 var insertTemplate = require ('../database/insert/JSONtemps')
+var searchTemplate = require ('../database/query/JSONtemps')
 
 // message variables
 var respond = require ('./responses')
