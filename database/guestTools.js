@@ -16,7 +16,7 @@ function addManyGuest (req, res, db){
 function addGuest (req, res, db){ 
   if (req.body.guestNum.length === 10){
     var num = '+1'+req.body.guestNum.length
-    model.Guest.findOneAndUpdate({phoneNum: num},upsertTemplate.Guest (req.body.host, num)).exec()
+    model.Guest.findOneAndUpdate({'phoneNum': num},upsertTemplate.Guest (req.body.host, num), {upsert:true}).exec()
     .then (function (guestInfo){
       res.status(200).send ('guest added succsefully')
     })
