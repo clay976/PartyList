@@ -19,8 +19,8 @@ function businessLogic (req, res, db){
   guestTools.validateGuest (req.body)
   .then (function (guestInfo){ // change to: .then (decideResponse (guestInfo))
     var resp = new twilio.TwimlResponse();
-
     var messageBody = guestInfo.lastMessage
+    console.log ('message body' +messageBody)
     if ((messageBody === 'yes' || messageBody === 'no') && guestInfo.trackID === ''){
       addResponse.emptyConfirmation (resp)
       return resp
