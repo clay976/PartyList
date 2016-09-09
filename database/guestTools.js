@@ -16,8 +16,10 @@ function addManyGuest (req, res, db){
 function addGuest (req, res, db){ 
   if (req.body.guestNum.length === 10){
     var num = '+1'+req.body.guestNum.length
+    console.length (num)
     model.Guest.findOneAndUpdate({'phoneNum': num},upsertTemplate.Guest (req.body.host, num), {upsert:true}).exec()
     .then (function (guestInfo){
+      console.log (guestInfo)
       res.status(200).send ('guest added succsefully')
     })
     .catch (function(err) {
@@ -33,6 +35,7 @@ function resetGuest (db, guest2Find){
 }
 
 function validateGuest (body){
+  console.log (body)
   return new Promise (function (fulfill, reject){
     model.Guest.findOne({ 'phoneNum' : body.From }).exec()
     .then (function (guestInfo){
