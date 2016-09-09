@@ -41,7 +41,7 @@ function validateGuest (body){
     .then (function (guestInfo){
       if (guestInfo){
         console.log ('guestJSON: ' +guestInfo)
-        console.log ('message: ' = body.Body)
+        console.log ('message: ' + body.Body)
         guestInfo.lastMessage = (body.Body).toLowerCare()
         fulfill (guestInfo) 
       }else{
