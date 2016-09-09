@@ -48,7 +48,7 @@ function validateHost (host){
         reject ('could not find this document in our database, this may be a problem on our end, sorry!')
       }
     })
-    .catch (console.log ('validating host failed')
+    .catch (console.log ('validating host failed'))
   })
 }
 
