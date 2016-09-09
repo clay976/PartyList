@@ -55,14 +55,14 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
   search.search ('tracks', searchTemplate.findTrack (trackID), db, function (trackDocFound){
     if (trackDocFound){
       respond.requestedAlready (res, guestFound.numRequests, trackDocFound.numRequests)
-      db.collection('tracks').updateOne(trackDocFound, updateTemplate.tracksReqd, updateResponseHandler)
+      db.collection('tracks').updateOne(trackDocFound, updateTemplate.tracksReqd (), updateResponseHandler)
     }else{        
       respond.newRequest (res, guestFound.numRequests)
       db.collection('tracks').insertOne(insertTemplate.track(trackID), insertResponseHandler)
     }
   })
   addSongToPlaylist (guestFound.host, trackID, toNum, db)
-  db.collection('guests').updateOne(guestFound, update.guestConfirm (), updateResponseHandler)
+  db.collection('guests').updateOne(guestFound, updateTemplate.guestConfirm (), updateResponseHandler)
 }
 
 function addSongToPlaylist (host, trackID, toNum, db){
