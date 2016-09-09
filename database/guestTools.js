@@ -42,7 +42,7 @@ function validateGuest (body){
       if (guestInfo){
         console.log ('guestJSON: ' +guestInfo)
         console.log ('message: ' + body.Body)
-        fulfill (model.Guest.findOneAndUpdate({'phoneNum': num},{'lastMessage':(body.Body).toLowerCare()}).exec()) 
+        fulfill (model.Guest.findOneAndUpdate({'phoneNum': body.From},{'lastMessage':(body.Body).toLowerCare()}).exec()) 
       }else{
         console.log ('could not find this document in our database, this may be a problem on our end, sorry!')
         reject ('could not find this document in our database, this may be a problem on our end, sorry!')
