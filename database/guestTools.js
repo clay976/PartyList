@@ -41,7 +41,7 @@ function validateGuest (body){
         guestInfo.lastMessage = (body.Body).toLowerCare()
         fulfill (guestInfo) 
       }else{
-        console.log ('rejecting inside validation')
+        console.log ('could not find this document in our database, this may be a problem on our end, sorry!')
         reject ('could not find this document in our database, this may be a problem on our end, sorry!')
       }
     })

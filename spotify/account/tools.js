@@ -45,6 +45,7 @@ function validateHost (host){
         console.log (hostInfo)
         fulfill (hostInfo) 
       }else{
+        console.log ('could not find this document in our database, this may be a problem on our end, sorry!')
         reject ('could not find this document in our database, this may be a problem on our end, sorry!')
       }
     })
