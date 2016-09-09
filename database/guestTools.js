@@ -40,7 +40,8 @@ function validateGuest (body){
     model.Guest.findOne({ 'phoneNum' : body.From }).exec()
     .then (function (guestInfo){
       if (guestInfo){
-        console.log ('guest ' +guestInfo)
+        console.log ('guestJSON: ' +guestInfo)
+        console.log ('message: ' = body.Body)
         guestInfo.lastMessage = (body.Body).toLowerCare()
         fulfill (guestInfo) 
       }else{
