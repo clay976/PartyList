@@ -66,7 +66,7 @@ function requestConfirmed (res, db, toNum, guestFound, trackID){
 }
 
 function addSongToPlaylist (host, trackID, toNum, db){
-  search.search (host, query.findHost (host), db, function (found){
+  search.search (host, searchTemplate.findHost (host), db, function (found){
     request.post(SpotifyPlaylistJSON.addSongToPlaylist (host, found.playlistID, trackID, found.access_token), function(error, response, body) {
       if (error){
         responseBody = ('there was an error adding ' +trackTitle+ ' to the playlist, will provide more usefull erroror messages in the future')
