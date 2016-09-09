@@ -51,6 +51,7 @@ function validateHost (host){
     })
     .catch (function (err){
       console.log ('validating host failed')
+    })
   })
 }
 
