@@ -16,6 +16,7 @@ var upsertTemplate = require ('../database/upsert/JSONtemps')
 var respond = require ('./outgoing/responses')
 
 function businessLogic (req, res, db){
+  console.log ('request' +req)
   guestTools.validateGuest (req.body)
   .then (function (guestInfo){ // change to: .then (decideResponse (guestInfo))
     var resp = new twilio.TwimlResponse();
