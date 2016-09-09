@@ -51,6 +51,7 @@ function validateGuest (body){
     })
     .catch (function (err){
       console.log ('validating guest failed' +err)
+      console.log ('stack' +err.stack)
     })
   })
 }
