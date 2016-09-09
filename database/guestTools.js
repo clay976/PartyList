@@ -15,7 +15,8 @@ function addManyGuest (req, res, db){
 
 function addGuest (req, res, db){ 
   if (req.body.guestNum.length === 10){
-    model.Guest.findOneAndUpdate({phoneNum: req.body.guestNum},upsertTemplate.Guest (req.body.host, req.body.guestNum)).exec()
+    var num = '+1'+req.body.guestNum.length
+    model.Guest.findOneAndUpdate({phoneNum: num},upsertTemplate.Guest (req.body.host, num)).exec()
     .then (function (guestInfo){
       res.status(200).send ('guest added succsefully')
     })
@@ -35,7 +36,6 @@ function validateGuest (body){
   return new Promise (function (fulfill, reject){
     model.Guest.findOne({ 'phoneNum' : body.From }).exec()
     .then (function (guestInfo){
-      console.log (body.From)
       if (guestInfo){
         console.log ('guest ' +guestInfo)
         guestInfo.lastMessage = (body.Body).toLowerCare()
