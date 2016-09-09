@@ -39,7 +39,7 @@ function homepage (req, res, db) {
 
 function validateHost (host){
   return new Promise (function (fulfill, reject){
-    (model.Host.findOne({ 'hostID' : host }).exec())
+    model.Host.findOne({ 'hostID' : host }).exec()
     .then (function (hostInfo){
       if (hostInfo){
         console.log (hostInfo)

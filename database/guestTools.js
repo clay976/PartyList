@@ -33,7 +33,7 @@ function resetGuest (db, guest2Find){
 
 function validateGuest (body){
   return new Promise (function (fulfill, reject){
-    (model.Guest.findOne({ 'phoneNum' : body.From }).exec())
+    model.Guest.findOne({ 'phoneNum' : body.From }).exec()
     .then (function (guestInfo){
       console.log (body.From)
       if (guestInfo){
@@ -45,7 +45,9 @@ function validateGuest (body){
         reject ('could not find this document in our database, this may be a problem on our end, sorry!')
       }
     })
-    .catch (console.log ('validating guest failed' +reason))
+    .catch (function (err){
+      console.log ('validating guest failed' +err)
+    })
   })
 }
 
