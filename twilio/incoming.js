@@ -50,13 +50,13 @@ function businessLogic (req, res, db){
           return resp
         })
         .catch (function (err){
-          console.log ('something went wrong: '+err)
-          res.status(400).send ('something went wrong: '+err)
+          console.log ('something went wrong: '+err.stack)
+          res.status(400).send ('something went wrong: '+err.stack)
         })
       })
       .catch (function (err){
-        console.log ('something went wrong: '+err)
-        res.status(400).send ('something went wrong: '+err)
+        console.log ('something went wrong: '+err.stack)
+        res.status(400).send ('something went wrong: '+err.stack)
       })
     }
   })
@@ -65,7 +65,7 @@ function businessLogic (req, res, db){
     res.send (resp.toString())
   })
   .catch (function (err){
-    res.status(400).send ('something went wrong: '+err)
+    res.status(400).send ('something went wrong: '+err.stack)
   })
 }
 
