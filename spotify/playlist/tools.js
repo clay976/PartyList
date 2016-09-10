@@ -27,7 +27,7 @@ function createPlaylist (req, res, db){
     }else res.status(401).redirect (hostInfo.homePage)
   })      
   .catch (function (err){
-    res.status(400).send ('something went wrong: '+err)
+    res.status(400).send ('something went wrong: '+err.stack)
   })
 }
 
@@ -43,7 +43,7 @@ function setLatestPlaylist (req, res, db){
     })
   })
   .catch (function (err){
-    res.status(400).send ('something went wrong: '+err)
+    res.status(400).send ('something went wrong: '+err.stack)
   })
 }
 

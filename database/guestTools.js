@@ -23,7 +23,7 @@ function addGuest (req, res, db){
       res.status(200).send ('guest added succsefully')
     })
     .catch (function(err) {
-      console.log('Something went wrong: ', err.message);
+      console.log('Something went wrong: ', err.stack);
       res.status(400).send ('sorry something went wrong: '+ err.message)
     })
   }else{
@@ -48,7 +48,6 @@ function validateGuest (body){
       }
     })
     .catch (function (err){
-      //respond
       console.log ('validating guest failed' +err.stack)
     })
   })
