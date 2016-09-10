@@ -18,7 +18,9 @@ var model = require ('../database/models')
 
 function businessLogic (req, res, db){
   guestTools.validateGuest (req.body)
-  .then (chooseResponse())
+  .then (function (guestInfo){
+    return (chooseReponseAction (guestInfo))
+  })
   .then (function (resp){
     console.log ('sending response: ' +resp.toString())
     res.send (resp.toString())
@@ -28,25 +30,23 @@ function businessLogic (req, res, db){
   })
 }
 
-function chooseResponse (guestInfo){
-  return new Promise (function (fulfill, reject){
-    var resp = new twilio.TwimlResponse()
-    var messageBody = guestInfo.lastMessage
-    if ((messageBody === 'yes' || messageBody === 'no') && guestInfo.trackID === ''){
-      fulfill (addResponse.emptyConfirmation (resp))
-    }else if (messageBody === 'yes' && guestInfo.numRequests < 1){
-      model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, {$set: { numRequests: 4}}).exec()
-      fulfill (addResponse.advertisment (resp))
-    }else if (messageBody === 'yes'){
-      model.Track.findOneAndUpdate({trackID: guestInfo.trackID}, {$inc: { numRequests: 1}}).exec()
-      fulfill (addResponse.advertisment (resp))
-    }else if (messageBody === 'no'){
-      model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : ''}}).exec()
-      fulfill (addResponse.declineRequest (resp))
-    }else{
-      fulfill (searchSpotifyAndBuildResponse (messageBody, resp, guestInfo))
-    }
-  })
+function chooseReponseAction (guestInfo){
+  var resp = new twilio.TwimlResponse()
+  var messageBody = guestInfo.lastMessage
+  if ((messageBody === 'yes' || messageBody === 'no') && guestInfo.trackID === ''){
+    return (addResponse.emptyConfirmation (resp))
+  }else if (messageBody === 'yes' && guestInfo.numRequests < 1){
+    model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, {$set: { numRequests: 4}}).exec()
+    return (addResponse.advertisment (resp))
+  }else if (messageBody === 'yes'){
+    model.Track.findOneAndUpdate({trackID: guestInfo.trackID}, {$inc: { numRequests: 1}}).exec()
+    return (addResponse.advertisment (resp))
+  }else if (messageBody === 'no'){
+    model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : ''}}).exec()
+    return (addResponse.declineRequest (resp))
+  }else{
+    return (searchSpotifyAndBuildResponse (messageBody, resp, guestInfo))
+  }
 }
 
 function searchSpotifyAndBuildResponse (messageBody, resp, guestInfo){
