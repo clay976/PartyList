@@ -19,7 +19,7 @@ var model = require ('../database/models')
 function businessLogic (req, res, db){
   guestTools.validateGuest (req.body)
   .then (function (guestInfo){ // change to: .then (decideResponse (guestInfo))
-    var resp = new twilio.TwimlResponse();
+    var resp = new twilio.TwimlResponse()
     var messageBody = guestInfo.lastMessage
     if ((messageBody === 'yes' || messageBody === 'no') && guestInfo.trackID === ''){
       return (addResponse.emptyConfirmation (resp))
@@ -42,7 +42,7 @@ function businessLogic (req, res, db){
       })
       return (resp)
     }
-  }
+  })
   .then (function (resp){
     console.log ('sending response: ' +resp.toString())
     res.send (resp.toString())
