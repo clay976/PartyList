@@ -23,11 +23,10 @@ function businessLogic (req, res, db){
     var messageBody = guestInfo.lastMessage
     if ((messageBody === 'yes' || messageBody === 'no') && guestInfo.trackID === ''){
       return (addResponse.emptyConfirmation (resp))
+    }else if (messageBody === 'yes' && guestInfo.numRequests < 1){
+      model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, {$set: { numRequests: 4}}).exec()
+      return (addResponse.advertisment (resp))
     }else if (messageBody === 'yes'){
-      if (guestInfo.numRequests < 1){
-        addResponse.advertisment (resp)
-        model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, {$set: { numRequests: 4}}).exec()
-      }
       model.Track.findOneAndUpdate({trackID: guestInfo.trackID}, {$inc: { numRequests: 1}}).exec()
       return (addResponse.advertisment (resp))
     }else if (messageBody === 'no'){
@@ -39,11 +38,11 @@ function businessLogic (req, res, db){
         var track = tracksFound.body.tracks.items[0]
         model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : track.id}}).exec()
         model.Track.findOneAndUpdate({'trackID': track.id}, upsertTemplate.Track (track.id), {upsert:true}).exec()
-        resp = addResponse.trackFound (resp, track.name, track.artists[0].name, requests)
+        return (addResponse.trackFound (resp, track.name, track.artists[0].name, requests))
       })
       return (resp)
     }
-  })
+  }
   .then (function (resp){
     console.log ('sending response: ' +resp.toString())
     res.send (resp.toString())
