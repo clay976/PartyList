@@ -40,7 +40,8 @@ function chooseReponseAction (guestInfo){
     return (addResponse.advertisment (resp))
   }else if (messageBody === 'yes'){
     model.Track.findOneAndUpdate({trackID: guestInfo.trackID}, {$inc: { numRequests: 1}}).exec()
-    return (addResponse.advertisment (resp))
+    model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, {$inc: { numRequests: -1}, $set: {'currentTrack' : ''}}).exec()
+    return (addResponse.songConfirmed (resp))
   }else if (messageBody === 'no'){
     model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : ''}}).exec()
     return (addResponse.declineRequest (resp))
@@ -56,7 +57,11 @@ function searchSpotifyAndBuildResponse (messageBody, resp, guestInfo){
       var track = tracksFound.body.tracks.items[0]
       model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : track.id}}).exec()
       model.Track.findOneAndUpdate({'trackID': track.id}, upsertTemplate.Track (track.id), {upsert:true}).exec()
-      fulfill (addResponse.trackFound (resp, track.name, track.artists[0].name))
+      .then (function (databaseTrack){
+        var requests = databaseTrack.numRequests
+        fulfill (addResponse.trackFound (resp, track.name, track.artists[0].name, requests))
+      })
+      
     })
   })
 }

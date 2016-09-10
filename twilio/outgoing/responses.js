@@ -32,26 +32,11 @@ function advertisment (resp){
   resp.message ('\n\nYou are recieving an advertisment because you have made 5 successful request')
   return resp
 }
-/*
-function songAdded (toNum, responseBody){
-  messageObject = messageTool.message (toNum, responseBody)
-  client.sendMessage(messageObject, messageTool.sentHandler)
+
+function songConfirmed (resp, title, artist, numRequests){
+  resp.message ('\n\n your song: ' +title+ ', by: ' +artist+ 'now has ' +numRequests+ ' requests and will be added to the playlist!')
+  return response
 }
-
-function askConfirmation(res, db, trackAdd){
-  var resp = new twilio.TwimlResponse();
-  search.search ('tracks', searchTemps.findTrack (trackAdd.tracks.items[0].id), db, function (trackDocFound){
-    if (trackDocFound){
-      var currentSongRequests = trackDocFound.numRequests
-      resp.message ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\n Current number of requests: ' +currentSongRequests+ '\n\nSend back "Yes" to confirm, "No" to discard this request!')
-    }else{
-      resp.message ('track found: ' +trackTitle+ ' by ' +trackArtist+ '\n\n This request will be new!! \n\nSend back "Yes" to confirm, "No" to discard this request!')
-    }
-    res.setHeader('Content-Type', 'text/xml')
-    res.send(resp.toString())
-  })
-}*/
-
 
 module.exports = {
 	notGuest: notGuest,
