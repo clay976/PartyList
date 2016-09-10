@@ -36,7 +36,6 @@ function businessLogic (req, res, db){
       addResponse.declineRequest (resp)
       return resp
     }else{
-      console.log (messageBody)
       spotifyApi.searchTracks (messageBody, { limit : 1 })
       .then (function (tracksFound){
         console.log ('trackID: ' +trackAdd.tracks.items[0])
@@ -47,6 +46,12 @@ function businessLogic (req, res, db){
           addResponse.trackFound (resp, tracksFound.tracks.items[0].name, trackAdd.tracks.items[0].artists[0].name)
           return resp
         })
+        .catch (function (err){
+          res.status(400).send ('something went wrong: '+err)
+        })
+      })
+      .catch (function (err){
+        res.status(400).send ('something went wrong: '+err)
       })
     }
   })
