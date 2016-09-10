@@ -20,7 +20,7 @@ function Guest (host, number){
 
 function Track (TrackID){
 	var track = {
-  'trackId'				: TrackID,
+  'trackID'				: TrackID,
   'numRequests'		: 0,
   'timePlayed'		: 0 
 }
