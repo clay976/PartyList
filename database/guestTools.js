@@ -1,4 +1,3 @@
-var search = require ('./query/search')
 var queryTemplate = require ('./query/JSONtemps')
 var upsertTemplate = require ('./upsert/JSONtemps')
 var model = require ('./models')
