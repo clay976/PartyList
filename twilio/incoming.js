@@ -42,13 +42,16 @@ function businessLogic (req, res, db){
       spotifyApi.searchTracks (messageBody, { limit : 1 })
       .then (function (tracksFound){
         var track = tracksFound.body.tracks.items[0]
+        model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : track.id}}).exec()
         model.Track.findOneAndUpdate({'trackID': track.id}, upsertTemplate.Track (track.id), {upsert:true}).exec()
         .then (function (trackFound){
-          res.send (resp.toString())
+          console.log (trackFound) 
+          addResponse.trackFound (resp, track.name, track.artists[0].name)
+          return resp
         })
         .then (function (resp){
           console.log ('resp: ' +resp)
-          
+          res.send (resp.toString())
         })
         .catch (function (err){
           console.log ('something went wrong: '+err.stack)
