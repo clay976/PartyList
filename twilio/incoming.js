@@ -47,7 +47,7 @@ function businessLogic (req, res, db){
         .then (function (trackFound){
           console.log ('trackFound: ' +trackFound) 
           resp = addResponse.trackFound (resp, track.name, track.artists[0].name)
-          return resp
+          console.log ('resp: ' +resp)
         })
         .then (function (resp){
           console.log ('resp: ' +resp)
