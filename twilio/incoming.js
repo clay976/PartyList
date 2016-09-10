@@ -36,10 +36,11 @@ function businessLogic (req, res, db){
       addResponse.declineRequest (resp)
       return resp
     }else{
+      console.log (messageBody)
       spotifyApi.searchTracks (messageBody, { limit : 1 })
       .then (function (tracksFound){
         console.log ('trackID: ' +trackAdd.tracks.items[0])
-        model.Track.findOneandUpdate({trackID: trackAdd.tracks.items[0].id}, upsertTemplate (trackAdd.tracks.items[0].id), {upsert:true}).exec()
+        model.Track.findOneandUpdate({'trackID': trackAdd.tracks.items[0].id}, upsertTemplate (trackAdd.tracks.items[0].id), {upsert:true}).exec()
         .then (function (trackFound){
           if (trackFound) requests = trackFound.numRequests
           else requests = 0
@@ -50,7 +51,7 @@ function businessLogic (req, res, db){
     }
   })
   .then (function (resp){
-    console.log (resp)
+    console.log ('resp: ' +resp)
     res.send (resp.toString())
   })
   .catch (function (err){

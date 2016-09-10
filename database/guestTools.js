@@ -35,7 +35,6 @@ function resetGuest (db, guest2Find){
 }
 
 function validateGuest (body){
-  console.log (body)
   return new Promise (function (fulfill, reject){
     model.Guest.findOne({ 'phoneNum' : body.From }).exec()
     .then (function (guestInfo){
