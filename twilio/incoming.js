@@ -13,7 +13,7 @@ var spotifyApi = new SpotifyWebApi(credentials);
 var guestTools = require ('../database/guestTools')
 var upsertTemplate = require ('../database/upsert/JSONtemps')
 // message variables
-var respond = require ('./outgoing/responses')
+var addResponse = require ('./outgoing/responses')
 var model = require ('../database/models')
 
 function businessLogic (req, res, db){
@@ -42,7 +42,6 @@ function businessLogic (req, res, db){
       spotifyApi.searchTracks (messageBody, { limit : 1 })
       .then (function (tracksFound){
         var track = tracksFound.body.tracks.items[0]
-        console.log (track)
         model.Track.findOneAndUpdate({'trackID': track.id}, upsertTemplate.Track (track.id), {upsert:true}).exec()
         .then (function (trackFound){
           console.log (trackFound) 
