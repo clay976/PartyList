@@ -29,7 +29,7 @@ function homepage (req, res, db) {
     var refresh_token = data.body['refresh_token']
     spotifyApi.getMe()
     .then (function (hostInfo){ //change to: .then (updateOrInsertOnLogin (hostInfo))
-      model.Host.findOneAndUpdate({hostID: hostInfo.body.id}, upsertTemplate.Host (hostInfo.body.id, access_token, refresh_token, homePage), {upsert:true}).exec()
+      model.Host.findOneAndUpdate({'hostID': hostInfo.body.id}, upsertTemplate.Host (hostInfo.body.id, access_token, refresh_token, homePage), {upsert:true}).exec()
     })
   }).catch (function(err) {
     console.log('Something went wrong: ');
