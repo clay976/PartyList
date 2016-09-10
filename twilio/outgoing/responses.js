@@ -14,7 +14,7 @@ function emptyConfirmation (resp){
 }
 
 function trackFound (resp, title, artist, numRequests){
-  resp.message ('\n\n We found: ' +title+ ', by: ' +artist+ 'This Track has ' +numRequests+ ' requests!')
+  resp.message ('\n\n We found: ' +title+ ', by: ' +artist+ '. This Track has ' +numRequests+ ' requests!')
   return resp
 }
 
@@ -35,7 +35,7 @@ function advertisment (resp){
 
 function songConfirmed (resp, title, artist, numRequests){
   resp.message ('\n\n your song: ' +title+ ', by: ' +artist+ 'now has ' +numRequests+ ' requests and will be added to the playlist!')
-  return response
+  return resp
 }
 
 module.exports = {
