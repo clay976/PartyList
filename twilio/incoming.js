@@ -44,13 +44,11 @@ function businessLogic (req, res, db){
         var track = tracksFound.body.tracks.items[0]
         model.Track.findOneAndUpdate({'trackID': track.id}, upsertTemplate.Track (track.id), {upsert:true}).exec()
         .then (function (trackFound){
-          console.log (trackFound) 
-          addResponse.trackFound (resp, track.name, track.artists[0].name)
-          return resp
+          res.send (resp.toString())
         })
         .then (function (resp){
           console.log ('resp: ' +resp)
-          res.send (resp.toString())
+          
         })
         .catch (function (err){
           console.log ('something went wrong: '+err.stack)
