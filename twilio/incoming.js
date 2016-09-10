@@ -20,7 +20,6 @@ function businessLogic (req, res, db){
   .then (function (guestInfo){ // change to: .then (decideResponse (guestInfo))
     var resp = new twilio.TwimlResponse();
     var messageBody = guestInfo.lastMessage
-    console.log ('message body' +messageBody)
     if ((messageBody === 'yes' || messageBody === 'no') && guestInfo.trackID === ''){
       addResponse.emptyConfirmation (resp)
       return resp
@@ -39,7 +38,7 @@ function businessLogic (req, res, db){
     }else{
       spotifyApi.searchTracks (messageBody, { limit : 1 })
       .then (function (tracksFound){
-        console.log (tracksFound)
+        console.log (trackID: trackAdd.tracks.items[0])
         model.Track.findOneandUpdate({trackID: trackAdd.tracks.items[0].id}, upsertTemplate (trackAdd.tracks.items[0].id), {upsert:true}).exec()
         .then (function (trackFound){
           if (trackFound) requests = trackFound.numRequests
@@ -49,6 +48,9 @@ function businessLogic (req, res, db){
         })
       })
     }
+  })
+  .then (function (resp){
+    console.log (resp)
     res.send (resp.toString())
   })
   .catch (function (err){
