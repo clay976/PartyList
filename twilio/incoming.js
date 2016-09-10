@@ -18,7 +18,7 @@ var model = require ('../database/models')
 
 function businessLogic (req, res, db){
   guestTools.validateGuest (req.body)
-  .then (chooseResponse (guestInfo))
+  .then (chooseResponse())
   .then (function (resp){
     console.log ('sending response: ' +resp.toString())
     res.send (resp.toString())
