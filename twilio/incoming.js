@@ -41,12 +41,13 @@ function businessLogic (req, res, db){
       console.log ('searching for tracks with name: '+ messageBody)
       spotifyApi.searchTracks (messageBody, { limit : 1 })
       .then (function (tracksFound){
-        console.log (tracksFound.body.tracks.items[0].id)
-        model.Track.findOneandUpdate({'trackID': tracksFound.tracks.items[0].id}, upsertTemplate (tracksFound.tracks.items[0].id), {upsert:true}).exec()
+        var track = tracksFound.body.tracks.items[0]
+        model.Track.findOneandUpdate({'trackID': track.ID}, upsertTemplate (tracksFound.tracks.items[0].id), {upsert:true}).exec()
         .then (function (trackFound){
+          console.log (trackFound) 
           if (trackFound) requests = trackFound.numRequests
           else requests = 0
-          addResponse.trackFound (resp, tracksFound.tracks.items[0].name, tracksFound.tracks.items[0].artists[0].name)
+          addResponse.trackFound (resp, track.name, track.artists[0].name)
           return resp
         })
         .then (function (resp){
