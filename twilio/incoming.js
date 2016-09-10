@@ -45,8 +45,8 @@ function businessLogic (req, res, db){
         model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : track.id}}).exec()
         model.Track.findOneAndUpdate({'trackID': track.id}, upsertTemplate.Track (track.id), {upsert:true}).exec()
         .then (function (trackFound){
-          console.log (trackFound) 
-          addResponse.trackFound (resp, track.name, track.artists[0].name)
+          console.log ('trackFound: ' +trackFound) 
+          resp = addResponse.trackFound (resp, track.name, track.artists[0].name)
           return resp
         })
         .then (function (resp){
