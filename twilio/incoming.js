@@ -21,7 +21,6 @@ function businessLogic (req, res, db){
   .then (function (guestInfo){ // change to: .then (decideResponse (guestInfo))
     var resp = new twilio.TwimlResponse();
     var messageBody = guestInfo.lastMessage
-    var requests = 0
     if ((messageBody === 'yes' || messageBody === 'no') && guestInfo.trackID === ''){
       return (addResponse.emptyConfirmation (resp))
     }else if (messageBody === 'yes'){
@@ -35,23 +34,17 @@ function businessLogic (req, res, db){
       model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : ''}}).exec()
       return (addResponse.declineRequest (resp))
     }else{
-      console.log ('searching for tracks with name: '+ messageBody)
       spotifyApi.searchTracks (messageBody, { limit : 1 })
       .then (function (tracksFound){
         var track = tracksFound.body.tracks.items[0]
         model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : track.id}}).exec()
         model.Track.findOneAndUpdate({'trackID': track.id}, upsertTemplate.Track (track.id), {upsert:true}).exec()
         resp = addResponse.trackFound (resp, track.name, track.artists[0].name, requests)
-        .catch (function (err){
-          console.log ('something went wrong: '+err.stack)
-          res.status(400).send ('something went wrong: '+err.stack)
-        })
       })
       .catch (function (err){
         console.log ('something went wrong: '+err.stack)
-        res.status(400).send ('something went wrong: '+err.stack)
       })
-
+      return (resp)
     }
   })
   .then (function (resp){
@@ -60,7 +53,6 @@ function businessLogic (req, res, db){
   })
   .catch (function (err){
     console.log ('something went wrong: '+err.stack)
-    res.status(400).send ('something went wrong: '+err.stack)
   })
 }
 
