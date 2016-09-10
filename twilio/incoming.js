@@ -38,7 +38,7 @@ function businessLogic (req, res, db){
     }else{
       spotifyApi.searchTracks (messageBody, { limit : 1 })
       .then (function (tracksFound){
-        console.log (trackID: trackAdd.tracks.items[0])
+        console.log ('trackID: ' +trackAdd.tracks.items[0])
         model.Track.findOneandUpdate({trackID: trackAdd.tracks.items[0].id}, upsertTemplate (trackAdd.tracks.items[0].id), {upsert:true}).exec()
         .then (function (trackFound){
           if (trackFound) requests = trackFound.numRequests
