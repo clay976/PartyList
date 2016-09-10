@@ -21,8 +21,8 @@ function Guest (host, number){
 function Track (TrackID){
 	var track = {
   trackId				: TrackID,
-  numRequests		: { type: Number, default: 0 },
-  timePlayed		: Number 
+  numRequests		: 0,
+  timePlayed		: 0 
 }
 	return track
 }
