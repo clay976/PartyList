@@ -40,8 +40,7 @@ function businessLogic (req, res, db){
       console.log ('searching for tracks with name: '+ messageBody)
       spotifyApi.searchTracks (messageBody, { limit : 1 })
       .then (function (tracksFound){
-        tracksFound = JSON.parse (tracksFound)
-        console.log ('track:' +tracksFound)
+        console.log ('tracks' +tracksFound)
         model.Track.findOneandUpdate({'trackID': tracksFound.tracks.items[0].id}, upsertTemplate (tracksFound.tracks.items[0].id), {upsert:true}).exec()
         .then (function (trackFound){
           if (trackFound) requests = trackFound.numRequests
@@ -49,6 +48,14 @@ function businessLogic (req, res, db){
           addResponse.trackFound (resp, tracksFound.tracks.items[0].name, tracksFound.tracks.items[0].artists[0].name)
           return resp
         })
+        .catch (function (err){
+          console.log ('something went wrong: '+err.stack)
+          res.status(400).send ('something went wrong: '+err.stack)
+        })
+      })
+      .catch (function (err){
+        console.log ('something went wrong: '+err.stack)
+        res.status(400).send ('something went wrong: '+err.stack)
       })
     }
   })
