@@ -14,6 +14,7 @@ var guestTools = require ('../database/guestTools')
 var upsertTemplate = require ('../database/upsert/JSONtemps')
 // message variables
 var respond = require ('./outgoing/responses')
+var model = require ('../database/models')
 
 function businessLogic (req, res, db){
   guestTools.validateGuest (req.body)
