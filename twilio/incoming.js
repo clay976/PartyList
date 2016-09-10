@@ -33,14 +33,7 @@ function businessLogic (req, res, db){
       model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : ''}}).exec()
       return (addResponse.declineRequest (resp))
     }else{
-      spotifyApi.searchTracks (messageBody, { limit : 1 })
-      .then (function (tracksFound){
-        var track = tracksFound.body.tracks.items[0]
-        model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : track.id}}).exec()
-        model.Track.findOneAndUpdate({'trackID': track.id}, upsertTemplate.Track (track.id), {upsert:true}).exec()
-        return (addResponse.trackFound (resp, track.name, track.artists[0].name, requests))
-      })
-      return (resp)
+      return (searchSpotifyAndBuildResponse (messageBody, resp, guestInfo))
     }
   })
   .then (function (resp){
@@ -49,6 +42,16 @@ function businessLogic (req, res, db){
   })
   .catch (function (err){
     console.log ('something went wrong: '+err.stack)
+  })
+}
+
+function searchSpotifyAndBuildResponse (messageBody, resp, guestInfo){
+  spotifyApi.searchTracks (messageBody, { limit : 1 })
+  .then (function (tracksFound){
+    var track = tracksFound.body.tracks.items[0]
+    model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : track.id}}).exec()
+    model.Track.findOneAndUpdate({'trackID': track.id}, upsertTemplate.Track (track.id), {upsert:true}).exec()
+    return (addResponse.trackFound (resp, track.name, track.artists[0].name))
   })
 }
 
