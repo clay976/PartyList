@@ -48,9 +48,6 @@ function businessLogic (req, res, db){
           console.log ('trackFound: ' +trackFound) 
           resp = addResponse.trackFound (resp, track.name, track.artists[0].name)
           console.log ('resp: ' +resp)
-        })
-        .then (function (resp){
-          console.log ('resp: ' +resp)
           res.send (resp.toString())
         })
         .catch (function (err){
