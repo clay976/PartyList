@@ -44,5 +44,6 @@ module.exports = {
 	trackFound: trackFound,
 	declineRequest: declineRequest,
 	songNotFound: songNotFound,
-	advertisment: advertisment
+	advertisment: advertisment,
+  songConfirmed: songConfirmed
 }
