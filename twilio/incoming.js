@@ -52,7 +52,7 @@ function searchSpotifyAndBuildResponse (messageBody, resp, guestInfo){
       var track = tracksFound.body.tracks.items[0]
       model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : track.id}}).exec()
       model.Track.findOneAndUpdate({'trackID': track.id}, upsertTemplate.Track (track.id), {upsert:true}).exec()
-      fullfil (addResponse.trackFound (resp, track.name, track.artists[0].name))
+      fulfill (addResponse.trackFound (resp, track.name, track.artists[0].name))
     })
   })
 }
