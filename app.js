@@ -98,7 +98,6 @@ RETURNED: properly formatted JSON object containing the name and spotify ID of t
     { name  : bar,                                                                      |
       id    : feioqf98yfefhc                                                            |
     }                                                                                   |
-
   ]}
 _______________________________________________________________________________________*/
   app.post('/playlist/spotify/getAll', function (req, res){
@@ -106,7 +105,7 @@ ________________________________________________________________________________
   })
 
 /*
-set a specif playlist id (most likely to be used after finding all the user's spotify playlists)
+set a specific playlist id (most likely to be used after finding all the user's spotify playlists)
 ________________________________________________________________________________________
 TO BE SENT:
   JSON from req.body{               :  type  :              Description                |
@@ -127,6 +126,19 @@ TO BE SENT:
 _______________________________________________________________________________________*/
   app.post('/playlist/partyList/latest', function (req, res){
   })
+
+/*
+Set wether songs added can be explicit or not.
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.post('/playlist/explicit', function (req, res){
+    spotifyAccountTools.explicitFilter (req, res, db)
+  })
+
 /*
 remove every guest that is associated with this user
 ________________________________________________________________________________________
@@ -145,8 +157,9 @@ ________________________________________________________________________________
 TO BE SENT:
   JSON from req.body{                     :  type  :              Description                |
     host                                  : string :  the username of their spotify account. |
-    guestNums [ {number : 1234567890}, 
-                {number : 4169834260} ]   : array  :  phone numbers of the guest to be added |
+    guestNums [ 1234567890, 
+                4169834260                : array  :  phone numbers of the guest to be added |
+              ]   
   }
 _______________________________________________________________________________________*/
   app.post('/guests/addMany', function (req, res){

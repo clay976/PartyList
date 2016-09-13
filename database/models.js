@@ -23,6 +23,7 @@ var host = mongoose.Schema({
   refresh_token	: String,
   playlistID		: { type: String, default: '' },
   homePage      : String
+  explicit      : { type: Boolean, defauult: true}
 })
 
 var Guest = mongoose.model('Guest', guest);

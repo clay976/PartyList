@@ -54,7 +54,9 @@ function validateHost (host){
     })
   })
 }
-
+function explicitFilter (req, res, db){
+  model.Host.findOneAndUpdate({ 'hostID' : req.host }, { $set: {'playlistID' : req.switch}}).exec()
+}
 
 //exports for external modules to use.
 module.exports = {

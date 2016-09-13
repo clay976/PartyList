@@ -26,6 +26,10 @@
           <button id= "obtain-new-token" name = "obtain new token"> obtain new token </button>
         <div id="oauth"></div>
           <label for="filename">Spotify Playlist functions</label>
+          <label class="switch">
+            <input type="checkbox">
+            <div class="slider"></div>
+          </label>
           <form id="input" action="/playlist/spotify/create" method="POST">
             <input type="text" name="playName" placeholder="new playlist Name">
             <input type="hidden" name="host" value= "clay976">
