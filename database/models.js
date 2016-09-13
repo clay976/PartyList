@@ -22,7 +22,7 @@ var host = mongoose.Schema({
   expires_in		: { type: Number, default: 3600 },
   refresh_token	: String,
   playlistID		: { type: String, default: '' },
-  homePage      : String
+  homePage      : String,
   explicit      : { type: Boolean, defauult: true}
 })
 
