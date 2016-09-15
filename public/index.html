@@ -76,11 +76,14 @@
           <label for="filename">Spotify Playlist functions</label>
           <div></div>
           <form id="input" action="/playlist/explicit" method="POST">
-            <label class="switch">
-              <div class="slider"></div>
-              <input type="hidden" name="host" value= "clay976">
-              <input type="submit" value="set">
-            </label>
+            <input type="hidden" name="host" value= "clay976">
+            <input type="hidden" name="explicit" value= "true">
+            <input type="submit" value="set explicit">
+          </form>
+          <form id="input" action="/playlist/explicit" method="POST">
+            <input type="hidden" name="host" value= "clay976">
+            <input type="hidden" name="explicit" value= "false">
+            <input type="submit" value="set clean">
           </form>
           <form id="input" action="/playlist/spotify/create" method="POST">
             <input type="text" name="playName" placeholder="new playlist Name">
