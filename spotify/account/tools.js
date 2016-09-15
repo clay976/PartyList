@@ -55,7 +55,7 @@ function validateHost (host){
   })
 }
 function explicitFilter (req, res, db){
-  hostAcountTools.validateHost (req.body.host)
+  validateHost (req.body.host)
   .then (function (hostInfo){
     console.log ('setting explicit filter to ' + req.body.explicit+ ' for ' +hostInfo.hostID) 
     model.Host.findOneAndUpdate({ 'hostID' : hostInfo.host }, { $set: {'playlistID' : req.body.explicit}}).exec()  
