@@ -55,7 +55,11 @@ function validateHost (host){
   })
 }
 function explicitFilter (req, res, db){
-  model.Host.findOneAndUpdate({ 'hostID' : req.host }, { $set: {'playlistID' : req.switch}}).exec()
+  hostAcountTools.validateHost (req.body.host)
+  .then (function (hostInfo){
+    model.Host.findOneAndUpdate({ 'hostID' : hostInfo.host }, { $set: {'playlistID' : req.switch}}).exec()  
+  })
+  
 }
 
 //exports for external modules to use.
