@@ -58,8 +58,12 @@ function explicitFilter (req, res, db){
   validateHost (req.body.host)
   .then (function (hostInfo){
     console.log ('setting explicit filter to ' + req.body.explicit+ ' for ' +hostInfo.hostID) 
-    model.Host.findOneAndUpdate({ 'hostID' : hostInfo.host }, { $set: {'playlistID' : req.body.explicit}}).exec()  
+    model.Host.findOneAndUpdate({ 'hostID' : hostInfo.host }, { $set: {'playlistID' : req.body.explicit}}).exec()
+    .then (res.status(200).redirect (hostInfo.homePage))  
   })
+  .catch (function (err){
+      console.log ('validating host failed' +err.stack)
+    })
   
 }
 
