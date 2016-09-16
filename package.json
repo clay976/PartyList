@@ -20,8 +20,7 @@
     "bluebird": "3.4.1"
   },
   "devDependencies": {
-    "gulp": "^3.9.1",
-    "gulp-mocha": "^2.2.0",
+    "should": "^11.1.0",
     "supertest": "^1.2.0"
   }
 }

@@ -1,16 +1,22 @@
-var request = require('supertest')
-  , express = require('express');
- 
-var app = express();
+var should = require('should')
 var assert = require('assert')
+var request = require('supertest')
+var url = '104.131.215.55'
 
 describe('GET /guests/add', function(){
-  it('add a guest to the database', function(){
-    var guestNum = 1234567890
-    request(app)
-      .post('/guests/add?' +guestNum)
-      .expect (300)
-  })
+  it('add a guest to the database', function(done){
+    var guestNum = '1234567890'
+    request(url)
+    .post('/guests/add?'+guestNum)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      // this is should.js syntax, very clear
+      res.should.have.status(400);
+      done();
+    });
+  });
 })
 
 describe('test building JSON object to send message with twilio', function(){
