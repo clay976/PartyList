@@ -53,7 +53,7 @@ TO BE SENT:
     code                            : string :  the authorization code revieced from spotify |
   }
 _____________________________________________________________________________________________*/
-  app.post('/callback', function (req, res){
+  app.get('/callback', function (req, res){
     console.log ('req '+ req)
     console.log ('query '+ req.query)
     console.log ('code '+ req.query.code)
