@@ -49,10 +49,8 @@ describe('GET /login', function(){
 
 describe('GET /callback', function(){
   it('hit the callback enpoint with a valid authorization code. should obtain access tokens and redirect.', function(done){
-    var req = {query:{code: code}}
     request(url)
-    .get('/callback')
-    .send(req)
+    .get('/callback?code='+code)
     .end(function(err, res) {
       if (err) {
         throw err;
