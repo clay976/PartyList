@@ -54,6 +54,8 @@ TO BE SENT:
   }
 _____________________________________________________________________________________________*/
   app.get('/callback', function (req, res){
+    var noodle = req
+    console.log ('req '+ JSON.stringify(noodle))
     console.log ('query '+ JSON.stringify(req.query))
     console.log ('code '+ req.query.code)
     spotifyAccountTools.homepage (req, res, db)
