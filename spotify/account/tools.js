@@ -1,3 +1,4 @@
+
 //node modules
 var querystring = require('querystring')
 var SpotifyWebApi = require('spotify-web-api-node');
@@ -20,21 +21,35 @@ var spotifyApi = new SpotifyWebApi(credentials);
 // make another call for host info
 function homepage (req, res, db) {
   spotifyApi.authorizationCodeGrant(req.query.code)
-  .then (function(data) { //change to: .then (setUpHostInfo(data))
-    spotifyApi.setAccessToken(data.body['access_token'])
-    spotifyApi.setRefreshToken(data.body['refresh_token'])
-    var homePage = '/#' +querystring.stringify({access_token: data.body['access_token'],refresh_token: data.body['refresh_token']})
-    res.redirect (homePage)
+  .then (function(data) {
     var access_token = data.body['access_token']
     var refresh_token = data.body['refresh_token']
+    var homePage = '/#' +querystring.stringify({'access_token': access_token,'refresh_token':refresh_token})
+    res.redirect (homePage)
     spotifyApi.getMe()
     .then (function (hostInfo){ //change to: .then (updateOrInsertOnLogin (hostInfo))
       model.Host.findOneAndUpdate({'hostID': hostInfo.body.id}, upsertTemplate.Host (hostInfo.body.id, access_token, refresh_token, homePage), {upsert:true}).exec()
+      .then (function (host){
+        console.log (host)
+      })
     })
-  }).catch (function(err) {
-    console.log('Something went wrong: '+ err.stack);
-    res.status(400).redirect ('/?'+err.stack)
   })
+  .catch (function(err) {
+    console.log('Something went wrong: '+ err);
+    res.status(400).redirect ('/?'+err)
+  })
+}
+
+function explicitFilter (req, res, db){
+  validateHost (req.body.host)
+  .then (function (hostInfo){
+    console.log ('setting explicit filter to ' + req.body.explicit+ ' for ' +hostInfo.hostID) 
+    model.Host.findOneAndUpdate({ 'hostID' : hostInfo.host }, { $set: {'playlistID' : req.body.explicit}}).exec()
+    .then (res.status(200).redirect (hostInfo.homePage))  
+  })
+  .catch (function (err){
+    console.log ('validating host failed' +err.stack)
+  })  
 }
 
 function validateHost (host){
@@ -45,26 +60,14 @@ function validateHost (host){
         console.log (hostInfo)
         fulfill (hostInfo) 
       }else{
-        console.log ('could not find this document in our database, this may be a problem on our end, sorry!')
-        reject ('could not find this document in our database, this may be a problem on our end, sorry!')
+        console.log ('could not find this host in our database, this may be a problem on our end, sorry!')
+        reject ('could not find this host in our database, this may be a problem on our end, sorry!')
       }
     })
     .catch (function (err){
       console.log ('validating host failed' +err.stack)
     })
   })
-}
-function explicitFilter (req, res, db){
-  validateHost (req.body.host)
-  .then (function (hostInfo){
-    console.log ('setting explicit filter to ' + req.body.explicit+ ' for ' +hostInfo.hostID) 
-    model.Host.findOneAndUpdate({ 'hostID' : hostInfo.host }, { $set: {'playlistID' : req.body.explicit}}).exec()
-    .then (res.status(200).redirect (hostInfo.homePage))  
-  })
-  .catch (function (err){
-      console.log ('validating host failed' +err.stack)
-    })
-  
 }
 
 //exports for external modules to use.

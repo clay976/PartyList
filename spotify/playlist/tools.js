@@ -23,11 +23,11 @@ function createPlaylist (req, res, db){
       .then (function(data){
         model.Host.findOneAndUpdate({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : data.body['id']}}).exec()
       })
-      .then (res.status(200).redirect (hostInfo.homePage))
-    }else res.status(401).redirect (hostInfo.homePage)
+      .then (res.status(200).json ('playlist was created successfully'))
+    }else res.status(401).json ('we did not recieve a playlist name')
   })      
   .catch (function (err){
-    res.status(400).send ('something went wrong: '+err.stack)
+    res.status(400).json ('something went wrong: '+err)
   })
 }
 
@@ -39,7 +39,7 @@ function setLatestPlaylist (req, res, db){
     spotifyApi.getUserPlaylists(hostInfo.hostID)
     .then (function(data){
       model.Host.findOneAndUpdate({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : data.body.items[0].id}}).exec()
-      .then (res.status(200).redirect (hostInfo.homePage))
+      .then (res.status(200).json ('playlist set to '+ data.body.items[0].name))
     })
   })
   .catch (function (err){

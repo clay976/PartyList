@@ -5,7 +5,8 @@ function Host (data, accessToken, refreshToken, homePage){
 	  'expires_in'		: 3600,
 	  'refresh_token'	: refreshToken,
 	  'playlistID'		: '',
-	  'homePage'			: homePage
+	  'homePage'			: homePage,
+	  'exlpicit'			: true
 	}
 	return host
 }

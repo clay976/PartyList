@@ -23,8 +23,8 @@ var guestTools = require ('./database/guestTools')
 //mongo database variables
 var MongoClient = require('mongodb').MongoClient
 var mongoose = require("mongoose");
-mongoose.Promise = require('bluebird');
 var mongoUrl = 'mongodb://localhost:27017/party'
+mongoose.Promise = global.Promise;
 
 //connect to the database, this happens when api starts, and the conection doesn't close until the API shuts down/crashes
 mongoose.connect(mongoUrl)
@@ -53,7 +53,10 @@ TO BE SENT:
     code                            : string :  the authorization code revieced from spotify |
   }
 _____________________________________________________________________________________________*/
-  app.get('/callback', function (req, res){
+  app.post('/callback', function (req, res){
+    console.log ('req': req)
+    console.log ('query': req.query)
+    console.log ('code': req.query.code)
     spotifyAccountTools.homepage (req, res, db)
   })  
 

@@ -15,18 +15,17 @@ function addManyGuest (req, res, db){
 function addGuest (req, res, db){ 
   if (req.body.guestNum.length === 10){
     var num = '+1'+req.body.guestNum
-    console.log (num)
     model.Guest.findOneAndUpdate({'phoneNum': num},upsertTemplate.Guest (req.body.host, num), {upsert:true}).exec()
     .then (function (guestInfo){
       console.log (guestInfo)
-      res.status(200).send ('guest added succsefully')
+      res.status(200).json ('guest added succsefully')
     })
     .catch (function(err) {
       console.log('Something went wrong: ', err.stack);
-      res.status(400).send ('sorry something went wrong: '+ err.message)
+      res.status(400).json ('sorry something went wrong: '+ err.message)
     })
   }else{
-    res.status(400).send('number recieved not in the right format, please retry with the format "1234567890" (no speacial characters)')
+    res.status(400).json('number recieved not in the right format, please retry with the format "1234567890" (no speacial characters)')
   }
 }
 
@@ -35,8 +34,10 @@ function resetGuest (db, guest2Find){
 
 function validateGuest (body){
   return new Promise (function (fulfill, reject){
-    model.Guest.findOne({ 'phoneNum' : body.From }).exec()
-    .then (function (guestInfo){
+    var query = model.Guest.findOne({ 'phoneNum' : body.From })
+    promise = query.exec()
+
+    promise.then (function (guestInfo){
       if (guestInfo){
         console.log ('guestJSON: ' +guestInfo)
         guestInfo.lastMessage = (body.Body).toLowerCase()
