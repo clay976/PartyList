@@ -25,12 +25,13 @@ function homepage (req, res, db) {
     var access_token = data.body['access_token']
     var refresh_token = data.body['refresh_token']
     var homePage = '/#' +querystring.stringify({'access_token': access_token,'refresh_token':refresh_token})
+    spotifyApi.setAccessToken(access_token)
     spotifyApi.getMe()
     .then (function (hostInfo){
       model.Host.findOneAndUpdate({'hostID': hostInfo.body.id}, upsertTemplate.Host (hostInfo.body.id, access_token, refresh_token, homePage), {upsert:true}).exec()
       .then (function (host){
         console.log (host)
-        res.status(200).redirect (homePage)
+        res.status(200).redirect (host.homePage)
       })
       .catch (function(err) {
         console.log('Something went wrong: '+ err);
@@ -38,7 +39,7 @@ function homepage (req, res, db) {
     })
     .catch (function(err) {
       console.log('Something went wrong: '+ err);
-      res.status(400).redirect ('/?'+err)
+      res.status(403).redirect ('/?'+err)
     })
   })
   .catch (function(err) {
