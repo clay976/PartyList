@@ -54,9 +54,9 @@ TO BE SENT:
   }
 _____________________________________________________________________________________________*/
   app.post('/callback', function (req, res){
-    console.log ('req': req)
-    console.log ('query': req.query)
-    console.log ('code': req.query.code)
+    console.log ('req '+ req)
+    console.log ('query '+ req.query)
+    console.log ('code '+ req.query.code)
     spotifyAccountTools.homepage (req, res, db)
   })  
 
