@@ -30,8 +30,15 @@ function homepage (req, res, db) {
       model.Host.findOneAndUpdate({'hostID': hostInfo.body.id}, upsertTemplate.Host (hostInfo.body.id, access_token, refresh_token, homePage), {upsert:true}).exec()
       .then (function (host){
         console.log (host)
-        res.redirect (host.homePage)
+        res.status(200).redirect (homePage)
       })
+      .catch (function(err) {
+        console.log('Something went wrong: '+ err);
+      })
+    })
+    .catch (function(err) {
+      console.log('Something went wrong: '+ err);
+      res.status(400).redirect ('/?'+err)
     })
   })
   .catch (function(err) {
