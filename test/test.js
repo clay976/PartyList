@@ -28,7 +28,7 @@ https://accounts.spotify.com/authorize?response_type=code&client_id=a000adffbd26
 
 place the code in this next variable
 */
-var code = 'AQDQmxJE5URUP8vdjo_udgIa_zE3SqlKYIc1Nlp4bg0EmS4QxJHVETn3XWiubc3i3juQdTwNBV760_e9YF7WSqeDZJgXJLrkU5FpYXEht00hmxNi0IdwRhDsEHCffDHHwDQlp0RxAsfiemXlH-V3w0vF91axHoRFCQNmfqrt95ChBltb9JLzs5wCmnLUzA2m_KZs14LbRgzPkHKoVE1KNxTLU3m_ExLUDZlSC52Cfb93PUe9U2ko3s3ZcMgz_Y697NKJqMBEx5GXm0WrT8jlgxYmL1i8bB7Oai7Y251wwiCuFxxkYNf4aTMOk6Em8oWsqIDHYe8tsL3USHQ4L89Afc4wfywZJnNZN_tzk5UiEIZ11geC4v-bLLMOF_BkfHDac7WT'
+var code = 'AQBd3bafVTns4v2F5bTiPeBkQJTCRYA3tbb2H0zJwqC2oxsbOjyFDTRGcaLBDpkcQR8XGz7bQh3ONZQYi9sfaOYey2k98SMEEvvIT-TmecZVYwm3OmAifkle8YK_7Wz870TO06giYYjTyey198oen88VbdmkVhPtOih3I0Yv_0-AoTkhlVMsNagAdTaE-L4QlEmHUq9dymgERcsda16xcQfgvp11WcjH75dX1FHGGzg4hixL3ook6z4fwov0iPQKtq1oJeZs4JKm9Zrx9YsZbRV9HoCPFtMvU6lIHmyqvQTdSE2tTS6OMEKAXf2GfQEN2rpFsVHCBqdL-xTcVt6-yMXeAgflp7ltYpLhJfixtuQK_VO-pA0ovE0CX4L1otufG3JZ'
 var access_token, refresh_token
 
 //start tests
@@ -55,21 +55,10 @@ describe('GET /callback', function(){
       if (err) {
         throw err;
       }
-      console.log ('access: ' +access_token)
+      console.log ('res: ' +JSON.stringify(res.body))
       res.status.should.equal(302);
       done();
     });
-  });
-})
-
-describe('obtain access tockens directly from the api, no going through my endpoint.', function(){
-  it('hit the spotiffy code auth endpoint directly to retrieve the tokens.', function(){
-    return spotifyApi.authorizationCodeGrant(code)
-    .then (function(res) { 
-      access_token = res.body['access_token']
-      refresh_token = res.body['refresh_token']
-      res.statusCode.should.equal(200);
-    })
   });
 })
 
@@ -81,17 +70,6 @@ describe('test accesing the spotify api with an authorization code that is gener
     return spotifyApi.authorizationCodeGrant('badCode')
     .catch (function (err){
       err.message.should.equal('invalid_grant: Invalid authorization code');
-    })
-  })
-})
-
-describe('add host to the database', function(){
-  it ('add host', function(){
-    var query = model.Host.findOneAndUpdate({'hostID': 'clay976'}, upsertTemplate.Host ('clay976', access_token, refresh_token, 'homePage'), {upsert:true})
-    var promise = query.exec()
-
-    return promise.then (function (hostInfo){
-      console.log ('noodles')
     })
   })
 })

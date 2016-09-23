@@ -25,12 +25,12 @@ function homepage (req, res, db) {
     var access_token = data.body['access_token']
     var refresh_token = data.body['refresh_token']
     var homePage = '/#' +querystring.stringify({'access_token': access_token,'refresh_token':refresh_token})
-    res.redirect (homePage)
     spotifyApi.getMe()
-    .then (function (hostInfo){ //change to: .then (updateOrInsertOnLogin (hostInfo))
+    .then (function (hostInfo){
       model.Host.findOneAndUpdate({'hostID': hostInfo.body.id}, upsertTemplate.Host (hostInfo.body.id, access_token, refresh_token, homePage), {upsert:true}).exec()
       .then (function (host){
         console.log (host)
+        res.redirect (host.homePage)
       })
     })
   })
