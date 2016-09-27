@@ -52,6 +52,7 @@ function setTokensAndGetHostInfo (data) {
     .catch (function(err) {
       reject ("spotify error: "+ err)
     })
+  })
 }
 
 /*
