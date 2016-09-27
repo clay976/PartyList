@@ -5,25 +5,26 @@ var credentials = {
   redirectUri : 'http://104.131.215.55:80/callback'
 };
 var spotifyApi = new SpotifyWebApi(credentials);
-var querystring = require('querystring')
-
-var upsertTemplate = require ('./upsert/JSONtemps')
 var model = require ('./models')
 
 function validateHost (host){
-  model.Host.findOne({ 'hostID' : host }).exec()
-  .then (function (hostInfo){
-    if (hostInfo){
-      fulfill (hostInfo) 
-    }else{
-      reject ("validation error: could not find this host in our database, You must log in to continue")
-    }
-  })
-  .catch (function(err) {
-    reject ("mongo error: "+ err)
-  })
+	return new Promise (function (fulfill, reject){
+	  model.Host.findOne({ 'hostID' : host }).exec()
+	  .then (function (hostInfo){
+	    if (hostInfo){
+	    	spotifyApi.setAccessToken (hostInfo.access_token)
+	      fulfill (hostInfo)
+	    }else{
+	      reject ("validation error: could not find this host in our database, You must log in to continue")
+	    }
+	  })
+	  .catch (function(err) {
+	    reject ("mongo error: "+ err)
+	  })
+	 })
 }
 
 module.exports = {
-  validateHost: validateHost
+  validateHost	: validateHost,
+  spotifyApi		: spotifyApi
 }

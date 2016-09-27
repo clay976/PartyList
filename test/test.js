@@ -17,7 +17,7 @@ var upsertTemplate = require ('../database/upsert/JSONtemps')
 
 //variables
 var url = 'localhost'
-var validHostFail = 'validating host failed: could not find this host in our database, they may not be logged in properly or this may be a problem on our end, sorry!'
+var validHostFail = 'validation error: could not find this host in our database, You must log in to continue'
 
 /*BEFORE EACH RUN OF TESTS!!
 use this url to retrieve a code so we can obtain access tokens
@@ -27,7 +27,7 @@ https://accounts.spotify.com/authorize?response_type=code&client_id=a000adffbd26
 
 place the code in this next variable
 */
-var code = 'https://accounts.spotify.com/authorize?response_type=code&client_id=a000adffbd26453fbef24e8c1ff69c3b&scope=user-read-private%20user-read-email%20user-read-birthdate%20streaming%20playlist-modify-private%20playlist-modify-public%20playlist-read-private&redirect_uri=http%3A%2F%2F104.131.215.55%3A80%2Fcallback'
+var code = 'AQBAX6gybAffLLTBgoCA6UBbQUgn9aduR0fnNqT6jvjqyGSxdbeaj-Nwwd-ddO6l5o2rXWbNWAKvLIDDiYrE2yWYvKsrXxyL0tdW3lyQUTs_rgipXjGjB4jAnTvyNINJ7S5-Wk2HmHJXKTwlj5KrZExhcu5w7uQ_yTnfn43nvBLlp8Bi0Eco9Y2t1AEGNAwKFlNdIWpEnpmzJex-dIqgEZWj58yiSjfg86r1i777vEsUieUhSy1bITgnR9Wp23jYGCj51mYH-T-e3CitDC8lYRXDY75QLZTLHeyT0CUFegWRrJu4eWKdpxTIyLaC2pNJ2akQPi9f83L8KH-ThjiU490ZA9GG3aiMp6Ye-rZL-mCB5aQ4BUYBYIR9AylBABW2QD-z'
 var access_token, refresh_token
 
 //start tests
@@ -71,26 +71,26 @@ describe('GET /callback', function(){
     });
   });
 })
-/*
+
 describe('POST /playlist/spotify/create', function(){
-  it('successfully create a spotify playlist', function(done){
-    postData = {
-      "playName"  : "mocha test",
-      "host"      : "clay976"
-    }
-    request(url)
-    .post('/playlist/spotify/create')
-    .send (postData)
-    .end(function(err, res) {
-      if (err) {
-        throw err;
-      }
-      console.log (res.body)
-      res.body.should.equal ('playlist was created successfully')
-      res.status.should.equal(200);
-      done();
-    });
-  });
+  // it('successfully create a spotify playlist', function(done){
+  //   postData = {
+  //     "playName"  : "mocha test",
+  //     "host"      : "clay976"
+  //   }
+  //   request(url)
+  //   .post('/playlist/spotify/create')
+  //   .send (postData)
+  //   .end(function(err, res) {
+  //     if (err) {
+  //       throw err;
+  //     }
+  //     console.log (res.body)
+  //     res.body.should.equal ('playlist was created successfully')
+  //     res.status.should.equal(200);
+  //     done();
+  //   });
+  // });
   it('fail to create a playlist because name of playlist was missing', function(done){
     postData = {
       "host"      : "clay976"
@@ -103,7 +103,7 @@ describe('POST /playlist/spotify/create', function(){
         throw err;
       }
       console.log (res.body)
-      res.body.should.equal ('we did not recieve a playlist name')
+      res.body.should.equal ('error creating playlist: we did not recieve playlist information')
       res.status.should.equal(400);
       done();
     });
@@ -121,8 +121,98 @@ describe('POST /playlist/spotify/create', function(){
         throw err;
       }
       console.log (res.body)
-      res.body.should.equal (validHostFail)
-      res.status.should.equal(401);
+      res.body.should.equal ('error creating playlist: '+ validHostFail)
+      res.status.should.equal(400);
+      done();
+    });
+  });
+})
+describe('POST /playlist/spotify/set', function(){
+  it('successfully set a playlist that the user owns', function(done){
+    postData = {
+      "playlistID"  : "0ktJLEaSUXtKIJPcRB2cK4",
+      "host"      : "clay976"
+    }
+    request(url)
+    .post('/playlist/spotify/set')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal ('playlist has been set successfully')
+      res.status.should.equal(200);
+      done();
+    });
+  })
+  it('try to set a playlist ID that the user does not own', function(done){
+    postData = {
+      "playlistID"  : "4VJ8BH056GfU5IdxVnaBNP",
+      "host"      : "clay976"
+    }
+    request(url)
+    .post('/playlist/spotify/set')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal ('error setting playlist: spotify error: you either do not own that playlist or it does not exist, WebapiError: Not found.')
+      res.status.should.equal(400);
+      done();
+    });
+  });
+  it('fail to set a playlist ID because input host information was missing', function(done){
+    postData = {
+      "playlistID"      : "0ktJLEaSUXtKIJPcRB2cK4"
+    }
+    request(url)
+    .post('/playlist/spotify/set')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal ('error setting playlist: '+ validHostFail)
+      res.status.should.equal(400);
+      done();
+    });
+  });
+  it('fail to set a playlist ID because input ID of playlist was missing', function(done){
+    postData = {
+      "host"      : "clay976"
+    }
+    request(url)
+    .post('/playlist/spotify/set')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal ('error setting playlist: we did not recieve playlist information')
+      res.status.should.equal(400);
+      done();
+    });
+  });
+  it('fail to set a playlist ID because host validation failed', function(done){
+    postData = {
+      "host"      : "noHost",
+      "playName"  : "mocha test"
+    }
+    request(url)
+    .post('/playlist/spotify/set')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal ('error setting playlist: '+ validHostFail)
+      res.status.should.equal(400);
       done();
     });
   });
@@ -139,6 +229,7 @@ describe('POST /playlist/spotify/latest', function(){
         throw err;
       }
       console.log (res.body)
+      res.body.should.equal('playlist successfully set to latest playlist');
       res.status.should.equal(200);
       done();
     });
@@ -153,12 +244,13 @@ describe('POST /playlist/spotify/latest', function(){
         throw err;
       }
       console.log (res.body)
-      res.body.should.equal (validHostFail)
-      res.status.should.equal(401);
+      res.body.should.equal ('error setting latest playlist: '+validHostFail)
+      res.status.should.equal(400);
       done();
     });
   });
 })
+
 
 describe('POST /playlist/spotify/getAll', function(){
   it('successfully ask for all the user\'s playlists', function(done){
@@ -185,42 +277,8 @@ describe('POST /playlist/spotify/getAll', function(){
         throw err;
       }
       console.log (res.body)
-      res.body.should.equal (validHostFail)
-      res.status.should.equal(401);
-      done();
-    });
-  });
-})
-
-describe('POST /playlist/spotify/set', function(){
-  it('successfully set a valid playlist', function(done){
-    postData = { "host" : "clay976",
-                 "playlistID" : "7zhE7bkc5yTS7e8IxSQEVr" }
-    request(url)
-    .post('/playlist/spotify/set')
-    .send (postData)
-    .end(function(err, res) {
-      if (err) {
-        throw err;
-      }
-      console.log (res.body)
-      res.body.should.equal('playlist has been set successfully')
-      res.status.should.equal(200);
-      done();
-    });
-  });
-  it('fail to validate the host when trying to ask for all the user\'s playlists', function(done){
-    postData = { "host" : "badHost" }
-    request(url)
-    .post('/playlist/spotify/set')
-    .send (postData)
-    .end(function(err, res) {
-      if (err) {
-        throw err;
-      }
-      console.log (res.body)
-      res.body.should.equal (validHostFail)
-      res.status.should.equal(401);
+      res.body.should.equal ('error retriving user\'s playlists: '+validHostFail)
+      res.status.should.equal(400);
       done();
     });
   });

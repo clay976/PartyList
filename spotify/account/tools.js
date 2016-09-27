@@ -30,6 +30,7 @@ function homepage (req, res) {
     return model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, upsertTemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage = '/#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':hostInfo.refresh_token})), {upsert:true}).exec()
   })
   .then (function (host){
+    console.log (host)
     res.redirect (host.homePage)
   })
   .catch (function (err){
@@ -40,7 +41,6 @@ function homepage (req, res) {
 function setTokensAndGetHostInfo (data) {
   return new Promise (function (fulfill, reject){
     spotifyApi.setAccessToken(data.body['access_token'])
-    spotifyApi.setRefreshToken(data.body['refresh_token'])
     spotifyApi.getMe()
     .then (function (spotifyReturn) {
       fulfill  ({ 
