@@ -22,12 +22,15 @@ function createPlaylist (req, res, db){
       spotifyApi.createPlaylist(hostInfo.hostID, req.body.playName, { public : true })
       .then (function(data){
         model.Host.findOneAndUpdate({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : data.body['id']}}).exec()
+        .then (res.status(200).json ('playlist was created successfully'))
       })
-      .then (res.status(200).json ('playlist was created successfully'))
-    }else res.status(401).json ('we did not recieve a playlist name')
+      .catch (function(err) {
+        res.status(502).json ('spotify error: '+ err)
+      })
+    }else res.status(400).json ('we did not recieve a playlist name')
   })      
   .catch (function (err){
-    res.status(400).json ('something went wrong: '+err)
+    res.status(401).json('validating host failed: '+ err)
   })
 }
 
@@ -41,20 +44,12 @@ function setLatestPlaylist (req, res, db){
       model.Host.findOneAndUpdate({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : data.body.items[0].id}}).exec()
       .then (res.status(200).json ('playlist set to '+ data.body.items[0].name))
     })
+    .catch (function(err) {
+      res.status(502).json ('Spotify error: '+ err)
+    })
   })
   .catch (function (err){
-    res.status(400).send ('something went wrong: '+err.stack)
-  })
-}
-
-function setSpecificPlaylist (req, res, db){
-  hostAcountTools.validateHost (req.body.host)
-  .then (function (hostInfo){
-    model.Host.findOneAndUpdate({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : req.body.playlistID}}).exec()
-    .then (res.status(200).redirect (hostInfo.homePage))
-  })
-  .catch (function (err){
-    res.status(400).send ('something went wrong: '+err)
+    res.status(401).json('validating host failed: '+ err)
   })
 }
 
@@ -65,19 +60,36 @@ function findAllPlaylists (req, res, db){
     spotifyApi.setAccessToken(hostInfo.access_token)
     spotifyApi.getUserPlaylists(hostInfo.hostID)
     .then (function(data){
-      var playlistJSON = playlistTemplate.userPlaylists (hostInfo.hostID, data.body.items, data.body.total)
-      console.log (playlistJSON)
-      (res.status(200).json (playlistJSON))
+      var playJSON = playlistTemplate.userPlaylists (hostInfo.hostID, data.body.items, data.body.total)
+      res.status(200).json (playJSON)
+    })
+    .catch (function(err) {
+      res.status(500).json ('spotify error: '+ err)
     })
   })
   .catch (function (err){
-    res.status(400).send ('something went wrong: '+err)
+    res.status(401).json ('validating host failed: '+err)
+  })
+}
+
+
+function setSpecificPlaylist (req, res, db){
+  hostAcountTools.validateHost (req.body.host)
+  .then (function (hostInfo){
+    model.Host.findOneAndUpdate({ 'hostID' : hostInfo.HostID }, { $set: {'playlistID' : req.body.playlistID}}).exec()
+    .then (res.status(200).json ('playlist has been set successfully'))
+    .catch (function(err) {
+      res.status(403).json ('Something went wrong: '+ err)
+    })
+  })
+  .catch (function (err){
+    res.status(401).json ('validating host failed: '+err)
   })
 }
 
 module.exports = {
   createPlaylist: createPlaylist,
   setLatestPlaylist: setLatestPlaylist,
-  setSpecificPlaylist: setSpecificPlaylist,
-  findAllPlaylists: findAllPlaylists
+  findAllPlaylists: findAllPlaylists,
+  setSpecificPlaylist: setSpecificPlaylist
 }

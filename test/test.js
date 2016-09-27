@@ -13,12 +13,11 @@ var spotifyApi = new SpotifyWebApi(credentials);
 
 //my modules
 var model = require ('../database/models')
-var guestTools = require ('../database/guestTools')
 var upsertTemplate = require ('../database/upsert/JSONtemps')
-var spotifyAccountTool = require ('../spotify/account/tools')
 
 //variables
 var url = 'localhost'
+var validHostFail = 'validating host failed: could not find this host in our database, they may not be logged in properly or this may be a problem on our end, sorry!'
 
 /*BEFORE EACH RUN OF TESTS!!
 use this url to retrieve a code so we can obtain access tokens
@@ -28,7 +27,7 @@ https://accounts.spotify.com/authorize?response_type=code&client_id=a000adffbd26
 
 place the code in this next variable
 */
-var code = 'AQBd3bafVTns4v2F5bTiPeBkQJTCRYA3tbb2H0zJwqC2oxsbOjyFDTRGcaLBDpkcQR8XGz7bQh3ONZQYi9sfaOYey2k98SMEEvvIT-TmecZVYwm3OmAifkle8YK_7Wz870TO06giYYjTyey198oen88VbdmkVhPtOih3I0Yv_0-AoTkhlVMsNagAdTaE-L4QlEmHUq9dymgERcsda16xcQfgvp11WcjH75dX1FHGGzg4hixL3ook6z4fwov0iPQKtq1oJeZs4JKm9Zrx9YsZbRV9HoCPFtMvU6lIHmyqvQTdSE2tTS6OMEKAXf2GfQEN2rpFsVHCBqdL-xTcVt6-yMXeAgflp7ltYpLhJfixtuQK_VO-pA0ovE0CX4L1otufG3JZ'
+var code = 'https://accounts.spotify.com/authorize?response_type=code&client_id=a000adffbd26453fbef24e8c1ff69c3b&scope=user-read-private%20user-read-email%20user-read-birthdate%20streaming%20playlist-modify-private%20playlist-modify-public%20playlist-read-private&redirect_uri=http%3A%2F%2F104.131.215.55%3A80%2Fcallback'
 var access_token, refresh_token
 
 //start tests
@@ -40,7 +39,6 @@ describe('GET /login', function(){
       if (err) {
         throw err;
       }
-      res.redirect.should.equal (true)
       res.status.should.equal(302);
       done();
     });
@@ -48,109 +46,303 @@ describe('GET /login', function(){
 })
 
 describe('GET /callback', function(){
-  it('hit the callback enpoint with a valid authorization code. should obtain access tokens and redirect.', function(done){
+  it('hit the callback enpoint with a valid authorization code. should be a redirect, to the hosts homepage.', function(done){
     request(url)
     .get('/callback?code='+code)
     .end(function(err, res) {
       if (err) {
         throw err;
       }
-      console.log ('res: ' +JSON.stringify(res.body))
       res.status.should.equal(302);
+      done();
+    });
+  });
+  it('hit the callback enpoint with a bad authorization code. should be a redirect back to login.', function(done){
+    request(url)
+    .get('/callback?code=badcode')
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal('error loggin in: WebapiError: invalid_grant: Invalid authorization code');
+      res.status.should.equal(400);
+      done();
+    });
+  });
+})
+/*
+describe('POST /playlist/spotify/create', function(){
+  it('successfully create a spotify playlist', function(done){
+    postData = {
+      "playName"  : "mocha test",
+      "host"      : "clay976"
+    }
+    request(url)
+    .post('/playlist/spotify/create')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal ('playlist was created successfully')
+      res.status.should.equal(200);
+      done();
+    });
+  });
+  it('fail to create a playlist because name of playlist was missing', function(done){
+    postData = {
+      "host"      : "clay976"
+    }
+    request(url)
+    .post('/playlist/spotify/create')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal ('we did not recieve a playlist name')
+      res.status.should.equal(400);
+      done();
+    });
+  });
+  it('fail to create a spotify playlist because host validation failed', function(done){
+    postData = {
+      "host"      : "noHost",
+      "playName"  : "mocha test"
+    }
+    request(url)
+    .post('/playlist/spotify/create')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal (validHostFail)
+      res.status.should.equal(401);
+      done();
+    });
+  });
+})
+
+describe('POST /playlist/spotify/latest', function(){
+  it('successfully ask for the latest playlist in spotify to be set.', function(done){
+    postData = { "host" : "clay976" }
+    request(url)
+    .post('/playlist/spotify/latest')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.status.should.equal(200);
+      done();
+    });
+  });
+  it('fail to validate the host when trying to set the latest playlist', function(done){
+    postData = { "host" : "badHost" }
+    request(url)
+    .post('/playlist/spotify/latest')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal (validHostFail)
+      res.status.should.equal(401);
+      done();
+    });
+  });
+})
+
+describe('POST /playlist/spotify/getAll', function(){
+  it('successfully ask for all the user\'s playlists', function(done){
+    postData = { "host" : "clay976" }
+    request(url)
+    .post('/playlist/spotify/getAll')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.status.should.equal(200);
+      done();
+    });
+  });
+  it('fail to validate the host when trying to ask for all the user\'s playlists', function(done){
+    postData = { "host" : "badHost" }
+    request(url)
+    .post('/playlist/spotify/getAll')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal (validHostFail)
+      res.status.should.equal(401);
+      done();
+    });
+  });
+})
+
+describe('POST /playlist/spotify/set', function(){
+  it('successfully set a valid playlist', function(done){
+    postData = { "host" : "clay976",
+                 "playlistID" : "7zhE7bkc5yTS7e8IxSQEVr" }
+    request(url)
+    .post('/playlist/spotify/set')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal('playlist has been set successfully')
+      res.status.should.equal(200);
+      done();
+    });
+  });
+  it('fail to validate the host when trying to ask for all the user\'s playlists', function(done){
+    postData = { "host" : "badHost" }
+    request(url)
+    .post('/playlist/spotify/set')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal (validHostFail)
+      res.status.should.equal(401);
       done();
     });
   });
 })
 
 /*
-describe('test accesing the spotify api with an authorization code that is generated before the tests', function(){
-  it ('get Oauth tokens with authorization code', function(){
-  })
-  it ('fail to get Oauth tokens because of an invalid authorization code', function(){
-    return spotifyApi.authorizationCodeGrant('badCode')
-    .catch (function (err){
-      err.message.should.equal('invalid_grant: Invalid authorization code');
-    })
-  })
-})
-
-describe('Spotify Account Tools', function(){
-  it('validate a host', function(){
-    var promise = spotifyAccountTool.validateHost ('clay976')
-    return promise.then (function (host){
-      console.log (host)
-      host.hostID.should.equal ('clay976')
-    })
-  });
-  it('fail to validate a host', function(){
-    var promise = spotifyAccountTool.validateHost ('badHost') 
-    return promise.catch (function (err){
-      console.log (err)
-    })
-  });
-})
-
-describe('POST /playlist/spotify/create', function(){
-  it('try to post a playlist', function(done){
-    postData = {
-      "playName"  : "testing",
-      "host"      : "clay976"
-    }
-    request(url)
-    .post ('/playlist/spotify/create')
-    .send (postData)
-    .end (function(err, res) {
-      if (err) {
-        throw err;
-      }
-      console.log ('res: '+res.body)
-      res.status.should.equal(200);
-      done();
-    });
-  });
-})
-
 describe('POST /guests/add', function(){
-  it('add a guest to the database succsefully', function(done){
-    postData = {
-      "guestNum"  : "1234567890",
-      "host"      : "clay976" 
-    }
+  it('successfully add a guest to the database ', function(done){
+    postData = { "host" : "clay976",
+                 "guestNum" : "1234567890" }
     request(url)
-    .post('/guests/add?')
+    .post('/guests/add')
     .send (postData)
     .end(function(err, res) {
       if (err) {
         throw err;
       }
-      res.body.should.equal ('guest added succsefully')
+      console.log (res.body)
       res.status.should.equal(200);
       done();
     });
   });
-  it('fail to addd aguest to the database because of malformed syntax', function(done){
-    postData = {"guestNum" : "1000"}
+  it('fail to add a guest for missing host information', function(done){
+    postData = { "guestNum" : "1234567890" }
     request(url)
-    .post('/guests/add?')
+    .post('/guests/add')
     .send (postData)
     .end(function(err, res) {
       if (err) {
         throw err;
       }
-      res.body.should.equal ('number recieved not in the right format, please retry with the format "1234567890" (no speacial characters)')
+      console.log (res.body)
+      res.status.should.equal(401);
+      done();
+    });
+  });
+  it('fail to add a guest for missing phone number information', function(done){
+    postData = { "host" : "clay976" }
+    request(url)
+    .post('/guests/add')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.status.should.equal(400);
+      done();
+    });
+  });
+  it('fail to add a guest for malformed phone number information', function(done){
+    postData = { "host" : "clay976",
+                 "guestNum" : "badnum" }
+    request(url)
+    .post('/guests/add')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
       res.status.should.equal(400);
       done();
     });
   });
 })
-
-describe('unit testing for guest functions', function(){
-  it('successfully validate a guest that is already in our database', function(){
-    data = {'body':{"guestNum"  : "1234567890"}}
-    return guestTools.validateGuest (data).then (function (guest){
-      console.log (guest)
-      guest.hostID.should.equal ('clay976')
-      guest.phoneNum.should.equal ('1234567890')
-    })
+/*
+describe('POST /message', function(){
+  it('send "yes" trying to confirm an empty request', function(done){
+    postData = { "host" : "yes"}
+    request(url)
+    .post('/message')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res)
+      done();
+    });
+  });
+  it('fail to add a guest for missing host information', function(done){
+    postData = { "guestNum" : "1234567890" }
+    request(url)
+    .post('/guests/add')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.status.should.equal(401);
+      done();
+    });
+  });
+  it('fail to add a guest for missing phone number information', function(done){
+    postData = { "host" : "clay976" }
+    request(url)
+    .post('/guests/add')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.status.should.equal(400);
+      done();
+    });
+  });
+  it('fail to add a guest for malformed phone number information', function(done){
+    postData = { "host" : "clay976",
+                 "guestNum" : "badnum" }
+    request(url)
+    .post('/guests/add')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.status.should.equal(400);
+      done();
+    });
   });
 })*/

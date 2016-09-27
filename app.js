@@ -54,7 +54,7 @@ TO BE SENT:
   }
 _____________________________________________________________________________________________*/
   app.get('/callback', function (req, res){
-    spotifyAccountTools.homepage (req, res, db)
+    spotifyAccountTools.homepage (req, res)
   })  
 
 /*

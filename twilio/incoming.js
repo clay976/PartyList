@@ -58,7 +58,6 @@ function searchSpotifyAndBuildResponse (messageBody, resp, guestInfo){
         var requests = databaseTrack.numRequests
         fulfill (addResponse.trackFound (resp, track.name, track.artists[0].name, requests))
       })
-      
     })
   })
 }
@@ -67,12 +66,11 @@ function addSongToPlaylist (host, trackID, toNum, db){
   search.search (host, query.findHost (host), db, function (found){
     spotifyApi.addTracksToPlaylist (userId, playlistId, tracks)
     .then (function (){
-      responseBody = 'your song has been added to the playlist'
+      return 'your song has been added to the playlist'
     })
     .catch (function (err){
-      responseBody = ('there was an error adding ' +trackTitle+ ' to the playlist, will provide more usefull erroror messages in the future')
+      return ('there was an error adding ' +trackTitle+ ' to the playlist')
     })
-    respond.songAdded (toNum, responseBody)
   })
 }
 

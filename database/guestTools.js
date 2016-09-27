@@ -1,61 +1,59 @@
 var queryTemplate = require ('./query/JSONtemps')
 var upsertTemplate = require ('./upsert/JSONtemps')
 var model = require ('./models')
+var hostAcountTools = require ('../spotify/account/tools')
 
-function addManyGuest (req, res, db){
+function addManyGuest (req, res){
   var body = JSON.parse(req)
-  var host = body.host
   var nums = body.guestNums
   var count = nums.length
   for (var i = 0; i < count; i++) {
-    addGuest (res, db, host, nums[i])
+    addGuest (res, db, body.host, nums[i])
   }
 }
 
-function addGuest (req, res, db){ 
-  if (req.body.guestNum.length === 10){
-    var num = '+1'+req.body.guestNum
-    model.Guest.findOneAndUpdate({'phoneNum': num},upsertTemplate.Guest (req.body.host, num), {upsert:true}).exec()
-    .then (function (guestInfo){
-      console.log (guestInfo)
-      res.status(200).json ('guest added succsefully')
-    })
-    .catch (function(err) {
-      console.log('Something went wrong: ', err.stack);
-      res.status(400).json ('sorry something went wrong: '+ err.message)
-    })
-  }else{
-    res.status(400).json('number recieved not in the right format, please retry with the format "1234567890" (no speacial characters)')
-  }
+function addGuest (req, res){
+  hostAcountTools.validateHost (req.body.host)
+  .then (validateRequest(req))
+  .then (model.Guest.findOneAndUpdate({'phoneNum': '+1'+req.body.guestNum}, upsertTemplate.Guest (req.body.host, '+1'+req.body.guestNum), {upsert:true}).exec())
+  .then (res.status(200).json ('guest added succsefully'))
+  .catch (function (err){
+    res.status(400).json('error: '+err)
+  })
 }
 
-function resetGuest (db, guest2Find){
+function validateRequest (req){
+  return new Promise (function (fulfill, reject){
+    if (req.body.guestNum){
+      if (req.body.guestNum.length === 10){
+        fulfill ()
+      }else {
+        reject ('number not the right length, please retry with the format "1234567890" (no speacial characters)')
+      }
+    }else{
+      reject ('no phone number recieved to add as a guest')
+    }
+  })
 }
 
 function validateGuest (body){
   return new Promise (function (fulfill, reject){
-    var query = model.Guest.findOne({ 'phoneNum' : body.From })
-    promise = query.exec()
-
-    promise.then (function (guestInfo){
+    model.Guest.findOne({ 'phoneNum' : body.From }).exec()
+    .then (function (guestInfo){
       if (guestInfo){
         console.log ('guestJSON: ' +guestInfo)
         guestInfo.lastMessage = (body.Body).toLowerCase()
         fulfill (guestInfo) 
-      }else{
-        console.log ('could not find this document in our database, this may be a problem on our end, sorry!')
-        reject ('could not find this document in our database, this may be a problem on our end, sorry!')
-      }
+      }else reject ('we could not find you listed as a guest in anyone\'s part, sorry!')
     })
     .catch (function (err){
-      console.log ('validating guest failed' +err.stack)
+      reject ('validating guest failed' +err.stack)
     })
   })
 }
 
 module.exports = {
   addManyGuest : addManyGuest,
-  resetGuest: resetGuest,
   addGuest: addGuest,
   validateGuest: validateGuest
 }
