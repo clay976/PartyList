@@ -25,7 +25,7 @@ function homepage (req, res) {
     return databaseHostTools.setHomePageAndSaveHost(data)
   })
   .then (function (host){
-    return res.redirect (host.homePage)
+    res.redirect (host.homePage)
   })
   .catch (function (err){
     return res.status(400).json ('error loggin in: '+err)
