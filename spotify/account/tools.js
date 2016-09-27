@@ -13,6 +13,8 @@ var credentials = {
 var spotifyApi = new SpotifyWebApi(credentials);
 var model = require ('../../database/models')
 var upsertTemplate = require ('../../database/upsert/JSONtemps')
+var querystring = require('querystring')
+
 
 // makes a request to the spotify API to retrieve
 // the access and refresh tokens for the user
