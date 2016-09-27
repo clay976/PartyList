@@ -8,7 +8,7 @@ var spotifyApi = new SpotifyWebApi(credentials);
 var querystring = require('querystring')
 
 var upsertTemplate = require ('./upsert/JSONtemps')
-var model = require ('../../database/models')
+var model = require ('./models')
 
 function setHomePageAndSaveHost(hostInfo){
   var access_token = spotifyApi.getAccessToken
