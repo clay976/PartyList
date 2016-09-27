@@ -11,7 +11,7 @@ var credentials = {
   redirectUri : 'http://104.131.215.55:80/callback'
 };
 var spotifyApi = new SpotifyWebApi(credentials);
-var model = require ('./models')
+var model = require ('../../database/models')
 
 // makes a request to the spotify API to retrieve
 // the access and refresh tokens for the user
