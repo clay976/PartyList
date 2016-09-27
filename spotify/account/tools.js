@@ -19,16 +19,16 @@ var spotifyApi = new SpotifyWebApi(credentials);
 function homepage (req, res) {
   spotifyApi.authorizationCodeGrant(req.query.code)
   .then (function (data){
-    setTokensAndGetHostInfo(data)
+    return setTokensAndGetHostInfo(data)
   })
   .then (function (data){
-    databaseHostTools.setHomePageAndSaveHost(data)
+    return databaseHostTools.setHomePageAndSaveHost(data)
   })
   .then (function (host){
-    res.redirect (host.homePage)
+    return res.redirect (host.homePage)
   })
   .catch (function (err){
-    res.status(400).json ('error loggin in: '+err)
+    return res.status(400).json ('error loggin in: '+err)
   })
 }
 
