@@ -19,12 +19,15 @@ var spotifyApi = new SpotifyWebApi(credentials);
 function homepage (req, res) {
   spotifyApi.authorizationCodeGrant(req.query.code)
   .then (function (data){
+    console.log (data)
     return setTokensAndGetHostInfo(data)
   })
   .then (function (data){
+    console.log (data)
     return databaseHostTools.setHomePageAndSaveHost(data)
   })
   .then (function (host){
+    console.log (host)
     res.redirect (host.homePage)
   })
   .catch (function (err){
