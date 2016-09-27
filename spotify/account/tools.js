@@ -2,7 +2,7 @@
 //node modules
 
 //my modules
-var databaseHostTools = require ('../../database/models')
+var databaseHostTools = require ('../../database/hostTools')
 
 var SpotifyWebApi = require('spotify-web-api-node');
 var credentials = {
@@ -24,7 +24,7 @@ function homepage (req, res) {
   .then (function (data){
     databaseHostTools.setHomePageAndSaveHost(data)
   })
-  .then (function (data){
+  .then (function (host){
     res.redirect (host.homePage)
   })
   .catch (function (err){
