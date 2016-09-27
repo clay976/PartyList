@@ -22,9 +22,9 @@ function homepage (req, res) {
     console.log (data)
     return setTokensAndGetHostInfo(data)
   })
-  .then (function (data){
-    console.log (data)
-    return databaseHostTools.setHomePageAndSaveHost(data)
+  .then (function (hostInfo){
+    console.log (hostInfo)
+    return model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, upsertTemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage = '/#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':rhostInfo.efresh_token})), {upsert:true}).exec()
   })
   .then (function (host){
     console.log (host)
@@ -38,7 +38,11 @@ function homepage (req, res) {
 function setTokensAndGetHostInfo (data) {
   spotifyApi.setAccessToken(data.body['access_token'])
   spotifyApi.setRefreshToken(data.body['refresh_token'])
-  return spotifyApi.getMe()
+  return {
+    "spotifyReturn" : spotifyApi.getMe(),
+    "access_token"  : data.body['access_token'],
+    "refresh_token" :data.body['refresh_token']
+  }
 }
 
 /*

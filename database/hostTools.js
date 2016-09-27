@@ -10,13 +10,6 @@ var querystring = require('querystring')
 var upsertTemplate = require ('./upsert/JSONtemps')
 var model = require ('./models')
 
-function setHomePageAndSaveHost(hostInfo){
-  var access_token = spotifyApi.getAccessToken
-  var refresh_token = spotifyApi.getRefreshToken
-  var homePage = '/#' +querystring.stringify({'access_token': access_token,'refresh_token':refresh_token})
-  return model.Host.findOneAndUpdate({'hostID': hostInfo.body.id}, upsertTemplate.Host (hostInfo.body.id, access_token, refresh_token, homePage), {upsert:true}).exec()
-}
-
 function validateHost (host){
   model.Host.findOne({ 'hostID' : host }).exec()
   .then (function (hostInfo){
@@ -32,6 +25,5 @@ function validateHost (host){
 }
 
 module.exports = {
-  setHomePageAndSaveHost: setHomePageAndSaveHost,
   validateHost: validateHost
 }
