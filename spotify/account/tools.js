@@ -23,7 +23,6 @@ var querystring = require('querystring')
 function homepage (req, res) {
   spotifyApi.authorizationCodeGrant(req.query.code)
   .then (function (data){
-    console.log (data)
     return setTokensAndGetHostInfo(data)
   })
   .then (function (hostInfo){
@@ -31,7 +30,6 @@ function homepage (req, res) {
     return model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, upsertTemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage = '/#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':hostInfo.efresh_token})), {upsert:true}).exec()
   })
   .then (function (host){
-    console.log ('host: '+host)
     res.redirect (host.homePage)
   })
   .catch (function (err){
