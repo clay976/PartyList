@@ -1,14 +1,6 @@
 //node modules
 var twilio = require('twilio')
-
-var SpotifyWebApi = require('spotify-web-api-node');
-var credentials = {
-  clientId : 'a000adffbd26453fbef24e8c1ff69c3b',
-  clientSecret : '899b3ec7d52b4baabba05d6031663ba2',
-  redirectUri : 'http://104.131.215.55:80/callback'
-};
-
-var spotifyApi = new SpotifyWebApi(credentials);
+var hostAcountTools = require ('../../database/hostTools')
 var guestTools = require ('../database/guestTools')
 var addResponse = require ('./outgoing/responses')
 var model = require ('../database/models')
@@ -49,7 +41,7 @@ function chooseReponseAction (guestInfo){
 
 function searchSpotifyAndBuildResponse (messageBody, resp, guestInfo){
   return new Promise (function (fulfill, reject){
-    spotifyApi.searchTracks (messageBody, { limit : 1 })
+    hostAcountTools.spotifyApi.searchTracks (messageBody, { limit : 1 })
     .then (function (tracksFound){
       var track = tracksFound.body.tracks.items[0]
       model.Guest.update({ 'phoneNum' : guestInfo.phoneNum }, { $set: {'currentTrack' : track.id}})
@@ -64,7 +56,7 @@ function searchSpotifyAndBuildResponse (messageBody, resp, guestInfo){
 
 function addSongToPlaylist (host, trackID, toNum, db){
   search.search (host, query.findHost (host), db, function (found){
-    spotifyApi.addTracksToPlaylist (userId, playlistId, tracks)
+    hostAcountTools.spotifyApi.addTracksToPlaylist (userId, playlistId, tracks)
     .then (function (){
       return 'your song has been added to the playlist'
     })

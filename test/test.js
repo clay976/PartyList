@@ -27,7 +27,7 @@ https://accounts.spotify.com/authorize?response_type=code&client_id=a000adffbd26
 
 place the code in this next variable
 */
-var code = 'AQBAX6gybAffLLTBgoCA6UBbQUgn9aduR0fnNqT6jvjqyGSxdbeaj-Nwwd-ddO6l5o2rXWbNWAKvLIDDiYrE2yWYvKsrXxyL0tdW3lyQUTs_rgipXjGjB4jAnTvyNINJ7S5-Wk2HmHJXKTwlj5KrZExhcu5w7uQ_yTnfn43nvBLlp8Bi0Eco9Y2t1AEGNAwKFlNdIWpEnpmzJex-dIqgEZWj58yiSjfg86r1i777vEsUieUhSy1bITgnR9Wp23jYGCj51mYH-T-e3CitDC8lYRXDY75QLZTLHeyT0CUFegWRrJu4eWKdpxTIyLaC2pNJ2akQPi9f83L8KH-ThjiU490ZA9GG3aiMp6Ye-rZL-mCB5aQ4BUYBYIR9AylBABW2QD-z'
+var code = 'AQCruidCKv3fW5WDvZ-jDdgXQEwcjuq_7Q3gpXaxYwPeVteRCkbJxZhxjwK0gliDACp14nKajvFn68MepA1kfEOImE8Hv5guaV5wyafAJZfXaEO-QGS-6OsOKEcscn6zMNB28UBXmSiIigmSoy_p4b_P1WLrW7o-lrru7qNbqEtxvmlIa7VxLaLxyecsKWhK65oj9DkMmhIgXNLk-i4Dz49qgvlOZ5gt-8vKb-R5VUnMZLw1TwETDSF48J9fd2i1WHN16-phfjVu92pyXiKw_xfNo_ixsEHdwYteRf830VjDEAaW6aggwNJwePDx1pcfrNhhjyMogADmbbnj1Q4_4cqM8Ay9tVqGAv6VjtD_XZuwg3n4SE6Wdvi84ZkcPZE4U2KZ'
 var access_token, refresh_token
 
 //start tests
@@ -284,7 +284,6 @@ describe('POST /playlist/spotify/getAll', function(){
   });
 })
 
-/*
 describe('POST /guests/add', function(){
   it('successfully add a guest to the database ', function(done){
     postData = { "host" : "clay976",
@@ -311,7 +310,8 @@ describe('POST /guests/add', function(){
         throw err;
       }
       console.log (res.body)
-      res.status.should.equal(401);
+      res.body.should.equal('error adding guest: validation error: could not find this host in our database, You must log in to continue')
+      res.status.should.equal(400);
       done();
     });
   });
@@ -325,6 +325,7 @@ describe('POST /guests/add', function(){
         throw err;
       }
       console.log (res.body)
+      res.body.should.equal('error adding guest: no phone number recieved to add as a guest')
       res.status.should.equal(400);
       done();
     });
@@ -340,15 +341,16 @@ describe('POST /guests/add', function(){
         throw err;
       }
       console.log (res.body)
+      res.body.should.equal('error adding guest: number not the right length, please retry with the format "1234567890" (no speacial characters)')
       res.status.should.equal(400);
       done();
     });
   });
 })
-/*
+
 describe('POST /message', function(){
   it('send "yes" trying to confirm an empty request', function(done){
-    postData = { "host" : "yes"}
+    postData = { "message.body" : "yes"}
     request(url)
     .post('/message')
     .send (postData)
@@ -360,47 +362,33 @@ describe('POST /message', function(){
       done();
     });
   });
-  it('fail to add a guest for missing host information', function(done){
-    postData = { "guestNum" : "1234567890" }
-    request(url)
-    .post('/guests/add')
-    .send (postData)
-    .end(function(err, res) {
-      if (err) {
-        throw err;
-      }
-      console.log (res.body)
-      res.status.should.equal(401);
-      done();
-    });
-  });
-  it('fail to add a guest for missing phone number information', function(done){
-    postData = { "host" : "clay976" }
-    request(url)
-    .post('/guests/add')
-    .send (postData)
-    .end(function(err, res) {
-      if (err) {
-        throw err;
-      }
-      console.log (res.body)
-      res.status.should.equal(400);
-      done();
-    });
-  });
-  it('fail to add a guest for malformed phone number information', function(done){
-    postData = { "host" : "clay976",
-                 "guestNum" : "badnum" }
-    request(url)
-    .post('/guests/add')
-    .send (postData)
-    .end(function(err, res) {
-      if (err) {
-        throw err;
-      }
-      console.log (res.body)
-      res.status.should.equal(400);
-      done();
-    });
-  });
-})*/
+  // it('fail to add a guest for missing phone number information', function(done){
+  //   postData = { "host" : "clay976" }
+  //   request(url)
+  //   .post('/guests/add')
+  //   .send (postData)
+  //   .end(function(err, res) {
+  //     if (err) {
+  //       throw err;
+  //     }
+  //     console.log (res.body)
+  //     res.status.should.equal(400);
+  //     done();
+  //   });
+  // });
+  // it('fail to add a guest for malformed phone number information', function(done){
+  //   postData = { "host" : "clay976",
+  //                "guestNum" : "badnum" }
+  //   request(url)
+  //   .post('/guests/add')
+  //   .send (postData)
+  //   .end(function(err, res) {
+  //     if (err) {
+  //       throw err;
+  //     }
+  //     console.log (res.body)
+  //     res.status.should.equal(400);
+  //     done();
+  //   });
+  // });
+})

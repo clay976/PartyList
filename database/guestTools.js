@@ -1,7 +1,7 @@
 var queryTemplate = require ('./query/JSONtemps')
 var upsertTemplate = require ('./upsert/JSONtemps')
 var model = require ('./models')
-var hostAcountTools = require ('../spotify/account/tools')
+var hostAcountTools = require ('./hostTools')
 
 function addManyGuest (req, res){
   var body = JSON.parse(req)
@@ -14,11 +14,17 @@ function addManyGuest (req, res){
 
 function addGuest (req, res){
   hostAcountTools.validateHost (req.body.host)
-  .then (validateRequest(req))
-  .then (model.Guest.findOneAndUpdate({'phoneNum': '+1'+req.body.guestNum}, upsertTemplate.Guest (req.body.host, '+1'+req.body.guestNum), {upsert:true}).exec())
-  .then (res.status(200).json ('guest added succsefully'))
+  .then (function (){
+    return validateRequest(req)
+  })
+  .then (function (){
+    return model.Guest.findOneAndUpdate({'phoneNum': '+1'+req.body.guestNum}, upsertTemplate.Guest (req.body.host, '+1'+req.body.guestNum), {upsert:true}).exec()
+  })
+  .then (function (update){
+    res.status(200).json ('guest added succsefully')
+  })
   .catch (function (err){
-    res.status(400).json('error: '+err)
+    res.status(400).json('error adding guest: '+err)
   })
 }
 
@@ -26,7 +32,7 @@ function validateRequest (req){
   return new Promise (function (fulfill, reject){
     if (req.body.guestNum){
       if (req.body.guestNum.length === 10){
-        fulfill ()
+        fulfill (true)
       }else {
         reject ('number not the right length, please retry with the format "1234567890" (no speacial characters)')
       }
@@ -41,13 +47,12 @@ function validateGuest (body){
     model.Guest.findOne({ 'phoneNum' : body.From }).exec()
     .then (function (guestInfo){
       if (guestInfo){
-        console.log ('guestJSON: ' +guestInfo)
         guestInfo.lastMessage = (body.Body).toLowerCase()
         fulfill (guestInfo) 
       }else reject ('we could not find you listed as a guest in anyone\'s part, sorry!')
     })
     .catch (function (err){
-      reject ('validating guest failed' +err.stack)
+      reject ('validating guest failed: ' +err)
     })
   })
 }
