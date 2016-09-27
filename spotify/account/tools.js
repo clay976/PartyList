@@ -39,12 +39,12 @@ function homepage (req, res) {
 function setTokensAndGetHostInfo (data) {
   spotifyApi.setAccessToken(data.body['access_token'])
   spotifyApi.setRefreshToken(data.body['refresh_token'])
-   return spotifyApi.getMe().then (function (spotifyReturn)) {
+   return spotifyApi.getMe().then (function (spotifyReturn) {
     return  { "spotifyReturn" : spotifyReturn
       "access_token"  : data.body['access_token'],
       "refresh_token" :data.body['refresh_token']
     }
-  }
+  })
 }
 
 /*
