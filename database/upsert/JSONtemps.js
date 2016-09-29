@@ -1,5 +1,5 @@
 function Host (data, accessToken, refreshToken, homePage){
-	var host = {
+	return {
 	  'hostID' 				: data,
 	  'access_token'	: accessToken,
 	  'expires_in'		: 3600,
@@ -8,24 +8,23 @@ function Host (data, accessToken, refreshToken, homePage){
 	  'homePage'			: homePage,
 	  'exlpicit'			: true
 	}
-	return host
 }
 
 function Guest (host, number){
-	var guest = {
+	return {
   	'hostID'				: host,
     'phoneNum'			: number
-	}
-	return guest
+  }
 }
 
-function Track (TrackID){
-	var track = {
-  'trackID'				: TrackID,
-  'numRequests'		: 0,
-  'timePlayed'		: 0 
-}
-	return track
+function Track (TrackID, name, artist){
+	return {
+	  'trackID'				: TrackID,
+	  'name'					: name,
+	  'artist'				: artist,
+	  'numRequests'		: 0,
+	  'timePlayed'		: 0 
+	}
 }
 
 module.exports = {

@@ -195,7 +195,7 @@ ________________________________________________________________________________
   //this should only be coming from Twilio,
   //to be fixed in gulp branch or something.
   app.post('/message', function (req, res){
-    twilioIncoming.businessLogic (req, res, db)
+    twilioIncoming.HandleIncomingMessage (req, res, db)
   })
   app.listen(80)
 })

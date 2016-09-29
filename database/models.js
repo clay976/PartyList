@@ -6,12 +6,18 @@ var guest = mongoose.Schema({
 	hostID				: String,
   phoneNum			: String,
   numRequests		: { type: Number, default: 4 },
-  currentTrack	: { type: String, default: '' },
+  currentTrack	: { 
+    trackID       : { type: String, default: '' },
+    name          : { type: String, default: '' },
+    artist        : { type: String, default: '' }
+  },
   lastMessage   : { type: String, default: '' } 
 })
 
 var track = mongoose.Schema({
   trackId				: String,
+  name          : String,
+  artist        : String,
   numRequests		: { type: Number, default: 0 },
   timePlayed		: Number 
 })

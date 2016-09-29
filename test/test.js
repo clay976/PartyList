@@ -27,7 +27,7 @@ https://accounts.spotify.com/authorize?response_type=code&client_id=a000adffbd26
 
 place the code in this next variable
 */
-var code = 'AQCruidCKv3fW5WDvZ-jDdgXQEwcjuq_7Q3gpXaxYwPeVteRCkbJxZhxjwK0gliDACp14nKajvFn68MepA1kfEOImE8Hv5guaV5wyafAJZfXaEO-QGS-6OsOKEcscn6zMNB28UBXmSiIigmSoy_p4b_P1WLrW7o-lrru7qNbqEtxvmlIa7VxLaLxyecsKWhK65oj9DkMmhIgXNLk-i4Dz49qgvlOZ5gt-8vKb-R5VUnMZLw1TwETDSF48J9fd2i1WHN16-phfjVu92pyXiKw_xfNo_ixsEHdwYteRf830VjDEAaW6aggwNJwePDx1pcfrNhhjyMogADmbbnj1Q4_4cqM8Ay9tVqGAv6VjtD_XZuwg3n4SE6Wdvi84ZkcPZE4U2KZ'
+var code = 'AQAmLKQcMT4SKUxmvWVPbqmPSfeGfM_Y75w2hCEF83KZSaeZHFF7M9tV6fztzgQQnhknrhwTrddcs3mLO70JEd2LW9aw6w-UW0SZA-ebZZu46lgzBHEFaVFP0nm_fd1jAyCdDe7Ynw1adqtkEPiOg5_4v-Ibn8-yeIvtmfnRsnVgKn8sjmYks4s8FH3GUC3QXLjl1qAn6IdbyEHSNfD1xNhtqVk9E6D_FvMHUAOrPS6tEybiZ9LkqeMsk8eEDaPbKvtlGJHKR_ULau286lUVahROxY5HuM2MHlivWxTdryf0lFAf-sjB2IlHjB18672sXGn4xqGUy8vxSFtgEC12qoV-9V_P1Qf4aS-jmBH8Y8dXh6boIoTnfHhOZwn5Y1aAv-JU'
 var access_token, refresh_token
 
 //start tests
@@ -287,7 +287,7 @@ describe('POST /playlist/spotify/getAll', function(){
 describe('POST /guests/add', function(){
   it('successfully add a guest to the database ', function(done){
     postData = { "host" : "clay976",
-                 "guestNum" : "1234567890" }
+                 "guestNum" : "6134539030" }
     request(url)
     .post('/guests/add')
     .send (postData)
@@ -347,10 +347,12 @@ describe('POST /guests/add', function(){
     });
   });
 })
-
 describe('POST /message', function(){
-  it('send "yes" trying to confirm an empty request', function(done){
-    postData = { "message.body" : "yes"}
+  it('send a message from a non-guest phone number, should be rejected', function(done){
+    postData = { 
+      "From"  : "+11432432",
+      "Body"  : "yes"
+    }
     request(url)
     .post('/message')
     .send (postData)
@@ -358,37 +360,40 @@ describe('POST /message', function(){
       if (err) {
         throw err;
       }
-      console.log (res)
+      console.log (res.body)
       done();
     });
   });
-  // it('fail to add a guest for missing phone number information', function(done){
-  //   postData = { "host" : "clay976" }
-  //   request(url)
-  //   .post('/guests/add')
-  //   .send (postData)
-  //   .end(function(err, res) {
-  //     if (err) {
-  //       throw err;
-  //     }
-  //     console.log (res.body)
-  //     res.status.should.equal(400);
-  //     done();
-  //   });
-  // });
-  // it('fail to add a guest for malformed phone number information', function(done){
-  //   postData = { "host" : "clay976",
-  //                "guestNum" : "badnum" }
-  //   request(url)
-  //   .post('/guests/add')
-  //   .send (postData)
-  //   .end(function(err, res) {
-  //     if (err) {
-  //       throw err;
-  //     }
-  //     console.log (res.body)
-  //     res.status.should.equal(400);
-  //     done();
-  //   });
-  // });
+  it('send a message from a guest, but confirmation is empty', function(done){
+    postData = { 
+      "From"  : "+16134539030",
+      "Body"  : "yes"
+    }
+    request(url)
+    .post('/message')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      done();
+    });
+  });
+  it('send a message from a guest, with drake as the search query', function(done){
+    postData = { 
+      "From"  : "+16134539030",
+      "Body"  : "drake"
+    }
+    request(url)
+    .post('/message')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      done();
+    });
+  });
 })
