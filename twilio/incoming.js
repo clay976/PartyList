@@ -1,7 +1,7 @@
 //node modules
 var twilio = require('twilio')
-var sid = 'AC82e766299f910ec0f7496b884aaaff0b'
-var atoken = '79f43f205a4c09fb8be70869dda29a2b'
+var sid = 'AC85573f40ef0c3fb0c5aa58477f61b02e'
+var atoken = 'fcea26b2b0ae541d904ba23e12e2c499'
 var client = require('twilio/lib')(sid, atoken);
 var hostAcountTools = require ('../database/hostTools')
 var guestTools = require ('../database/guestTools')
@@ -11,6 +11,7 @@ var addResponse = require ('./responses')
 var upsertTemplate = require ('../database/upsert/JSONtemps')
 
 function HandleIncomingMessage (req, res, db){
+  var resp = new twilio.TwimlResponse();
   guestTools.validateGuest (req.body)
   .then (function (guestInfo){
     console.log ('1')
@@ -30,8 +31,8 @@ function HandleIncomingMessage (req, res, db){
   })
   .then (function (responseObject){
     console.log ('4')
-    var resp = new twilio.TwimlResponse();
     resp.message = responseObject.response
+    console.log (resp)
     res.send (resp.toString())
   })
   .catch (function (err){
