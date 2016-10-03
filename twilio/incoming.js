@@ -1,5 +1,6 @@
 //node modules
 var twilio = require('twilio')
+var client = require('twilio/lib')(sid, atoken);
 var hostAcountTools = require ('../database/hostTools')
 var guestTools = require ('../database/guestTools')
 var model = require ('../database/models')
@@ -20,7 +21,9 @@ function HandleIncomingMessage (req, res, db){
     return guestTools.updateGuestAndTrackIfNeeded (responseObject)
   })
   .then (function (responseObject){
-    res.send (responseObject.response)
+    var resp = new twilio.TwimlResponse();
+    resp.message = responseObject.response
+    res.send (resp.toString())
   })
   .catch (function (err){
     //var re-sp = new twilio.TwimlResponse()

@@ -3,17 +3,6 @@ var should = require('should')
 var assert = require('assert')
 var request = require('supertest')
 var querystring = require('querystring')
-var SpotifyWebApi = require('spotify-web-api-node');
-var credentials = {
-  clientId : 'a000adffbd26453fbef24e8c1ff69c3b',
-  clientSecret : '899b3ec7d52b4baabba05d6031663ba2',
-  redirectUri : 'http://104.131.215.55:80/callback'
-};
-var spotifyApi = new SpotifyWebApi(credentials);
-
-//my modules
-var model = require ('../database/models')
-var upsertTemplate = require ('../database/upsert/JSONtemps')
 
 //variables
 var url = 'localhost'
