@@ -21,15 +21,17 @@ var querystring = require('querystring')
 // preps them in to an "options" object to
 // make another call for host info
 function homepage (req, res) {
+  var homepage
   spotifyApi.authorizationCodeGrant(req.query.code)
   .then (function (data){
     return setTokensAndGetHostInfo(data)
   })
   .then (function (hostInfo){
-    return model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, upsertTemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, '/#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':hostInfo.refresh_token})), {upsert:true}).exec()
+    homepage = '/#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':hostInfo.refresh_token})
+    return model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, upsertTemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homepage), {upsert:true}).exec()
   })
   .then (function (host){
-    res.redirect (host.homePage)
+    res.redirect (homePage)
   })
   .catch (function (err){
     return res.status(400).json ('error loggin in: '+err)

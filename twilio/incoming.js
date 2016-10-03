@@ -13,22 +13,30 @@ var upsertTemplate = require ('../database/upsert/JSONtemps')
 function HandleIncomingMessage (req, res, db){
   guestTools.validateGuest (req.body)
   .then (function (guestInfo){
+    console.log ('1')
+    console.log (guestInfo)
     return buildResponseObject (guestInfo)
   })
   .then (function (responseObject){
+    console.log ('2')
+    console.log (responseObject)
     if (responseObject.searchSpotify) return addSpotifySearchResultsIfNeeded (responseObject)
     else return responseObject
   })
   .then (function (responseObject){
+    console.log ('3')
+    console.log (responseObject)
     return guestTools.updateGuestAndTrackIfNeeded (responseObject)
   })
   .then (function (responseObject){
+    console.log ('4')
     var resp = new twilio.TwimlResponse();
     resp.message = responseObject.response
     res.send (resp.toString())
   })
   .catch (function (err){
-    //var re-sp = new twilio.TwimlResponse()
+    console.log ('err')
+    console.log (err)
     res.send ('error handling incoming message: '+ err)
   })
 }
