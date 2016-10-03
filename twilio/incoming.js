@@ -31,7 +31,7 @@ function HandleIncomingMessage (req, res, db){
   })
   .then (function (responseObject){
     console.log ('4')
-    resp.message = responseObject.response
+    resp.Message = responseObject.response
     console.log (resp)
     res.send (resp.toString())
   })
