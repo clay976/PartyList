@@ -1,5 +1,7 @@
 //node modules
 var twilio = require('twilio')
+var sid = 'AC82e766299f910ec0f7496b884aaaff0b'
+var atoken = '79f43f205a4c09fb8be70869dda29a2b'
 var client = require('twilio/lib')(sid, atoken);
 var hostAcountTools = require ('../database/hostTools')
 var guestTools = require ('../database/guestTools')

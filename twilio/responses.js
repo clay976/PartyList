@@ -1,7 +1,5 @@
 //node modules
 var model = require ('../database/models')
-var sid = 'AC82e766299f910ec0f7496b884aaaff0b'
-var atoken = '79f43f205a4c09fb8be70869dda29a2b'
 
 //my modules
 var notGuest = ('sorry, we could not find a party that you are currently a guest of. Send the host\'s phone number in the format "1234567890" and we will ask them to add you');
