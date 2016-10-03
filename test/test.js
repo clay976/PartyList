@@ -27,8 +27,7 @@ https://accounts.spotify.com/authorize?response_type=code&client_id=a000adffbd26
 
 place the code in this next variable
 */
-var code = 'AQAmLKQcMT4SKUxmvWVPbqmPSfeGfM_Y75w2hCEF83KZSaeZHFF7M9tV6fztzgQQnhknrhwTrddcs3mLO70JEd2LW9aw6w-UW0SZA-ebZZu46lgzBHEFaVFP0nm_fd1jAyCdDe7Ynw1adqtkEPiOg5_4v-Ibn8-yeIvtmfnRsnVgKn8sjmYks4s8FH3GUC3QXLjl1qAn6IdbyEHSNfD1xNhtqVk9E6D_FvMHUAOrPS6tEybiZ9LkqeMsk8eEDaPbKvtlGJHKR_ULau286lUVahROxY5HuM2MHlivWxTdryf0lFAf-sjB2IlHjB18672sXGn4xqGUy8vxSFtgEC12qoV-9V_P1Qf4aS-jmBH8Y8dXh6boIoTnfHhOZwn5Y1aAv-JU'
-var access_token, refresh_token
+var code = 'AQDrmYpSyBGOzZAo0ECfNfIHSm-zK3O-Gkb1P0HuxmlIRjADFTihsRpGlkbRx2P5-zI-iHNzB6C8zOxzX3dwA_Fc7yZHNJr3EUwyC81FdK4D0jVW6SEuMi6j1WUBgSZnFHjJgV-igNDi-GBMiHdMGRMMxxoL-8rAtWnOWA_LpLJETfaIysDoyd8e0dREVA_ZfuyMyI7dRdZV_EFixtEXEoe_3J2sVD_FhStCNNbBq11yPZJPdVCZkNz8_-fO7Djr7jMsnA7MfBgoKhkFoiTtMhWlRIvcw2R2vEsQy_GoKAi5VEixQ0Rs77UXa3b4nzSF_Er0zHjGALy41gSX5mWZUlujx4t6sygkXCtlslqSAZNVUvSHqsKBPqInFfrJfwb4CjuN'
 
 //start tests
 describe('GET /login', function(){
@@ -73,24 +72,24 @@ describe('GET /callback', function(){
 })
 
 describe('POST /playlist/spotify/create', function(){
-  // it('successfully create a spotify playlist', function(done){
-  //   postData = {
-  //     "playName"  : "mocha test",
-  //     "host"      : "clay976"
-  //   }
-  //   request(url)
-  //   .post('/playlist/spotify/create')
-  //   .send (postData)
-  //   .end(function(err, res) {
-  //     if (err) {
-  //       throw err;
-  //     }
-  //     console.log (res.body)
-  //     res.body.should.equal ('playlist was created successfully')
-  //     res.status.should.equal(200);
-  //     done();
-  //   });
-  // });
+  it('successfully create a spotify playlist', function(done){
+    postData = {
+      "playName"  : "mocha test",
+      "host"      : "clay976"
+    }
+    request(url)
+    .post('/playlist/spotify/create')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.body.should.equal ('playlist was created successfully')
+      res.status.should.equal(200);
+      done();
+    });
+  });
   it('fail to create a playlist because name of playlist was missing', function(done){
     postData = {
       "host"      : "clay976"
@@ -351,7 +350,7 @@ describe('POST /message', function(){
   it('send a message from a non-guest phone number, should be rejected', function(done){
     postData = { 
       "From"  : "+11432432",
-      "Body"  : "yes"
+      "Body"  : "non-guest request"
     }
     request(url)
     .post('/message')
@@ -360,11 +359,46 @@ describe('POST /message', function(){
       if (err) {
         throw err;
       }
-      console.log (res.body)
+      res.text.should.equal('error handling incoming message: sorry, we could not find a party that you are currently a guest of. Send the host\'s phone number in the format "1234567890" and we will ask them to add you')
+      console.log (res.text)
       done();
     });
   });
-  it('send a message from a guest, but confirmation is empty', function(done){
+  it('send a message from a guest, with drake as the search query', function(done){
+    postData = { 
+      "From"  : "+16134539030",
+      "Body"  : "fireworks drake"
+    }
+    request(url)
+    .post('/message')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      res.text.should.equal('We found: Fireworks, by: Drake. This Track has 0 requests!')
+      console.log (res.text)
+      done();
+    });
+  });
+  it('send a message from a guest, declining a preious request', function(done){
+    postData = { 
+      "From"  : "+16134539030",
+      "Body"  : "no"
+    }
+    request(url)
+    .post('/message')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      res.text.should.equal('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.')
+      console.log (res.text)
+      done();
+    });
+  });
+  it('send a message from a guest, with an empty request', function(done){
     postData = { 
       "From"  : "+16134539030",
       "Body"  : "yes"
@@ -376,7 +410,25 @@ describe('POST /message', function(){
       if (err) {
         throw err;
       }
-      console.log (res.body)
+      res.text.should.equal('error handling incoming message: We don\'t have a request for you to confirm or decline. If your song is just "yes", or "no", add an artist name to search')
+      console.log (res.text)
+      done();
+    });
+  });
+  it('send a message from a guest, with an empty request', function(done){
+    postData = { 
+      "From"  : "+16134539030",
+      "Body"  : "no"
+    }
+    request(url)
+    .post('/message')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      res.text.should.equal('error handling incoming message: We don\'t have a request for you to confirm or decline. If your song is just "yes", or "no", add an artist name to search')
+      console.log (res.text)
       done();
     });
   });
@@ -392,7 +444,42 @@ describe('POST /message', function(){
       if (err) {
         throw err;
       }
-      console.log (res.body)
+      res.text.should.equal('We found: One Dance, by: Drake. This Track has 0 requests!')
+      console.log (res.text)
+      done();
+    });
+  });
+  it('send a message from a guest, confirming a request', function(done){
+    postData = { 
+      "From"  : "+16134539030",
+      "Body"  : "yes"
+    }
+    request(url)
+    .post('/message')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      //res.text.should.equal('error handling incoming message: We don\'t have a request for you to confirm or decline. If your song is just "yes", or "no", add an artist name to search')
+      console.log (res.text)
+      done();
+    });
+  });
+  it('send a message from a guest, with a request that will not be found', function(done){
+    postData = { 
+      "From"  : "+16134539030",
+      "Body"  : "fuieqgf8234078rhfew"
+    }
+    request(url)
+    .post('/message')
+    .send (postData)
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      //res.body.should.equal('soung not found')
+      console.log (res.text)
       done();
     });
   });

@@ -9,7 +9,20 @@ function guest (databaseObject){
 		"spotifySearch"	: false
 	})
 }
+function clearGuestSong (num){
+return {$inc	: { 
+	numRequests			: num
+	}, 
+	$set						: { 
+		currentTrack 	: {
+	  	trackID 		: '', 
+	  	name    		: '', 
+	  	artist  		: ''				
+		}
+	}}
+}
 
 module.exports = {
-	guest	: guest
+	clearGuestSong	: clearGuestSong,
+	guest						: guest
 }

@@ -69,7 +69,7 @@ function updateGuestAndTrackIfNeeded (guestReqObject){
 function updateGuestIfNeeded (guestReqObject){
   return new Promise (function (fulfill, reject){
     if (guestReqObject.guestUpdate){
-      model.Guest.findOneAndUpdate({ 'phoneNum' : guestReqObject.guest.From}, {$set : guestReqObject.guestUpdate}).exec()
+      model.Guest.findOneAndUpdate({ 'phoneNum' : guestReqObject.guest.phoneNum}, guestReqObject.guestUpdate).exec()
       .then (function (updated){
         fulfill (guestReqObject)
       })
@@ -79,10 +79,11 @@ function updateGuestIfNeeded (guestReqObject){
     }else fulfill (guestReqObject)
   })
 }
+
 function updateTrackIfNeeded (guestReqObject){
   return new Promise (function (fulfill, reject){
     if (guestReqObject.trackUpdate){
-      model.Track.findOneAndUpdate({ 'trackID' : guestReqObject.guest.track.id}, guestReqObject.trackUpdate, {upsert:true}).exec()
+      model.Track.findOneAndUpdate({ 'trackID' : guestReqObject.guest.currentTrack.trackID}, guestReqObject.trackUpdate, {upsert:true}).exec()
       .then (function (updated){
         fulfill (guestReqObject)
       })
