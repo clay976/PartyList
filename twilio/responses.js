@@ -34,7 +34,7 @@ function trackFoundOnSpotify (trackID, title, artist, prevRequests){
 
 function checkForPreviousRequests (trackID, prevRequests){
   return new Promise (function (fulfill, reject){
-    for (var i = 0; i < prevRequests.length(); i++){
+    for (var i = 0; i < prevRequests.length; i++){
       if (trackID === prevRequests[i]){
         fulfill (true)
       }
