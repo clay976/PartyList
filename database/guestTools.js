@@ -42,21 +42,20 @@ function validateGuest (body){
   console.log ('incoming request')
   console.log (body)
   return new Promise (function (fulfill, reject){
+    if (body.Body.toLowerCase() === 'add me please'){
+      console.log ('adding guest: '+ body)
+      model.Guest.findOneAndUpdate({'phoneNum': body.From}, upsertTemplate.Guest ('clay976', body.From), {upsert:true}).exec()
+      .then (function (updated){
+        reject ('You have been added succesfully!')
+      })
+    }
     model.Guest.findOne({ 'phoneNum' : body.From }).exec()
     .then (function (guestInfo){
       if (guestInfo){
         guestInfo.lastMessage = (body.Body).toLowerCase()
         fulfill (guestInfo) 
       }else{
-        if (body.Body.toLowerCase() === 'add me please'){
-          console.log ('adding guest: '+ body)
-          model.Guest.findOneAndUpdate({'phoneNum': body.From}, upsertTemplate.Guest ('clay976', body.From), {upsert:true}).exec()
-          .then (function (updated){
-            reject ('You have been added succesfully!')
-          })
-        }else{
-          reject (addResponse.notGuest)
-        }
+        reject (addResponse.notGuest)
       }
     })
     .catch (function (err){
