@@ -205,17 +205,16 @@ ________________________________________________________________________________
     var refresh_token
     model.Host.findOne({ 'hostID' : 'clay976' }).exec()
     .then (function (hostInfo){
-      console.log (hostInfo)
-      spotifyAccountTools.spotifyApi.setAccessToken(hostInfo.access_token)
       spotifyAccountTools.spotifyApi.setRefreshToken(hostInfo.refresh_token)
       spotifyApi.refreshAccessToken()
       .then(function(data) {
         tokenExpirationEpoch = (new Date().getTime() / 1000) + data.body['expires_in'];
         console.log('Refreshed token. It now expires in ' + Math.floor(tokenExpirationEpoch - new Date().getTime() / 1000) + ' seconds!');
         model.Host.findOneAndUpdate({'hostID': 'clay976'}, upsertTemplate.Host ('clay976', data.body['access_token'], hostInfo.refresh_token, hostInfo.homePage)).exec()
+        spotifyAccountTools.spotifyApi.setAccessToken(data.body['access_token'])
       }, function(err) {
         console.log('Could not refresh the token!', err.message);
       });
     })
-  }, 6000)//000)
+  }, 3540000)//000)
 })

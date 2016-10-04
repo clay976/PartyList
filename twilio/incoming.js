@@ -25,6 +25,7 @@ function HandleIncomingMessage (req, res, db){
     return guestTools.updateGuestAndTrackIfNeeded (responseObject)
   })
   .then (function (responseObject){
+    console.log (responseObject)
     resp.message (responseObject.response)
     res.end(resp.toString());
   })
