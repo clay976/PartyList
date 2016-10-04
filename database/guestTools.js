@@ -45,7 +45,16 @@ function validateGuest (body){
       if (guestInfo){
         guestInfo.lastMessage = (body.Body).toLowerCase()
         fulfill (guestInfo) 
-      }else reject (addResponse.notGuest)
+      }else{
+        if (messageBody === 'add me please'){
+          model.Guest.findOneAndUpdate({'phoneNum': body.From}, upsertTemplate.Guest ('clay976', body.From), {upsert:true}).exec()
+          .then (function (updated){
+            reject ('added succesfully')
+          })
+        }else{
+          reject (addResponse.notGuest)
+        }
+      }
     })
     .catch (function (err){
       reject ('validating guest failed: ' +err)

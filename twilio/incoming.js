@@ -30,7 +30,7 @@ function HandleIncomingMessage (req, res, db){
   })
   .catch (function (err){
     console.log (err)
-    resp.message ('error handling incoming message: '+ err)
+    resp.message (err)
     res.end(resp.toString());
   })
 }
@@ -39,7 +39,7 @@ function buildResponseObject (guestInfo){
   return new Promise (function (fulfill, reject){
     guestReqObject = guestObject.guest (guestInfo)
     var messageBody = guestReqObject.guest.lastMessage
-    if ((messageBody === 'yes' || messageBody === 'no') && (guestInfo.currentTrack.trackID === '')){
+    if ((messageBody === 'yes') && (guestInfo.currentTrack.trackID === '')){
       reject (addResponse.emptyConfirmation)
     }/*else if (messageBody === 'yes' && guestInfo.numRequests < 1){
       model.Track.findOne({ 'trackID' : guestInfo.currentTrack.trackID}).exec()
@@ -108,10 +108,6 @@ function buildResponseObject (guestInfo){
         guestReqObject.guestUpdate    = guestObject.clearGuestSong (-1)
         fulfill (guestReqObject)
       })
-    }else if (messageBody === 'no'){
-      guestReqObject.guestUpdate      = guestObject.clearGuestSong (0)
-      guestReqObject.response         = addResponse.declineRequest
-      fulfill (guestReqObject)
     }else{
       guestReqObject.searchSpotify    = true
       fulfill (guestReqObject)

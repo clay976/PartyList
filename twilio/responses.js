@@ -2,7 +2,7 @@
 var model = require ('../database/models')
 
 //my modules
-var notGuest = ('sorry, we could not find a party that you are currently a guest of. Send the host\'s phone number in the format "1234567890" and we will ask them to add you');
+var notGuest = ('sorry, we could not find a party that you are currently a guest of. Send the host\'s phone number in the format "1234567890" and we will ask them to add you. \n\n if you are trying to joing HOCO playlist send back "add me please"');
 
 var emptyConfirmation = ('We don\'t have a request for you to confirm or decline. If your song is just "yes", or "no", add an artist name to search')
 
