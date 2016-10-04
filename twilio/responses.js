@@ -10,11 +10,10 @@ var declineRequest = ('Sorry about the wrong song, try modifying your search! Re
 
 var songNotFound = ('Sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
 
-function trackFoundOnSpotify (trackID, title, artist, prevRequests){
+function trackFoundOnSpotify (trackID, title, artist, prevReqs){
   return new Promise (function (fulfill, reject){
-    var prevRequests = checkForPreviousRequests (trackID, prevRequests)
-    prevRequests
-    .then (model.Track.findOne({ 'trackID' : trackID}).exec())
+    var prevRequests = checkForPreviousRequests (trackID, prevReqs)
+    model.Track.findOne({ 'trackID' : trackID}).exec()
     .then (function (trackFound){
       if (trackFound && trackFound.addedPaylist){
         reject ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +(trackFound.numRequests + 1)+ ' request(s) and has already been added to the playlist.')
@@ -33,6 +32,7 @@ function trackFoundOnSpotify (trackID, title, artist, prevRequests){
 }
 
 function checkForPreviousRequests (trackID, prevRequests){
+  console.log (prevRequests)
   return new Promise (function (fulfill, reject){
     for (var i = 0; i < prevRequests.length; i++){
       if (trackID === prevRequests[i]){
