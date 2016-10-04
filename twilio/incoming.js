@@ -77,7 +77,7 @@ function buildResponseObject (guestInfo){
             model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
             .then (function (hostInfo){
               console.log (hostInfo)
-              spotifyApi.setAccessToken(hostInfo.access_token)
+              hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
               hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, guestInfo.currentTrack.trackID)
               .then (function (added){
                 console.log ('adding')
