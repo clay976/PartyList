@@ -92,16 +92,17 @@ function buildResponseObject (guestInfo){
             .catch (function (err){
               console.log (err)
             }) 
-            guestReqObject.trackUpdate= {$set: { addedPaylist: true}}
+            guestReqObject.trackUpdate= {$set: { addedPaylist: true}, $inc: { foundAmount: 1}}
             guestReqObject.response   = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
             return (guestReqObject)
           }else{
-            guestReqObject.trackUpdate= {$inc: { numRequests: 1}}
+            guestReqObject.guestUpdate= {$push : {prevRequests : guestInfo.currentTrack.trackID}}
+            guestReqObject.trackUpdate= {$inc: { numRequests: 1, foundAmount: 1}}
             guestReqObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
             return (guestReqObject)
           }
         }else {
-          guestReqObject.trackUpdate  = {$inc: { numRequests: 1}}
+          guestReqObject.trackUpdate  = {$inc: { numRequests: 1, foundAmount: 1}}
           guestReqObject.response     = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, 0)
           return (guestReqObject)
         }
@@ -123,7 +124,7 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
     .then (function (tracksFound){
       if (tracksFound.body.tracks.total != 0){
         var track                     = tracksFound.body.tracks.items[0]
-        var resp                      = addResponse.trackFoundOnSpotify (track.id, track.name, track.artists[0].name)
+        var resp                      = addResponse.trackFoundOnSpotify (track.id, track.name, track.artists[0].name, guestReqObject.guest.prevRequests)
         resp
         .then (function (resp){
           guestReqObject.response     = resp

@@ -53,7 +53,7 @@ function validateGuest (body){
           console.log ('adding guest: '+ body)
           model.Guest.findOneAndUpdate({'phoneNum': body.From}, upsertTemplate.Guest ('clay976', body.From), {upsert:true}).exec()
           .then (function (updated){
-            reject ('You have been added succesfully!')
+            reject ('You have been added succesfully!\n\n Songs can be searched by sending a text like this "Drake One Dance". Confirm your request after it is found. Songs with 2 requests will be added to the playlist.')
           })
         }else{
           reject (addResponse.notGuest)

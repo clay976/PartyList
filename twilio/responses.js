@@ -10,21 +10,36 @@ var declineRequest = ('Sorry about the wrong song, try modifying your search! Re
 
 var songNotFound = ('Sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
 
-function trackFoundOnSpotify (trackID, title, artist){
+function trackFoundOnSpotify (trackID, title, artist, prevRequests){
   return new Promise (function (fulfill, reject){
-    model.Track.findOne({ 'trackID' : trackID}).exec()
+    var prevRequests = checkForPreviousRequests (trackID, prevRequests)
+    prevRequests
+    .then (model.Track.findOne({ 'trackID' : trackID}).exec())
     .then (function (trackFound){
       if (trackFound && trackFound.addedPaylist){
-        reject ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +(trackFound.numRequests + 1)+ ' request(s) and has already been added to the playlist')
+        reject ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +(trackFound.numRequests + 1)+ ' request(s) and has already been added to the playlist.')
+      }else if (trackFound && prevRequests) {
+        reject ('We found: ' +title+ ', by: ' +artist+ '. You have already requested this Track. Ask someone else to request it and get it on the playlist!!')
       }else if (trackFound){
-        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request')
+        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
       }else{
-        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has 0 requests! \n\n Send back "yes" to confirm or search another song to discard this request')
+        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has 0 requests! \n\n Send back "yes" to confirm or search another song to discard this request.')
       }
     })
     .catch (function (err){
-      reject ('database '+err)
+      reject (err)
     })
+  })
+}
+
+function checkForPreviousRequests (trackID, prevRequests){
+  return new Promise (function (fulfill, reject){
+    for (var i = 0; i < prevRequests.length(); i++){
+      if (trackID === prevRequests[i]){
+        fulfill (true)
+      }
+    }
+    fulfill (false)
   })
 }
 
