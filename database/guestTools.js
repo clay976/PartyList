@@ -39,7 +39,7 @@ function validateRequest (req){
 }
 
 function validateGuest (body){
-  consol.log ('incoming request')
+  console.log ('incoming request')
   console.log (body)
   return new Promise (function (fulfill, reject){
     model.Guest.findOne({ 'phoneNum' : body.From }).exec()
