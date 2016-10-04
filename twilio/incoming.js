@@ -31,8 +31,11 @@ function HandleIncomingMessage (req, res, db){
   })
   .then (function (responseObject){
     console.log ('4')
-    resp.Message = responseObject.response
     res.writeHead(200, {'Content-Type': 'text/xml'});
+    resp.message = responseObject.response
+    console.log (res)
+    console.log ('4')
+    console.log (resp.toString())
     res.end(resp.toString());
   })
   .catch (function (err){
