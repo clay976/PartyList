@@ -10,7 +10,7 @@ var spotifyPlaylistTools = require ('./spotify/playlist/tools')
 var spotifyAccountTemplate = require ('./spotify/account/JSONtemps')
 
 var twilioIncoming = require ('./twilio/incoming')
-
+var upsertTemplate = require ('./database/upsert/JSONtemps')
 //app declaration and uses
 var app = express()
 app.use(bodyParser.json()) // for parsing application/json
@@ -198,21 +198,21 @@ ________________________________________________________________________________
     twilioIncoming.HandleIncomingMessage (req, res, db)
   })
   app.listen(80)
-  /*
+  
   setInterval(function refreshToken () {
+    var tokenExpirationEpoch
     var refresh_token
-    //find host
-    //obtain access from refresh
-    //update access token
-    request.post(makeJSON.acessFromRefresh(refresh_token), function (error, response, body) {
-      refresh_token = docum.refresh_token
-      request.post(makeJSON.acessFromRefresh(refresh_token), function (error, response, body) {
-        if (!error && response.statusCode === 200) {
-          update.updater (host, query.findHost (host), update.accessToken (body.access_token),db, function (error){
-            console.log ('updated the access token')
-          })
-        }
-      })
+    model.Host.findOne({ 'hostID' : host }).exec()
+    .then (function (hostInfo){
+      spotifyAccountTools.spotifyApi.setAccessToken(hostInfo.access_token)
+      spotifyApi.refreshAccessToken()
+      .then(function(data) {
+        tokenExpirationEpoch = (new Date().getTime() / 1000) + data.body['expires_in'];
+        console.log('Refreshed token. It now expires in ' + Math.floor(tokenExpirationEpoch - new Date().getTime() / 1000) + ' seconds!');
+        model.Host.findOneAndUpdate({'hostID': 'clay976'}, upsertTemplate.Host ('clay976', data.body['access_token'], hostInfo.refresh_token, hostInfo.homePage)).exec()
+      }, function(err) {
+        console.log('Could not refresh the token!', err.message);
+      });
     })
-  }, 3540000)*/
+  }, 3540)//000)
 })
