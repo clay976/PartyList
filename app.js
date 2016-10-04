@@ -212,9 +212,10 @@ ________________________________________________________________________________
         console.log('Refreshed token. It now expires in ' + Math.floor(tokenExpirationEpoch - new Date().getTime() / 1000) + ' seconds!');
         model.Host.findOneAndUpdate({'hostID': 'clay976'}, upsertTemplate.Host ('clay976', data.body['access_token'], hostInfo.refresh_token, hostInfo.homePage)).exec()
         spotifyAccountTools.spotifyApi.setAccessToken(data.body['access_token'])
-      }, function(err) {
-        console.log('Could not refresh the token!', err.message);
-      });
+      })
+      .catch (function (){
+        console.log ('error getting token: '+ err)
+      })
     })
-  }, 3540000)//000)
+  }, 3540)//000)
 })
