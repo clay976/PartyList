@@ -79,7 +79,7 @@ function buildResponseObject (guestInfo){
             .then (function (hostInfo){
               console.log (hostInfo)
               hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
-              hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, trackFound.trackID)
+              hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+trackFound.trackID)
               .then (function (added){
                 console.log ('adding')
                 console.log (added)
