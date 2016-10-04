@@ -8,7 +8,7 @@ var emptyConfirmation = ('We don\'t have a request for you to confirm or decline
 
 var declineRequest = ('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.')
 
-var songNotFound = ('Sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
+var songNotFound = ('Sorry, that song could not be found, use as many key words as possible, make sure to not use any special characters either!')
 
 function trackFoundOnSpotify (trackID, title, artist){
   return new Promise (function (fulfill, reject){
