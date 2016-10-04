@@ -83,7 +83,13 @@ function buildResponseObject (guestInfo){
                 console.log ('adding')
                 console.log (added)
               })  
+              .catch (function (err){
+                console.log (err)
+              }) 
             })
+            .catch (function (err){
+              console.log (err)
+            }) 
             guestReqObject.trackUpdate= {$set: { numRequests: 0}}
             guestReqObject.response   = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
             return (guestReqObject)
