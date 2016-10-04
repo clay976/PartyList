@@ -30,7 +30,6 @@ function createPlaylist (req, res, db){
     return hostAcountTools.spotifyApi.getUserPlaylists(hostInfo.hostID)
   })
   .then (function(data){
-    console.log (data.body.items)
     return playlistTemplate.userPlaylists (req.body.host, data.body.items, data.body.total)
   })
   .then (function (playlistInfo){

@@ -198,7 +198,7 @@ ________________________________________________________________________________
     twilioIncoming.HandleIncomingMessage (req, res, db)
   })
   app.listen(80)
-
+  /*
   setInterval(function refreshToken () {
     var refresh_token
     //find host
@@ -214,5 +214,5 @@ ________________________________________________________________________________
         }
       })
     })
-  }, 3540000)
+  }, 3540000)*/
 })
