@@ -73,12 +73,12 @@ function buildResponseObject (guestInfo){
       model.Track.findOne({ 'trackID' : guestInfo.currentTrack.trackID}).exec()
       .then (function (trackFound){
         if (trackFound){
-          if (trackFound.numRequests === 2){
+          if (trackFound.numRequests === 1){
             model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
             .then (function (hostInfo){
               console.log (hostInfo)
               hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
-              hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, guestInfo.currentTrack.trackID)
+              hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, trackFound.trackID)
               .then (function (added){
                 console.log ('adding')
                 console.log (added)
