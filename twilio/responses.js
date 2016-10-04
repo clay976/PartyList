@@ -2,22 +2,22 @@
 var model = require ('../database/models')
 
 //my modules
-var notGuest = ('Sorry, we could not find a party that you are currently a guest of. Send the host\'s phone number in the format "1234567890" and we will ask them to add you. \n\n if you are trying to join the HOCO playlist send back "add me please"');
+var notGuest = ('Sorry, we could not find a party that you are currently a guest of. Send the host\'s phone number in the format "1234567890" and we will ask them to add you. \n\nIf you are trying to join the HOCO playlist send back "add me please"');
 
 var emptyConfirmation = ('We don\'t have a request for you to confirm or decline. If your song is just "yes", or "no", add an artist name to search')
 
 var declineRequest = ('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.')
 
-var songNotFound = ('Sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
+var songNotFound = ('Sorry, that song could not be found, use as many key words as possible, make sure to not use any special characters either!')
 
 function trackFoundOnSpotify (trackID, title, artist){
   return new Promise (function (fulfill, reject){
     model.Track.findOne({ 'trackID' : trackID}).exec()
     .then (function (trackFound){
       if (trackFound){
-        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' requests! \n\n Send back "yes" to confirm or search another song to discard this request')
+        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' requests! \n\nSend back "yes" to confirm or search another song to discard this request')
       }else{
-        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has 0 requests! \n\n Send back "yes" to confirm or search another song to discard this request')
+        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has 0 requests! \n\nSend back "yes" to confirm or search another song to discard this request')
       }
     })
     .catch (function (err){
