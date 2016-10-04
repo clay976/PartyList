@@ -39,6 +39,8 @@ function validateRequest (req){
 }
 
 function validateGuest (body){
+  consol.log ('incoming request')
+  console.log (body)
   return new Promise (function (fulfill, reject){
     model.Guest.findOne({ 'phoneNum' : body.From }).exec()
     .then (function (guestInfo){
@@ -47,9 +49,10 @@ function validateGuest (body){
         fulfill (guestInfo) 
       }else{
         if (body.Body.toLowerCase() === 'add me please'){
+          console.log ('adding guest: '+ body)
           model.Guest.findOneAndUpdate({'phoneNum': body.From}, upsertTemplate.Guest ('clay976', body.From), {upsert:true}).exec()
           .then (function (updated){
-            reject ('added succesfully')
+            reject ('You have been added succesfully!')
           })
         }else{
           reject (addResponse.notGuest)
