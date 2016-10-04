@@ -33,7 +33,7 @@ function HandleIncomingMessage (req, res, db){
     console.log ('4')
     res.writeHead(200, {'Content-Type': 'text/xml'});
     console.log (responseObject.response)
-    resp.message = responseObject.response
+    resp.message (responseObject.response)
     console.log ('5')
     console.log (resp)
     console.log ('6')
