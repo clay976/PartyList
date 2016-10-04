@@ -25,7 +25,8 @@ function HandleIncomingMessage (req, res, db){
     return guestTools.updateGuestAndTrackIfNeeded (responseObject)
   })
   .then (function (responseObject){
-    console.log (responseObject)
+    console.log ('sending to guest')
+    console.log (responseObject.response)
     resp.message (responseObject.response)
     res.end(resp.toString());
   })
@@ -75,14 +76,13 @@ function buildResponseObject (guestInfo){
       model.Track.findOne({ 'trackID' : guestInfo.currentTrack.trackID}).exec()
       .then (function (trackFound){
         if (trackFound){
-          if (trackFound.numRequests === 4){
+          if (trackFound.numRequests === 2){
             model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
             .then (function (hostInfo){
-              console.log (hostInfo)
               hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
               hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+trackFound.trackID)
               .then (function (added){
-                console.log ('adding')
+                console.log ('adding song to playlist')
                 console.log (added)
               })  
               .catch (function (err){
