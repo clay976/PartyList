@@ -10,15 +10,14 @@ function guest (databaseObject){
 	})
 }
 function clearGuestSong (num, trackID){
-return 	{
-	$inc						: {numRequests			: num}, 
-	$set						: { 
-		currentTrack 	: {
-	  	trackID 		: '', 
-	  	name    		: '', 
-	  	artist  		: ''}},
-	$push						: {
-		prevRequests	: trackID
+	return 	{
+		$inc						: {numRequests	: num}, 
+		$set						: { 
+			currentTrack 	: {
+		  	trackID 		: '', 
+		  	name    		: '', 
+		  	artist  		: ''}},
+		$push						: {prevRequests	: trackID}
 	}
 }
 
