@@ -12,38 +12,24 @@ var upsertTemplate = require ('../database/upsert/JSONtemps')
 
 function HandleIncomingMessage (req, res, db){
   var resp = new twilio.TwimlResponse();
+  res.writeHead(200, {'Content-Type': 'text/xml'});
   guestTools.validateGuest (req.body)
   .then (function (guestInfo){
-    console.log ('1')
-    console.log (guestInfo)
     return buildResponseObject (guestInfo)
   })
   .then (function (responseObject){
-    console.log ('2')
-    console.log (responseObject)
     if (responseObject.searchSpotify) return addSpotifySearchResultsIfNeeded (responseObject)
     else return responseObject
   })
   .then (function (responseObject){
-    console.log ('3')
-    console.log (responseObject)
     return guestTools.updateGuestAndTrackIfNeeded (responseObject)
   })
   .then (function (responseObject){
-    console.log ('4')
-    res.writeHead(200, {'Content-Type': 'text/xml'});
-    console.log (responseObject.response)
     resp.message (responseObject.response)
-    console.log ('5')
-    console.log (resp)
-    console.log ('6')
-    console.log (resp.toString())
     res.end(resp.toString());
   })
   .catch (function (err){
-    console.log ('err')
-    console.log (err)
-    res.send ('error handling incoming message: '+ err)
+    res.end('error handling incoming message: '+ err);
   })
 }
 
@@ -54,11 +40,21 @@ function buildResponseObject (guestInfo){
     if ((messageBody === 'yes' || messageBody === 'no') && (guestInfo.currentTrack.trackID === '')){
       reject (addResponse.emptyConfirmation)
     }else if (messageBody === 'yes' && guestInfo.numRequests < 1){
-      model.Track.findOne({ 'trackID' : guestInfo.currentTrack.id}).exec()
+      model.Track.findOne({ 'trackID' : guestInfo.currentTrack.trackID}).exec()
       .then (function (trackFound){
         if (trackFound){
-          guestReqObject.response     = addResponse.songConfirmedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
-          return (guestReqObject)
+          if (trackFound.numRequests === 6){
+            model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
+            .then (function (hostInfo){
+              hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistId, guestInfo.currentTrack.trackID)  
+            })
+            guestReqObject.trackUpdate= {$set: { numRequests: 0}}
+            guestReqObject.response     = addResponse.songConfirmedAndAddedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
+            return (guestReqObject)
+          }else{
+            guestReqObject.response   = addResponse.songConfirmedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
+            return (guestReqObject)
+          }
         }else {
           guestReqObject.response     = addResponse.songConfirmedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, 0)
           return (guestReqObject)
@@ -70,11 +66,21 @@ function buildResponseObject (guestInfo){
         fulfill (guestReqObject)
       })
     }else if (messageBody === 'yes'){
-      model.Track.findOne({ 'trackID' : guestInfo.currentTrack.id}).exec()
+      model.Track.findOne({ 'trackID' : guestInfo.currentTrack.trackID}).exec()
       .then (function (trackFound){
         if (trackFound){
-          guestReqObject.response     = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
-          return (guestReqObject)
+          if (trackFound.numRequests === 6){
+            model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
+            .then (function (hostInfo){
+              hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistId, guestInfo.currentTrack.trackID)  
+            })
+            guestReqObject.trackUpdate= {$set: { numRequests: 0}}
+            guestReqObject.response   = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
+            return (guestReqObject)
+          }else{
+            guestReqObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
+            return (guestReqObject)
+          }
         }else {
           guestReqObject.response     = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, 0)
           return (guestReqObject)
@@ -127,18 +133,6 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
     })
     .catch (function (err){
       reject ('error searching spotify for track: ' +err)
-    })
-  })
-}
-
-function addSongToPlaylist (host, trackID, toNum, db){
-  search.search (host, query.findHost (host), db, function (found){
-    hostAcountTools.spotifyApi.addTracksToPlaylist (userId, playlistId, tracks)
-    .then (function (){
-      return ('your song has been added to the playlist')
-    })
-    .catch (function (err){
-      return ('there was an error adding ' +trackTitle+ ' to the playlist')
     })
   })
 }

@@ -30,10 +30,11 @@ function createPlaylist (req, res, db){
     return hostAcountTools.spotifyApi.getUserPlaylists(hostInfo.hostID)
   })
   .then (function(data){
+    console.log (data.body.items)
     return playlistTemplate.userPlaylists (req.body.host, data.body.items, data.body.total)
   })
   .then (function (playlistInfo){
-    return model.Host.findOneAndUpdate({ 'hostID' : playlistInfo.playlists[0].owner }, { $set: {'playlistID' : playlistInfo.playlists[0].id, 'playlistName' : playlistInfo.playlists[0].name}}).exec()
+    return model.Host.findOneAndUpdate({ 'hostID' : playlistInfo.playlists[0].owner.id }, { $set: {'playlistID' : playlistInfo.playlists[0].id, 'playlistName' : playlistInfo.playlists[0].name}}).exec()
   })
   .then (function (update){
     res.status(200).json ('playlist successfully set to latest playlist')

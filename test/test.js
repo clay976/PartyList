@@ -16,7 +16,7 @@ https://accounts.spotify.com/authorize?response_type=code&client_id=a000adffbd26
 
 place the code in this next variable
 */
-var code = 'AQDrmYpSyBGOzZAo0ECfNfIHSm-zK3O-Gkb1P0HuxmlIRjADFTihsRpGlkbRx2P5-zI-iHNzB6C8zOxzX3dwA_Fc7yZHNJr3EUwyC81FdK4D0jVW6SEuMi6j1WUBgSZnFHjJgV-igNDi-GBMiHdMGRMMxxoL-8rAtWnOWA_LpLJETfaIysDoyd8e0dREVA_ZfuyMyI7dRdZV_EFixtEXEoe_3J2sVD_FhStCNNbBq11yPZJPdVCZkNz8_-fO7Djr7jMsnA7MfBgoKhkFoiTtMhWlRIvcw2R2vEsQy_GoKAi5VEixQ0Rs77UXa3b4nzSF_Er0zHjGALy41gSX5mWZUlujx4t6sygkXCtlslqSAZNVUvSHqsKBPqInFfrJfwb4CjuN'
+var code = 'AQDQSonwFU8ItTfa14ipHJLxuV01hQ8x35xo4Vwsz3MMqOkBGONe1cy3EO2BI7f0QAljaXAecRDIIl-RgHdtwUYYS1CqCJo_Nc4GBCrIaxUxXEazWStzHD0f_luT_cFEEDwCJ1u0mSbK-jlUOT6TKzX-XN27HiWYGB6QvTIwIqKTir1wOD6qdWeSxurwofDe8okhiIpQGqNi3Q-45Tz23ZX1br8HTH5iSyCU_pTplPm7gOcaaT-8gK83vMxCyBT42244pGNRdU-gGEPa6oz3SFdW3bQBKTjQ_iHpkj6jdQnORj345y7yXHBDxQtuANqxRdUuxKwdZcTG-6I8XYYIVsPM77JBJg357zrKP05WmFEIWWeMftl4FpP-LRoeU7XJoYVv'
 
 //start tests
 describe('GET /login', function(){
@@ -365,7 +365,7 @@ describe('POST /message', function(){
       if (err) {
         throw err;
       }
-      res.text.should.equal('We found: Fireworks, by: Drake. This Track has 0 requests!')
+      res.text.should.equal('<?xml version="1.0" encoding="UTF-8"?><Response><Message>We found: Fireworks, by: Drake. This Track has 0 requests!</Message></Response>')
       console.log (res.text)
       done();
     });
@@ -382,7 +382,7 @@ describe('POST /message', function(){
       if (err) {
         throw err;
       }
-      res.text.should.equal('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.')
+      res.text.should.equal('<?xml version="1.0" encoding="UTF-8"?><Response><Message>Sorry about the wrong song, try modifying your search! Remember to not use any special characters.</Message></Response>')
       console.log (res.text)
       done();
     });
@@ -432,8 +432,7 @@ describe('POST /message', function(){
     .end(function(err, res) {
       if (err) {
         throw err;
-      }
-      res.text.should.equal('We found: One Dance, by: Drake. This Track has 0 requests!')
+      }  
       console.log (res.text)
       done();
     });

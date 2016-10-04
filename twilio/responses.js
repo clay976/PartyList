@@ -27,11 +27,19 @@ function trackFoundOnSpotify (trackID, title, artist){
 }
 
 function songConfirmedAndadvertisment (title, artist, numRequests){
-  return ('your song: ' +title+ ', by: ' +artist+ ' now has ' +numRequests+ ' requests and will be added to the playlist! You are also recieving an advertisment because you have made 5 successful request')
+  return ('your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' requests! You are also recieving an advertisment because you have made 5 successful request')
 }
 
 function songConfirmed (title, artist, numRequests){
-  return ('your song: ' +title+ ', by: ' +artist+ ' now has ' +numRequests+ ' requests and will be added to the playlist!')
+  return ('your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' requests!')
+}
+
+function songConfirmedAndAdded (title, artist, numRequests){
+  return ('your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' requests and will be added to the playlist!')
+}
+
+function songConfirmedAndAddedAndadvertisment (title, artist, numRequests){
+  return ('your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' requests and will be added to the playlist!')
 }
 
 module.exports = {
@@ -41,5 +49,7 @@ module.exports = {
   declineRequest: declineRequest,
   songNotFound: songNotFound,
   songConfirmedAndadvertisment: songConfirmedAndadvertisment,
-  songConfirmed: songConfirmed
+  songConfirmed: songConfirmed,
+  songConfirmedAndAdded: songConfirmedAndAdded,
+  songConfirmedAndAddedAndadvertisment: songConfirmedAndAddedAndadvertisment
 }
