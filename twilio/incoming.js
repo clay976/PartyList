@@ -95,6 +95,7 @@ function buildResponseObject (guestInfo){
             guestReqObject.response   = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
             return (guestReqObject)
           }else{
+            guestReqObject.trackUpdate    = {$inc: { numRequests: 1}}
             guestReqObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
             return (guestReqObject)
           }
@@ -104,7 +105,6 @@ function buildResponseObject (guestInfo){
         }
       })
       .then (function (guestReqObject){
-        guestReqObject.trackUpdate    = {$inc: { numRequests: 1}}
         guestReqObject.guestUpdate    = guestObject.clearGuestSong (-1)
         fulfill (guestReqObject)
       })

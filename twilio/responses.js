@@ -15,7 +15,7 @@ function trackFoundOnSpotify (trackID, title, artist){
     model.Track.findOne({ 'trackID' : trackID}).exec()
     .then (function (trackFound){
       if (trackFound){
-        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' requests!')
+        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' requests! \n\n Send back "yes" to confirm or search another song to discard this request')
       }else{
         fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has 0 requests!')
       }
