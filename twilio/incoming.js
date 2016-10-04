@@ -30,7 +30,8 @@ function HandleIncomingMessage (req, res, db){
     res.end(resp.toString());
   })
   .catch (function (err){
-    res.end('error handling incoming message: '+ err);
+    resp.message ('error handling incoming message: '+ err)
+    res.end(resp.toString());
   })
 }
 
