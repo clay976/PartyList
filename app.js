@@ -203,7 +203,7 @@ ________________________________________________________________________________
   setInterval(function refreshToken () {
     var tokenExpirationEpoch
     var refresh_token
-    model.Host.findOne({ 'hostID' : host }).exec()
+    model.Host.findOne({ 'hostID' : 'clay976' }).exec()
     .then (function (hostInfo){
       spotifyAccountTools.spotifyApi.setAccessToken(hostInfo.access_token)
       spotifyApi.refreshAccessToken()
