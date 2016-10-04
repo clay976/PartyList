@@ -132,13 +132,6 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
               artist                  : track.artists[0].name
             }
           }}
-          guestReqObject.trackUpdate  = {$set :{
-            trackID                 : track.id,
-            name                    : track.name,
-            artist                  : track.artists[0].name,
-            numRequests             : 0,
-            timePlayed              : 0 
-          }}
           fulfill (guestReqObject)
         })
       }else{
