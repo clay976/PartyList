@@ -199,14 +199,15 @@ ________________________________________________________________________________
     twilioIncoming.HandleIncomingMessage (req, res, db)
   })
   app.listen(80)
-  
   setInterval(function refreshToken () {
+    console.log ('getting refresh token')
     var tokenExpirationEpoch
     var refresh_token
     model.Host.findOne({ 'hostID' : 'clay976' }).exec()
     .then (function (hostInfo){
+      console.log (hostInfo)
       spotifyAccountTools.spotifyApi.setAccessToken(hostInfo.access_token)
-      spotifyAccountTools.spotifyApi.setAccessToken(hostInfo.refresh_token)
+      spotifyAccountTools.spotifyApi.setRefreshToken(hostInfo.refresh_token)
       spotifyApi.refreshAccessToken()
       .then(function(data) {
         tokenExpirationEpoch = (new Date().getTime() / 1000) + data.body['expires_in'];
@@ -215,6 +216,9 @@ ________________________________________________________________________________
       }, function(err) {
         console.log('Could not refresh the token!', err.message);
       });
+      .catch (function (err){
+        console.log (err)
+      })
     })
   }, 3540)//000)
 })
