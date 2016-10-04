@@ -12,18 +12,20 @@ var songNotFound = ('Sorry, that song could be found, use as many key words as p
 
 function trackFoundOnSpotify (trackID, title, artist, prevReqs){
   return new Promise (function (fulfill, reject){
-    var prevRequests = checkForPreviousRequests (trackID, prevReqs)
     model.Track.findOne({ 'trackID' : trackID}).exec()
     .then (function (trackFound){
-      if (trackFound && trackFound.addedPaylist){
-        reject ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +(trackFound.numRequests + 1)+ ' request(s) and has already been added to the playlist.')
-      }else if (trackFound && prevRequests) {
-        reject ('We found: ' +title+ ', by: ' +artist+ '. You have already requested this Track. Ask someone else to request it and get it on the playlist!!')
-      }else if (trackFound){
-        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
-      }else{
-        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has 0 requests! \n\n Send back "yes" to confirm or search another song to discard this request.')
-      }
+      checkForPreviousRequests (trackID, prevReqs)
+      .then (function (prevRequests){
+        if (trackFound && trackFound.addedPaylist){
+          reject ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +(trackFound.numRequests + 1)+ ' request(s) and has already been added to the playlist.')
+        }else if (trackFound && prevRequests) {
+          reject ('We found: ' +title+ ', by: ' +artist+ '. You have already requested this Track. Ask someone else to request it and get it on the playlist!!')
+        }else if (trackFound){
+          fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
+        }else{
+          fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has 0 requests! \n\n Send back "yes" to confirm or search another song to discard this request.')
+        }
+      })
     })
     .catch (function (err){
       reject (err)

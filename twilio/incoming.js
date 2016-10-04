@@ -96,7 +96,7 @@ function buildResponseObject (guestInfo){
             guestReqObject.response   = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
             return (guestReqObject)
           }else{
-            guestReqObject.guestUpdate= {$push : {prevRequests : guestInfo.currentTrack.trackID}}
+            guestReqObject.guestUpdate= {$push: {prevRequests : guestInfo.currentTrack.trackID}}
             guestReqObject.trackUpdate= {$inc: { numRequests: 1, foundAmount: 1}}
             guestReqObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
             return (guestReqObject)
