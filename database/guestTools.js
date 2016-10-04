@@ -41,27 +41,28 @@ function validateRequest (req){
 function validateGuest (body){
   console.log ('incoming request')
   console.log (body)
+  var message = (body.Body).toLowerCase().trim()
   return new Promise (function (fulfill, reject){
-    if (body.Body.toLowerCase() === 'add me please'){
-      console.log ('adding guest: '+ body)
-      model.Guest.findOneAndUpdate({'phoneNum': body.From}, upsertTemplate.Guest ('clay976', body.From), {upsert:true}).exec()
-      .then (function (updated){
-        reject ('You have been added succesfully!')
-      })
-    }else{
-      model.Guest.findOne({ 'phoneNum' : body.From }).exec()
-      .then (function (guestInfo){
-        if (guestInfo){
-          guestInfo.lastMessage = (body.Body).toLowerCase()
-          fulfill (guestInfo) 
+    model.Guest.findOne({ 'phoneNum' : body.From }).exec()
+    .then (function (guestInfo){
+      if (guestInfo){
+        guestInfo.lastMessage = message
+        fulfill (guestInfo) 
+      }else{
+        if (message === 'add me please'){
+          console.log ('adding guest: '+ body)
+          model.Guest.findOneAndUpdate({'phoneNum': body.From}, upsertTemplate.Guest ('clay976', body.From), {upsert:true}).exec()
+          .then (function (updated){
+            reject ('You have been added succesfully!')
+          })
         }else{
           reject (addResponse.notGuest)
         }
-      })
-      .catch (function (err){
-        reject ('validating guest failed: ' +err)
-      })
-    }
+      }
+    })
+    .catch (function (err){
+      reject ('validating guest failed: ' +err)
+    })
   })
 }
 
