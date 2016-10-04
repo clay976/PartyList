@@ -48,19 +48,20 @@ function validateGuest (body){
       .then (function (updated){
         reject ('You have been added succesfully!')
       })
+    }else{
+      model.Guest.findOne({ 'phoneNum' : body.From }).exec()
+      .then (function (guestInfo){
+        if (guestInfo){
+          guestInfo.lastMessage = (body.Body).toLowerCase()
+          fulfill (guestInfo) 
+        }else{
+          reject (addResponse.notGuest)
+        }
+      })
+      .catch (function (err){
+        reject ('validating guest failed: ' +err)
+      })
     }
-    model.Guest.findOne({ 'phoneNum' : body.From }).exec()
-    .then (function (guestInfo){
-      if (guestInfo){
-        guestInfo.lastMessage = (body.Body).toLowerCase()
-        fulfill (guestInfo) 
-      }else{
-        reject (addResponse.notGuest)
-      }
-    })
-    .catch (function (err){
-      reject ('validating guest failed: ' +err)
-    })
   })
 }
 
