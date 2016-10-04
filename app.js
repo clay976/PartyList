@@ -206,6 +206,7 @@ ________________________________________________________________________________
     model.Host.findOne({ 'hostID' : 'clay976' }).exec()
     .then (function (hostInfo){
       spotifyAccountTools.spotifyApi.setAccessToken(hostInfo.access_token)
+      spotifyAccountTools.spotifyApi.setAccessToken(hostInfo.refresh_token)
       spotifyApi.refreshAccessToken()
       .then(function(data) {
         tokenExpirationEpoch = (new Date().getTime() / 1000) + data.body['expires_in'];
