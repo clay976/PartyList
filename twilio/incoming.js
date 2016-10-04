@@ -92,7 +92,7 @@ function buildResponseObject (guestInfo){
             .catch (function (err){
               console.log (err)
             }) 
-            guestReqObject.trackUpdate= {$set: { numRequests: 0}}
+            guestReqObject.trackUpdate= {$set: { addedPaylist: true}}
             guestReqObject.response   = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
             return (guestReqObject)
           }else{
@@ -123,7 +123,8 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
       if (tracksFound.body.tracks.total != 0){
         var track                     = tracksFound.body.tracks.items[0]
         var resp                      = addResponse.trackFoundOnSpotify (track.id, track.name, track.artists[0].name)
-        resp.then (function (resp){
+        resp
+        .then (function (resp){
           guestReqObject.response     = resp
           guestReqObject.guestUpdate  = {$set : {
             currentTrack              : {
@@ -133,6 +134,9 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
             }
           }}
           fulfill (guestReqObject)
+        })
+        .catch (function (err){
+          reject (err)  
         })
       }else{
         reject (addResponse.songNotFound)

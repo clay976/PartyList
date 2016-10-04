@@ -14,8 +14,10 @@ function trackFoundOnSpotify (trackID, title, artist){
   return new Promise (function (fulfill, reject){
     model.Track.findOne({ 'trackID' : trackID}).exec()
     .then (function (trackFound){
-      if (trackFound){
-        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' requests! \n\n Send back "yes" to confirm or search another song to discard this request')
+      if (trackFound && trackFound.addedPaylist){
+        reject ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' request(s) and has already been added to the playlist')
+      }else if (trackFound){
+        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request')
       }else{
         fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has 0 requests! \n\n Send back "yes" to confirm or search another song to discard this request')
       }
@@ -27,11 +29,11 @@ function trackFoundOnSpotify (trackID, title, artist){
 }
 
 function songConfirmedAndadvertisment (title, artist, numRequests){
-  return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' requests! You are also recieving an advertisment because you have made 5 successful request')
+  return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' request(s)! You are also recieving an advertisment because you have made 5 successful request')
 }
 
 function songConfirmed (title, artist, numRequests){
-  return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' requests!')
+  return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' request(s)!')
 }
 
 function songConfirmedAndAdded (title, artist, numRequests){

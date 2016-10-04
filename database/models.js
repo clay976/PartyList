@@ -19,7 +19,8 @@ var track = mongoose.Schema({
   name          : String,
   artist        : String,
   numRequests		: { type: Number, default: 0 },
-  timePlayed		: Number 
+  timePlayed		: Number,
+  addedPaylist  : { type: Boolean, defauult: false}
 })
 
 var host = mongoose.Schema({
