@@ -11,15 +11,15 @@ function createPlaylist (req, res, db){
   })
   .then (function (validatedInput){
     return (requestSpotifyPlaylistCreation(validatedInput))
-  })     
+  })
   .then (function(createdPlaylist){
     return model.Host.findOneAndUpdate({ 'hostID' : createdPlaylist.HostID }, { $set: {'playlistID' : createdPlaylist.playlistData.body['id']}}).exec()
   })
   .then (function (updated){
-    res.status(200).json ('playlist was created successfully')
+    res.status(200).json ('Playlist was created successfully')
   })
   .catch (function(err) {
-    res.status(400).json ('error creating playlist: '+ err)
+    res.status(400).json ('Error creating playlist: '+ err)
   })
 }
 
@@ -38,10 +38,10 @@ function createPlaylist (req, res, db){
   })
   .then (function (update){
     console.log (update)
-    res.status(200).json ('playlist successfully set to latest playlist')
+    res.status(200).json ('Playlist successfully set to latest playlist')
   })
   .catch (function (err){
-    res.status(400).json('error setting latest playlist: '+ err)
+    res.status(400).json('Error setting latest playlist: '+ err)
   })
 }
 
@@ -58,7 +58,7 @@ function findAllPlaylists (req, res, db){
     return res.status(200).json (playlistInfo)
   })
   .catch (function (err){
-    res.status(400).json ('error retriving user\'s playlists: '+err)
+    res.status(400).json ('Error retriving user\'s playlists: '+err)
   })
 }
 
@@ -75,10 +75,10 @@ function setSpecificPlaylist (req, res, db){
     return (model.Host.findOneAndUpdate({ 'hostID' : validRequest.HostID }, { $set: {'playlistID' : validRequest.playlistID}}).exec())
   })
   .then (function (updated){
-    res.status(200).json ('playlist has been set successfully')
+    res.status(200).json ('Playlist has been set successfully')
   })
   .catch (function(err) {
-    res.status(400).json ('error setting playlist: '+ err)
+    res.status(400).json ('Error setting playlist: '+ err)
   })
 }
 
@@ -92,7 +92,7 @@ function validatePlaylistOwnership (data){
       })
     })
     .catch (function (err){
-      reject ('spotify error: you either do not own that playlist or it does not exist, '+ err)
+      reject ('Spotify error: You either do not own that playlist or it does not exist, '+ err)
     })
   })
 }
@@ -106,7 +106,7 @@ function validatePlaylistInput (hostInfo, playName) {
         'playName' : playName
       })
     }else{
-      reject ('we did not recieve playlist information')
+      reject ('We did not recieve playlist information')
     }
   })
 }
