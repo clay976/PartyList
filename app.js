@@ -12,6 +12,7 @@ var spotifyAccountTemplate = require ('./spotify/account/JSONtemps')
 
 var twilioIncoming = require ('./twilio/incoming')
 var upsertTemplate = require ('./database/upsert/JSONtemps')
+var databaseHostTools = require ('./database/hostTools')
 //app declaration and uses
 var app = express()
 app.use(bodyParser.json()) // for parsing application/json
@@ -205,8 +206,8 @@ ________________________________________________________________________________
     var tokenExpirationEpoch
     model.Host.findOne({ 'hostID' : 'clay976' }).exec()
     .then (function (hostInfo){
-      spotifyAccountTools.spotifyApi.setRefreshToken(hostInfo.refresh_token)
-      spotifyApi.refreshAccessToken()
+      databaseHostTools.spotifyApi.setRefreshToken(hostInfo.refresh_token)
+      databaseHostTools.spotifyApi.refreshAccessToken()
       .then(function(data) {
         cosole.log (data.body)
         model.Host.findOneAndUpdate({'hostID': 'clay976'}, upsertTemplate.Host ('clay976', data.body['access_token'], hostInfo.refresh_token, hostInfo.homePage)).exec()
