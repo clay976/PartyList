@@ -15,7 +15,7 @@ function trackFoundOnSpotify (trackID, title, artist){
     model.Track.findOne({ 'trackID' : trackID}).exec()
     .then (function (trackFound){
       if (trackFound && trackFound.addedPaylist){
-        reject ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' request(s) and has already been added to the playlist')
+        reject ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +(trackFound.numRequests + 1)+ ' request(s) and has already been added to the playlist')
       }else if (trackFound){
         fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request')
       }else{
