@@ -213,7 +213,7 @@ ________________________________________________________________________________
         model.Host.findOneAndUpdate({'hostID': 'clay976'}, upsertTemplate.Host ('clay976', data.body['access_token'], hostInfo.refresh_token, hostInfo.homePage)).exec()
         spotifyAccountTools.spotifyApi.setAccessToken(data.body['access_token'])
       })
-      .catch (function (){
+      .catch (function (err){
         console.log ('error getting token: '+ err)
       })
     })
