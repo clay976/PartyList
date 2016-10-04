@@ -216,9 +216,6 @@ ________________________________________________________________________________
       }, function(err) {
         console.log('Could not refresh the token!', err.message);
       });
-      .catch (function (err){
-        console.log (err)
-      })
     })
   }, 6000)//000)
 })
