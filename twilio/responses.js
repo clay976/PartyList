@@ -17,7 +17,7 @@ function trackFoundOnSpotify (trackID, title, artist){
       if (trackFound){
         fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' requests! \n\n Send back "yes" to confirm or search another song to discard this request')
       }else{
-        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has 0 requests!')
+        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has 0 requests! \n\n Send back "yes" to confirm or search another song to discard this request')
       }
     })
     .catch (function (err){
