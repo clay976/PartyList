@@ -74,7 +74,7 @@ function buildResponseObject (guestInfo){
       model.Track.findOne({ 'trackID' : guestInfo.currentTrack.trackID}).exec()
       .then (function (trackFound){
         if (trackFound){
-          if (trackFound.numRequests === 1){
+          if (trackFound.numRequests === 4){
             model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
             .then (function (hostInfo){
               console.log (hostInfo)
