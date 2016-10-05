@@ -209,6 +209,7 @@ ________________________________________________________________________________
       databaseHostTools.spotifyApi.setRefreshToken(hostInfo.refresh_token)
       databaseHostTools.spotifyApi.refreshAccessToken()
       .then(function(data) {
+        databaseHostTools.spotifyApi.setAccessToken(data.body.access_token)
         model.Host.findOneAndUpdate({'hostID': 'clay976'}, upsertTemplate.Host ('clay976', data.body.access_token, hostInfo.refresh_token, hostInfo.homePage)).exec()
         .then(function(update) {
           console.log (update)
@@ -224,5 +225,5 @@ ________________________________________________________________________________
     .catch (function (err){
       console.log (err)
     })
-  }, 3540*10)//000)
+  }, 3500000)
 })
