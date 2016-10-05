@@ -14,7 +14,6 @@ function trackFoundOnSpotify (trackID, title, artist, prevReqs){
   return new Promise (function (fulfill, reject){
     model.Track.findOne({ 'trackID' : trackID}).exec()
     .then (function (trackFound){
-      console.log (prevReqs)
       checkForPreviousRequests (trackID, prevReqs)
       .then (function (prevRequests){
         if (trackFound && trackFound.addedPaylist){
@@ -35,7 +34,6 @@ function trackFoundOnSpotify (trackID, title, artist, prevReqs){
 }
 
 function checkForPreviousRequests (trackID, prevRequests){
-  console.log (prevRequests)
   return new Promise (function (fulfill, reject){
     for (var i = 0; i < prevRequests.length; i++){
       if (trackID === prevRequests[i]){
