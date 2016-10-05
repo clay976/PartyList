@@ -39,8 +39,6 @@ function validateRequest (req){
 }
 
 function validateGuest (body){
-  console.log ('incoming request')
-  console.log (body)
   var message = (body.Body).toLowerCase().trim()
   return new Promise (function (fulfill, reject){
     model.Guest.findOne({ 'phoneNum' : body.From }).exec()

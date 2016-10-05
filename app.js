@@ -202,7 +202,6 @@ ________________________________________________________________________________
   app.listen(80)
 
   setInterval(function refreshToken () {
-    console.log ('getting refresh token')
     var tokenExpirationEpoch
     model.Host.findOne({ 'hostID' : 'clay976' }).exec()
     .then (function (hostInfo){
@@ -212,7 +211,7 @@ ________________________________________________________________________________
         databaseHostTools.spotifyApi.setAccessToken(data.body.access_token)
         model.Host.findOneAndUpdate({'hostID': 'clay976'}, upsertTemplate.Host ('clay976', data.body.access_token, hostInfo.refresh_token, hostInfo.homePage)).exec()
         .then(function(update) {
-          console.log (update)
+          console.log ('getting refresh token successful')
         })
         .catch (function (err){
           console.log (err)

@@ -11,6 +11,8 @@ var addResponse = require ('./responses')
 var upsertTemplate = require ('../database/upsert/JSONtemps')
 
 function HandleIncomingMessage (req, res, db){
+  console.log ('incoming text')
+  console.log ('from: '+ req.body.From+ ', message: '+ req.body.Body)
   var resp = new twilio.TwimlResponse();
   res.writeHead(200, {'Content-Type': 'text/xml'});
   guestTools.validateGuest (req.body)
@@ -82,8 +84,6 @@ function buildResponseObject (guestInfo){
               hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
               hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+trackFound.trackID)
               .then (function (added){
-                console.log ('adding song to playlist')
-                console.log (added)
               })  
               .catch (function (err){
                 console.log (err)
