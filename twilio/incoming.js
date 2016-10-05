@@ -92,16 +92,16 @@ function buildResponseObject (guestInfo){
             .catch (function (err){
               console.log (err)
             }) 
-            guestReqObject.trackUpdate= {$set: { addedPaylist: true}, $inc: { foundAmount: 1}}
+            guestReqObject.trackUpdate= {$set: { addedPaylist: true}}
             guestReqObject.response   = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
             return (guestReqObject)
           }else{
-            guestReqObject.trackUpdate= {$inc: { numRequests: 1, foundAmount: 1}}
+            guestReqObject.trackUpdate= {$inc: { numRequests: 1}}
             guestReqObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
             return (guestReqObject)
           }
         }else { 
-          guestReqObject.trackUpdate  = {$inc: { numRequests: 1, foundAmount: 1}}
+          guestReqObject.trackUpdate  = {$inc: { numRequests: 1}}
           guestReqObject.response     = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, 0)
           return (guestReqObject)
         }
@@ -120,6 +120,7 @@ function buildResponseObject (guestInfo){
 function addSpotifySearchResultsIfNeeded (guestReqObject){
   return new Promise (function (fulfill, reject){
     hostAcountTools.spotifyApi.searchTracks (guestReqObject.guest.lastMessage, { limit : 1 })
+    guestReqObject.trackUpdate        = {$inc: { foundAmount: 1}}
     .then (function (tracksFound){
       if (tracksFound.body.tracks.total != 0){
         var track                     = tracksFound.body.tracks.items[0]
