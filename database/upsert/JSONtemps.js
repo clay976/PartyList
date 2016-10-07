@@ -22,7 +22,8 @@ function Track (TrackID, name, artist){
 	  'name'					: name,
 	  'artist'				: artist,
 	  'numRequests'		: 0,
-	  'timePlayed'		: 0 
+	  'timePlayed'		: 0,
+	  'foundAmount' 	: 1 
 	}
 }
 
