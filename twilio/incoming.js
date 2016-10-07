@@ -124,6 +124,7 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
     .then (function (tracksFound){
       if (tracksFound.body.tracks.total != 0){
         var track                     = tracksFound.body.tracks.items[0]
+        console.log (track)
         var resp                      = addResponse.trackFoundOnSpotify (track.id, track.name, track.artists[0].name, guestReqObject.guest.prevRequests)
         resp
         .then (function (resp){
