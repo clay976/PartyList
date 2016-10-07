@@ -119,11 +119,12 @@ function buildResponseObject (guestInfo){
 
 function addSpotifySearchResultsIfNeeded (guestReqObject){
   return new Promise (function (fulfill, reject){
+    var track
     guestReqObject.trackUpdate        = {$inc: { foundAmount: 1}}
     hostAcountTools.spotifyApi.searchTracks (guestReqObject.guest.lastMessage, { limit : 1 })
     .then (function (tracksFound){
       if (tracksFound.body.tracks.total != 0){
-        var track                     = tracksFound.body.tracks.items[0]
+        track                         = tracksFound.body.tracks.items[0]
         console.log (track)
         var resp                      = addResponse.trackFoundOnSpotify (track.id, track.name, track.artists[0].name, guestReqObject.guest.prevRequests)
         resp
