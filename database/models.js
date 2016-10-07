@@ -22,7 +22,7 @@ var track = mongoose.Schema({
   numRequests		: { type: Number, default: 0 },
   timePlayed		: Number,
   addedPaylist  : { type: Boolean, defauult: false},
-  foundAmount   : { type: Number, default: 1 }
+  foundAmount   : { type: Number, default: 0 }
 })
 
 var host = mongoose.Schema({
