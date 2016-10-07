@@ -154,6 +154,24 @@ ________________________________________________________________________________
   })
 
 /*
+remove a guest that is associated with this user
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.post ('/guests/remove', function (req, res){
+    model.Guest.findOneAndUpdate({'phoneNum': '+1'+req.body.guestNum}, {'hostID': null}).exec()
+    .then (function (update){
+      res.json ('guest removed from party')
+    })
+    .catch (function (err){
+      res.json (err)
+    })
+  })
+
+/*
 add many guests to the party in a JSON block
 ________________________________________________________________________________________
 TO BE SENT:
