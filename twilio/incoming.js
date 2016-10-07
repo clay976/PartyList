@@ -124,7 +124,7 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
     .then (function (tracksFound){
       if (tracksFound.body.tracks.total != 0){
         track                         = tracksFound.body.tracks.items[0]
-        model.Track.findOneAndUpdate({ 'trackID' : track.id}, upsertTemplate.Track (track.id, track.name, track.artists[0].name)}, {upsert:true}).exec()
+        model.Track.findOneAndUpdate({ 'trackID' : track.id}, upsertTemplate.Track (track.id, track.name, track.artists[0].name), {upsert:true}).exec()
         var resp                      = addResponse.trackFoundOnSpotify (track.id, track.name, track.artists[0].name, guestReqObject.guest.prevRequests)
         resp
         .then (function (resp){
