@@ -14,14 +14,16 @@ function trackFoundOnSpotify (trackID, title, artist, prevReqs){
   return new Promise (function (fulfill, reject){
     model.Track.findOne({ 'trackID' : trackID}).exec()
     .then (function (trackFound){
-      console.log (trackFound.name+ ' by: ' +trackFound.artist+ ' was found on spotify. found: ' +trackFound.foundAmount+ ' times.')
       checkForPreviousRequests (trackID, prevReqs)
       .then (function (prevRequests){
         if (trackFound && trackFound.addedPaylist){
+          console.log (trackFound.name+ ' by: ' +trackFound.artist+ ' was found on spotify. found: ' +trackFound.foundAmount+ ' times.')
           reject ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +(trackFound.numRequests + 1)+ ' request(s) and has already been added to the playlist.')
         }else if (trackFound && prevRequests) {
+          console.log (trackFound.name+ ' by: ' +trackFound.artist+ ' was found on spotify. found: ' +trackFound.foundAmount+ ' times.')
           reject ('We found: ' +title+ ', by: ' +artist+ '. You have already requested this Track. Ask someone else to request it and get it on the playlist!!')
         }else if (trackFound){
+          console.log (trackFound.name+ ' by: ' +trackFound.artist+ ' was found on spotify. found: ' +trackFound.foundAmount+ ' times.')
           fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
         }else{
           fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has 0 requests! \n\n Send back "yes" to confirm or search another song to discard this request.')
