@@ -49,15 +49,11 @@ function validateGuest (body){
         .then (function (updated){
           reject ('You have been added succesfully!\n\n Songs can be searched by sending a text like this "Drake One Dance". Confirm your request after it is found. Songs with 2 requests will be added to the playlist. You can find the playlist here:  https://open.spotify.com/user/clay976/playlist/4zTJyhtgvVuNvGFwDDSfJB')
         })
-      }
-      if (!guestInfo){
+      }else if (!guestInfo){
         reject (addResponse.notGuest)
-      }
-      if (guestInfo.hostID){
+      }else if (guestInfo.hostID){
         guestInfo.lastMessage = message
         fulfill (guestInfo) 
-      }else{
-        reject (addResponse.notGuest)
       }
     })
     .catch (function (err){
