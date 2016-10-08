@@ -41,26 +41,28 @@ function validateRequest (req){
 function validateGuest (body){
   return new Promise (function (fulfill, reject){
     var message = (body.Body).toLowerCase().trim()
-    if (message === 'add me please'){
-      console.log ('adding guest: '+ body)
-      model.Guest.findOneAndUpdate({'phoneNum': body.From}, upsertTemplate.Guest ('clay976', body.From), {upsert:true}).exec()
-      .then (function (updated){
-        reject ('You have been added succesfully!\n\n Songs can be searched by sending a text like this "Drake One Dance". Confirm your request after it is found. Songs with 2 requests will be added to the playlist. You can find the playlist here:  https://open.spotify.com/user/clay976/playlist/4zTJyhtgvVuNvGFwDDSfJB')
-      })
-    }else{
-      model.Guest.findOne({ 'phoneNum' : body.From }).exec()
-      .then (function (guestInfo){
-        if (guestInfo.hostID){
-          guestInfo.lastMessage = message
-          fulfill (guestInfo) 
-        }else{
-          reject (addResponse.notGuest)
-        }
-      })
-      .catch (function (err){
-        reject ('validating guest failed: ' +err)
-      })
-    }
+    model.Guest.findOne({ 'phoneNum' : body.From }).exec()
+    .then (function (guestInfo){
+      if (message === 'add me please'){
+        console.log ('adding guest: '+ body)
+        model.Guest.findOneAndUpdate({'phoneNum': body.From}, upsertTemplate.Guest ('clay976', body.From), {upsert:true}).exec()
+        .then (function (updated){
+          reject ('You have been added succesfully!\n\n Songs can be searched by sending a text like this "Drake One Dance". Confirm your request after it is found. Songs with 2 requests will be added to the playlist. You can find the playlist here:  https://open.spotify.com/user/clay976/playlist/4zTJyhtgvVuNvGFwDDSfJB')
+        })
+      }
+      if (!guestInfo){
+        reject (addResponse.notGuest)
+      }
+      if (guestInfo.hostID){
+        guestInfo.lastMessage = message
+        fulfill (guestInfo) 
+      }else{
+        reject (addResponse.notGuest)
+      }
+    })
+    .catch (function (err){
+      reject ('validating guest failed: ' +err)
+    })
   })
 }
 
