@@ -53,7 +53,7 @@ function validateGuest (body){
         if (guestInfo.hostID){
           guestInfo.lastMessage = message
           fulfill (guestInfo) 
-        }
+        }else reject (addResponse.notGuest)
       }else reject (addResponse.notGuest)
     })
     .catch (function (err){
