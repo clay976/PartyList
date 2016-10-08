@@ -1,6 +1,6 @@
 var mongoose = require("mongoose");
 mongoose.Promise = require('bluebird');
-
+//db.guests.remove( { phoneNum : '+16134539030' } )
 
 var guest = mongoose.Schema({
 	hostID				: String,
