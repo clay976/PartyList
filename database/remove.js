@@ -1,12 +1,12 @@
-var loginTool = require ('../spotifyTools/loginTools')
+var redirection = require ('../spotify/account/tools')
 
 function songs (res, db, host){
 	db.collection('tracks').deleteMany (function(err, results){
 		if (err){
-			loginTool.homePageRedirect (res, 400, 'songs were not dropped from the database because of an error')
+			redirection.homePageRedirect (res, 400, 'songs were not dropped from the database because of an error')
 			console.log (err, "error")
 		}else{
-			loginTool.homePageRedirect (res, 200, 'songs were removed succsefully')
+			redirection.homePageRedirect (res, 200, 'songs were removed succsefully')
 			console.log ('songs were dropped from user: ')
 		}
 	})
@@ -15,10 +15,10 @@ function songs (res, db, host){
 function guests (res, db, host){
 	db.collection('guests').deleteMany (function(err, results){
 		if (err){
-			loginTool.homePageRedirect (res, 400, 'guests were not dropped from the database because of an error')
+			redirection.homePageRedirect (res, 400, 'guests were not dropped from the database because of an error')
 			console.log (err, "error")
 		}else{
-			loginTool.homePageRedirect (res, 200, 'guests were removed succsefully')
+			redirection.homePageRedirect (res, 200, 'guests were removed succsefully')
 			console.log ('guests were dropped from user: ')
 		}
 	})

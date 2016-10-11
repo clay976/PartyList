@@ -2,131 +2,245 @@
 var express = require('express') // Express web server framework
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
-var assert = require('assert')
+var querystring = require('querystring')
+var model = require ('./database/models')
 
 //my modules
-var spotifyLoginTools = require ('./spotifyTools/loginTools')
-var spotifyPlaylistTools = require ('./spotifyTools/playlistTools')
-var handleIncoming = require ('./messageTools/handleIncoming')
-var respond = require ('./messageTools/responses')
+var spotifyAccountTools = require ('./spotify/account/tools')
+var spotifyPlaylistTools = require ('./spotify/playlist/tools')
+var spotifyAccountTemplate = require ('./spotify/account/JSONtemps')
 
+var twilioIncoming = require ('./twilio/incoming')
+var upsertTemplate = require ('./database/upsert/JSONtemps')
+var databaseHostTools = require ('./database/hostTools')
 //app declaration and uses
 var app = express()
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 //required documents and tools
-var removeList = require ('./databasetools/removeList')
-var insert = require ('./databasetools/insert')
-var query = require ('./databasetools/querydb')
-var update = require ('./databasetools/update')
-var validateToken = require ('./databasetools/checkToken')
+var removeList = require ('./database/remove')
+var guestTools = require ('./database/guestTools')
 
 //mongo database variables
 var MongoClient = require('mongodb').MongoClient
-var dbTools = require ('./databasetools/abstractTools')
+var mongoose = require("mongoose");
 var mongoUrl = 'mongodb://localhost:27017/party'
+mongoose.Promise = global.Promise;
 
 //connect to the database, this happens when api starts, and the conection doesn't close until the API shuts down/crashes
-MongoClient.connect(mongoUrl, function serveEndpoints (err, db) {
-  assert.equal(null, err)
+mongoose.connect(mongoUrl)
+
+var db = mongoose.connection;
+db.on('error', console.error.bind(console, 'connection error:'));
+db.once('open', function(db) {
   app.use(express.static(__dirname + '/public')).use(cookieParser())
 
-  // login endpoint and function:
-  // login endpoint is hit by the front end when someone has never saved a login
-  // info for our application
-  // the are handed the scope of our app and asked to agree before actually loggin in.
+/*
+this will be hit if they are accessing our service from a browser
+_______________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description |
+  }
+________________________________________________________________________*/
   app.get('/login', function (req, res){
-    spotifyLoginTools.login(req, res)
+    res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify(spotifyAccountTemplate.buildScope()))
   })
 
-  // callback endpoint and function:
-  // endpoint will get hit when a user is trying to login and
-  // has already accepted the scope of our application
+/*
+log the user in to access the rest of our things, and to save their access and refresh tokens
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                      |
+    code                            : string :  the authorization code revieced from spotify |
+  }
+_____________________________________________________________________________________________*/
   app.get('/callback', function (req, res){
-    spotifyLoginTools.homepage (req, res, db, spotifyLoginTools.retrieveAndPrepTokens)
+    spotifyAccountTools.homepage (req, res)
   })  
 
-  // createPlaylist endpoint and function
-  // extracts the information from the request
-  // to name the playlist and check who the
-  // host is. then goes through spotify to 
-  // make the playlist on their account
-  app.post('/playlist/create', function (req, res){
-    var playlistName = req.body.playName
-    var host = req.body.host
-    spotifyPlaylistTools.createPlaylist (res, db, playlistName, host, spotifyPlaylistTools.preparePlaylistRequest)
+/*
+create a new spotify playlist
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.post('/playlist/spotify/create', function (req, res){
+    spotifyPlaylistTools.createPlaylist (req, res, db)
   })
 
-  // searches the spotify account and sets
-  // their most recent playlist ID as the
-  // current playlist to add to.
-
-  // TODO: FIX THIS, so that it does not
-  // allow for a playlist that the user
-  // does not control.
-  app.post('/playlist/latest/spotify', function (req, res){
-    var host = req.body.host
-    spotifyPlaylistTools.findPlaylist (res, db, host)
+/*
+find the user's latest spotify playlist
+________________________________________________________________________________________
+TO BE SENT: a JSON object in the body of the request
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.post('/playlist/spotify/latest', function (req, res){
+    spotifyPlaylistTools.setLatestPlaylist (req, res, db)
   })
 
-  // choose the last playlist
-  // the host was using found
-  // in the database
-  app.post('/playlist/latest/party', function (req, res){
-    var host = req.body.host
-    var host2Find = query.findHost (host)
-
-    query.search (host, host2Find, db, function (hostFound){
-      if (hostFound.playlistID != ''){
-        var message = 'hosts playlist has been found in DB'
-        console.log (message)
-        res.send (200, message)
-      }else{
-        message = 'sorry, host playlist not found in DB'
-        console.log (message)
-        res.send (401, message)
-      }
-    })
+/*
+find all the user's spotify playlist to choose from.
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                 |
+    host                            : string :  the username of their spotify account.  |
+  }                                                                                     |
+                                                                                        |
+RETURNED: properly formatted JSON object containing the name and spotify ID of the      |
+          playlist of playlist that the user controls.                                  |
+  {playlists"[                                                                          |                     
+    { name  : foo,                                                                      |
+      id    : fwe98ffew78fyweb                                                          |
+    },                                                                                  |
+    { name  : bar,                                                                      |
+      id    : feioqf98yfefhc                                                            |
+    }                                                                                   |
+  ]}
+_______________________________________________________________________________________*/
+  app.post('/playlist/spotify/getAll', function (req, res){
+    spotifyPlaylistTools.findAllPlaylists (req, res, db)
   })
 
-  // choose a playlist from the list
-  // of avaliable playlists that the
-  // user controls
-  app.post('/playlist/choose', function (req, res){
-    
+/*
+set a specific playlist id (most likely to be used after finding all the user's spotify playlists)
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.post('/playlist/spotify/set', function (req, res){
+    spotifyPlaylistTools.setSpecificPlaylist (req, res, db)
+  })  
+
+/*
+find this user's latest playlist held in our database
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.post('/playlist/partyList/latest', function (req, res){
   })
 
-  // resetAllGuests endpoint and function:
-  // removes all the guest from a current
-  // host's party
+/*
+Set wether songs added can be explicit or not.
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.post('/playlist/explicit', function (req, res){
+    spotifyAccountTools.explicitFilter (req, res, db)
+  })
+
+/*
+remove every guest that is associated with this user
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
   app.post ('/guests/removeAll', function (req, res){
-    var host = req.body.host
-    removeList.guests (res, db, host)
+    removeList.guests (res, db, req.body.host)
   })
 
-  app.post('/guests/add', function (req, res){
-    var host = req.body.host
-    var guestNum = req.body.guestNum
-    dbTools.addGuest (res, db, host, guestNum)
-  })
-
-  app.post('/songs/removeAll', function (req, res){
-    var host = req.body.host
-    removeList.songs (res, db, host)
-  })
-
-  app.post('/message', function (req, res){ 
-    var sender = req.body.From
-    var messageBody = req.body.Body.toLowerCase()
-    var guest2Find = query.findGuest (sender)
-    query.search ('guests', guest2Find, db, function (guestFound){
-      if (!guestFound){
-        respond.notGuest (res, sender)
-      }else{
-        handleIncoming.incoming (res, db, sender, guestFound, messageBody)
-      }
+/*
+remove a guest that is associated with this user
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.post ('/guests/remove', function (req, res){
+    model.Guest.findOneAndUpdate({'phoneNum': '+1'+req.body.guestNum}, {'hostID': null}).exec()
+    .then (function (update){
+      res.json ('guest removed from party')
     })
+    .catch (function (err){
+      res.json (err)
+    })
+  })
+
+/*
+add many guests to the party in a JSON block
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{                     :  type  :              Description                |
+    host                                  : string :  the username of their spotify account. |
+    guestNums [ 1234567890, 
+                4169834260                : array  :  phone numbers of the guest to be added |
+              ]   
+  }
+_______________________________________________________________________________________*/
+  app.post('/guests/addMany', function (req, res){
+    guestTools.addManyGuest (req, res, db)
+  })
+
+
+/*
+add a single guest to the party in a JSON block
+___________________________________________________________________
+TO BE SENT:
+  JSON from req.body{  :  type  :              Description                |
+    host               : string :  the username of their spotify account. |
+    guestNum           : string : phone number of the guest to be added   |
+  }
+_______________________________________________________________________*/
+  app.post('/guests/add', function (req, res){
+    guestTools.addGuest (req, res, db)
+  })
+
+/*
+remove the entire list of songs in our db for this user
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.post('/songs/removeAll', function (req, res){
+    removeList.songs (res, db, req.body.host)
+  })
+
+  //this should only be coming from Twilio,
+  //to be fixed in gulp branch or something.
+  app.post('/message', function (req, res){
+    twilioIncoming.HandleIncomingMessage (req, res, db)
   })
   app.listen(80)
+
+  setInterval(function refreshToken () {
+    var tokenExpirationEpoch
+    model.Host.findOne({ 'hostID' : 'clay976' }).exec()
+    .then (function (hostInfo){
+      databaseHostTools.spotifyApi.setRefreshToken(hostInfo.refresh_token)
+      databaseHostTools.spotifyApi.refreshAccessToken()
+      .then(function(data) {
+        databaseHostTools.spotifyApi.setAccessToken(data.body.access_token)
+        model.Host.findOneAndUpdate({'hostID': 'clay976'}, upsertTemplate.Host ('clay976', data.body.access_token, hostInfo.refresh_token, hostInfo.homePage)).exec()
+        .then(function(update) {
+          console.log ('getting refresh token successful')
+        })
+        .catch (function (err){
+          console.log (err)
+        })
+      })
+      .catch (function (err){
+        console.log ('error getting token: '+ err)
+      })
+    })
+    .catch (function (err){
+      console.log (err)
+    })
+  }, 3500000)
 })
