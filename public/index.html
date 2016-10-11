@@ -1,54 +1,6 @@
 <!doctype html>
 <html>
   <head>
-  <style>
-  .switch {
-    position: relative;
-    display: inline-block;
-    width: 60px;
-    height: 34px;
-  }
-  .switch input {display:none;}
-
-  .slider {
-    position: absolute;
-    cursor: pointer;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    background-color: #ccc;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-
-  .slider:before {
-    position: absolute;
-    content: "";
-    height: 26px;
-    width: 26px;
-    left: 4px;
-    bottom: 4px;
-    background-color: white;
-    -webkit-transition: .4s;
-    transition: .4s;
-  }
-
-  input:checked + .slider {
-    background-color: #2196F3;
-  }
-
-  input:focus + .slider {
-    box-shadow: 0 0 1px #2196F3;
-  }
-
-  input:checked + .slider:before {
-    -webkit-transform: translateX(26px);
-    -ms-transform: translateX(26px);
-    transform: translateX(26px);
-  }
-  /* Rounded sliders */
-  </style>
     <title>Example of the Authorization Code flow with Spotify</title>
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
     <style type="text/css">
@@ -63,92 +15,66 @@
       }
     </style>
   </head>
-  <body>
     <div class="container" id= "contain">
       <div id="login">
         <h1>Log in to let spotify do awesome things</h1>
         <a href="/login" class="btn btn-primary">Log in</a>
       </div>
       <div id="loggedin">
-        <div id="user-profile"></div>
-          <button id= "obtain-new-token" name = "obtain new token"> obtain new token </button>
-        <div id="oauth"></div>
-          <label for="filename">Spotify Playlist functions</label>
-          <div></div>
-          <form id="input" action="/playlist/explicit" method="POST">
-            <input type="hidden" name="host" value= "clay976">
-            <input type="hidden" name="explicit" value= "true">
-            <input type="submit" value="set explicit">
-          </form>
-          <form id="input" action="/playlist/explicit" method="POST">
-            <input type="hidden" name="host" value= "clay976">
-            <input type="hidden" name="explicit" value= "false">
-            <input type="submit" value="set clean">
-          </form>
-          <form id="input" action="/playlist/spotify/create" method="POST">
-            <input type="text" name="playName" placeholder="new playlist Name">
-            <input type="hidden" name="host" value= "clay976">
-            <input type="submit" value="create">
-          </form>
-          <form id="input" action="/playlist/spotify/latest" method="POST">
-            <input type="submit" value="find latest spotify playlist">
-            <input type="hidden" name="host" value= "clay976">
-          </form>
-          <form id="input" action="/playlist/spotify/getAll" method="POST">
-            <input type="submit" value="retreive all spotify playlists in a list">
-            <input type="hidden" name="host" value= "clay976">
-          </form>
-          <form id="input" action="/playlist/spotify/set" method="POST">
-            <input type="text" name="playlistID" placeholder="playlist ID to be set as the partylist">
-            <input type="submit" value="find latest party playlist">
-            <input type="hidden" name="host" value= "clay976">
-          </form>
-          <label for="filename">partyList playlist functions</label>
-          <form id="input" action="/playlist/partyList/latest" method="POST">
-            <input type="submit" value="find latest party playlist">
-            <input type="hidden" name="host" value= "clay976">
-          </form>
-          <label for="filename">Songs</label>
-          <form id="input" action="/songs/removeAll" method="POST">
+        <div id="Spotify Playlist functions"></div>
+        <form id="input" action="/playlist/explicit" method="POST">
           <input type="hidden" name="host" value= "clay976">
-            <input type="submit" value="reset song requests">
-          </form>
-          <label for="filename">Guest Manipulation</label>
-          <form id="input" action="/guests/removeAll" method="POST">
-            <input type="submit" value="Remove All Guests">
-          </form>
-          <form id="input" action="/guests/add" method="POST">
-            <input type="text" name="guestNum" placeholder="ex. 9055554260">
-            <input type="hidden" name="host" value= "clay976">
-            <input type="submit" value="add">
-          </form>
-          <form id="input" action="/guests/remove" method="POST">
-            <input type="text" name="guestNum" placeholder="ex. 9055554260">
-            <input type="submit" value="remove">
-          </form>
-        </div>
+          <input type="hidden" name="explicit" value= "true">
+          <input type="submit" value="set explicit">
+        </form>
+        <form id="input" action="/playlist/explicit" method="POST">
+          <input type="hidden" name="host" value= "clay976">
+          <input type="hidden" name="explicit" value= "false">
+          <input type="submit" value="set clean">
+        </form>
+        <form id="input" action="/playlist/spotify/create" method="POST">
+          <input type="text" name="playName" placeholder="new playlist Name">
+          <input type="hidden" name="host" value= "clay976">
+          <input type="submit" value="create">
+        </form>
+        <form id="input" action="/playlist/spotify/latest" method="POST">
+          <input type="submit" value="find latest spotify playlist">
+          <input type="hidden" name="host" value= "clay976">
+        </form>
+        <form id="input" action="/playlist/spotify/getAll" method="POST">
+          <input type="submit" value="retreive all spotify playlists in a list">
+          <input type="hidden" name="host" value= "clay976">
+        </form>
+        <form id="input" action="/playlist/spotify/set" method="POST">
+          <input type="text" name="playlistID" placeholder="playlist ID to be set as the partylist">
+          <input type="submit" value="find latest party playlist">
+          <input type="hidden" name="host" value= "clay976">
+        </form>
+        <label for="filename">partyList playlist functions</label>
+        <form id="input" action="/playlist/partyList/latest" method="POST">
+          <input type="submit" value="find latest party playlist">
+          <input type="hidden" name="host" value= "clay976">
+        </form>
+        <label for="filename">Songs</label>
+        <form id="input" action="/songs/removeAll" method="POST">
+        <input type="hidden" name="host" value= "clay976">
+          <input type="submit" value="reset song requests">
+        </form>
+        <label for="filename">Guest Manipulation</label>
+        <form id="input" action="/guests/removeAll" method="POST">
+          <input type="submit" value="Remove All Guests">
+        </form>
+        <form id="input" action="/guests/add" method="POST">
+          <input type="text" name="guestNum" placeholder="ex. 9055554260">
+          <input type="hidden" name="host" value= "clay976">
+          <input type="submit" value="add">
+        </form>
+        <form id="input" action="/guests/remove" method="POST">
+          <input type="text" name="guestNum" placeholder="ex. 9055554260">
+          <input type="submit" value="remove">
+        </form>
       </div>
     </div>
-    <script id="user-profile-template" type="text/x-handlebars-template">
-      <h1>Logged in as {{display_name}}</h1>
-      <div class="media">
-        <div class="pull-left">
-          <img class="media-object" width="150" src="{{images.0.url}}" />
-        </div>
-        <div class="media-body">
-          <dl class="dl-horizontal">
-            <dt>Display name</dt><dd class="clearfix">{{display_name}}</dd>
-            <dt>Id</dt><dd>{{id}}</dd>
-            <dt>Email</dt><dd>{{email}}</dd>
-            <dt>Spotify URI</dt><dd><a href="{{external_urls.spotify}}">{{external_urls.spotify}}</a></dd>
-            <dt>Link</dt><dd><a href="{{href}}">{{href}}</a></dd>
-            <dt>Profile Image</dt><dd class="clearfix"><a href="{{images.0.url}}">{{images.0.url}}</a></dd>
-            <dt>Country</dt><dd>{{country}}</dd>
-          </dl>
-        </div>
-      </div>
-    </script>
-
     <script id="oauth-template" type="text/x-handlebars-template">
       <h2>oAuth info</h2>
       <dl class="dl-horizontal">
@@ -160,7 +86,7 @@
     <script id="Playlists" type="text/x-handlebars-template">
       <h2>Playlist Info</h2>
       <dl class="dl-horizontal">
-        <dt>Users PLaylists</dt><dd class="text-overflow">{{}}</dd>
+        <dt>Users Playlists</dt><dd class="text-overflow">{{}}</dd>
         <dt>Refresh token</dt><dd class="text-overflow">{{refresh_token}}></dd>
       </dl>
     </script>
@@ -217,20 +143,6 @@
               $('#login').show()
               $('#loggedin').hide()
           }
-          document.getElementById('obtain-new-token').addEventListener('click', function() {
-            $.ajax({
-              url: '/refresh_token',
-              data: {
-                'refresh_token': refresh_token
-              }
-            }).done(function(data) {
-              access_token = data.access_token
-              oauthPlaceholder.innerHTML = oauthTemplate({
-                access_token: access_token,
-                refresh_token: refresh_token
-              })
-            })
-          }, false)
         }
       })()
     </script>

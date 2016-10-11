@@ -1,0 +1,135 @@
+<!DOCTYPE html>
+<html>
+<style type="text/css">
+  #login, #loggedin {
+    display: none
+  }
+</style>
+<title>Party List</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
+<link rel="stylesheet" href="http://www.w3schools.com/lib/w3-theme-red.css">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
+
+<body>
+<!-- Side Navigation -->
+<nav class="w3-sidenav w3-white w3-card-2 w3-animate-left" style="display:none" id="mySidenav">
+  <h1 class="w3-xxxlarge w3-text-teal">Side Navigation</h1>
+  <a href="javascript:void(0)" onclick="w3_close()" class="w3-closenav w3-xxxlarge w3-text-theme">Close <i class="fa fa-remove"></i></a>
+  <a href="javascript:void(0)">Link 1</a>
+  <a href="javascript:void(0)">Link 2</a>
+  <a href="javascript:void(0)">Link 3</a>
+  <a href="javascript:void(0)">Link 4</a>
+  <a href="javascript:void(0)">Link 5</a>
+</nav>
+
+<!-- Modal -->
+<div id="id01" class="w3-modal">
+    <div class="w3-modal-content w3-card-8 w3-animate-top">
+      <header class="w3-container w3-theme-l1">
+        <span onclick="document.getElementById('id01').style.display='none'" class="w3-closebtn">×</span>
+        <h4>Oh snap! We just showed you a modal..</h4>
+        <h5>Because we can <i class="fa fa-smile-o"></i></h5>
+      </header>
+      <div class="w3-padding">
+        <p>Cool huh? Ok, enough teasing around..</p>
+        <p>Go to our <a class="w3-btn" href="/w3css/default.asp">W3.CSS Tutorial</a> to learn more!</p>
+      </div>
+      <footer class="w3-container w3-theme-l1">
+        <p>Modal footer</p>
+      </footer>
+    </div>
+</div>
+
+<div id="login">
+  <!-- Header -->
+  <header class="w3-container w3-theme w3-padding" id="myHeader">
+    <div class="w3-center">
+    <h4>Let everyone be the DJ and take the hassle out of creating playlists</h4>
+    <h1 class="w3-xxxlarge w3-animate-bottom">Party List</h1>
+      <div class="w3-padding-32">
+        <a class="w3-btn" href="/login">Login</a>
+      </div>
+    </div>
+  </header>
+
+  <div class="w3-half">
+  <div class="w3-row-padding w3-center w3-margin-top">
+    <h4>Hosts</h4><br>
+    <div class="w3-card-2 w3-padding-top" style="min-height:400px">
+    <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+    <p>1. Create or choose your playlist</p>
+    <p>2. Choose your guests or make it public</p>
+    <p>3. Message your guests to let them know</p>
+    <p>4. Watch your playlist build as requested</p>
+    </div>
+  </div>
+  </div>
+
+  <div class="w3-half">
+  <div class="w3-row-padding w3-center w3-margin-top">
+    <h4>Guests</h4><br>
+    <div class="w3-card-2 w3-padding-top" style="min-height:400px">
+    <i class="fa fa-css3 w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
+    <p>1. Add yourself or get added to a playlist   </p>
+    <p>2. Request in the format "starboy the Weeknd"</p>
+    <p>3. Confirm your request after it is found    </p>
+    <p>4. Follow the playlist on spotify!           </p>
+    </div>
+  </div>
+</div>
+
+<div id="loggedin">
+  <label>Spotify Playlist functions</label>
+  <form id="input" action="/playlist/explicit" method="POST">
+    <input type="hidden" name="host" value= "clay976">
+    <input type="hidden" name="explicit" value= "true">
+    <input type="submit" value="set explicit">
+  </form>
+  <form id="input" action="/playlist/explicit" method="POST">
+    <input type="hidden" name="host" value= "clay976">
+    <input type="hidden" name="explicit" value= "false">
+    <input type="submit" value="set clean">
+  </form>
+  <form id="input" action="/playlist/spotify/create" method="POST">
+    <input type="text" name="playName" placeholder="new playlist Name">
+    <input type="hidden" name="host" value= "clay976">
+    <input type="submit" value="create">
+  </form>
+  <form id="input" action="/playlist/spotify/latest" method="POST">
+    <input type="submit" value="find latest spotify playlist">
+    <input type="hidden" name="host" value= "clay976">
+  </form>
+  <form id="input" action="/playlist/spotify/getAll" method="POST">
+    <input type="submit" value="retreive all spotify playlists in a list">
+    <input type="hidden" name="host" value= "clay976">
+  </form>
+  <form id="input" action="/playlist/spotify/set" method="POST">
+    <input type="text" name="playlistID" placeholder="playlist ID to be set as the partylist">
+    <input type="submit" value="find latest party playlist">
+    <input type="hidden" name="host" value= "clay976">
+  </form>
+  <label>partyList playlist functions</label>
+  <form id="input" action="/playlist/partyList/latest" method="POST">
+    <input type="submit" value="find latest party playlist">
+    <input type="hidden" name="host" value= "clay976">
+  </form>
+  <label for="filename">Songs</label>
+  <form id="input" action="/songs/removeAll" method="POST">
+    <input type="hidden" name="host" value= "clay976">
+    <input type="submit" value="reset song requests">
+  </form>
+  <label for="filename">Guest Manipulation</label>
+  <form id="input" action="/guests/removeAll" method="POST">
+    <input type="submit" value="Remove All Guests">
+  </form>
+  <form id="input" action="/guests/add" method="POST">
+    <input type="text" name="guestNum" placeholder="ex. 9055554260">
+    <input type="hidden" name="host" value= "clay976">
+    <input type="submit" value="add">
+  </form>
+  <form id="input" action="/guests/remove" method="POST">
+    <input type="text" name="guestNum" placeholder="ex. 9055554260">
+    <input type="submit" value="remove">
+  </form>
+</div>
