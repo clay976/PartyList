@@ -27,7 +27,7 @@ function homepage (req, res) {
     return setTokensAndGetHostInfo(data)
   })
   .then (function (hostInfo){
-    homePage = '/' +hostInfo.spotifyReturn.body.id
+    homePage = '/#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':hostInfo.refresh_token,'hostID':hostInfo.spotifyReturn.body.id})
     return model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, upsertTemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage), {upsert:true}).exec()
   })
   .then (function (host){
