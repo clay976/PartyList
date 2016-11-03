@@ -129,9 +129,9 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
         .then (function (foundSong){
           if (foundSong) guestReqObject.trackUpdate        = {$inc: { foundAmount: 1}}
           else {
-            var debug = upsertTemplate.Track (guestReqObject.guest.hostID, track.id, track.name, track.artists[0].name
+            var debug = upsertTemplate.Track (guestReqObject.guest.hostID, track.id, track.name, track.artists[0].name)
             console.log (debug)
-            model.Track.findOneAndUpdate({ 'trackID' : track.id}, debug), {upsert:true}).exec()
+            model.Track.findOneAndUpdate({ 'trackID' : track.id}, debug, {upsert:true}).exec()
           }
         })
         var resp                      = addResponse.trackFoundOnSpotify (guestReqObject.guest.hostID, track.id, track.name, track.artists[0].name, guestReqObject.guest.prevRequests)
