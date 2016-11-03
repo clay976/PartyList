@@ -65,32 +65,32 @@
       <div class="w3-card-2 w3-padding-top" style="min-height:400px">
       <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
       <form id="input" action="/playlist/explicit" method="POST">
-        <input type="hidden" name="hostID">
+        <input id='hostID' type='hidden' name ='hostID'>
         <input type="hidden" name="explicit" value= "true">
         <input type="submit" value="set explicit">
       </form>
       <form id="input" action="/playlist/explicit" method="POST">
-        <input type="hidden" name="hostID">
+        <input id='hostID' type='hidden' name ='hostID'>
         <input type="hidden" name="explicit" value= "false">
         <input type="submit" value="set clean">
       </form>
       <form id="input" action="/playlist/spotify/create" method="POST">
-        <input id='hostID' type='text' name ='hostID'> 
+        <input id='hostID' type='hidden' name ='hostID'> 
         <input type="text" name="playName" placeholder="new playlist Name">
         <input type="submit" value="create">
       </form>
       <form id="input" action="/playlist/spotify/latest" method="POST">
         <input type="submit" value="find latest spotify playlist">
-        <input type="hidden" name="hostID">
+        <input id='hostID' type='hidden' name ='hostID'>
       </form>
       <form id="input" action="/playlist/spotify/getAll" method="POST">
         <input type="submit" value="retreive all spotify playlists in a list">
-        <input type="hidden" name="hostID">
+        <input id='hostID' type='hidden' name ='hostID'>
       </form>
       <form id="input" action="/playlist/spotify/set" method="POST">
         <input type="text" name="playlistID" placeholder="playlist ID to be set as the partylist">
         <input type="submit" value="find latest party playlist">
-        <input type="hidden" name="hostID">
+        <input id='hostID' type='hidden' name ='hostID'>
       </form>
       </div>
     </div>
@@ -102,7 +102,7 @@
       <div class="w3-card-2 w3-padding-top" style="min-height:400px">
       <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
       <form id="input" action="/songs/removeAll" method="POST">
-        <input type="hidden" name="hostID">
+        <input id='hostID' type='hidden' name ='hostID'>
         <input type="submit" value="reset song requests">
       </form>
       </div>
@@ -119,7 +119,7 @@
       </form>
       <form id="input" action="/guests/add" method="POST">
         <input type="text" name="guestNum" placeholder="ex. 9055554260">
-        <input type="hidden" name="hostID">
+        <input id='hostID' type='hidden' name ='hostID'>
         <input type="submit" value="add">
       </form>
       <form id="input" action="/guests/remove" method="POST">
