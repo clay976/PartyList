@@ -59,9 +59,6 @@
   </div>
 
   <div id="loggedin">
-  <?php
-  $hostID = $_GET['hostID'];
-  ?>
     <div class="w3-third">
     <div class="w3-row-padding w3-center w3-margin-top">
       <h4>Playlists</h4><br>
@@ -78,7 +75,7 @@
         <input type="submit" value="set clean">
       </form>
       <form id="input" action="/playlist/spotify/create" method="POST">
-        <input id='hostID' type='text' value=<?php echo $hostID; ?> 
+        <input id='hostID' type='text' name ='hostID'> 
         <input type="text" name="playName" placeholder="new playlist Name">
         <input type="submit" value="create">
       </form>
@@ -160,9 +157,27 @@
     if (access_token) {
       document.getElementById('login').style.visibility = 'hidden'
       document.getElementById('loggedin').style.visibility = 'visible'
+
+      function querySt(ji) {
+
+          hu = window.location.search.substring(1);
+          gy = hu.split("&");
+
+          for (i=0;i<gy.length;i++) {
+              ft = gy[i].split("=");
+              if (ft[0] == ji) {
+                  return ft[1];
+              }
+          }
+      }
+      var ID = querySt();
+      document.getElementById('hostID').value = ID;
+
     } else {
       document.getElementById('login').style.visibility = 'visible'
       document.getElementById('loggedin').style.visibility = 'hidden'
     }
   }
+
+
 </script>
