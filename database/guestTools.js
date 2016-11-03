@@ -14,12 +14,12 @@ function addManyGuest (req, res){
 }
 
 function addGuest (req, res){
-  hostAcountTools.validateHost (req.body.host)
+  hostAcountTools.validateHost (req.body.hostID)
   .then (function (){
     return validateRequest(req)
   })
   .then (function (){
-    return model.Guest.findOneAndUpdate({'phoneNum': '+1'+req.body.guestNum}, upsertTemplate.Guest (req.body.host, '+1'+req.body.guestNum), {upsert:true}).exec()
+    return model.Guest.findOneAndUpdate({'phoneNum': '+1'+req.body.guestNum}, upsertTemplate.Guest (req.body.hostID, '+1'+req.body.guestNum), {upsert:true}).exec()
   })
   .then (function (update){
     res.status(200).json ('guest added succsefully')
