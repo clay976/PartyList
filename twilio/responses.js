@@ -12,7 +12,7 @@ var songNotFound = ('Sorry, that song could be found, use as many key words as p
 
 function trackFoundOnSpotify (hostID, trackID, title, artist, prevReqs){
   return new Promise (function (fulfill, reject){
-    model.Track.findOne($and: [{ 'trackID' : trackID}, {'hostID' : hostID}]).exec()
+    model.Track.findOne({$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}).exec()
     .then (function (trackFound){
       checkForPreviousRequests (trackID, prevReqs)
       .then (function (prevRequests){
