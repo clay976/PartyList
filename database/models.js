@@ -16,6 +16,7 @@ var guest = mongoose.Schema({
 })
 
 var track = mongoose.Schema({
+  hostID        : String,
   trackID				: String,
   name          : String,
   artist        : String,

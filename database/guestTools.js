@@ -93,7 +93,7 @@ function updateGuestIfNeeded (guestReqObject){
 function updateTrackIfNeeded (guestReqObject){
   return new Promise (function (fulfill, reject){
     if (guestReqObject.trackUpdate){
-      model.Track.findOneAndUpdate({ 'trackID' : guestReqObject.guest.currentTrack.trackID}, guestReqObject.trackUpdate).exec()
+      model.Track.findOneAndUpdate($and: [{ 'trackID' : track.id}, {'hostID' : guestReqObject.guest.hostID}], guestReqObject.trackUpdate).exec()
       .then (function (updated){
         fulfill (guestReqObject)
       })

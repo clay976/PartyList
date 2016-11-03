@@ -75,7 +75,7 @@ function buildResponseObject (guestInfo){
         fulfill (guestReqObject)
       })
     }*/else if (messageBody === 'yes'){
-      model.Track.findOne({ 'trackID' : guestInfo.currentTrack.trackID}).exec()
+      model.Track.findOne($and: [{ 'trackID' : track.id}, {'hostID' : guestReqObject.guest.hostID}]).exec()
       .then (function (trackFound){
         if (trackFound){
           if (trackFound.numRequests === 1){
@@ -124,12 +124,12 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
     .then (function (tracksFound){
       if (tracksFound.body.tracks.total != 0){
         track                         = tracksFound.body.tracks.items[0]
-        model.Track.findOne({ 'trackID' : track.id}).exec()
+        model.Track.findOne($and: [{ 'trackID' : track.id}, {'hostID' : guestReqObject.guest.hostID}]).exec()
         .then (function (foundSong){
           if (foundSong) guestReqObject.trackUpdate        = {$inc: { foundAmount: 1}}
-          else model.Track.findOneAndUpdate({ 'trackID' : track.id}, upsertTemplate.Track (track.id, track.name, track.artists[0].name), {upsert:true}).exec()
+          else model.Track.findOneAndUpdate({ 'trackID' : track.id}, upsertTemplate.Track (guestReqObject.guest.hostID, track.id, track.name, track.artists[0].name), {upsert:true}).exec()
         })
-        var resp                      = addResponse.trackFoundOnSpotify (track.id, track.name, track.artists[0].name, guestReqObject.guest.prevRequests)
+        var resp                      = addResponse.trackFoundOnSpotify (guestReqObject.guest.hostID, track.id, track.name, track.artists[0].name, guestReqObject.guest.prevRequests)
         resp
         .then (function (resp){
           guestReqObject.response     = resp
