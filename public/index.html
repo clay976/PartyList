@@ -78,9 +78,8 @@
         <input type="submit" value="set clean">
       </form>
       <form id="input" action="/playlist/spotify/create" method="POST">
-        <input id='hostID' type='text' value='<?php echo $hostID; ?>' >
+        <input id='hostID' type='text' value=<?php echo $hostID; ?> 
         <input type="text" name="playName" placeholder="new playlist Name">
-        <input type="text" name="hostID">
         <input type="submit" value="create">
       </form>
       <form id="input" action="/playlist/spotify/latest" method="POST">
