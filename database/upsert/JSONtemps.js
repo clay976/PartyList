@@ -11,6 +11,13 @@ function Host (data, accessToken, refreshToken, homePage){
 
 function Guest (host, number){
 	return {
+		'currentTrack'	: { 
+		  'trackID'     : '',
+		  'name'        : '',
+		  'artist'      : ''
+		},
+		'lastMessage'   : '',
+		'prevRequests'  : []
   	'hostID'				: host,
     'phoneNum'			: number
   }
