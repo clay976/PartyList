@@ -18,7 +18,7 @@ function Guest (host, number){
 
 function Track (host, TrackID, name, artist){
 	return {
-		'hostID'				: host
+		'hostID'				: host,
 	  'trackID'				: TrackID,
 	  'name'					: name,
 	  'artist'				: artist,
