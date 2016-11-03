@@ -157,14 +157,7 @@
     if (access_token) {
       document.getElementById('login').style.visibility = 'hidden'
       document.getElementById('loggedin').style.visibility = 'visible'
-
-      function querySt() {
-        hu = window.location.search//.substring(1);
-        gy = hu.split("&");
-        return hu;
-      }
-      var koko = querySt();
-      document.getElementById('hostID').value = koko;
+      document.getElementById('hostID').value = params.hostID;
 
     } else {
       document.getElementById('login').style.visibility = 'visible'
