@@ -5,6 +5,7 @@ var model = require ('../../database/models')
 
 //TODO: add comments
 function createPlaylist (req, res, db){
+  console.log (req.body)
   hostAcountTools.validateHost (req.body.host)
   .then (function (hostInfo){
     return validatePlaylistInput(hostInfo, req.body.playName)
