@@ -161,7 +161,7 @@
       function querySt(ji) {
         hu = window.location.search.substring(1);
         gy = hu.split("=");
-        return gy[gy.length - 1]
+        return hu//gy[gy.length - 1]
       }
       var ID = querySt();
       document.getElementById('hostID').value = ID;
