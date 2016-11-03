@@ -150,7 +150,7 @@ TO BE SENT:
   }
 _______________________________________________________________________________________*/
   app.post ('/guests/removeAll', function (req, res){
-    removeList.guests (res, db, req.body.host)
+    removeList.guests (res, db, req.body.hostID)
   })
 
 /*
@@ -209,7 +209,7 @@ TO BE SENT:
   }
 _______________________________________________________________________________________*/
   app.post('/songs/removeAll', function (req, res){
-    removeList.songs (res, db, req.body.host)
+    removeList.songs (res, db, req.body.hostID)
   })
 
   //this should only be coming from Twilio,

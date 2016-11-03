@@ -58,7 +58,7 @@ function setTokensAndGetHostInfo (data) {
 
 /*
 function explicitFilter (req, res, db){
-  var hostInfo = validateHost (req.body.host)
+  var hostInfo = validateHost (req.body.hostID)
   hostInfo.then (model.Host.findOneAndUpdate({ 'hostID' : hostInfo.host }, { $set: {'playlistID' : req.body.explicit}}).exec())
   .then (res.status(200).json ('hostInfo.homePage'))  
   .catch (function(err) {

@@ -26,12 +26,12 @@ function createPlaylist (req, res, db){
 
 //TODO: add comments
  function setLatestPlaylist (req, res, db){
-  hostAcountTools.validateHost (req.body.host)
+  hostAcountTools.validateHost (req.body.hostID)
   .then (function (hostInfo){
     return hostAcountTools.spotifyApi.getUserPlaylists(hostInfo.hostID)
   })
   .then (function(data){
-    return playlistTemplate.userPlaylists (req.body.host, data.body.items, data.body.total)
+    return playlistTemplate.userPlaylists (req.body.hostID, data.body.items, data.body.total)
   })
   .then (function (playlistInfo){
     console.log (playlistInfo)
@@ -48,12 +48,12 @@ function createPlaylist (req, res, db){
 
 // //TODO: add comments
 function findAllPlaylists (req, res, db){
-  hostAcountTools.validateHost (req.body.host)
+  hostAcountTools.validateHost (req.body.hostID)
   .then (function (hostInfo){
     return hostAcountTools.spotifyApi.getUserPlaylists(hostInfo.hostID)
   })
   .then (function(data){
-    return playlistTemplate.userPlaylists (req.body.host, data.body.items, data.body.total)
+    return playlistTemplate.userPlaylists (req.body.hostID, data.body.items, data.body.total)
   })
   .then (function (playlistInfo){
     return res.status(200).json (playlistInfo)
@@ -65,7 +65,7 @@ function findAllPlaylists (req, res, db){
 
 
 function setSpecificPlaylist (req, res, db){
-  hostAcountTools.validateHost (req.body.host)
+  hostAcountTools.validateHost (req.body.hostID)
   .then (function (hostInfo){
     return validatePlaylistInput(hostInfo, req.body.playlistID)
   })

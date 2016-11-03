@@ -65,32 +65,32 @@
       <div class="w3-card-2 w3-padding-top" style="min-height:400px">
       <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
       <form id="input" action="/playlist/explicit" method="POST">
-        <input type="hidden" name="hostID">
+        <input id='hostID1' type='text' name ='hostID'> 
         <input type="hidden" name="explicit" value= "true">
         <input type="submit" value="set explicit">
       </form>
       <form id="input" action="/playlist/explicit" method="POST">
-        <input type="hidden" name="hostID">
+        <input id='hostID2' type='text' name ='hostID'>
         <input type="hidden" name="explicit" value= "false">
         <input type="submit" value="set clean">
       </form>
       <form id="input" action="/playlist/spotify/create" method="POST">
-        <input id='hostID' type='text' name ='hostID'> 
+        <input id='hostID3' type='text' name ='hostID'>
         <input type="text" name="playName" placeholder="new playlist Name">
         <input type="submit" value="create">
       </form>
       <form id="input" action="/playlist/spotify/latest" method="POST">
+        <input id='hostID4' type='text' name ='hostID'>
         <input type="submit" value="find latest spotify playlist">
-        <input type="hidden" name="hostID">
       </form>
       <form id="input" action="/playlist/spotify/getAll" method="POST">
+        <input id='hostID5' type='text' name ='hostID'>
         <input type="submit" value="retreive all spotify playlists in a list">
-        <input type="hidden" name="hostID">
       </form>
       <form id="input" action="/playlist/spotify/set" method="POST">
+        <input id='hostID6' type='text' name ='hostID'>
         <input type="text" name="playlistID" placeholder="playlist ID to be set as the partylist">
         <input type="submit" value="find latest party playlist">
-        <input type="hidden" name="hostID">
       </form>
       </div>
     </div>
@@ -102,7 +102,7 @@
       <div class="w3-card-2 w3-padding-top" style="min-height:400px">
       <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
       <form id="input" action="/songs/removeAll" method="POST">
-        <input type="hidden" name="hostID">
+        <input id='hostID7' type='text' name ='hostID'>
         <input type="submit" value="reset song requests">
       </form>
       </div>
@@ -118,11 +118,12 @@
         <input type="submit" value="Remove All Guests">
       </form>
       <form id="input" action="/guests/add" method="POST">
+        <input id='hostID8' type='text' name ='hostID'>
         <input type="text" name="guestNum" placeholder="ex. 9055554260">
-        <input type="hidden" name="hostID">
         <input type="submit" value="add">
       </form>
       <form id="input" action="/guests/remove" method="POST">
+        <input id='hostID9' type='text' name ='hostID'>
         <input type="text" name="guestNum" placeholder="ex. 9055554260">
         <input type="submit" value="remove">
       </form>
@@ -157,7 +158,15 @@
     if (access_token) {
       document.getElementById('login').style.visibility = 'hidden'
       document.getElementById('loggedin').style.visibility = 'visible'
-      document.getElementById('hostID').value = params.hostID;
+      document.getElementById('hostID1').value = params.hostID;
+      document.getElementById('hostID2').value = params.hostID;
+      document.getElementById('hostID3').value = params.hostID;
+      document.getElementById('hostID4').value = params.hostID;
+      document.getElementById('hostID5').value = params.hostID;
+      document.getElementById('hostID6').value = params.hostID;
+      document.getElementById('hostID7').value = params.hostID;
+      document.getElementById('hostID8').value = params.hostID;
+      document.getElementById('hostID9').value = params.hostID;
 
     } else {
       document.getElementById('login').style.visibility = 'visible'
