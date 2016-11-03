@@ -17,7 +17,7 @@ function Guest (host, number){
 		  'artist'      : ''
 		},
 		'lastMessage'   : '',
-		'prevRequests'  : []
+		'prevRequests'  : [],
   	'hostID'				: host,
     'phoneNum'			: number
   }
