@@ -29,7 +29,7 @@ function homepage (req, res) {
   .then (function (hostInfo){
     console.log (hostInfo)
     var homePage = '/#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':hostInfo.refresh_token,'hostID':hostInfo.spotifyReturn.body.id})
-    playlistTool.setLatestPlaylist ({'req':{'body':{'hostID':hostInfo.spotifyReturn.body.id}}})
+    playlistTool.setLatestPlaylist (hostInfo.spotifyReturn.body.id)
     return model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, upsertTemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage), {upsert:true}).exec()
   })
   .then (function (host){
