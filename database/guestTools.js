@@ -3,7 +3,12 @@ var upsertTemplate = require ('./upsert/JSONtemps')
 var model = require ('./models')
 var hostAcountTools = require ('./hostTools')
 var addResponse = require ('../twilio/responses')
-var client = require ('../twilio/incoming')
+
+//node modules
+var twilio = require('twilio')
+var sid = 'AC85573f40ef0c3fb0c5aa58477f61b02e'
+var atoken = 'fcea26b2b0ae541d904ba23e12e2c499'
+var client = require('twilio/lib')(sid, atoken);
 
 function addManyGuest (req, res){
   var body = JSON.parse(req)
