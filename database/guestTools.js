@@ -3,6 +3,7 @@ var upsertTemplate = require ('./upsert/JSONtemps')
 var model = require ('./models')
 var hostAcountTools = require ('./hostTools')
 var addResponse = require ('../twilio/responses')
+var client = require ('../twilio/incoming')
 
 function addManyGuest (req, res){
   var body = JSON.parse(req)
@@ -20,6 +21,13 @@ function addGuest (req, res){
   })
   .then (function (){
     return model.Guest.findOneAndUpdate({'phoneNum': '+1'+req.body.guestNum}, upsertTemplate.Guest (req.body.hostID, '+1'+req.body.guestNum), {upsert:true}).exec()
+  })
+  .then (function (){
+    return client.sendMessage({
+      to:'+1' +req.body.guestNum,
+      from:'+15878033620',
+      body:'You have been added to '+req.body.hostID+'\'s party. You can send back your song requests to this phone number!'
+    })
   })
   .then (function (update){
     res.status(200).json ('guest added succsefully')
