@@ -45,36 +45,7 @@ function buildResponseObject (guestInfo){
     var messageBody = guestReqObject.guest.lastMessage
     if ((messageBody === 'yes') && (guestInfo.currentTrack.trackID === '')){
       reject (addResponse.emptyConfirmation)
-    }/*else if (messageBody === 'yes' && guestInfo.numRequests < 1){
-      model.Track.findOne({ 'trackID' : guestInfo.currentTrack.trackID}).exec()
-      .then (function (trackFound){
-        if (trackFound){
-          if (trackFound.numRequests === 2){
-            model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
-            .then (function (hostInfo){
-              hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, guestInfo.currentTrack.trackID) 
-              .then (function (added){
-                console.log (added)
-              })  
-            })
-            guestReqObject.trackUpdate= {$set: { numRequests: 0}}
-            guestReqObject.response   = addResponse.songConfirmedAndAddedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
-            return (guestReqObject)
-          }else{
-            guestReqObject.response   = addResponse.songConfirmedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
-            return (guestReqObject)
-          }
-        }else {
-          guestReqObject.response     = addResponse.songConfirmedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, 0)
-          return (guestReqObject)
-        }
-      })
-      .then (function (guestReqObject){
-        guestReqObject.trackUpdate    = {$inc: { numRequests: 1}}
-        guestReqObject.guestUpdate    = guestObject.clearGuestSong (4)
-        fulfill (guestReqObject)
-      })
-    }*/else if (messageBody === 'yes'){
+    }else if (messageBody === 'yes'){
       model.Track.findOne({$and: [{ 'trackID' : guestReqObject.guest.currentTrack.trackID}, {'hostID' : guestReqObject.guest.hostID}]}).exec()
       .then (function (trackFound){
         console.log ('track: '+trackFound)
@@ -159,6 +130,37 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
     })
   })
 }
+
+/*else if (messageBody === 'yes' && guestInfo.numRequests < 1){
+      model.Track.findOne({ 'trackID' : guestInfo.currentTrack.trackID}).exec()
+      .then (function (trackFound){
+        if (trackFound){
+          if (trackFound.numRequests === 2){
+            model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
+            .then (function (hostInfo){
+              hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, guestInfo.currentTrack.trackID) 
+              .then (function (added){
+                console.log (added)
+              })  
+            })
+            guestReqObject.trackUpdate= {$set: { numRequests: 0}}
+            guestReqObject.response   = addResponse.songConfirmedAndAddedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
+            return (guestReqObject)
+          }else{
+            guestReqObject.response   = addResponse.songConfirmedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
+            return (guestReqObject)
+          }
+        }else {
+          guestReqObject.response     = addResponse.songConfirmedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, 0)
+          return (guestReqObject)
+        }
+      })
+      .then (function (guestReqObject){
+        guestReqObject.trackUpdate    = {$inc: { numRequests: 1}}
+        guestReqObject.guestUpdate    = guestObject.clearGuestSong (4)
+        fulfill (guestReqObject)
+      })
+    }*/
 
 module.exports = {
   HandleIncomingMessage: HandleIncomingMessage
