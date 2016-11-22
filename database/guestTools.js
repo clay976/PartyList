@@ -4,6 +4,12 @@ var model = require ('./models')
 var hostAcountTools = require ('./hostTools')
 var addResponse = require ('../twilio/responses')
 
+//node modules
+var twilio = require('twilio')
+var sid = 'AC85573f40ef0c3fb0c5aa58477f61b02e'
+var atoken = 'fcea26b2b0ae541d904ba23e12e2c499'
+var client = require('twilio/lib')(sid, atoken);
+
 function addManyGuest (req, res){
   var body = JSON.parse(req)
   var nums = body.guestNums
@@ -14,12 +20,19 @@ function addManyGuest (req, res){
 }
 
 function addGuest (req, res){
-  hostAcountTools.validateHost (req.body.host)
+  hostAcountTools.validateHost (req.body.hostID)
   .then (function (){
     return validateRequest(req)
   })
   .then (function (){
-    return model.Guest.findOneAndUpdate({'phoneNum': '+1'+req.body.guestNum}, upsertTemplate.Guest (req.body.host, '+1'+req.body.guestNum), {upsert:true}).exec()
+    return model.Guest.findOneAndUpdate({'phoneNum': '+1'+req.body.guestNum}, upsertTemplate.Guest (req.body.hostID, '+1'+req.body.guestNum), {upsert:true}).exec()
+  })
+  .then (function (){
+    return client.sendMessage({
+      to:'+1' +req.body.guestNum,
+      from:'+15878033620',
+      body:'You have been added to '+req.body.hostID+'\'s party. You can send back your song requests to this phone number!'
+    })
   })
   .then (function (update){
     res.status(200).json ('guest added succsefully')
@@ -93,7 +106,7 @@ function updateGuestIfNeeded (guestReqObject){
 function updateTrackIfNeeded (guestReqObject){
   return new Promise (function (fulfill, reject){
     if (guestReqObject.trackUpdate){
-      model.Track.findOneAndUpdate({ 'trackID' : guestReqObject.guest.currentTrack.trackID}, guestReqObject.trackUpdate).exec()
+      model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestReqObject.guest.currentTrack.trackID}, {'hostID' : guestReqObject.guest.hostID}]}, guestReqObject.trackUpdate).exec()
       .then (function (updated){
         fulfill (guestReqObject)
       })

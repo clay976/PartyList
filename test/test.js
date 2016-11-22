@@ -16,7 +16,7 @@ https://accounts.spotify.com/authorize?response_type=code&client_id=a000adffbd26
 
 place the code in this next variable
 */
-var code = 'AQDQSonwFU8ItTfa14ipHJLxuV01hQ8x35xo4Vwsz3MMqOkBGONe1cy3EO2BI7f0QAljaXAecRDIIl-RgHdtwUYYS1CqCJo_Nc4GBCrIaxUxXEazWStzHD0f_luT_cFEEDwCJ1u0mSbK-jlUOT6TKzX-XN27HiWYGB6QvTIwIqKTir1wOD6qdWeSxurwofDe8okhiIpQGqNi3Q-45Tz23ZX1br8HTH5iSyCU_pTplPm7gOcaaT-8gK83vMxCyBT42244pGNRdU-gGEPa6oz3SFdW3bQBKTjQ_iHpkj6jdQnORj345y7yXHBDxQtuANqxRdUuxKwdZcTG-6I8XYYIVsPM77JBJg357zrKP05WmFEIWWeMftl4FpP-LRoeU7XJoYVv'
+var code = 'AQBbATIdw2c7AWYYWBjZNJTsOIZjwjuYZlv5o0ThXL7ZVVWhpgQWc5RK0_Tzkc82VCqvGO2clKhAyb_ZWP7c_W_iHIth843dD5KxBEw1AbFiWKdfFDOpXLchjm1mU-e95uch8KQerzEF9KXrc_31ngaFTVDrwKqfO7YRwcD-qYltJwz3bqZQmrHfzbE8UZUyqmSIT-ajtQF0r-reMWd0cBmKHBurOHcL3oOxBGDX8iIuz55yIgclHso_vd3L7FNcmlXQj7HVEC4e9XaJdDifAkQbSDW8GDPPUpkw_52jqD1VzmqDtr9XHG961Qm1Qf882iRlO11vEo3X3_iyUqavaAnf1Vk1NdDK0Kwy45wBxIQ8YAIexDPfBtvekzHEWTLewc05'
 
 //start tests
 describe('GET /login', function(){
@@ -45,7 +45,7 @@ describe('GET /callback', function(){
       done();
     });
   });
-  it('hit the callback enpoint with a bad authorization code. should be a redirect back to login.', function(done){
+  it('hit the callback endpoint with a bad authorization code. should be a redirect back to login.', function(done){
     request(url)
     .get('/callback?code=badcode')
     .end(function(err, res) {

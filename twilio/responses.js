@@ -10,9 +10,9 @@ var declineRequest = ('Sorry about the wrong song, try modifying your search! Re
 
 var songNotFound = ('Sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
 
-function trackFoundOnSpotify (trackID, title, artist, prevReqs){
+function trackFoundOnSpotify (hostID, trackID, title, artist, prevReqs){
   return new Promise (function (fulfill, reject){
-    model.Track.findOne({ 'trackID' : trackID}).exec()
+    model.Track.findOne({$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}).exec()
     .then (function (trackFound){
       checkForPreviousRequests (trackID, prevReqs)
       .then (function (prevRequests){

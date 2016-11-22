@@ -3,6 +3,7 @@
 
 //my modules
 var databaseHostTools = require ('../../database/hostTools')
+var playlistTool = require ('../playlist/tools')
 
 var SpotifyWebApi = require('spotify-web-api-node');
 var credentials = {
@@ -21,16 +22,18 @@ var querystring = require('querystring')
 // preps them in to an "options" object to
 // make another call for host info
 function homepage (req, res) {
-  var homePage
   spotifyApi.authorizationCodeGrant(req.query.code)
   .then (function (data){
     return setTokensAndGetHostInfo(data)
   })
   .then (function (hostInfo){
-    homePage = '/#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':hostInfo.refresh_token,'hostID':hostInfo.spotifyReturn.body.id})
-    return model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, upsertTemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage), {upsert:true}).exec()
+    console.log (hostInfo)
+    var homePage = '/#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':hostInfo.refresh_token,'hostID':hostInfo.spotifyReturn.body.id})
+    playlistTool.setLatestPlaylist (hostInfo.spotifyReturn.body.id)
+    model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, upsertTemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage), {upsert:true}).exec()
+    return (homePage)
   })
-  .then (function (host){
+  .then (function (homePage){
     res.redirect (homePage)
   })
   .catch (function (err){
@@ -57,7 +60,7 @@ function setTokensAndGetHostInfo (data) {
 
 /*
 function explicitFilter (req, res, db){
-  var hostInfo = validateHost (req.body.host)
+  var hostInfo = validateHost (req.body.hostID)
   hostInfo.then (model.Host.findOneAndUpdate({ 'hostID' : hostInfo.host }, { $set: {'playlistID' : req.body.explicit}}).exec())
   .then (res.status(200).json ('hostInfo.homePage'))  
   .catch (function(err) {

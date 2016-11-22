@@ -11,13 +11,21 @@ function Host (data, accessToken, refreshToken, homePage){
 
 function Guest (host, number){
 	return {
+		'currentTrack'	: { 
+		  'trackID'     : '',
+		  'name'        : '',
+		  'artist'      : ''
+		},
+		'lastMessage'   : '',
+		'prevRequests'  : [],
   	'hostID'				: host,
     'phoneNum'			: number
   }
 }
 
-function Track (TrackID, name, artist){
+function Track (host, TrackID, name, artist){
 	return {
+		'hostID'				: host,
 	  'trackID'				: TrackID,
 	  'name'					: name,
 	  'artist'				: artist,
