@@ -1,27 +1,11 @@
-//update playlist document
-function playlistID (ID){
-  return ({
-    $set:{ "playlistID": ID }
-  }) 
-}
-
-//update guests functions
-function guestRequest (trackID){
-  return ({
-    $set: { "currentTrack": trackID }
-  }) 
-}
+//$set:{ "playlistID": ID }
+//$set: { "currentTrack": trackID }
 
 function guestConfirm(){
   return ({
     $inc: { numRequests: -1},
     $set: { "currentTrack": "" }
   }) 
-}
-
-//update tracks function 
-function tracksReqd (){
-  return ({ numRequests: 1}) 
 }
 
 //update api info functions
@@ -43,8 +27,6 @@ function accessToken (aToken){
   }}) 
 }
 module.exports = {
-  playlistID: playlistID,
-  guestRequest: guestRequest,
   guestConfirm: guestConfirm,
   tracksReqd: tracksReqd,
   bothTokens: bothTokens,

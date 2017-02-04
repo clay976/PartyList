@@ -1,4 +1,3 @@
-var queryTemplate = require ('./query/JSONtemps')
 var upsertTemplate = require ('./upsert/JSONtemps')
 var model = require ('./models')
 var hostAcountTools = require ('./hostTools')
