@@ -13,7 +13,7 @@ var spotifyAccountTemplate = require ('./spotify/account/JSONtemps')
 var twilioIncoming = require ('./twilio/incoming')
 
 //Database Tools
-var upsertTemplate = require ('./database/upsert/JSONtemps')
+var JSONtemplate = require ('./database/JSONtemps')
 var databaseHostTools = require ('./database/hostTools')
 var removeList = require ('./database/remove')
 var guestTools = require ('./database/guestTools')
@@ -230,7 +230,7 @@ ________________________________________________________________________________
       databaseHostTools.spotifyApi.refreshAccessToken()
       .then(function(data) {
         databaseHostTools.spotifyApi.setAccessToken(data.body.access_token)
-        model.Host.findOneAndUpdate({'hostID': 'clay976'}, upsertTemplate.Host ('clay976', data.body.access_token, hostInfo.refresh_token, hostInfo.homePage)).exec()
+        model.Host.findOneAndUpdate({'hostID': 'clay976'}, JSONtemplate.Host ('clay976', data.body.access_token, hostInfo.refresh_token, hostInfo.homePage)).exec()
         .then(function(update) {
           console.log ('getting refresh token successful')
         })

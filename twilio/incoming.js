@@ -8,7 +8,7 @@ var guestTools = require ('../database/guestTools')
 var model = require ('../database/models')
 var guestObject = require ('./JSONtemps')
 var addResponse = require ('./responses')
-var upsertTemplate = require ('../database/upsert/JSONtemps')
+var JSONtemplate = require ('../database/JSONtemps')
 
 function HandleIncomingMessage (req, res, db){
   console.log ('incoming text')
@@ -100,7 +100,7 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
         .then (function (foundSong){
           if (foundSong) guestReqObject.trackUpdate        = {$inc: { foundAmount: 1}}
           else {
-            var debug = upsertTemplate.Track (guestReqObject.guest.hostID, track.id, track.name, track.artists[0].name)
+            var debug = JSONtemplate.Track (guestReqObject.guest.hostID, track.id, track.name, track.artists[0].name)
             console.log (debug)
             model.Track.findOneAndUpdate({$and: [{ 'trackID' : track.id}, {'hostID' : guestReqObject.guest.hostID}]}, debug, {upsert:true}).exec()
           }

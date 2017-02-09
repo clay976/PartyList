@@ -13,7 +13,7 @@ var credentials = {
 };
 var spotifyApi = new SpotifyWebApi(credentials);
 var model = require ('../../database/models')
-var upsertTemplate = require ('../../database/upsert/JSONtemps')
+var JSONtemplate = require ('../../database/JSONtemps')
 var querystring = require('querystring')
 
 
@@ -30,7 +30,7 @@ function homepage (req, res) {
     console.log (hostInfo)
     var homePage = '/#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':hostInfo.refresh_token,'hostID':hostInfo.spotifyReturn.body.id})
     playlistTool.setLatestPlaylist (hostInfo.spotifyReturn.body.id)
-    model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, upsertTemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage), {upsert:true}).exec()
+    model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, JSONtemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage), {upsert:true}).exec()
     return (homePage)
   })
   .then (function (homePage){

@@ -63,6 +63,10 @@ function songConfirmedAndAddedAndadvertisment (title, artist, numRequests){
   return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' requests and will be added to the playlist!')
 }
 
+function errorOnOurEnd (){
+  return ('We are very sorry there was an error on our end. Please try again!')
+}
+
 module.exports = {
   notGuest: notGuest,
   emptyConfirmation: emptyConfirmation,
@@ -72,5 +76,6 @@ module.exports = {
   songConfirmedAndadvertisment: songConfirmedAndadvertisment,
   songConfirmed: songConfirmed,
   songConfirmedAndAdded: songConfirmedAndAdded,
-  songConfirmedAndAddedAndadvertisment: songConfirmedAndAddedAndadvertisment
+  songConfirmedAndAddedAndadvertisment: songConfirmedAndAddedAndadvertisment,
+  errorOnOurEnd: errorOnOurEnd
 }

@@ -1,7 +1,7 @@
-var upsertTemplate = require ('./upsert/JSONtemps')
+var JSONtemplate = require ('./JSONtemps')
 var model = require ('./models')
 var hostAcountTools = require ('./hostTools')
-var addResponse = require ('../twilio/responses')
+var response = require ('../twilio/responses')
 
 //node modules
 var twilio = require('twilio')
@@ -19,28 +19,30 @@ function addManyGuest (req, res){
 }
 
 function addGuest (req, res){
-  hostAcountTools.validateHost (req.body.hostID)
+  var guestNum = req.body.guestNum
+  var hostID = req.body.hostID
+  var guestQuery = {'phoneNum': '+1' +guestNum}
+  var infoToInsert = JSONtemplate.Guest (hostID, '+1' +guestNum)
+
+  hostAcountTools.validateHost (hostID)
   .then (function (){
     return validateRequest(req)
   })
   .then (function (){
-    return model.Guest.findOneAndUpdate({'phoneNum': '+1'+req.body.guestNum}, upsertTemplate.Guest (req.body.hostID, '+1'+req.body.guestNum), {upsert:true}).exec()
+    return model.Guest.findOneAndUpdate(guestQuery, infoToInsert, {upsert:true}).exec()
   })
   .then (function (){
-    return client.sendMessage({
-      to:'+1' +req.body.guestNum,
-      from:'+15878033620',
-      body:'You have been added to '+req.body.hostID+'\'s party. You can send back your song requests to this phone number!'
-    })
+    return client.sendMessage(welcomeMessage (guestNum, hostID))
   })
   .then (function (update){
-    res.status(200).json ('guest added succsefully')
+    res.status(200).json ('guest, with phone number:' +guestNum+ ', added succsefully')
   })
   .catch (function (err){
     res.status(400).json('error adding guest: '+err)
   })
 }
 
+//validates that the request from client side is present and in the right format
 function validateRequest (req){
   return new Promise (function (fulfill, reject){
     if (req.body.guestNum){
@@ -50,26 +52,30 @@ function validateRequest (req){
   })
 }
 
+//find the guest in our database by their phone number
+//if their number is not found or if they are not apart of anyone's parties currently. They are told they are not a guest.
 function validateGuest (body){
   return new Promise (function (fulfill, reject){
     var message = (body.Body).toLowerCase().trim()
     model.Guest.findOne({ 'phoneNum' : body.From }).exec()
     .then (function (guestInfo){
-      if (message === 'add me please'){
+      /*if (message === 'add me please'){
         console.log ('adding guest: '+ body)
         model.Guest.findOneAndUpdate({'phoneNum': body.From}, upsertTemplate.Guest ('clay976', body.From), {upsert:true}).exec()
         .then (function (updated){
           reject ('You have been added succesfully!\n\n Songs can be searched by sending a text like this "Drake One Dance". Confirm your request after it is found. Songs with 2 requests will be added to the playlist. You can find the playlist here:  https://open.spotify.com/user/clay976/playlist/4zTJyhtgvVuNvGFwDDSfJB')
         })
-      }else if (guestInfo){
+      }else */
+      if (guestInfo){
         if (guestInfo.hostID){
           guestInfo.lastMessage = message
           fulfill (guestInfo) 
-        }else reject (addResponse.notGuest)
-      }else reject (addResponse.notGuest)
+        }else reject (response.notGuest)
+      }else reject (response.notGuest)
     })
     .catch (function (err){
-      reject ('validating guest failed: ' +err)
+      console.log (err)
+      reject (response.errorOnOurEnd)
     })
   })
 }
@@ -114,6 +120,14 @@ function updateTrackIfNeeded (guestReqObject){
       })
     }else fulfill (guestReqObject)
   })
+}
+
+function welcomeMessage (toNum, hostID){
+  return {
+    to    :'+1' +toNum,
+    from  :'+15878033620',
+    body  : response.welcome (hostID)
+  }
 }
 
 module.exports = {
