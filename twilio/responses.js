@@ -72,14 +72,15 @@ function welcome (hostID){
 }
 
 module.exports = {
-  notGuest: notGuest,
-  emptyConfirmation: emptyConfirmation,
-  trackFoundOnSpotify: trackFoundOnSpotify,
-  declineRequest: declineRequest,
-  songNotFound: songNotFound,
-  songConfirmedAndadvertisment: songConfirmedAndadvertisment,
-  songConfirmed: songConfirmed,
-  songConfirmedAndAdded: songConfirmedAndAdded,
-  songConfirmedAndAddedAndadvertisment: songConfirmedAndAddedAndadvertisment,
-  errorOnOurEnd: errorOnOurEnd
+  notGuest                              : notGuest,
+  emptyConfirmation                     : emptyConfirmation,
+  trackFoundOnSpotify                   : trackFoundOnSpotify,
+  declineRequest                        : declineRequest,
+  songNotFound                          : songNotFound,
+  songConfirmedAndadvertisment          : songConfirmedAndadvertisment,
+  songConfirmed                         : songConfirmed,
+  songConfirmedAndAdded                 : songConfirmedAndAdded,
+  songConfirmedAndAddedAndadvertisment  : songConfirmedAndAddedAndadvertisment,
+  errorOnOurEnd                         : errorOnOurEnd,
+  welcome                               : welcome
 }
