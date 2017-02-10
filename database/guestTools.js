@@ -28,7 +28,9 @@ function addGuest (req, res){
   hostInfo
   .then (validateRequest(req))
   .then (model.Guest.findOneAndUpdate(guestQuery, infoToInsert, {upsert:true}).exec())
-  .then (client.sendMessage(welcomeMessage (guestNum, hostInfo.hostID, hostInfo.reqThreshold)))
+  .then (function (hostInfo){
+    client.sendMessage(welcomeMessage (guestNum, hostInfo.hostID, hostInfo.reqThreshold, hostInfo.playlistID))
+  })
   .then (res.status(200).json ('guest, with phone number: ' +guestNum+ ', added succsefully'))
   .catch(function (err){
     console.log (err.stack)
@@ -116,11 +118,11 @@ function updateTrackIfNeeded (guestReqObject){
   })
 }
 
-function welcomeMessage (toNum, hostID, reqThreshold){
+function welcomeMessage (toNum, hostID, reqThreshold, playlistID){
   return {
     to    :'+1' +toNum,
     from  :'+15878033620',
-    body  : response.welcome (hostID, reqThreshold)
+    body  : response.welcome (hostID, reqThreshold, playlistID)
   }
 }
 
