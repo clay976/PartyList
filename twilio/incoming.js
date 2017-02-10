@@ -50,20 +50,14 @@ function buildResponseObject (guestInfo){
       var hostInfo = model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
       Promise.all ([track, hostInfo])
       .then (function (values){ 
-        console.log ('values1: ' +values[0])
-        console.log ('values2: ' +values[1])
+        track = values[0]
+        hostInfo = values[1]
         if (track){
-          if (track.numRequests === 1){
-            model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
-            .then (function (hostInfo){
-              hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
-              hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
-              .then (function (added){
-              })  
-              .catch (function (err){
-                console.log (err)
-              }) 
-            })
+          if (track.numRequests === (hostInfo.reqThreshold - 1)){
+            hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
+            hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
+            .then (function (added){
+            })  
             .catch (function (err){
               console.log (err)
             }) 
