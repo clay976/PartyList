@@ -27,7 +27,7 @@ function homepage (req, res) {
     return setTokensAndGetHostInfo(data)
   })
   .then (function (hostInfo){
-    console.log ('host info: ' +hostInfo)
+    console.log ('host info: ' +hostInfo.spotifyReturn)
     var homePage = '/#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':hostInfo.refresh_token,'hostID':hostInfo.spotifyReturn.body.id})
     playlistTool.setLatestPlaylist (hostInfo.spotifyReturn.body.id)
     model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, JSONtemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage), {upsert:true}).exec()
