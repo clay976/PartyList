@@ -8,7 +8,6 @@ var spotifyApi = new SpotifyWebApi(credentials);
 var model = require ('./models')
 
 function validateHost (host){
-	console.log (host)
 	return new Promise (function (fulfill, reject){
 	  model.Host.findOne({ 'hostID' : host }).exec()
 	  .then (function (hostInfo){
