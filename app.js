@@ -106,7 +106,7 @@ RETURNED: properly formatted JSON object containing the name and spotify ID of t
   ]}
 _______________________________________________________________________________________*/
   app.post('/playlist/spotify/getAll', function (req, res){
-    spotifyPlaylistTools.findAllPlaylists (req, res, db)
+    spotifyPlaylistTools.findAllPlaylists (req, res)
   })
 
 /*
@@ -118,9 +118,20 @@ TO BE SENT:
   }
 _______________________________________________________________________________________*/
   app.post('/playlist/spotify/set', function (req, res){
-    spotifyPlaylistTools.setSpecificPlaylist (req, res, db)
+    spotifyPlaylistTools.setSpecificPlaylist (req, res)
   })  
 
+/*
+set a specific playlist id (most likely to be used after finding all the user's spotify playlists)
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.post('/playlist/requestThreshold', function (req, res){
+    spotifyPlaylistTools.setRequestThreshold (req, res)
+  })  
 /*
 find this user's latest playlist held in our database
 ________________________________________________________________________________________

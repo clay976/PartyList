@@ -43,6 +43,18 @@ function createPlaylist (req, res, db){
   })
 }
 
+//TODO: add comments
+ function setRequestThreshold (req, res){
+  model.Host.findOneAndUpdate({ 'hostID' : req.hostID }, { $set: {'reqThreshold' : req.requests }}).exec()
+  .then (function (update){
+    res.status(200).json ('number of requests to add a song to a playlist has been set to ' +req.requests+ '!')
+  })
+  .catch (function (err){
+    console.log (err.stack)
+    res.status(400).json('error setting the request threshold: '+ err)
+  })
+}
+
 // //TODO: add comments
 function findAllPlaylists (req, res, db){
   hostAcountTools.validateHost (req.body.hostID)

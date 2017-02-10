@@ -34,7 +34,8 @@ var host = mongoose.Schema({
   playlistID		: { type: String, default: '' },
   playlistName  : { type: String, default: '' },
   homePage      : String,
-  explicit      : { type: Boolean, defauult: true}
+  explicit      : { type: Boolean, defauult: true},
+  reqThreshold  : { type: Number. default: 2} 
 })
 
 var Guest = mongoose.model('Guest', guest);
