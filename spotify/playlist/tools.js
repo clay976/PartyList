@@ -137,8 +137,9 @@ function requestSpotifyPlaylistCreation (data){
 }
 
 module.exports = {
-  createPlaylist: createPlaylist,
-  setLatestPlaylist: setLatestPlaylist,
-  findAllPlaylists: findAllPlaylists,
-  setSpecificPlaylist: setSpecificPlaylist
+  createPlaylist      : createPlaylist,
+  setLatestPlaylist   : setLatestPlaylist,
+  findAllPlaylists    : findAllPlaylists,
+  setSpecificPlaylist : setSpecificPlaylist,
+  setRequestThreshold : setRequestThreshold
 }
