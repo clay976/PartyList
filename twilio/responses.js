@@ -67,6 +67,10 @@ function errorOnOurEnd (){
   return ('We are very sorry there was an error on our end. Please try again!')
 }
 
+function welcome (hostID){
+  return ('you have been added to ' +hostID+ '\'s party with Party List')
+}
+
 module.exports = {
   notGuest: notGuest,
   emptyConfirmation: emptyConfirmation,
