@@ -38,7 +38,6 @@ function createPlaylist (req, res, db){
     return model.Host.findOneAndUpdate({ 'hostID' : playlistInfo.playlists[0].owner }, { $set: {'playlistID' : playlistInfo.playlists[0].id, 'playlistName' : playlistInfo.playlists[0].name}}).exec()
   })
   .then (function (update){
-    console.log (update)
     res.status(200).json ('playlist successfully set to latest playlist')
   })
   .catch (function (err){
