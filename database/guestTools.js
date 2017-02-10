@@ -38,6 +38,7 @@ function addGuest (req, res){
     res.status(200).json ('guest, with phone number: ' +guestNum+ ', added succsefully')
   })
   .catch (function (err){
+    console.log (err.stack)
     res.status(400).json('error adding guest: '+err)
   })
 }
