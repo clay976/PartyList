@@ -93,14 +93,13 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
           if (foundSong) guestReqObject.trackUpdate        = {$inc: { foundAmount: 1}}
           else {
             var debug = JSONtemplate.Track (guestReqObject.guest.hostID, track.id, track.name, track.artists[0].name)
-            console.log (debug)
             model.Track.findOneAndUpdate({$and: [{ 'trackID' : track.id}, {'hostID' : guestReqObject.guest.hostID}]}, debug, {upsert:true}).exec()
           }
         })
         addResponse.trackFoundOnSpotify (guestReqObject.guest.hostID, track.id, track.name, track.artists[0].name, guestReqObject.guest.prevRequests)
         .then (function (resp){
           guestReqObject.response     = resp
-          guestReqObject.guestUpdate  = JSONtemplate.setGuestTrack (track.id, track.name, rack.artists[0].name)
+          guestReqObject.guestUpdate  = JSONtemplate.setGuestTrack (track.id, track.name, track.artists[0].name)
           fulfill (guestReqObject)
         })
         .catch (function (err){
