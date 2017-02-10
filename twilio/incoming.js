@@ -46,15 +46,18 @@ function buildResponseObject (guestInfo){
     if ((messageBody === 'yes') && (guestInfo.currentTrack.trackID === '')){
       reject (addResponse.emptyConfirmation)
     }else if (messageBody === 'yes'){
-      model.Track.findOne({$and: [{ 'trackID' : guestReqObject.guest.currentTrack.trackID}, {'hostID' : guestReqObject.guest.hostID}]}).exec()
-      .then (function (trackFound){
-        console.log ('track: '+trackFound)
-        if (trackFound){
-          if (trackFound.numRequests === 1){
+      var track = model.Track.findOne({$and: [{ 'trackID' : guestReqObject.guest.currentTrack.trackID}, {'hostID' : guestReqObject.guest.hostID}]}).exec()
+      var hostInfo = model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
+      
+
+      Promise.all ([track, hostInfo]).then (values => { 
+        console.log (values)
+        if (track){
+          if (track.numRequests === 1){
             model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
             .then (function (hostInfo){
               hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
-              hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+trackFound.trackID)
+              hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
               .then (function (added){
               })  
               .catch (function (err){
@@ -65,11 +68,11 @@ function buildResponseObject (guestInfo){
               console.log (err)
             }) 
             guestReqObject.trackUpdate= {$set: { addedPaylist: true}}
-            guestReqObject.response   = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
+            guestReqObject.response   = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests)
             return (guestReqObject)
           }else{
             guestReqObject.trackUpdate= {$inc: { numRequests: 1}}
-            guestReqObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
+            guestReqObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests)
             return (guestReqObject)
           }
         }else { 
