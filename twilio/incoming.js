@@ -48,9 +48,8 @@ function buildResponseObject (guestInfo){
     }else if (messageBody === 'yes'){
       var track = model.Track.findOne({$and: [{ 'trackID' : guestReqObject.guest.currentTrack.trackID}, {'hostID' : guestReqObject.guest.hostID}]}).exec()
       var hostInfo = model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
-      
-
-      Promise.all ([track, hostInfo]).then (values => { 
+      Promise.all ([track, hostInfo])
+      .then (function (values){ 
         console.log (values)
         if (track){
           if (track.numRequests === 1){
