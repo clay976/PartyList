@@ -23,21 +23,14 @@ function addGuest (req, res){
   var hostID = req.body.hostID
   var guestQuery = {'phoneNum': '+1' +guestNum}
   var infoToInsert = JSONtemplate.Guest (hostID, '+1' +guestNum)
-
-  hostAcountTools.validateHost (hostID)
-  .then (function (){
-    return validateRequest(req)
-  })
-  .then (function (){
-    return model.Guest.findOneAndUpdate(guestQuery, infoToInsert, {upsert:true}).exec()
-  })
-  .then (function (){
-    return client.sendMessage(welcomeMessage (guestNum, hostID))
-  })
-  .then (function (update){
-    res.status(200).json ('guest, with phone number: ' +guestNum+ ', added succsefully')
-  })
-  .catch (function (err){
+  hostInfo = hostAcountTools.validateHost (hostID)
+  
+  hostInfo
+  .then (validateRequest(req))
+  .then (model.Guest.findOneAndUpdate(guestQuery, infoToInsert, {upsert:true}).exec())
+  .then (client.sendMessage(welcomeMessage (guestNum, hostID, hostInfo.reqThreshold))
+  .then (res.status(200).json ('guest, with phone number: ' +guestNum+ ', added succsefully'))
+  .catch(function (err){
     console.log (err.stack)
     res.status(400).json('error adding guest: '+err)
   })
@@ -123,11 +116,11 @@ function updateTrackIfNeeded (guestReqObject){
   })
 }
 
-function welcomeMessage (toNum, hostID){
+function welcomeMessage (toNum, hostID, reqThreshold){
   return {
     to    :'+1' +toNum,
     from  :'+15878033620',
-    body  : response.welcome (hostID)
+    body  : response.welcome (hostID, reqThreshold)
   }
 }
 

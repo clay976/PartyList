@@ -67,8 +67,8 @@ function errorOnOurEnd (){
   return ('We are very sorry there was an error on our end. Please try again!')
 }
 
-function welcome (hostID){
-  return ('you have been added to ' +hostID+ '\'s party with Party List')
+function welcome (hostID, reqThreshold){
+  return ('you have been added to ' +hostID+ '\'s party with Party List. Send your song requests to this number. Songs will be added after ' +reqThreshold+ '. You can find the playlist here! link...')
 }
 
 module.exports = {

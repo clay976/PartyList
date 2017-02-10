@@ -48,7 +48,7 @@ function createPlaylist (req, res, db){
   console.log (req.body)
   model.Host.findOneAndUpdate({ 'hostID' : req.body.hostID }, { $set: {'reqThreshold' : req.body.requests }}).exec()
   .then (function (update){
-    res.status(200).json ('number of requests to add a song to a playlist has been set to ' +req.requests+ '!')
+    res.status(200).json ('number of requests to add a song to a playlist has been set to ' +req.body.requests+ '!')
   })
   .catch (function (err){
     console.log (err.stack)
