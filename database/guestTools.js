@@ -19,7 +19,7 @@ function addManyGuest (req, res){
 }
 
 function addGuest (req, res){
-  console.log ("req: " +req)
+  console.log ("req: " +req.body)
   var guestNum = req.body.guestNum
   var hostID = req.body.hostID
   var guestQuery = {'phoneNum': '+1' +guestNum}
