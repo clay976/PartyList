@@ -19,8 +19,6 @@ function addManyGuest (req, res){
 }
 
 function addGuest (req, res){
-  console.log ("req: " +req.body.hostID)
-  console.log ("req: " +req.body.guestNum)
   var guestNum = req.body.guestNum
   var hostID = req.body.hostID
   var guestQuery = {'phoneNum': '+1' +guestNum}
@@ -37,7 +35,7 @@ function addGuest (req, res){
     return client.sendMessage(welcomeMessage (guestNum, hostID))
   })
   .then (function (update){
-    res.status(200).json ('guest, with phone number:' +guestNum+ ', added succsefully')
+    res.status(200).json ('guest, with phone number: ' +guestNum+ ', added succsefully')
   })
   .catch (function (err){
     res.status(400).json('error adding guest: '+err)
