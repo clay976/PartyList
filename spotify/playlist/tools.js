@@ -45,8 +45,8 @@ function createPlaylist (req, res, db){
 
 //TODO: add comments
  function setRequestThreshold (req, res){
-  console.log (req)
-  model.Host.findOneAndUpdate({ 'hostID' : req.hostID }, { $set: {'reqThreshold' : req.requests }}).exec()
+  console.log (req.body)
+  model.Host.findOneAndUpdate({ 'hostID' : req.body.hostID }, { $set: {'reqThreshold' : req.body.requests }}).exec()
   .then (function (update){
     res.status(200).json ('number of requests to add a song to a playlist has been set to ' +req.requests+ '!')
   })
