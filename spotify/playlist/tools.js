@@ -34,7 +34,6 @@ function createPlaylist (req, res, db){
     return playlistTemplate.userPlaylists (host, data.body.items, data.body.total)
   })
   .then (function (playlistInfo){
-    console.log (playlistInfo)
     return model.Host.findOneAndUpdate({ 'hostID' : playlistInfo.playlists[0].owner }, { $set: {'playlistID' : playlistInfo.playlists[0].id, 'playlistName' : playlistInfo.playlists[0].name}}).exec()
   })
   .then (function (update){
