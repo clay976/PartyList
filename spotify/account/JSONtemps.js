@@ -4,7 +4,7 @@
 var scope = 'user-read-private user-read-email user-read-birthdate streaming playlist-modify-private playlist-modify-public playlist-read-private'
 var client_id = 'a000adffbd26453fbef24e8c1ff69c3b'
 var client_secret = '899b3ec7d52b4baabba05d6031663ba2' // Your client secret
-var redirect_uri = 'http://104.131.215.55:80/callback'
+var redirect_uri = 'http://localhost/callback'
 
 function buildScope (){
   return {
