@@ -23,14 +23,12 @@ function addGuest (req, res){
   var hostID = req.body.hostID
   var guestQuery = {'phoneNum': '+1' +guestNum}
   var infoToInsert = JSONtemplate.Guest (hostID, '+1' +guestNum)
-  hostInfo = hostAcountTools.validateHost (hostID)
+  var hostInfo = hostAcountTools.validateHost (hostID)
   
   hostInfo
   .then (validateRequest(req))
   .then (model.Guest.findOneAndUpdate(guestQuery, infoToInsert, {upsert:true}).exec())
-  .then (function (hostInfo){
-    client.sendMessage(welcomeMessage (guestNum, hostInfo.hostID, hostInfo.reqThreshold))
-  })
+  .then (client.sendMessage(welcomeMessage (guestNum, hostInfo.hostID, hostInfo.reqThreshold)))
   .then (res.status(200).json ('guest, with phone number: ' +guestNum+ ', added succsefully'))
   .catch(function (err){
     console.log (err.stack)
