@@ -50,7 +50,8 @@ function buildResponseObject (guestInfo){
       var hostInfo = model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
       Promise.all ([track, hostInfo])
       .then (function (values){ 
-        console.log (values)
+        console.log ('values1: ' values[0])
+        console.log ('values2: ' values[1])
         if (track){
           if (track.numRequests === 1){
             model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
