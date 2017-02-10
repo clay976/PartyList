@@ -49,6 +49,18 @@ function guestConfirm(){
   }
 }
 
+function setGuestTrack (id, name, artist){
+	return	{
+    $set            : {
+      currentTrack  : {
+        trackID     : id, 
+        name        : name, 
+        artist      : artist
+      }
+    }
+  }
+}
+
 //update api info functions
 function bothTokens (aToken, rToken){
   var d 		= new Date()
@@ -75,6 +87,7 @@ module.exports = {
 	Guest					: Guest,
 	Track					: Track,
 	guestConfirm	: guestConfirm,
+	setGuestTrack	: setGuestTrack,
   bothTokens		: bothTokens,
   accessToken		: accessToken
 }
