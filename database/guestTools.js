@@ -28,7 +28,9 @@ function addGuest (req, res){
   hostInfo
   .then (validateRequest(req))
   .then (model.Guest.findOneAndUpdate(guestQuery, infoToInsert, {upsert:true}).exec())
-  .then (client.sendMessage(welcomeMessage (guestNum, hostInfo.hostID, hostInfo.reqThreshold)))
+  .then (function (hostInfo){
+    client.sendMessage(welcomeMessage (guestNum, hostInfo.hostID, hostInfo.reqThreshold))
+  })
   .then (res.status(200).json ('guest, with phone number: ' +guestNum+ ', added succsefully'))
   .catch(function (err){
     console.log (err.stack)
