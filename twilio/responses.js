@@ -10,42 +10,6 @@ var declineRequest = ('Sorry about the wrong song, try modifying your search! Re
 
 var songNotFound = ('Sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
 
-function trackFoundOnSpotify (hostID, trackID, title, artist, prevReqs){
-  return new Promise (function (fulfill, reject){
-    var trackFound = model.Track.findOne({$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}).exec()
-    var prevRequests = checkForPreviousRequests (trackID, prevReqs)
-    
-    Promise.all ([trackFound, prevRequests])
-    .then (function (values){ 
-      trackFound = values[0]
-      prevRequests = values[1]
-      if (trackFound && trackFound.addedPaylist){
-        reject ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +(trackFound.numRequests + 1)+ ' request(s) and has already been added to the playlist.')
-      }else if (trackFound && prevRequests) {
-        reject ('We found: ' +title+ ', by: ' +artist+ '. You have already requested this Track. Ask someone else to request it and get it on the playlist!!')
-      }else if (trackFound){
-        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
-      }else{
-        fulfill ('We found: ' +title+ ', by: ' +artist+ '. This Track has 0 requests! \n\n Send back "yes" to confirm or search another song to discard this request.')
-      }
-    })
-    .catch (function (err){
-      reject (err)
-    })
-  })
-}
-
-function checkForPreviousRequests (trackID, prevRequests){
-  return new Promise (function (fulfill, reject){
-    for (var i = 0; i < prevRequests.length; i++){
-      if (trackID === prevRequests[i]){
-        fulfill (true)
-      }
-    }
-    fulfill (false)
-  })
-}
-
 function songConfirmedAndadvertisment (title, artist, numRequests){
   return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' request(s)! You are also recieving an advertisment because you have made 5 successful request')
 }
@@ -68,6 +32,18 @@ function errorOnOurEnd (){
 
 function welcome (hostID, reqThreshold, playlistID){
   return ('you have been added to ' +hostID+ '\'s party with Party List. Send your song requests to this number. Songs will be added after ' +reqThreshold+ '. You can find the playlist here https://play.spotify.com/user/clay976/playlist/'+ playlistID)
+}
+
+function alreadyAdded (title, artist, requests){
+  return ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +Requests+ ' request(s) and has already been added to the playlist.')
+}
+
+function alreadyAdded (title, artist){
+  return ('We found: ' +title+ ', by: ' +artist+ '. You have already requested this Track. Ask someone else to request it and get it on the playlist!!')
+}
+
+function askToConfirm (title, artist, requests){
+  return ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
 }
 
 module.exports = {

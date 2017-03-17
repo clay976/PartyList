@@ -1,23 +1,29 @@
 
 function guest (databaseObject){
-	return ({
+	return {
 		"guest"					: databaseObject,
 		"trackFound"		: null,
 		"response"			: null,
 		"guestUpdate"		: null,
 		"trackUpdate"		: null,
 		"spotifySearch"	: false
-	})
+	}
 }
 function clearGuestSong (num, trackID){
 	return 	{
-		$inc						: {numRequests	: num}, 
+		$inc						: {
+			numRequests		: num
+		}, 
 		$set						: { 
 			currentTrack 	: {
 		  	trackID 		: '', 
 		  	name    		: '', 
-		  	artist  		: ''}},
-		$push						: {prevRequests	: trackID}
+		  	artist  		: ''
+		  }
+		},
+		$push						: {
+			prevRequests	: trackID
+		}
 	}
 }
 

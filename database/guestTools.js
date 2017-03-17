@@ -91,8 +91,7 @@ function updateGuestAndTrackIfNeeded (guestReqObject){
 
 function updateGuestIfNeeded (guestReqObject){
   return new Promise (function (fulfill, reject){
-    if (guestReqObject.guestUpdate){
-      console.log (guestReqObject.guestUpdate)
+    if (guestReqObject.guestUpdate){ 
       model.Guest.findOneAndUpdate({ 'phoneNum' : guestReqObject.guest.phoneNum}, guestReqObject.guestUpdate).exec()
       .then (function (updated){
         fulfill (guestReqObject)

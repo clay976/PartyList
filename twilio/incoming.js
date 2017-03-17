@@ -1,14 +1,18 @@
-//node modules
-var twilio = require('twilio')
-var sid = 'AC85573f40ef0c3fb0c5aa58477f61b02e'
-var atoken = 'fcea26b2b0ae541d904ba23e12e2c499'
-var client = require('twilio/lib')(sid, atoken);
+//twilio modules
+var twilio          = require('twilio')
+var sid             = 'AC85573f40ef0c3fb0c5aa58477f61b02e'
+var atoken          = 'fcea26b2b0ae541d904ba23e12e2c499'
+var client          = require('twilio/lib')(sid, atoken);
+
+//database modules
 var hostAcountTools = require ('../database/hostTools')
-var guestTools = require ('../database/guestTools')
-var model = require ('../database/models')
-var guestObject = require ('./JSONtemps')
-var addResponse = require ('./responses')
-var JSONtemplate = require ('../database/JSONtemps')
+var guestTools      = require ('../database/guestTools')
+var model           = require ('../database/models')
+var JSONtemplate    = require ('../database/JSONtemps')
+
+//other templates
+var addResponse     = require ('./responses')
+var guestObject     = require ('./JSONtemps')
 
 function HandleIncomingMessage (req, res, db){
   console.log ('incoming text')
@@ -27,13 +31,12 @@ function HandleIncomingMessage (req, res, db){
     return guestTools.updateGuestAndTrackIfNeeded (responseObject)
   })
   .then (function (responseObject){
-    console.log ('sending to guest')
-    console.log (responseObject.response)
+    console.log ('sending to guest: ' +responseObject.response)
     resp.message (responseObject.response)
     res.end(resp.toString());
   })
   .catch (function (err){
-    console.log (err)
+    console.log (err.stack)
     resp.message (err)
     res.end(resp.toString());
   })
@@ -45,26 +48,26 @@ function buildResponseObject (guestInfo){
     var messageBody = guestReqObject.guest.lastMessage
     if ((messageBody === 'yes') && (guestInfo.currentTrack.trackID === '')){
       reject (addResponse.emptyConfirmation)
-    }else if (messageBody === 'yes'){ // guest is confirming the last song we sent to them
+    // guest is confirming the last song we sent to them
+    }else if (messageBody === 'yes'){
       var track = model.Track.findOne({$and: [{ 'trackID' : guestReqObject.guest.currentTrack.trackID}, {'hostID' : guestReqObject.guest.hostID}]}).exec()
       var hostInfo = model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
       Promise.all ([track, hostInfo])
       .then (function (values){ 
         track = values[0]
         hostInfo = values[1]
-        if (track){ // the track was found in our database because someone already searched for it (possibly the person confirming it)
-          if (track.numRequests === (hostInfo.reqThreshold - 1)){ // the song has met the number of requests to be added to the playlist
-            hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
-            hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
-            guestReqObject.trackUpdate= {$set: { addedPaylist: true}}
-            guestReqObject.response   = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests)
-            return (guestReqObject)
-          }else{ // the song has been confirmed but will not be added to the playlist yet
+        // the track was found in our database because someone already searched for it (possibly the person confirming it)
+        if (track){
+          // the song has met the number of requests to be added to the playlist
+          if (track.numRequests === (hostInfo.reqThreshold - 1)) return addTrackToPlaylist (guestReqObject, hostInfo, track)
+          // the song has been confirmed but will not be added to the playlist yet
+          else{
             guestReqObject.trackUpdate= {$inc: { numRequests: 1}}
             guestReqObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests)
             return (guestReqObject)
           }
-        }else{ // the track is new so the guest will be informed that they have confirmed and it 
+        // the track is new so the guest will be informed that they have confirmed and it 
+        }else{
           guestReqObject.trackUpdate  = {$inc: { numRequests: 1}}
           guestReqObject.response     = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, 0)
           return (guestReqObject)
@@ -96,7 +99,7 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
             model.Track.findOneAndUpdate({$and: [{ 'trackID' : track.id}, {'hostID' : guestReqObject.guest.hostID}]}, debug, {upsert:true}).exec()
           }
         })
-        addResponse.trackFoundOnSpotify (guestReqObject.guest.hostID, track.id, track.name, track.artists[0].name, guestReqObject.guest.prevRequests)
+        trackFoundOnSpotify (guestReqObject.guest.hostID, track.id, track.name, track.artists[0].name, guestReqObject.guest.prevRequests)
         .then (function (resp){
           guestReqObject.response     = resp
           guestReqObject.guestUpdate  = JSONtemplate.setGuestTrack (track.id, track.name, track.artists[0].name)
@@ -112,6 +115,43 @@ function addSpotifySearchResultsIfNeeded (guestReqObject){
     .catch (function (err){
       reject ('error searching spotify for track: ' +err)
     })
+  })
+}
+
+function addTrackToPlaylist (guestReqObject, hostInfo, track){
+  hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
+  hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
+  guestReqObject.trackUpdate= {$set: { addedPaylist: true}}
+  guestReqObject.response   = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests)
+  return (guestReqObject)
+}
+
+function trackFoundOnSpotify (hostID, trackID, title, artist, prevReqs){
+  return new Promise (function (fulfill, reject){
+    var trackFound = model.Track.findOne({$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}).exec()
+    var prevRequests = checkForPreviousRequests (trackID, prevReqs)
+    Promise.all ([trackFound, prevRequests])
+    .then (function (values){ 
+      trackFound = values[0]
+      prevRequests = values[1]
+      if (trackFound && trackFound.addedPaylist)  reject (addResponse.alreadyAdded (title, artist, trackFound.numRequests + 1))
+      else if (trackFound && prevRequests)        reject (addResponse.youAlreadyRequested (title, artist))
+      else if (trackFound)                        fulfill (addResponse.askToConfirm (title, artist, trackFound.numRequests))
+    })
+    .catch (function (err){
+      reject (err)
+    })
+  })
+}
+
+function checkForPreviousRequests (trackID, prevRequests){
+  return new Promise (function (fulfill, reject){
+    for (var i = 0; i < prevRequests.length; i++){
+      if (trackID === prevRequests[i]){
+        fulfill (true)
+      }
+    }
+    fulfill (false)
   })
 }
 

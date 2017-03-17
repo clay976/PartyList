@@ -43,19 +43,6 @@ function createPlaylist (req, res, db){
   })
 }
 
-//TODO: add comments
- function setRequestThreshold (req, res){
-  console.log (req.body)
-  model.Host.findOneAndUpdate({ 'hostID' : req.body.hostID }, { $set: {'reqThreshold' : req.body.requests }}).exec()
-  .then (function (update){
-    res.status(200).json ('number of requests to add a song to a playlist has been set to ' +req.body.requests+ '!')
-  })
-  .catch (function (err){
-    console.log (err.stack)
-    res.status(400).json('error setting the request threshold: '+ err)
-  })
-}
-
 // //TODO: add comments
 function findAllPlaylists (req, res, db){
   hostAcountTools.validateHost (req.body.hostID)
@@ -93,6 +80,19 @@ function setSpecificPlaylist (req, res, db){
   })
 }
 
+//This is the request threshold that will get a song added to the playlist, set by the host.
+ function setRequestThreshold (req, res){
+  console.log (req.body)
+  model.Host.findOneAndUpdate({ 'hostID' : req.body.hostID }, { $set: {'reqThreshold' : req.body.requests }}).exec()
+  .then (function (update){
+    res.status(200).json ('number of requests to add a song to a playlist has been set to ' +req.body.requests+ '!')
+  })
+  .catch (function (err){
+    console.log (err.stack)
+    res.status(400).json('error setting the request threshold: '+ err)
+  })
+}
+
 function validatePlaylistOwnership (data){
   return new Promise (function (fulfill, reject){
     hostAcountTools.spotifyApi.getPlaylist(data.hostID, data.playName)
@@ -109,7 +109,6 @@ function validatePlaylistOwnership (data){
 }
 
 function validatePlaylistInput (hostInfo, playName) {
-  //TOD: add additional validation for things like spotify not allowing special characters in playlist names
   return new Promise (function (fulfill, reject){
     if (playName){
       fulfill ({
