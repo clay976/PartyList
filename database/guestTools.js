@@ -42,9 +42,14 @@ function addGuest (req, res){
 function validateRequest (req){
   return new Promise (function (fulfill, reject){
     if (req.body.guestNum){
-      if (req.body.guestNum.length === 10) fulfill (true)
-      else reject ('number not the right length, please retry with the format "1234567890" (no speacial characters)')
-    }else reject ('no phone number recieved to add as a guest')
+      if (req.body.guestNum.length === 10) {
+        fulfill (true)
+      }else{
+        reject ('number not the right length, please retry with the format "1234567890" (no speacial characters)')
+      }
+    }else{
+      reject ('no phone number recieved to add as a guest')
+    }
   })
 }
 

@@ -38,7 +38,7 @@ function alreadyAdded (title, artist, requests){
   return ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +Requests+ ' request(s) and has already been added to the playlist.')
 }
 
-function alreadyAdded (title, artist){
+function alreadyRequested (title, artist){
   return ('We found: ' +title+ ', by: ' +artist+ '. You have already requested this Track. Ask someone else to request it and get it on the playlist!!')
 }
 
@@ -49,7 +49,6 @@ function askToConfirm (title, artist, requests){
 module.exports = {
   notGuest                              : notGuest,
   emptyConfirmation                     : emptyConfirmation,
-  trackFoundOnSpotify                   : trackFoundOnSpotify,
   declineRequest                        : declineRequest,
   songNotFound                          : songNotFound,
   songConfirmedAndadvertisment          : songConfirmedAndadvertisment,
@@ -57,5 +56,9 @@ module.exports = {
   songConfirmedAndAdded                 : songConfirmedAndAdded,
   songConfirmedAndAddedAndadvertisment  : songConfirmedAndAddedAndadvertisment,
   errorOnOurEnd                         : errorOnOurEnd,
-  welcome                               : welcome
+  welcome                               : welcome,
+  alreadyAdded                          : alreadyAdded,
+  alreadyRequested                      : alreadyRequested,
+  askToConfirm                          : askToConfirm
+
 }

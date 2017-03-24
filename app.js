@@ -1,5 +1,5 @@
 //node modules
-var express = require('express') // Express web server framework
+var express = require('express')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var querystring = require('querystring')
@@ -26,7 +26,6 @@ var mongoUrl = 'mongodb://localhost:27017/party'
 mongoose.Promise = global.Promise;
 
 //app declaration and uses
-
 var app = express()
 app.use(bodyParser.json()) // for parsing application/json
 app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded

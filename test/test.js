@@ -18,9 +18,9 @@ localhost/login
 place the code in this next variable
 */
 
-//https://accounts.spotify.com/en/login?continue=https:%2F%2Faccounts.spotify.com%2Fen%2Fauthorize%3Fresponse_type%3Dcode%26client_id%3Da000adffbd26453fbef24e8c1ff69c3b%26scope%3Duser-read-private%2520user-read-email%2520user-read-birthdate%2520streaming%2520playlist-modify-private%2520playlist-modify-public%2520playlist-read-private%26redirect_uri%3Dhttp:%252F%252F104.131.215.55:80%252Fcallback
+// https://accounts.spotify.com/en/login?continue=https:%2F%2Faccounts.spotify.com%2Fen%2Fauthorize%3Fresponse_type%3Dcode%26client_id%3Da000adffbd26453fbef24e8c1ff69c3b%26scope%3Duser-read-private%2520user-read-email%2520user-read-birthdate%2520streaming%2520playlist-modify-private%2520playlist-modify-public%2520playlist-read-private%26redirect_uri%3Dhttp:%252F%252F104.131.215.55:80%252Fcallback
 
-var code
+var code = 'AQBZ6EqXSV-BgPyuJi1XOVdccng91fnsmLMilGasI24n92j-fg5BFIeMitxz-k3JxjmTS6i3x0GYhVNnl-4U4MTRRzTjxwjwRZB0w_0o4C1FcGSLk5s4PGVNFcyuBHvzw-PikW_nZ97QsxRL7MC7kypGArPmWA1mUfAn5WjrEEliPIdvvAxqWgNT2Z2KRREAWAzWjx-6GoeZng1nnNB_vJDDpbMFORWEIklCNTCUzsVd8X7lytd0rrxA83CiaZlpPoknmRGV1SDrXso2lCZC459_m2GQUv3--BGTLCyw9H0RcBjR329Aa7IrBd3Jq4sFYRyAeoVb2zXYU59Gs2r9TNu1_bYroC32-R63RCE0K_xvvvC2YbGqolKh3jH3R-JJJfzM'
 
 //start tests
 describe('GET /login', function(){
@@ -37,7 +37,7 @@ describe('GET /login', function(){
     })
   });
 })
-/*
+
 describe('GET /callback', function(){
   it('hit the callback enpoint with a valid authorization code. should be a redirect, to the hosts homepage.', function(done){
     request(url)
@@ -476,4 +476,4 @@ describe('POST /message', function(){
       done();
     });
   });
-})*/
+})
