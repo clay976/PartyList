@@ -65,11 +65,13 @@ function checkGuestState (guestInfo){
     var messageBody = guestInfo.lastMessage
     //guest is confirming the last track that we have for them
     if ((messageBody === 'yes') && (guestInfo.currentTrack.trackID != '')){
+      console.log ('1')
       guestObject.state = 'confirm'
       fulfill (guestObject)
     }
     //guest is searching a new song because we have not matched any other string in their message to our dictionairy
     else{
+      console.log ('2')
       guestObject.state = 'search'
       fulfill (guestObject)
     }
