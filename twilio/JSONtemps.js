@@ -2,11 +2,12 @@
 function guest (databaseObject){
 	return {
 		"guest"					: databaseObject,
-		"trackFound"		: null,
+		"spotifyTrack"	: null,
+		"databaseTrack"	: null,
 		"response"			: null,
 		"guestUpdate"		: null,
 		"trackUpdate"		: null,
-		"spotifySearch"	: false
+		"state"					: ''
 	}
 }
 function clearGuestSong (num, trackID){

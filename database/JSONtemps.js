@@ -31,7 +31,7 @@ function Track (host, TrackID, name, artist){
 	  'artist'				: artist,
 	  'numRequests'		: 0,
 	  'timePlayed'		: 0,
-	  'foundAmount' 	: 2
+	  'foundAmount' 	: 0,
 	}
 }
 
