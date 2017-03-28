@@ -80,9 +80,14 @@ function performActionBasedOnState (guestObject){
     //searching spotify and building a repsonse based on the search request and response from spotify
     if (guestObject.state = 'search'){
       searchSpotify (guestObject)
-      .then (searchDatabaseForTrack (guestObject))
-      .then (checkForPreviousRequests (guestObject))
-      .then (fulfill (guestObject))
+      .then (function (guestObject){
+        //search our database fo the track
+        searchDatabaseForTrack (guestObject)
+      })
+      .then (function (guestObject){
+        //check to seee if the guest has requested this track before
+        fullfil (checkForPreviousRequests (guestObject))
+      })
       .catch (function (err){
         console.log (err.stack)
         reject (err)
@@ -142,11 +147,11 @@ function checkForPreviousRequests (guestObject){
     for (var i = 0; i < guestObject.guest.prevRequests.length; i++){
       if (guestObject.spotifyTrack.id === guestObject.guest.prevRequests[i]){
         //we found that the guest has already requested the same track they searched so reject with that message right away
-        reject (addResponse.youAlreadyRequested (title, artist))
+        reject (addResponse.youAlreadyRequested (guestObject.databaseTrack.name, guestObject.databaseTrack.artist))
       }
     }
     //this is a new request from this guest so continue on the function chain
-    guesObject.response = addResponse.askToConfirm (title, artist, trackFound.numRequests)
+    guesObject.response = addResponse.askToConfirm (guestObject.databaseTrack.name, guestObject.databaseTrack.artist, trackFound.numRequests)
     fulfill (guestObject)
   })
 }
