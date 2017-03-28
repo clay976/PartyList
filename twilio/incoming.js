@@ -46,6 +46,7 @@ function HandleIncomingMessage (req, res, db){
     res.end(resp.toString());
   })
   .catch (function (err){
+    console.log ('sending error to guest: ' +responseObject.response)
     console.log (err.stack)
     resp.message (err)
     res.end(resp.toString());
