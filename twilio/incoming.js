@@ -61,8 +61,11 @@ function HandleIncomingMessage (req, res, db){
 // advertising opt outs and stuff)
 function checkGuestState (guestInfo){
   return new Promise (function (fulfill, reject){
+    console.log ('0')
     var guestObject = JSONtemplate.guest (guestInfo)
+    console.log (guestObject)
     var messageBody = guestInfo.lastMessage
+    console.log ('0.75')
     //guest is confirming the last track that we have for them
     if ((messageBody === 'yes') && (guestInfo.currentTrack.trackID != '')){
       console.log ('1')
