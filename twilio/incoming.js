@@ -82,10 +82,12 @@ function performActionBasedOnState (guestObject){
       searchSpotify (guestObject)
       .then (function (guestObject){
         //search our database fo the track
+        console.log ('1:'+guestObject)
         return searchDatabaseForTrack (guestObject)
       })
       .then (function (guestObject){
         //check to seee if the guest has requested this track before
+        console.log ('2:'+guestObject)
         fullfil (checkForPreviousRequests (guestObject))
       })
       .catch (function (err){
@@ -151,7 +153,7 @@ function checkForPreviousRequests (guestObject){
       }
     }
     //this is a new request from this guest so continue on the function chain
-    guestObject.response = addResponse.askToConfirm (guestObject.databaseTrack.name, guestObject.databaseTrack.artist, trackFound.numRequests)
+    guestObject.response = addResponse.askToConfirm (guestObject.databaseTrack.name, guestObject.databaseTrack.artist, guestObject.databaseTrack.numRequests)
     fulfill (guestObject)
   })
 }
