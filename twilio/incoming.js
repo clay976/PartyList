@@ -151,7 +151,7 @@ function checkForPreviousRequests (guestObject){
       }
     }
     //this is a new request from this guest so continue on the function chain
-    guesObject.response = addResponse.askToConfirm (guestObject.databaseTrack.name, guestObject.databaseTrack.artist, trackFound.numRequests)
+    guestObject.response = addResponse.askToConfirm (guestObject.databaseTrack.name, guestObject.databaseTrack.artist, trackFound.numRequests)
     fulfill (guestObject)
   })
 }
