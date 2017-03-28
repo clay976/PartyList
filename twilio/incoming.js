@@ -14,10 +14,12 @@ var JSONtemplate    = require ('../database/JSONtemps')
 var addResponse     = require ('./responses')
 var guestObject     = require ('./JSONtemps')
 
-var dataBaseTrack                     = model.Track.findOne({$and: [{ 'trackID' : guestReqObject.guest.currentTrack.trackID}, {'hostID' : guestReqObject.guest.hostID}]}).exec()
+/*
+var dataBaseTrack             = model.Track.findOne({$and: [{ 'trackID' : guestReqObject.guest.currentTrack.trackID}, {'hostID' : guestReqObject.guest.hostID}]}).exec()
 var hostInfo                  = model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
 guestReqObject.guestUpdate    = guestObject.clearGuestSong (-1, guestInfo.currentTrack.trackID)
 var spotifyTrack              = hostAcountTools.spotifyApi.searchTracks (guestReqObject.guest.lastMessage, { limit : 1 })
+*/
 
 //message incoming
 function HandleIncomingMessage (req, res, db){
@@ -68,6 +70,7 @@ function checkGuestState (guestInfo){
       guestObject.state = 'confirm'
       fulfill (guestObject)
     }
+  })
 }
 
 //these actions relate directly to the state of the message that we have received from the guest.
@@ -86,8 +89,9 @@ function performActionBasedOnState (guestObject){
     }
     //guest has confirmed a song so we will use our service to see about adding it to the playlist or whatnot (bumping it up in the queue possibly)
     else{
-      fulfill songConfirmed (guestObject)
+      fulfill (songConfirmed (guestObject))
     }
+  })
 }
 
 function searchSpotify (guestObject){
