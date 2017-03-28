@@ -62,7 +62,7 @@ function HandleIncomingMessage (req, res, db){
 function checkGuestState (guestInfo){
   return new Promise (function (fulfill, reject){
     console.log ('0')
-    var guestObject = JSONtemplate.guest (guestInfo)
+    var guestObject = guestObject.guest (guestInfo)
     console.log (guestObject)
     var messageBody = guestInfo.lastMessage
     console.log ('0.75')
