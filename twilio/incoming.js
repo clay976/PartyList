@@ -31,10 +31,12 @@ function HandleIncomingMessage (req, res, db){
   guestTools.validateGuest (req.body)
   .then (function (guestInfo){
     //check the state of the guest wether they are searching or confirming
+    console.log ('info:'+guestInfo)
     return (checkGuestState (guestInfo))
   })
   .then (function (guestObject){
     //perform the necessary action based on the state like search spotify or take a guest off a mailing list
+    console.log ('action:'+guestObject)
     return performActionBasedOnState (guestObject)
   })
   .then (function (responseObject){
