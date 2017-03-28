@@ -82,7 +82,7 @@ function performActionBasedOnState (guestObject){
       searchSpotify (guestObject)
       .then (function (guestObject){
         //search our database fo the track
-        searchDatabaseForTrack (guestObject)
+        return searchDatabaseForTrack (guestObject)
       })
       .then (function (guestObject){
         //check to seee if the guest has requested this track before
