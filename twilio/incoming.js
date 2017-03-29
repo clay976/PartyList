@@ -105,6 +105,7 @@ function searchSpotify (guestObject){
     //search spotify for a track based on the message we got from the
     hostAcountTools.spotifyApi.searchTracks (guestObject.guest.lastMessage, { limit : 1 })
     .then (function (spotifyTrack){
+      console.log (spotifyTrack.body.tracks.items[0])
       //we found a track on spotify matching the guest message
       if (spotifyTrack.body.tracks.total != 0){
         guestObject.spotifyTrack = spotifyTrack.body.tracks.items[0]
