@@ -35,7 +35,6 @@ function HandleIncomingMessage (req, res, db){
   })
   .then (function (guestObject){
     //perform the necessary action based on the state like search spotify or take a guest off a mailing list
-    console.log ('action:'+guestObject)
     return performActionBasedOnState (guestObject)
   })
   .then (function (responseObject){
@@ -106,7 +105,6 @@ function searchSpotify (guestObject){
     //search spotify for a track based on the message we got from the
     hostAcountTools.spotifyApi.searchTracks (guestObject.guest.lastMessage, { limit : 1 })
     .then (function (spotifyTrack){
-      console.log ('1:'+guestObject)
       //we found a track on spotify matching the guest message
       if (tracksFound.body.tracks.total != 0){
         guestObject.spotifyTrack = spotifyTrack
@@ -124,6 +122,7 @@ function searchDatabaseForTrack (guestObject){
   return new Promise (function (fulfill, reject){
     model.Track.findOne({$and: [{ 'trackID' : guestObjectspotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}).exec()
     .then (function (databaseTrack){
+      console.log (guestObject)
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
       if (databaseTrack && databaseTrack.addedPaylist){
         reject (addResponse.alreadyAdded (title, artist, trackFound.numRequests + 1))
