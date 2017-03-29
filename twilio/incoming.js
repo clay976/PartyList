@@ -86,7 +86,7 @@ function performActionBasedOnState (guestObject){
       })
       .then (function (guestObject){
         //check to seee if the guest has requested this track before
-        fullfil (checkForPreviousRequests (guestObject))
+        fulfill (checkForPreviousRequests (guestObject))
       })
       .catch (function (err){
         console.log (err)
