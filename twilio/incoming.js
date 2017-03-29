@@ -79,17 +79,14 @@ function checkGuestState (guestInfo){
 function performActionBasedOnState (guestObject){
   return new Promise (function (fulfill, reject){
     //searching spotify and building a repsonse based on the search request and response from spotify
-    console.log (guestObject)
     if (guestObject.state = 'search'){
       searchSpotify (guestObject)
       .then (function (guestObject){
         //search our database fo the track
-        console.log ('1:'+guestObject)
         return searchDatabaseForTrack (guestObject)
       })
       .then (function (guestObject){
         //check to seee if the guest has requested this track before
-        console.log ('2:'+guestObject)
         fullfil (checkForPreviousRequests (guestObject))
       })
       .catch (function (err){
@@ -109,6 +106,7 @@ function searchSpotify (guestObject){
     //search spotify for a track based on the message we got from the
     hostAcountTools.spotifyApi.searchTracks (guestObject.guest.lastMessage, { limit : 1 })
     .then (function (spotifyTrack){
+      console.log ('1:'+guestObject)
       //we found a track on spotify matching the guest message
       if (tracksFound.body.tracks.total != 0){
         guestObject.spotifyTrack = spotifyTrack
