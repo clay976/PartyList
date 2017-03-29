@@ -124,7 +124,7 @@ function searchSpotify (guestObject){
 
 function searchDatabaseForTrack (guestObject){
   return new Promise (function (fulfill, reject){
-    console.log (guestObject)
+    console.log (guestObject.spotifyTrack.artists[0])
     model.Track.findOne({$and: [{ 'trackID' : guestObject.spotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}).exec()
     .then (function (databaseTrack){
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
