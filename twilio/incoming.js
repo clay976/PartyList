@@ -31,7 +31,6 @@ function HandleIncomingMessage (req, res, db){
   guestTools.validateGuest (req.body)
   .then (function (guestInfo){
     //check the state of the guest wether they are searching or confirming
-    console.log ('info:'+guestInfo)
     return (checkGuestState (guestInfo))
   })
   .then (function (guestObject){
@@ -61,20 +60,15 @@ function HandleIncomingMessage (req, res, db){
 // advertising opt outs and stuff)
 function checkGuestState (guestInfo){
   return new Promise (function (fulfill, reject){
-    console.log ('0')
     var guestObject = guestObj.guest (guestInfo)
-    console.log (guestObject)
     var messageBody = guestInfo.lastMessage
-    console.log ('0.75')
     //guest is confirming the last track that we have for them
     if ((messageBody === 'yes') && (guestInfo.currentTrack.trackID != '')){
-      console.log ('1')
       guestObject.state = 'confirm'
       fulfill (guestObject)
     }
     //guest is searching a new song because we have not matched any other string in their message to our dictionairy
     else{
-      console.log ('2')
       guestObject.state = 'search'
       fulfill (guestObject)
     }
@@ -85,6 +79,7 @@ function checkGuestState (guestInfo){
 function performActionBasedOnState (guestObject){
   return new Promise (function (fulfill, reject){
     //searching spotify and building a repsonse based on the search request and response from spotify
+    console.log (guestObject)
     if (guestObject.state = 'search'){
       searchSpotify (guestObject)
       .then (function (guestObject){
