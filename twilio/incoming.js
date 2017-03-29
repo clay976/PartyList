@@ -81,8 +81,7 @@ function performActionBasedOnState (guestObject){
     if (guestObject.state = 'search'){
       searchSpotify (guestObject)
       .then (function (guestObject){
-        //search our database fo the track
-        console.log (guestObject)
+        //search our database fo the track 
         return searchDatabaseForTrack (guestObject)
       })
       .then (function (guestObject){
@@ -106,6 +105,7 @@ function searchSpotify (guestObject){
     //search spotify for a track based on the message we got from the
     hostAcountTools.spotifyApi.searchTracks (guestObject.guest.lastMessage, { limit : 1 })
     .then (function (spotifyTrack){
+      console.log (spotifyTrack)
       //we found a track on spotify matching the guest message
       if (tracksFound.body.tracks.total != 0){
         guestObject.spotifyTrack = spotifyTrack
