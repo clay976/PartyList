@@ -129,7 +129,7 @@ function searchDatabaseForTrack (guestObject){
     .then (function (databaseTrack){
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
       if (databaseTrack && databaseTrack.addedPaylist){
-        reject (addResponse.alreadyAdded (guestObject.databaseTrack.name, guestObject.databaseTrack.name, guestObject.databaseTrack.numRequests + 1))
+        reject (addResponse.alreadyAdded (guestObject.databaseTrack.name, guestObject.databaseTrack.artist, guestObject.databaseTrack.numRequests + 1))
       }
       //this track was found in our database so we are going to log that info (might be useful to know what tracks get searched most)
       if (databaseTrack){
