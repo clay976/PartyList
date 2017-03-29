@@ -47,7 +47,7 @@ function HandleIncomingMessage (req, res, db){
   })
   .catch (function (err){
     console.log ('sending error to guest: ' +responseObject.response)
-    console.log (err.stack)
+    console.log (err)
     resp.message (err)
     res.end(resp.toString());
   })
@@ -89,7 +89,7 @@ function performActionBasedOnState (guestObject){
         fullfil (checkForPreviousRequests (guestObject))
       })
       .catch (function (err){
-        console.log (err.stack)
+        console.log (err)
         reject (err)
       })
     }
