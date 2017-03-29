@@ -105,7 +105,6 @@ function searchSpotify (guestObject){
     //search spotify for a track based on the message we got from the
     hostAcountTools.spotifyApi.searchTracks (guestObject.guest.lastMessage, { limit : 1 })
     .then (function (spotifyTrack){
-      console.log (spotifyTrack.body.tracks.items[0])
       //we found a track on spotify matching the guest message
       if (spotifyTrack.body.tracks.total != 0){
         guestObject.spotifyTrack = spotifyTrack.body.tracks.items[0]
@@ -125,6 +124,7 @@ function searchSpotify (guestObject){
 
 function searchDatabaseForTrack (guestObject){
   return new Promise (function (fulfill, reject){
+    console.log (guestObject)
     model.Track.findOne({$and: [{ 'trackID' : guestObject.spotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}).exec()
     .then (function (databaseTrack){
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
