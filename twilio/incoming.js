@@ -54,7 +54,6 @@ function HandleIncomingMessage (req, res, db){
 }
 
 // Checks to see if a guest is requesting a new track or if they are confirming an already searched track
-
 // Other state checking will be added here for additional options that the guest can send up (things like
 // advertising opt outs and stuff)
 function checkGuestState (guestInfo){
@@ -107,6 +106,7 @@ function searchSpotify (guestObject){
       //we found a track on spotify matching the guest message
       if (spotifyTrack.body.tracks.total != 0){
         guestObject.spotifyTrack = spotifyTrack.body.tracks.items[0]
+        guestObject.guestUpdate = JSONtemplate.setGuestTrack (guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
         fulfill (guestObject)
       }
       // we did not find a track matching the guests search request so we reject immediatley and respond to them
