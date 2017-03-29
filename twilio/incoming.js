@@ -30,6 +30,7 @@ function HandleIncomingMessage (req, res, db){
   //make sure the guest is actually a guest of a party.
   guestTools.validateGuest (req.body)
   .then (function (guestInfo){
+    console.log (guestInfo)
     //check the state of the guest wether they are searching or confirming
     return (checkGuestState (guestInfo))
   })
@@ -38,7 +39,6 @@ function HandleIncomingMessage (req, res, db){
     return performActionBasedOnState (guestObject)
   })
   .then (function (responseObject){
-    console.log (responseObject)
     return guestTools.updateGuestAndTrackIfNeeded (responseObject)
   })
   .then (function (responseObject){
