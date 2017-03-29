@@ -139,9 +139,8 @@ function searchDatabaseForTrack (guestObject){
       }
       // the track was not found in our database so we are going to add it. That way we can log additional info about it and use it late if it is confirmed
       else{
-        console.log (guestObject.SpotifyTrack.artists[0])
-        guestObject.databaseTrack = JSONtemplate.Track (guestObject.guest.hostID, guestObject.SpotifyTrack.id, guestObject.SpotifyTrack.name, guestObject.SpotifyTrack.artists[0].name)
-        model.Track.findOneAndUpdate ({$and: [{ 'trackID' : guestObject.SpotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}, guestObject.databaseTrack, {upsert:true}).exec()
+        guestObject.databaseTrack = JSONtemplate.Track (guestObject.guest.hostID, guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
+        model.Track.findOneAndUpdate ({$and: [{ 'trackID' : guestObject.spotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}, guestObject.databaseTrack, {upsert:true}).exec()
         fulfill (guestObject)
       }
     })
