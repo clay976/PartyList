@@ -30,7 +30,6 @@ function HandleIncomingMessage (req, res, db){
   //make sure the guest is actually a guest of a party.
   guestTools.validateGuest (req.body)
   .then (function (guestInfo){
-    console.log (guestInfo)
     //check the state of the guest wether they are searching or confirming
     return (checkGuestState (guestInfo))
   })
@@ -76,6 +75,7 @@ function checkGuestState (guestInfo){
 //these actions relate directly to the state of the message that we have received from the guest.
 function performActionBasedOnState (guestObject){
   return new Promise (function (fulfill, reject){
+    console.log (guestObject.state)
     //searching spotify and building a repsonse based on the search request and response from spotify
     if (guestObject.state = 'search'){
       searchSpotify (guestObject)
