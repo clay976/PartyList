@@ -115,6 +115,10 @@ function searchSpotify (guestObject){
         reject (addResponse.songNotFound)
       }
     })
+    .catch (function (err){
+      console.log (err)
+      reject (err)
+    })
   })
 }
 
@@ -139,9 +143,10 @@ function searchDatabaseForTrack (guestObject){
         fulfill (guestObject)
       }
     })
-  })
-  .catch (function (err){
-    reject (err)
+    .catch (function (err){
+      console.log (err)
+      reject (err)
+    })
   })
 }
 
