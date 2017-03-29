@@ -120,7 +120,7 @@ function searchSpotify (guestObject){
 
 function searchDatabaseForTrack (guestObject){
   return new Promise (function (fulfill, reject){
-    model.Track.findOne({$and: [{ 'trackID' : guestObjectspotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}).exec()
+    model.Track.findOne({$and: [{ 'trackID' : guestObject.spotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}).exec()
     .then (function (databaseTrack){
       console.log (guestObject)
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
@@ -140,6 +140,9 @@ function searchDatabaseForTrack (guestObject){
         fulfill (guestObject)
       }
     })
+  })
+  .catch (function (err){
+    reject (err)
   })
 }
 
