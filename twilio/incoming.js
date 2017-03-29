@@ -31,11 +31,7 @@ function HandleIncomingMessage (req, res, db){
   guestTools.validateGuest (req.body)
   .then (function (guestInfo){
     //check the state of the guest wether they are searching or confirming
-    return (checkGuestState (guestInfo))
-  })
-  .then (function (guestObject){
-    //perform the necessary action based on the state like search spotify or take a guest off a mailing list
-    return performActionBasedOnState (guestObject)
+    return (checkGuestStateAndPerformAction (guestInfo))
   })
   .then (function (responseObject){
     return guestTools.updateGuestAndTrackIfNeeded (responseObject)
@@ -55,7 +51,7 @@ function HandleIncomingMessage (req, res, db){
 // Checks to see if a guest is requesting a new track or if they are confirming an already searched track
 // Other state checking will be added here for additional options that the guest can send up (things like
 // advertising opt outs and stuff)
-function checkGuestState (guestInfo){
+function checkGuestStateAndPerformAction (guestInfo){
   return new Promise (function (fulfill, reject){
     var guestObject = guestObj.guest (guestInfo)
     var messageBody = guestInfo.lastMessage
@@ -66,18 +62,6 @@ function checkGuestState (guestInfo){
     }
     //guest is searching a new song because we have not matched any other string in their message to our dictionairy
     else{
-      guestObject.state = 'search'
-      fulfill (guestObject)
-    }
-  })
-}
-
-//these actions relate directly to the state of the message that we have received from the guest.
-function performActionBasedOnState (guestObject){
-  return new Promise (function (fulfill, reject){
-    console.log (guestObject.state)
-    //searching spotify and building a repsonse based on the search request and response from spotify
-    if (guestObject.state = 'search'){
       searchSpotify (guestObject)
       .then (function (guestObject){
         //search our database fo the track 
@@ -90,10 +74,6 @@ function performActionBasedOnState (guestObject){
       .catch (function (err){
         reject (err)
       })
-    }
-    //guest has confirmed a song so we will use our service to see about adding it to the playlist or whatnot (bumping it up in the queue possibly)
-    else if (guestObject.state = 'confirm'){
-      reject ('you song is confirmed')
     }
   })
 }
