@@ -35,7 +35,7 @@ function welcome (hostID, reqThreshold, playlistID){
 }
 
 function alreadyAdded (title, artist, requests){
-  return ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +Requests+ ' request(s) and has already been added to the playlist.')
+  return ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +requests+ ' request(s) and has already been added to the playlist.')
 }
 
 function alreadyRequested (title, artist){
@@ -43,7 +43,7 @@ function alreadyRequested (title, artist){
 }
 
 function askToConfirm (title, artist, requests){
-  return ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +trackFound.numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
+  return ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +requests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
 }
 
 module.exports = {
