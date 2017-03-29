@@ -105,10 +105,9 @@ function searchSpotify (guestObject){
     //search spotify for a track based on the message we got from the
     hostAcountTools.spotifyApi.searchTracks (guestObject.guest.lastMessage, { limit : 1 })
     .then (function (spotifyTrack){
-      console.log (spotifyTrack)
       //we found a track on spotify matching the guest message
-      if (tracksFound.body.tracks.total != 0){
-        guestObject.spotifyTrack = spotifyTrack
+      if (spotifyTrack.body.tracks.total != 0){
+        guestObject.spotifyTrack = spotifyTrack.body.tracks.items[0]
         fulfill (guestObject)
       }
       // we did not find a track matching the guests search request so we reject immediatley and respond to them
