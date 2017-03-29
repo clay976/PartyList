@@ -60,6 +60,7 @@ function checkGuestState (guestInfo){
   return new Promise (function (fulfill, reject){
     var guestObject = guestObj.guest (guestInfo)
     var messageBody = guestInfo.lastMessage
+    console.log (guestInfo)
     //guest is confirming the last track that we have for them
     if ((messageBody === 'yes') && (guestInfo.currentTrack.trackID != '')){
       guestObject.state = 'confirm'
