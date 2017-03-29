@@ -82,6 +82,7 @@ function performActionBasedOnState (guestObject){
       searchSpotify (guestObject)
       .then (function (guestObject){
         //search our database fo the track
+        console.log (guestObject)
         return searchDatabaseForTrack (guestObject)
       })
       .then (function (guestObject){
@@ -120,7 +121,6 @@ function searchSpotify (guestObject){
 
 function searchDatabaseForTrack (guestObject){
   return new Promise (function (fulfill, reject){
-    console.log (guestObject)
     model.Track.findOne({$and: [{ 'trackID' : guestObject.spotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}).exec()
     .then (function (databaseTrack){
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
