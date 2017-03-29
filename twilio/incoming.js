@@ -129,16 +129,19 @@ function searchDatabaseForTrack (guestObject){
     .then (function (databaseTrack){
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
       if (databaseTrack && databaseTrack.addedPaylist){
+        console.log ('added already')
         reject (addResponse.alreadyAdded (guestObject.databaseTrack.name, guestObject.databaseTrack.artist, guestObject.databaseTrack.numRequests + 1))
       }
       //this track was found in our database so we are going to log that info (might be useful to know what tracks get searched most)
       if (databaseTrack){
+        console.log ('not in database')
         guestObject.databaseTrack = databaseTrack
         guestObject.trackUpdate = {$inc: { foundAmount: 1}}
         fulfill (guestObject)
       }
       // the track was not found in our database so we are going to add it. That way we can log additional info about it and use it late if it is confirmed
       else{
+        console.log ('new track')
         guestObject.databaseTrack = JSONtemplate.Track (guestObject.guest.hostID, guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
         model.Track.findOneAndUpdate ({$and: [{ 'trackID' : guestObject.spotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}, guestObject.databaseTrack, {upsert:true}).exec()
         fulfill (guestObject)
@@ -153,6 +156,7 @@ function searchDatabaseForTrack (guestObject){
 
 function checkForPreviousRequests (guestObject){
   return new Promise (function (fulfill, reject){
+    console.log ('checking for requests')
     for (var i = 0; i < guestObject.guest.prevRequests.length; i++){
       if (guestObject.spotifyTrack.id === guestObject.guest.prevRequests[i]){
         //we found that the guest has already requested the same track they searched so reject with that message right away
