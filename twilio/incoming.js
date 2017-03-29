@@ -12,7 +12,7 @@ var JSONtemplate    = require ('../database/JSONtemps')
 
 //other templates
 var addResponse     = require ('./responses')
-var guestObject     = require ('./JSONtemps')
+var guestObj        = require ('./JSONtemps')
 
 /*
 var dataBaseTrack             = model.Track.findOne({$and: [{ 'trackID' : guestReqObject.guest.currentTrack.trackID}, {'hostID' : guestReqObject.guest.hostID}]}).exec()
@@ -62,7 +62,7 @@ function HandleIncomingMessage (req, res, db){
 function checkGuestState (guestInfo){
   return new Promise (function (fulfill, reject){
     console.log ('0')
-    var guestObject = guestObject.guest (guestInfo)
+    var guestObject = guestObj.guest (guestInfo)
     console.log (guestObject)
     var messageBody = guestInfo.lastMessage
     console.log ('0.75')
