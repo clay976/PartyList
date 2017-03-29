@@ -92,8 +92,8 @@ function performActionBasedOnState (guestObject){
       })
     }
     //guest has confirmed a song so we will use our service to see about adding it to the playlist or whatnot (bumping it up in the queue possibly)
-    else{
-      fulfill (songConfirmed (guestObject))
+    else if (guestObject.state = 'confirm'){
+      reject ('you song is confirmed')
     }
   })
 }
