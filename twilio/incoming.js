@@ -134,7 +134,7 @@ function searchDatabaseForTrack (guestObject){
         reject (addResponse.alreadyAdded (databaseTrack.name, databaseTrack.artist, databaseTrack.numRequests + 1))
       }
       //this track was found in our database so we are going to log that info (might be useful to know what tracks get searched most)
-      if (databaseTrack){
+      else if (databaseTrack){
         console.log ('not in database')
         guestObject.databaseTrack = databaseTrack
         guestObject.trackUpdate = {$inc: { foundAmount: 1}}
