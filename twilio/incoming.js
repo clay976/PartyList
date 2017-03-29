@@ -24,7 +24,7 @@ var spotifyTrack              = hostAcountTools.spotifyApi.searchTracks (guestRe
 //message incoming
 function HandleIncomingMessage (req, res, db){
   console.log ('incoming text')
-  console.log ('from: '+ req.body.From+ ', message: '+ req.body.Body)
+  console.log ('from: ' +req.body.From+ ', message: '+ req.body.Body)
   var resp = new twilio.TwimlResponse();
   res.writeHead(200, {'Content-Type': 'text/xml'});
   //make sure the guest is actually a guest of a party.
@@ -46,8 +46,7 @@ function HandleIncomingMessage (req, res, db){
     res.end(resp.toString());
   })
   .catch (function (err){
-    console.log ('sending error to guest: ' +responseObject.response)
-    console.log (err)
+    console.log ('sending rejection to guest' +err)
     resp.message (err)
     res.end(resp.toString());
   })
@@ -89,7 +88,6 @@ function performActionBasedOnState (guestObject){
         fulfill (checkForPreviousRequests (guestObject))
       })
       .catch (function (err){
-        console.log (err)
         reject (err)
       })
     }
@@ -116,7 +114,6 @@ function searchSpotify (guestObject){
       }
     })
     .catch (function (err){
-      console.log (err)
       reject (err)
     })
   })
@@ -124,13 +121,11 @@ function searchSpotify (guestObject){
 
 function searchDatabaseForTrack (guestObject){
   return new Promise (function (fulfill, reject){
-    console.log (guestObject.spotifyTrack.artists[0])
     model.Track.findOne({$and: [{ 'trackID' : guestObject.spotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}).exec()
     .then (function (databaseTrack){
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
       if (databaseTrack && databaseTrack.addedPaylist){
         console.log ('added already')
-        console.log (databaseTrack)
         reject (addResponse.alreadyAdded (databaseTrack.name, databaseTrack.artist, databaseTrack.numRequests + 1))
       }
       //this track was found in our database so we are going to log that info (might be useful to know what tracks get searched most)
@@ -149,7 +144,6 @@ function searchDatabaseForTrack (guestObject){
       }
     })
     .catch (function (err){
-      console.log (err)
       reject (err)
     })
   })
