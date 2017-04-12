@@ -14,8 +14,8 @@ function songConfirmedAndadvertisment (title, artist, numRequests){
   return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' request(s)! You are also recieving an advertisment because you have made 5 successful request')
 }
 
-function songConfirmed (title, artist, numRequests){
-  return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' request(s)!')
+function songConfirmed (title, artist, numRequests, reqThreshold){
+  return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' request(s)! Songs need ' +reqThreshold+ ' to be added to the playlist.')
 }
 
 function songConfirmedAndAdded (title, artist, numRequests){
@@ -31,7 +31,7 @@ function errorOnOurEnd (){
 }
 
 function welcome (hostID, reqThreshold, playlistID){
-  return ('you have been added to ' +hostID+ '\'s party with Party List. Send your song requests to this number. Songs will be added after ' +reqThreshold+ '. You can find the playlist here https://play.spotify.com/user/clay976/playlist/'+ playlistID)
+  return ('You have been added to ' +hostID+ '\'s party with Party List. Send your song requests to this number. Songs will be added after ' +reqThreshold+ '. You can find the playlist here https://play.spotify.com/user/clay976/playlist/'+ playlistID)
 }
 
 function alreadyAdded (title, artist, requests){

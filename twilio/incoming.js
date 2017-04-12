@@ -57,8 +57,15 @@ function checkGuestStateAndPerformAction (guestInfo){
     var messageBody = guestInfo.lastMessage
     //guest is confirming the last track that we have for them
     if ((messageBody === 'yes') && (guestInfo.currentTrack.trackID != '')){
-      guestObject.state = 'confirm'
-      reject ('you song is confirmed')
+      model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
+      //model.Track.findOne({ 'trackID' : guestInfo.currentTrack.trackID}).exec()
+      .then  (function (hostInfo){
+        guestObject.hostInfo = hostInfo
+        return (guestObject)
+      })
+      .then (function (guestObject){
+        handleTrackConfirmation (guestObject)
+      })
     }
     //guest is searching a new song because we have not matched any other string in their message to our dictionairy
     else{
@@ -145,34 +152,34 @@ function checkForPreviousRequests (guestObject){
   })
 }
 
-function addTrackToPlaylist (guestReqObject, hostInfo, track){
-  hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
-  hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
-  guestReqObject.trackUpdate = {$set: { addedPaylist: true}}
-  guestReqObject.response    = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests)
-  return (guestReqObject)
+// the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
+function handleTrackConfirmation (guestObject){
+  return new Promise (function (fulfill, reject){
+    if (guestObject.track.numRequests === (guestObject.reqThreshold - 1)){
+      fulfill (addTrackToPlaylist (guestReqObject, hostInfo, track))
+    }
+    // the song has been confirmed but will not be added to the playlist yet
+    else{
+      guestReqObject.trackUpdate= {$inc: { numRequests: 1}}
+      guestReqObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests, guestObject.reqThreshold)
+      fulfill (guestReqObject)
+    }
+  })
 }
 
-function handleTrackDatabaseSearch (values){
+function addTrackToPlaylist (guestReqObject, hostInfo, track){
   return new Promise (function (fulfill, reject){
-    track = values[0]
-    hostInfo = values[1]
-    // the track was found in our database because someone already searched for it (possibly the person confirming it)
-    if (track){
-      // the song has met the number of requests to be added to the playlist
-      if (track.numRequests === (hostInfo.reqThreshold - 1)) return addTrackToPlaylist (guestReqObject, hostInfo, track)
-      // the song has been confirmed but will not be added to the playlist yet
-      else{
-        guestReqObject.trackUpdate= {$inc: { numRequests: 1}}
-        guestReqObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests)
-        return (guestReqObject)
-      }
-    // the track is new so the guest will be informed that they have confirmed and it 
-    }else{
-      guestReqObject.trackUpdate  = {$inc: { numRequests: 1}}
-      guestReqObject.response     = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, 0)
-      return (guestReqObject)
-    }
+    hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
+    hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
+    .then (function (songAdded){
+      guestReqObject.trackUpdate = {$set: { addedPaylist: true}}
+      guestReqObject.response    = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests)
+      fulfill (guestReqObject)
+    })
+    .catch (function (err){
+      console.log (err)
+      reject (err)
+    })
   })
 }
 

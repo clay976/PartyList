@@ -7,6 +7,7 @@ function guest (databaseObject){
 		"response"			: null,
 		"guestUpdate"		: null,
 		"trackUpdate"		: null,
+		"hostInfo"			: '',
 		"state"					: ''
 	}
 }
