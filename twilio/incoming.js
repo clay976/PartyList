@@ -66,6 +66,10 @@ function checkGuestStateAndPerformAction (guestInfo){
         return (guestObject)
       })
       .then (function (guestObject){
+        console.log ('searching database for updated requests')
+        return searchDatabaseForTrack (guestObject)
+      })
+      .then (function (guestObject){
         console.log ('confirming track')
         handleTrackConfirmation (guestObject)
       })
@@ -127,7 +131,7 @@ function searchDatabaseForTrack (guestObject){
       }
       //this track was found in our database so we are going to log that info (might be useful to know what tracks get searched most)
       else if (databaseTrack){
-        console.log ('not on playlist')
+        console.log ('not on playlist, but in database')
         guestObject.databaseTrack = databaseTrack
         guestObject.trackUpdate = {$inc: { foundAmount: 1}}
         fulfill (guestObject)
