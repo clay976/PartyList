@@ -10,6 +10,10 @@ var declineRequest = ('Sorry about the wrong song, try modifying your search! Re
 
 var songNotFound = ('Sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
 
+function error (){
+  return ('There was an error on our end. We are very sorry, please try again!')
+}
+
 function songConfirmedAndadvertisment (title, artist, numRequests){
   return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' request(s)! You are also recieving an advertisment because you have made 5 successful request')
 }
@@ -47,6 +51,7 @@ function askToConfirm (title, artist, requests){
 }
 
 module.exports = {
+  error                                 : error,
   notGuest                              : notGuest,
   emptyConfirmation                     : emptyConfirmation,
   declineRequest                        : declineRequest,

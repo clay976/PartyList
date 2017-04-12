@@ -146,7 +146,7 @@ function searchDatabaseForTrack (guestObject){
     })
     .catch (function (err){
       console.log (err)
-      reject (err)
+      reject (addResponse.error())
     })
   })
 }
