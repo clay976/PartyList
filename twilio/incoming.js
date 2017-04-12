@@ -66,6 +66,10 @@ function checkGuestStateAndPerformAction (guestInfo){
       .then (function (guestObject){
         handleTrackConfirmation (guestObject)
       })
+      .catch (function (err){
+        console.log (err)
+        reject (err)
+      })
     }
     //guest is searching a new song because we have not matched any other string in their message to our dictionairy
     else{
@@ -79,6 +83,7 @@ function checkGuestStateAndPerformAction (guestInfo){
         fulfill (checkForPreviousRequests (guestObject))
       })
       .catch (function (err){
+        console.log (err)
         reject (err)
       })
     }
@@ -102,6 +107,7 @@ function searchSpotify (guestObject){
       }
     })
     .catch (function (err){
+      console.log (err)
       reject (err)
     })
   })
@@ -132,6 +138,7 @@ function searchDatabaseForTrack (guestObject){
       }
     })
     .catch (function (err){
+      console.log (err)
       reject (err)
     })
   })
