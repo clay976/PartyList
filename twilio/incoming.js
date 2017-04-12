@@ -186,7 +186,7 @@ function handleTrackConfirmation (guestObject){
   })
   .catch (function (err){
     console.log (err)
-    return (err)
+    reject (err)
   })
 }
 
