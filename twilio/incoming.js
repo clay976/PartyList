@@ -184,6 +184,10 @@ function handleTrackConfirmation (guestObject){
       fulfill (guestReqObject)
     }
   })
+  .catch (function (err){
+    console.log (err)
+    return (err)
+  })
 }
 
 function addTrackToPlaylist (guestReqObject, hostInfo, track){
