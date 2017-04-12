@@ -57,13 +57,16 @@ function checkGuestStateAndPerformAction (guestInfo){
     var messageBody = guestInfo.lastMessage
     //guest is confirming the last track that we have for them
     if ((messageBody === 'yes') && (guestInfo.currentTrack.trackID != '')){
+      console.log ('finding host')
       model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
       //model.Track.findOne({ 'trackID' : guestInfo.currentTrack.trackID}).exec()
       .then  (function (hostInfo){
+        console.log ('found host')
         guestObject.hostInfo = hostInfo
         return (guestObject)
       })
       .then (function (guestObject){
+        console.log ('confirming track')
         handleTrackConfirmation (guestObject)
       })
       .catch (function (err){
@@ -163,10 +166,19 @@ function checkForPreviousRequests (guestObject){
 function handleTrackConfirmation (guestObject){
   return new Promise (function (fulfill, reject){
     if (guestObject.track.numRequests === (guestObject.reqThreshold - 1)){
-      fulfill (addTrackToPlaylist (guestReqObject, hostInfo, track))
+      console.log ('attempting to add track to playlist')
+      addTrackToPlaylist (guestReqObject, hostInfo, track)
+      .then (function (guestObject){
+        fulfill (guestObject)
+      })
+      .catch (function (err){
+        console.log (err)
+        reject (err)
+      })
     }
     // the song has been confirmed but will not be added to the playlist yet
     else{
+      console.log ('incrementing song\'s request')
       guestReqObject.trackUpdate= {$inc: { numRequests: 1}}
       guestReqObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests, guestObject.reqThreshold)
       fulfill (guestReqObject)
