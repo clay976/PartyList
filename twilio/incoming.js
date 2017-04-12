@@ -127,14 +127,14 @@ function searchDatabaseForTrack (guestObject){
       }
       //this track was found in our database so we are going to log that info (might be useful to know what tracks get searched most)
       else if (databaseTrack){
-        console.log ('not in database')
+        console.log ('not on playlist')
         guestObject.databaseTrack = databaseTrack
         guestObject.trackUpdate = {$inc: { foundAmount: 1}}
         fulfill (guestObject)
       }
       // the track was not found in our database so we are going to add it. That way we can log additional info about it and use it late if it is confirmed
       else{
-        console.log ('new track')
+        console.log ('new track in database')
         guestObject.databaseTrack = JSONtemplate.Track (guestObject.guest.hostID, guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
         model.Track.findOneAndUpdate ({$and: [{ 'trackID' : guestObject.spotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}, guestObject.databaseTrack, {upsert:true}).exec()
         fulfill (guestObject)
@@ -164,6 +164,7 @@ function checkForPreviousRequests (guestObject){
 
 // the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
 function handleTrackConfirmation (guestObject){
+  console.log (guestObject)
   return new Promise (function (fulfill, reject){
     if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
       console.log ('attempting to add track to playlist')
