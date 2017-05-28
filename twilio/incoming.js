@@ -15,10 +15,10 @@ var addResponse     = require ('./responses')
 var guestObj        = require ('./JSONtemps')
 
 /*
-var dataBaseTrack             = model.Track.findOne({$and: [{ 'trackID' : guestReqObject.guest.currentTrack.trackID}, {'hostID' : guestReqObject.guest.hostID}]}).exec()
+var dataBaseTrack             = model.Track.findOne({$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.guest.hostID}]}).exec()
 var hostInfo                  = model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
-guestReqObject.guestUpdate    = guestObject.clearGuestSong (-1, guestInfo.currentTrack.trackID)
-var spotifyTrack              = hostAcountTools.spotifyApi.searchTracks (guestReqObject.guest.lastMessage, { limit : 1 })
+guestObject.guestUpdate    = guestObject.clearGuestSong (-1, guestInfo.currentTrack.trackID)
+var spotifyTrack              = hostAcountTools.spotifyApi.searchTracks (guestObject.guest.lastMessage, { limit : 1 })
 */
 
 //message incoming
@@ -174,7 +174,7 @@ function handleTrackConfirmation (guestObject){
   return new Promise (function (fulfill, reject){
     if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
       console.log ('attempting to add track to playlist')
-      addTrackToPlaylist (guestReqObject, hostInfo, track)
+      addTrackToPlaylist (guestObject, hostInfo, track)
       .then (function (guestObject){
         fulfill (guestObject)
       })
@@ -186,9 +186,9 @@ function handleTrackConfirmation (guestObject){
     // the song has been confirmed but will not be added to the playlist yet
     else{
       console.log ('incrementing song\'s request')
-      guestReqObject.trackUpdate= {$inc: { numRequests: 1}}
-      guestReqObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests, guestObject.reqThreshold)
-      fulfill (guestReqObject)
+      guestObject.trackUpdate= {$inc: { numRequests: 1}}
+      guestObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests, guestObject.reqThreshold)
+      fulfill (guestObject)
     }
   })
   .catch (function (err){
@@ -196,14 +196,14 @@ function handleTrackConfirmation (guestObject){
   })
 }
 
-function addTrackToPlaylist (guestReqObject, hostInfo, track){
+function addTrackToPlaylist (guestObject, hostInfo, track){
   return new Promise (function (fulfill, reject){
     hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
     hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
     .then (function (songAdded){
-      guestReqObject.trackUpdate = {$set: { addedPaylist: true}}
-      guestReqObject.response    = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests)
-      fulfill (guestReqObject)
+      guestObject.trackUpdate = {$set: { addedPaylist: true}}
+      guestObject.response    = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests)
+      fulfill (guestObject)
     })
     .catch (function (err){
       console.log (err.stack)
@@ -224,22 +224,22 @@ function addTrackToPlaylist (guestReqObject, hostInfo, track){
                 console.log (added)
               })  
             })
-            guestReqObject.trackUpdate= {$set: { numRequests: 0}}
-            guestReqObject.response   = addResponse.songConfirmedAndAddedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
-            return (guestReqObject)
+            guestObject.trackUpdate= {$set: { numRequests: 0}}
+            guestObject.response   = addResponse.songConfirmedAndAddedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
+            return (guestObject)
           }else{
-            guestReqObject.response   = addResponse.songConfirmedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
-            return (guestReqObject)
+            guestObject.response   = addResponse.songConfirmedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, trackFound.numRequests)
+            return (guestObject)
           }
         }else {
-          guestReqObject.response     = addResponse.songConfirmedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, 0)
-          return (guestReqObject)
+          guestObject.response     = addResponse.songConfirmedAndadvertisment (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, 0)
+          return (guestObject)
         }
       })
-      .then (function (guestReqObject){
-        guestReqObject.trackUpdate    = {$inc: { numRequests: 1}}
-        guestReqObject.guestUpdate    = guestObject.clearGuestSong (4)
-        fulfill (guestReqObject)
+      .then (function (guestObject){
+        guestObject.trackUpdate    = {$inc: { numRequests: 1}}
+        guestObject.guestUpdate    = guestObject.clearGuestSong (4)
+        fulfill (guestObject)
       })
     }*/
 
