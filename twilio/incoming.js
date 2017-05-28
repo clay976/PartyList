@@ -67,6 +67,7 @@ function checkGuestStateAndPerformAction (guestInfo){
       })
       .then (function (guestObject){
         console.log ('searching database for updated requests')
+        console.log (guestObject)
         return searchDatabaseForTrack (guestObject)
       })
       .then (function (guestObject){
