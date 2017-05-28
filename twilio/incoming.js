@@ -199,10 +199,10 @@ function handleTrackConfirmation (guestObject){
 function addTrackToPlaylist (guestObject, hostInfo, track){
   return new Promise (function (fulfill, reject){
     hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
-    hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
+    hostAcountTools.spotifyApi.addTracksToPlaylist (hostInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
     .then (function (songAdded){
       guestObject.trackUpdate = {$set: { addedPaylist: true}}
-      guestObject.response    = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests)
+      guestObject.response    = addResponse.songConfirmedAndAdded (guestObject.currentTrack.name, guestObject.currentTrack.artist, track.numRequests)
       fulfill (guestObject)
     })
     .catch (function (err){
