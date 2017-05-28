@@ -76,7 +76,7 @@ function checkGuestStateAndPerformAction (guestInfo){
         handleTrackConfirmation (guestObject)
       })
       .catch (function (err){
-        console.log (err)
+        console.log (err.stack)
         reject (err)
       })
     }
@@ -92,7 +92,7 @@ function checkGuestStateAndPerformAction (guestInfo){
         fulfill (checkForPreviousRequests (guestObject))
       })
       .catch (function (err){
-        console.log (err)
+        console.log (err.stack)
         reject (err)
       })
     }
@@ -116,7 +116,7 @@ function searchSpotify (guestObject){
       }
     })
     .catch (function (err){
-      console.log (err)
+      console.log (err.stack)
       reject (err)
     })
   })
@@ -147,7 +147,7 @@ function searchDatabaseForTrack (guestObject){
       }
     })
     .catch (function (err){
-      console.log (err)
+      console.log (err.stack)
       reject (addResponse.error())
     })
   })
@@ -179,7 +179,7 @@ function handleTrackConfirmation (guestObject){
         fulfill (guestObject)
       })
       .catch (function (err){
-        console.log (err)
+        console.log (err.stack)
         reject (err)
       })
     }
@@ -206,7 +206,7 @@ function addTrackToPlaylist (guestReqObject, hostInfo, track){
       fulfill (guestReqObject)
     })
     .catch (function (err){
-      console.log (err)
+      console.log (err.stack)
       reject (err)
     })
   })
