@@ -58,7 +58,7 @@ function checkGuestStateAndPerformAction (guestInfo){
     //guest is confirming the last track that we have for them
     if ((messageBody === 'yes') && (guestInfo.currentTrack.trackID != '')){
       console.log ('finding host')
-      guestInfo.spotifyTrack = guestInfo.currentTrack
+      guestObject.spotifyTrack = guestInfo.currentTrack
       model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
       //model.Track.findOne({ 'trackID' : guestInfo.currentTrack.trackID}).exec()
       .then  (function (hostInfo){
