@@ -174,7 +174,7 @@ function handleTrackConfirmation (guestObject){
   return new Promise (function (fulfill, reject){
     if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
       console.log ('attempting to add track to playlist')
-      addTrackToPlaylist (guestReqObject, hostInfo, track)
+      addTrackToPlaylist (guestObject, hostInfo, track)
       .then (function (guestObject){
         fulfill (guestObject)
       })
