@@ -68,7 +68,7 @@ function checkGuestStateAndPerformAction (guestInfo){
       })
       .then (function (guestObject){
         console.log ('searching database for updated requests')
-        console.log (guestObject)
+        console.log ('guest object: ' +guestObject)
         return searchDatabaseForTrack (guestObject)
       })
       .then (function (guestObject){
@@ -170,7 +170,7 @@ function checkForPreviousRequests (guestObject){
 
 // the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
 function handleTrackConfirmation (guestObject){
-  console.log (guestObject)
+  console.log ('guest object: ' +guestObject)
   return new Promise (function (fulfill, reject){
     if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
       console.log ('attempting to add track to playlist')
