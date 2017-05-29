@@ -106,6 +106,7 @@ function searchSpotify (guestObject){
       if (spotifyTrack.body.tracks.total != 0){
         guestObject.spotifyTrack = spotifyTrack.body.tracks.items[0]
         console.log (guestObject.spotifyTrack)
+        console.log (guestObject.spotifyTrack.artists[0].name)
         guestObject.guestUpdate = JSONtemplate.setGuestTrack (guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
         fulfill (guestObject)
       }
