@@ -23,8 +23,7 @@ var spotifyTrack              = hostAcountTools.spotifyApi.searchTracks (guestRe
 
 //message incoming
 function HandleIncomingMessage (req, res, db){
-  console.log ('incoming text')
-  console.log ('from: ' +req.body.From+ ', message: '+ req.body.Body)
+  console.log ('incoming text from: ' +req.body.From+ ', message: '+ req.body.Body)
   var resp = new twilio.TwimlResponse();
   res.writeHead(200, {'Content-Type': 'text/xml'});
   //make sure the guest is actually a guest of a party.
@@ -60,7 +59,6 @@ function checkGuestStateAndPerformAction (guestInfo){
       console.log ('finding host')
       guestObject.spotifyTrack = guestInfo.currentTrack
       model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
-      //model.Track.findOne({ 'trackID' : guestInfo.currentTrack.trackID}).exec()
       .then  (function (hostInfo){
         console.log ('found host')
         guestObject.hostInfo = hostInfo
@@ -107,6 +105,7 @@ function searchSpotify (guestObject){
       //we found a track on spotify matching the guest message
       if (spotifyTrack.body.tracks.total != 0){
         guestObject.spotifyTrack = spotifyTrack.body.tracks.items[0]
+        console.log (guestObject.spotifyTrack)
         guestObject.guestUpdate = JSONtemplate.setGuestTrack (guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
         fulfill (guestObject)
       }
@@ -174,7 +173,7 @@ function handleTrackConfirmation (guestObject){
   return new Promise (function (fulfill, reject){
     if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
       console.log ('attempting to add track to playlist')
-      addTrackToPlaylist (guestReqObject, hostInfo, track)
+      addTrackToPlaylist (guestObject, hostInfo, track)
       .then (function (guestObject){
         fulfill (guestObject)
       })
