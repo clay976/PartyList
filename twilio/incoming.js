@@ -128,21 +128,20 @@ function searchDatabaseForTrack (guestObject){
       console.log (databaseTrack)
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
       if (databaseTrack && databaseTrack.addedPaylist){
-        console.log ('added already')
+        console.log ('track added already to playlist')
         reject (addResponse.alreadyAdded (databaseTrack.name, databaseTrack.artist, databaseTrack.numRequests + 1))
       }
       //this track was found in our database so we are going to log that info (might be useful to know what tracks get searched most)
       else if (databaseTrack){
-        console.log ('not on playlist, but in database')
+        console.log ('track not on playlist, but in database')
         guestObject.databaseTrack = databaseTrack
         guestObject.trackUpdate = {$inc: { foundAmount: 1}}
         fulfill (guestObject)
       }
       // the track was not found in our database so we are going to add it. That way we can log additional info about it and use it late if it is confirmed
       else{
-        console.log ('new track in database')
-        guestObject.databaseTrack = JSONtemplate.Track (guestObject.guest.hostID, guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
-        model.Track.findOneAndUpdate ({$and: [{ 'trackID' : guestObject.spotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}, guestObject.databaseTrack, {upsert:true}).exec()
+        console.log ('new track in database (should only happen on searches)')
+        guestObject.trackUpdate = JSONtemplate.Track (guestObject.guest.hostID, guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
         fulfill (guestObject)
       }
     })
