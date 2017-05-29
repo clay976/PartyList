@@ -41,7 +41,8 @@ function HandleIncomingMessage (req, res, db){
     res.end(resp.toString());
   })
   .catch (function (err){
-    console.log ('sending rejection to guest' +err.stack)
+    console.log ('received error: ' +err)
+    console.log ('error stack: ' +err.stack)
     resp.message ('sorry, we had an error on our end. Please try again.')
     res.end(resp.toString());
   })
