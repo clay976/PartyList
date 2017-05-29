@@ -43,7 +43,7 @@ function HandleIncomingMessage (req, res, db){
   .catch (function (err){
     console.log ('received error: ' +err)
     console.log ('error stack: ' +err.stack)
-    resp.message ('sorry, we had an error on our end. Please try again.')
+    resp.message (err)
     res.end(resp.toString());
   })
 }
