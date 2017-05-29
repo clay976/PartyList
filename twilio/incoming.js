@@ -105,8 +105,6 @@ function searchSpotify (guestObject){
       //we found a track on spotify matching the guest message
       if (spotifyTrack.body.tracks.total != 0){
         guestObject.spotifyTrack = spotifyTrack.body.tracks.items[0]
-        console.log (guestObject.spotifyTrack)
-        console.log (guestObject.spotifyTrack.artists[0].name)
         guestObject.guestUpdate = JSONtemplate.setGuestTrack (guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
         fulfill (guestObject)
       }
@@ -126,6 +124,7 @@ function searchDatabaseForTrack (guestObject){
   return new Promise (function (fulfill, reject){
     model.Track.findOne({$and: [{ 'trackID' : guestObject.spotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}).exec()
     .then (function (databaseTrack){
+      console.log (databaseTrack)
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
       if (databaseTrack && databaseTrack.addedPaylist){
         console.log ('added already')
