@@ -12,7 +12,7 @@ function validateHost (host){
 	  model.Host.findOne({ 'hostID' : host }).exec()
 	  .then (function (hostInfo){
 	    if (hostInfo){
-	    	console.log ('just validated this host: ' +hostInfo)
+	    	console.log ('just validated this host: ' +hostInfo.hostID)
 	    	spotifyApi.setAccessToken (hostInfo.access_token)
 	      fulfill (hostInfo)
 	    }else{
