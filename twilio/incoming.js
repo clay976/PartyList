@@ -72,7 +72,6 @@ function checkGuestStateAndPerformAction (guestInfo){
       })
       .then (function (guestObject){
         console.log ('searching database for updated requests')
-        console.log (guestObject)
         return searchDatabaseForTrack (guestObject)
       })
       .then (function (guestObject){
@@ -130,7 +129,6 @@ function searchDatabaseForTrack (guestObject){
   return new Promise (function (fulfill, reject){
     model.Track.findOne({$and: [{ 'trackID' : guestObject.spotifyTrack.id}, {'hostID' : guestObject.guest.hostID}]}).exec()
     .then (function (databaseTrack){
-      console.log (databaseTrack)
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
       if (databaseTrack && databaseTrack.addedPaylist){
         console.log ('track added already to playlist')
@@ -146,6 +144,7 @@ function searchDatabaseForTrack (guestObject){
       // the track was not found in our database so we are going to add it. That way we can log additional info about it and use it late if it is confirmed
       else{
         console.log ('new track in database (should only happen on searches)')
+        console.log (guestObject.spotifyTrack)
         guestObject.trackUpdate = JSONtemplate.Track (guestObject.guest.hostID, guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
         fulfill (guestObject)
       }
@@ -163,11 +162,11 @@ function checkForPreviousRequests (guestObject){
     for (var i = 0; i < guestObject.guest.prevRequests.length; i++){
       if (guestObject.spotifyTrack.id === guestObject.guest.prevRequests[i]){
         //we found that the guest has already requested the same track they searched so reject with that message right away
-        reject (addResponse.youAlreadyRequested (guestObject.databaseTrack.name, guestObject.databaseTrack.artist))
+        reject (addResponse.youAlreadyRequested (guestObject.spotifyTrack.name, guestObject.spotifyTrack.artist))
       }
     }
     //this is a new request from this guest so continue on the function chain
-    guestObject.response = addResponse.askToConfirm (guestObject.databaseTrack.name, guestObject.databaseTrack.artist, guestObject.databaseTrack.numRequests)
+    guestObject.response = addResponse.askToConfirm (guestObject.spotifyTrack.name, guestObject.spotifyTrack.artist, guestObject.databaseTrack.numRequests)
     fulfill (guestObject)
   })
 }
