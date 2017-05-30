@@ -144,8 +144,8 @@ function searchDatabaseForTrack (guestObject){
       // the track was not found in our database so we are going to add it. That way we can log additional info about it and use it late if it is confirmed
       else{
         console.log ('new track in database (should only happen on searches)')
-        console.log (guestObject.spotifyTrack)
         guestObject.trackUpdate = JSONtemplate.Track (guestObject.guest.hostID, guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
+        guestObject.databaseTrack = JSONtemplate.Track (guestObject.guest.hostID, guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
         fulfill (guestObject)
       }
     })
@@ -166,7 +166,7 @@ function checkForPreviousRequests (guestObject){
       }
     }
     //this is a new request from this guest so continue on the function chain
-    guestObject.response = addResponse.askToConfirm (guestObject.spotifyTrack.name, guestObject.spotifyTrack.artist, guestObject.databaseTrack.numRequests)
+    guestObject.response = addResponse.askToConfirm (guestObject.databaseTrack.name, guestObject.databaseTrack.artist, guestObject.databaseTrack.numRequests)
     fulfill (guestObject)
   })
 }
