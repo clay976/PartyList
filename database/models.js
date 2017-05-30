@@ -6,11 +6,7 @@ var guest = mongoose.Schema({
 	hostID				: String,
   phoneNum			: String,
   numRequests		: { type: Number, default: 4 },
-  currentTrack	: { 
-    trackID     : { type: String, default: '' },
-    name        : { type: String, default: '' },
-    artist      : { type: String, default: '' }
-  },
+  currentTrack	: String,
   lastMessage   : { type: String, default: '' },
   prevRequests  : [String]
 })

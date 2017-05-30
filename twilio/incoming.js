@@ -132,9 +132,9 @@ function searchSpotify (guestObject){
 
 function searchDatabaseForTrack (guestObject){
   return new Promise (function (fulfill, reject){
-    model.Track.findOne({$and: [{ 'trackID' : guestObject.guest.currentTrack.id}, {'hostID' : guestObject.guest.hostID}]}).exec()
+    model.Track.findOne({$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.guest.hostID}]}).exec()
     .then (function (databaseTrack){
-      console.log (databaseTrack)
+      console.log ('track found in database: ' +databaseTrack)
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
       if (databaseTrack && databaseTrack.addedPaylist){
         console.log ('track added already to playlist')
