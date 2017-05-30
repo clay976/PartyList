@@ -38,8 +38,8 @@ function welcome (hostID, reqThreshold, playlistID){
   return ('You have been added to ' +hostID+ '\'s party with Party List. Send your song requests to this number. Songs will be added after ' +reqThreshold+ '. You can find the playlist here https://play.spotify.com/user/clay976/playlist/'+ playlistID)
 }
 
-function alreadyAdded (title, artist, requests){
-  return ('We found: ' +title+ ', by: ' +artist+ '. This Track has ' +requests+ ' request(s) and has already been added to the playlist.')
+function alreadyAdded (title, artist){
+  return ('We found: ' +title+ ', by: ' +artist+ '. This Track has already been added to the playlist. Search for a new one!')
 }
 
 function alreadyRequested (title, artist){

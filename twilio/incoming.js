@@ -63,7 +63,6 @@ function checkGuestStateAndPerformAction (guestInfo){
     //guest is confirming the last track that we have for them
     if ((messageBody === 'yes') && (guestInfo.currentTrack.trackID != '')){
       console.log ('finding host')
-      guestObject.spotifyTrack = guestInfo.currentTrack
       model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
       .then  (function (hostInfo){
         console.log ('found host')
@@ -109,13 +108,13 @@ function searchSpotify (guestObject){
     .then (function (spotifyTrack){
       //we found a track on spotify matching the guest message
       if (spotifyTrack.body.tracks.total != 0){
-        var spotifyTrack =  spotifyTrack.body.tracks.items[0]
+        var track =  spotifyTrack.body.tracks.items[0]
         guestObject.guest.currentTrack = {
-          trackID     : spotifyTrack.id,
-          name        : spotifyTrack.name,
-          artist      : spotifyTrack.artists[0].name
+          trackID     : track.id,
+          name        : track.name,
+          artist      : track.artists[0].name
         }
-        guestObject.guestUpdate = JSONtemplate.setGuestTrack (spotifyTrack.id, spotifyTrack.name, spotifyTrack.artists[0].name)
+        guestObject.guestUpdate = JSONtemplate.setGuestTrack (track.id, track.name, track.artists[0].name)
         fulfill (guestObject)
       }
       // we did not find a track matching the guests search request so we reject immediatley and respond to them
@@ -137,7 +136,7 @@ function searchDatabaseForTrack (guestObject){
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
       if (databaseTrack && databaseTrack.addedPaylist){
         console.log ('track added already to playlist')
-        reject (addResponse.alreadyAdded (databaseTrack.name, databaseTrack.artist, databaseTrack.numRequests + 1))
+        reject (addResponse.alreadyAdded (databaseTrack.name, databaseTrack.artist))
       }
       //this track was found in our database so we are going to log that info (might be useful to know what tracks get searched most)
       else if (databaseTrack){
