@@ -149,8 +149,8 @@ function searchDatabaseForTrack (guestObject){
       // the track was not found in our database so we are going to add it. That way we can log additional info about it and use it late if it is confirmed
       else{
         console.log ('new track in database (should only happen on searches)')
-        guestObject.trackUpdate = JSONtemplate.Track (guestObject.guest.hostID, guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
-        guestObject.databaseTrack = JSONtemplate.Track (guestObject.guest.hostID, guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
+        guestObject.trackUpdate = JSONtemplate.Track (guestObject.guest.hostID, guestObject.guest.currentTrack.id, guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist)
+        guestObject.databaseTrack = JSONtemplate.Track (guestObject.guest.hostID, guestObject.guest.currentTrack.id, guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist)
         fulfill (guestObject)
       }
     })
@@ -165,9 +165,9 @@ function checkForPreviousRequests (guestObject){
   return new Promise (function (fulfill, reject){
     console.log ('checking for requests')
     for (var i = 0; i < guestObject.guest.prevRequests.length; i++){
-      if (guestObject.spotifyTrack.id === guestObject.guest.prevRequests[i]){
+      if (guestObject.guest.currentTrack.id === guestObject.guest.prevRequests[i]){
         //we found that the guest has already requested the same track they searched so reject with that message right away
-        reject (addResponse.youAlreadyRequested (guestObject.spotifyTrack.name, guestObject.spotifyTrack.artist))
+        reject (addResponse.youAlreadyRequested (guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist))
       }
     }
     //this is a new request from this guest so continue on the function chain
