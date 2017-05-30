@@ -182,7 +182,7 @@ function handleTrackConfirmation (guestObject){
   return new Promise (function (fulfill, reject){
     if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
       console.log ('attempting to add track to playlist')
-      addTrackToPlaylist (guestObject, hostInfo, track)
+      addTrackToPlaylist (guestObject, hostInfo, guestObject.currentTrack)
       .then (function (guestObject){
         fulfill (guestObject)
       })
@@ -210,7 +210,7 @@ function addTrackToPlaylist (guestReqObject, hostInfo, track){
     hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
     .then (function (songAdded){
       guestReqObject.trackUpdate = {$set: { addedPaylist: true}}
-      guestReqObject.response    = addResponse.songConfirmedAndAdded (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests)
+      guestReqObject.response    = addResponse.songConfirmedAndAdded (track.name, track.artist, track.numRequests)
       fulfill (guestReqObject)
     })
     .catch (function (err){
