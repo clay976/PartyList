@@ -109,7 +109,7 @@ function searchSpotify (guestObject){
     .then (function (spotifyTrack){
       //we found a track on spotify matching the guest message
       if (spotifyTrack.body.tracks.total != 0){
-        console.log (spotifyTrack)
+        var spotifyTrack =  spotifyTrack.body.tracks.items[0]
         guestObject.guest.currentTrack = {
           trackID     : spotifyTrack.id,
           name        : spotifyTrack.name,
