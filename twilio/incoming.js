@@ -118,7 +118,7 @@ function searchSpotify (guestObject){
     .then (function (track){
       var currentTrack = JSONtemplate.setGuestTrack (track.id, track.name, track.artists[0].name)
       guestObject.guest.currentTrack = currentTrack
-      return (model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$set : {currentTrack}}).exec())
+      return (model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$set : currentTrack}).exec())
     })
     .then (function (guest){
       console.log ('updated guest object: ' +guestObject.guest)
