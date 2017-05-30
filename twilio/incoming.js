@@ -116,11 +116,12 @@ function searchSpotify (guestObject){
       }
     })
     .then (function (track){
-      return (model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, JSONtemplate.setGuestTrack (track.id, track.name, track.artists[0].name)).exec())
+      var currentTrack = JSONtemplate.setGuestTrack (track.id, track.name, track.artists[0].name)
+      guestObject.guest.currentTrack = currentTrack
+      return (model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, $set: {currentTrack}).exec())
     })
     .then (function (guest){
-      console.log ('updated guest object: ' +guest)
-      guestObject.guest = guest
+      console.log ('updated guest object: ' +guestObject.guest)
       fulfill (guestObject)
     })
     .catch (function (err){

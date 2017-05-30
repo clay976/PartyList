@@ -51,12 +51,10 @@ function guestConfirm(){
 
 function setGuestTrack (id, name, artist){
 	return	{
-    $set            : {
-      currentTrack  : {
-        trackID     : id, 
-        name        : name, 
-        artist      : artist
-      }
+    currentTrack  : {
+      trackID     : id, 
+      name        : name, 
+      artist      : artist
     }
   }
 }
