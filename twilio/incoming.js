@@ -194,8 +194,8 @@ function handleTrackConfirmation (guestObject){
     // the song has been confirmed but will not be added to the playlist yet
     else{
       console.log ('incrementing song\'s request')
-      guestReqObject.trackUpdate= {$inc: { numRequests: 1}}
-      guestReqObject.response   = addResponse.songConfirmed (guestInfo.currentTrack.name, guestInfo.currentTrack.artist, track.numRequests, guestObject.reqThreshold)
+      guestObject.trackUpdate = {$inc: { numRequests: 1}}
+      guestObject.response    = addResponse.songConfirmed (guestObject.currentTrack.name, guestObject.currentTrack.artist, guestObject.databaseTrack.numRequests, guestObject.hostInfo.reqThreshold)
       fulfill (guestReqObject)
     }
   })
