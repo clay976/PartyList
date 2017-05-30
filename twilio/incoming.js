@@ -110,11 +110,11 @@ function searchSpotify (guestObject){
       //we found a track on spotify matching the guest message
       if (spotifyTrack.body.tracks.total != 0){
         guestObject.guest.currentTrack = {
-          trackID     : guestObject.spotifyTrack.id,
-          name        : guestObject.spotifyTrack.name,
-          artist      : guestObject.spotifyTrack.artists[0].name
+          trackID     : spotifyTrack.id,
+          name        : spotifyTrack.name,
+          artist      : spotifyTrack.artists[0].name
         }
-        guestObject.guestUpdate = JSONtemplate.setGuestTrack (guestObject.spotifyTrack.id, guestObject.spotifyTrack.name, guestObject.spotifyTrack.artists[0].name)
+        guestObject.guestUpdate = JSONtemplate.setGuestTrack (spotifyTrack.id, spotifyTrack.name, spotifyTrack.artists[0].name)
         fulfill (guestObject)
       }
       // we did not find a track matching the guests search request so we reject immediatley and respond to them
