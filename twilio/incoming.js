@@ -103,24 +103,24 @@ function checkGuestStateAndPerformAction (guestInfo){
 
 function searchSpotify (guestObject){
   return new Promise (function (fulfill, reject){
-    //search spotify for a track based on the message we got from the
+//search spotify for a track based on the message we got from the
     hostAcountTools.spotifyApi.searchTracks (guestObject.guest.lastMessage, { limit : 1 })
     .then (function (spotifyTrack){
-      //we found a track on spotify matching the guest message
+//we found a track on spotify matching the guest message
       if (spotifyTrack.body.tracks.total != 0){
-        var track =  spotifyTrack.body.tracks.items[0]
-        guestObject.guest.currentTrack = {
-          trackID     : track.id,
-          name        : track.name,
-          artist      : track.artists[0].name
-        }
-        guestObject.guestUpdate = JSONtemplate.setGuestTrack (track.id, track.name, track.artists[0].name)
-        fulfill (guestObject)
+        return (spotifyTrack.body.tracks.items[0])
       }
-      // we did not find a track matching the guests search request so we reject immediatley and respond to them
+// we did not find a track matching the guests search request so we reject immediatley and respond to them
       else{
         reject (addResponse.songNotFound)
       }
+    })
+    .then (function (track){
+      return (model.Guest.findOneAndUpdate({ 'phoneNum' : guestReqObject.guest.phoneNum}, JSONtemplate.setGuestTrack (track.id, track.name, track.artists[0].name)).exec())
+    })
+    .then (function (guest){
+      console.log (guest)
+      fulfill (guestObject)
     })
     .catch (function (err){
       console.log (err.stack)
