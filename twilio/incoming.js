@@ -196,7 +196,7 @@ function handleTrackConfirmation (guestObject){
       guestObject.trackUpdate = {$inc: { numRequests: 1}}
       console.log (guestObject.guest.currentTrack)
       guestObject.response    = addResponse.songConfirmed (guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist, guestObject.databaseTrack.numRequests, guestObject.hostInfo.reqThreshold)
-      fulfill (guestReqObject)
+      fulfill (guestObject)
     }
   })
   .catch (function (err){
