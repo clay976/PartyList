@@ -117,6 +117,7 @@ function searchSpotify (guestObject){
       }
     })
     .then (function (track){
+      console.log (track)
       console.log ('track object created after searching spotify: ' +track)
       return (model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$set : track}).exec())
     })
