@@ -23,7 +23,7 @@ function songConfirmed (title, artist, numRequests, reqThreshold){
 }
 
 function songConfirmedAndAdded (title, artist, numRequests){
-  return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' requests and will be added to the playlist!')
+  return ('Your song: ' +title+ ', by: ' +artist+ ' has enough requests and will be added to the playlist!')
 }
 
 function songConfirmedAndAddedAndadvertisment (title, artist, numRequests){
