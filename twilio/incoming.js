@@ -117,7 +117,6 @@ function searchSpotify (guestObject){
       }
     })
     .then (function (track){
-      console.log (track)
       guestObject.guest.currentTrack = track
       return (model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$set : {'currentTrack'  : track}}).exec())
     })
@@ -180,11 +179,10 @@ function checkForPreviousRequests (guestObject){
 
 // the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
 function handleTrackConfirmation (guestObject){
-  console.log (guestObject)
   return new Promise (function (fulfill, reject){
     if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
       console.log ('attempting to add track to playlist')
-      addTrackToPlaylist (guestObject, hostInfo, guestObject.currentTrack)
+      addTrackToPlaylist (guestObject, guestObject.hostInfo, guestObject.currentTrack)
       .then (function (guestObject){
         fulfill (guestObject)
       })
@@ -206,14 +204,14 @@ function handleTrackConfirmation (guestObject){
   })
 }
 
-function addTrackToPlaylist (guestReqObject, hostInfo, track){
+function addTrackToPlaylist (guestObject, hostInfo, track){
   return new Promise (function (fulfill, reject){
     hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
-    hostAcountTools.spotifyApi.addTracksToPlaylist (guestInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
+    hostAcountTools.spotifyApi.addTracksToPlaylist (hostInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
     .then (function (songAdded){
-      guestReqObject.trackUpdate = {$set: { addedPaylist: true}}
-      guestReqObject.response    = addResponse.songConfirmedAndAdded (track.name, track.artist, track.numRequests)
-      fulfill (guestReqObject)
+      guestObject.trackUpdate = {$set: { addedPaylist: true}}
+      guestObject.response    = addResponse.songConfirmedAndAdded (track.name, track.artist)
+      fulfill (guestObject)
     })
     .catch (function (err){
       console.log (err.stack)
