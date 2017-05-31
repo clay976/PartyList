@@ -108,7 +108,7 @@ function searchSpotify (guestObject){
     .then (function (spotifyTrack){
 //we found a track on spotify matching the guest message
       if (spotifyTrack.body.tracks.total != 0){
-        var currentTrack = JSONtemplate.setGuestTrack (spotifyTrack.body.tracks.items[0].id, spotifyTrack.body.tracks.items[0].name, spotifyTrack.body.tracks.items[0].artists[0].name)
+        var track = JSONtemplate.setGuestTrack (spotifyTrack.body.tracks.items[0].id, spotifyTrack.body.tracks.items[0].name, spotifyTrack.body.tracks.items[0].artists[0].name)
         return (currentTrack)
       }
 // we did not find a track matching the guests search request so we reject immediatley and respond to them
@@ -118,8 +118,8 @@ function searchSpotify (guestObject){
     })
     .then (function (track){
       console.log (track)
-      console.log ('track object created after searching spotify: ' +track)
-      return (model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$set : track}).exec())
+      guestObject.guest.currentTrack = track
+      return (model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$set : currentTrack  : {track}}).exec())
     })
     .then (function (guest){
       console.log ('updated guest object: ' +guestObject.guest)
