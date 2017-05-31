@@ -121,7 +121,6 @@ function searchSpotify (guestObject){
       return (model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$set : {'currentTrack'  : track}}).exec())
     })
     .then (function (guest){
-      console.log ('updated guest object: ' +guestObject.guest)
       fulfill (guestObject)
     })
     .catch (function (err){
@@ -195,7 +194,8 @@ function handleTrackConfirmation (guestObject){
     else{
       console.log ('incrementing song\'s request')
       guestObject.trackUpdate = {$inc: { numRequests: 1}}
-      guestObject.response    = addResponse.songConfirmed (guestObject.currentTrack.name, guestObject.currentTrack.artist, guestObject.databaseTrack.numRequests, guestObject.hostInfo.reqThreshold)
+      console.log (guestObject.guest.currentTrack)
+      guestObject.response    = addResponse.songConfirmed (guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist, guestObject.databaseTrack.numRequests, guestObject.hostInfo.reqThreshold)
       fulfill (guestReqObject)
     }
   })
