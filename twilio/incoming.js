@@ -210,6 +210,7 @@ function addTrackToPlaylist (guestObject, hostInfo, track){
     hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
     hostAcountTools.spotifyApi.addTracksToPlaylist (hostInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
     .then (function (songAdded){
+      console.log (songAdded)
       guestObject.trackUpdate = {$set: { addedPaylist: true}}
       guestObject.response    = addResponse.songConfirmedAndAdded (track.name, track.artist)
       fulfill (guestObject)
