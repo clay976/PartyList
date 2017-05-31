@@ -75,7 +75,7 @@ function checkGuestStateAndPerformAction (guestInfo){
       })
       .then (function (guestObject){
         console.log ('confirming track')
-        handleTrackConfirmation (guestObject)
+        fulfill (handleTrackConfirmation (guestObject))
       })
       .catch (function (err){
         console.log (err.stack)
@@ -205,12 +205,10 @@ function handleTrackConfirmation (guestObject){
 }
 
 function addTrackToPlaylist (guestObject, hostInfo, track){
-  console.log (hostInfo)
   return new Promise (function (fulfill, reject){
     hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
     hostAcountTools.spotifyApi.addTracksToPlaylist (hostInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
     .then (function (songAdded){
-      console.log (songAdded)
       guestObject.trackUpdate = {$set: { addedPaylist: true}}
       guestObject.response    = addResponse.songConfirmedAndAdded (track.name, track.artist)
       fulfill (guestObject)

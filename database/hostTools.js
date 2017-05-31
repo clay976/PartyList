@@ -1,11 +1,11 @@
 var SpotifyWebApi = require('spotify-web-api-node');
-var credentials = {
-  clientId : 'a000adffbd26453fbef24e8c1ff69c3b',
-  clientSecret : '899b3ec7d52b4baabba05d6031663ba2',
-  redirectUri : 'http://104.131.215.55:80/callback'
+var credentials 	= {
+  clientId 			: 'a000adffbd26453fbef24e8c1ff69c3b',
+  clientSecret 	: '899b3ec7d52b4baabba05d6031663ba2',
+  redirectUri 	: 'http://104.131.215.55:80/callback'
 };
-var spotifyApi = new SpotifyWebApi(credentials);
-var model = require ('./models')
+var spotifyApi 		= new SpotifyWebApi(credentials);
+var model 				= require ('./models')
 
 function validateHost (host){
 	return new Promise (function (fulfill, reject){
