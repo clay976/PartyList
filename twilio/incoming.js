@@ -118,7 +118,7 @@ function searchSpotify (guestObject){
     })
     .then (function (track){
       console.log (track)
-      //guestObject.guest.currentTrack = track
+      guestObject.guest.currentTrack = track
       return (model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$set : {'currentTrack'  : track}}).exec())
     })
     .then (function (guest){
@@ -136,15 +136,14 @@ function searchDatabaseForTrack (guestObject){
   return new Promise (function (fulfill, reject){
     model.Track.findOne({$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.guest.hostID}]}).exec()
     .then (function (databaseTrack){
-      console.log ('track found in database: ' +databaseTrack)
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
       if (databaseTrack && databaseTrack.addedPaylist){
-        console.log ('track added already to playlist')
+        console.log ('track added already to playlist' +databaseTrack)
         reject (addResponse.alreadyAdded (databaseTrack.name, databaseTrack.artist))
       }
       //this track was found in our database so we are going to log that info (might be useful to know what tracks get searched most)
       else if (databaseTrack){
-        console.log ('track not on playlist, but in database')
+        console.log ('track not on playlist, but in database' +databaseTrack)
         guestObject.databaseTrack = databaseTrack
         guestObject.trackUpdate = {$inc: { foundAmount: 1}}
         fulfill (guestObject)
