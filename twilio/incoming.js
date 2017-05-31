@@ -144,15 +144,19 @@ function searchDatabaseForTrack (guestObject){
         console.log ('track not on playlist, but in database' +databaseTrack)
         guestObject.databaseTrack = databaseTrack
         guestObject.trackUpdate = {$inc: { foundAmount: 1}}
-        fulfill (guestObject)
+        return (guestObject)
       }
       // the track was not found in our database so we are going to add it. That way we can log additional info about it and use it late if it is confirmed
       else{
         console.log ('new track in database (should only happen on searches)')
         guestObject.trackUpdate = JSONtemplate.Track (guestObject.guest.hostID, guestObject.guest.currentTrack.id, guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist)
         guestObject.databaseTrack = JSONtemplate.Track (guestObject.guest.hostID, guestObject.guest.currentTrack.id, guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist)
-        fulfill (guestObject)
+        return (guestObject)
       }
+    })
+    .then (function (guestObject){
+      model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.guest.hostID}]}, guestObject.trackUpdate).exec()
+      fulfill (guestObject) 
     })
     .catch (function (err){
       console.log (err.stack)
