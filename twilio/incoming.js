@@ -109,7 +109,7 @@ function searchSpotify (guestObject){
 //we found a track on spotify matching the guest message
       if (spotifyTrack.body.tracks.total != 0){
         var track = JSONtemplate.setGuestTrack (spotifyTrack.body.tracks.items[0].id, spotifyTrack.body.tracks.items[0].name, spotifyTrack.body.tracks.items[0].artists[0].name)
-        return (currentTrack)
+        return (track)
       }
 // we did not find a track matching the guests search request so we reject immediatley and respond to them
       else{
