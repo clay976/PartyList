@@ -214,7 +214,7 @@ function addTrackToPlaylist (guestObject, hostInfo, track){
     guestObject.response    = addResponse.songConfirmedAndAdded (track.name, track.artist)
 
     hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
-    .then (hostAcountTools.spotifyApi.addTracksToPlaylist (hostInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID))
+    hostAcountTools.spotifyApi.addTracksToPlaylist (hostInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
     .then (model.Track.findOneAndUpdate({$and: [{ 'trackID' : track.trackID}, {'hostID' : hostInfo.hostID}]}, trackUpdate).exec())
     .then (fulfill (guestObject))
     .catch (function (err){
