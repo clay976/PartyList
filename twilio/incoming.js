@@ -167,11 +167,10 @@ function searchDatabaseForTrack (guestObject){
 }
 
 function checkForPreviousRequests (guestObject){
-  console.log (guestObject)
   return new Promise (function (fulfill, reject){
     console.log ('checking for requests')
     for (var i = 0; i < guestObject.guest.prevRequests.length; i++){
-      if (guestObject.guest.currentTrack.id === guestObject.guest.prevRequests[i]){
+      if (guestObject.guest.currentTrack.trackID === guestObject.guest.prevRequests[i]){
         //we found that the guest has already requested the same track they searched so reject with that message right away
         reject (addResponse.youAlreadyRequested (guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist))
       }
