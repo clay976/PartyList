@@ -155,7 +155,7 @@ function searchDatabaseForTrack (guestObject){
       }
     })
     .then (function (guestObject){
-      model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.guest.hostID}]}, guestObject.trackUpdate).exec()
+      model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.guest.hostID}]}, guestObject.trackUpdate, {upsert:true}).exec()
       fulfill (guestObject) 
     })
     .catch (function (err){
