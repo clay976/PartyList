@@ -201,7 +201,7 @@ function handleTrackConfirmation (guestObject){
       console.log ('incrementing song\'s request')
       var trackUpdate = {$inc: { numRequests: 1}}
       
-      model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestObject.currentTrack.trackID}, {'hostID' : guestObject.hostInfo.hostID}]}, trackUpdate).exec()
+      model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.hostInfo.hostID}]}, trackUpdate).exec()
       guestObject.response    = addResponse.songConfirmed (guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist, guestObject.databaseTrack.numRequests, guestObject.hostInfo.reqThreshold)
       fulfill (guestObject)
     }
