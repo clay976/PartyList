@@ -184,7 +184,7 @@ function checkForPreviousRequests (guestObject){
 // the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
 function handleTrackConfirmation (guestObject){
   return new Promise (function (fulfill, reject){
-    model.guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$push: {'prevRequests' : guestObject.guest.currentTrack.trackID}});
+    model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$push: {'prevRequests' : guestObject.guest.currentTrack.trackID}});
     if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
       console.log ('attempting to add track to playlist')
       addTrackToPlaylist (guestObject, guestObject.hostInfo, guestObject.guest.currentTrack)
@@ -201,7 +201,7 @@ function handleTrackConfirmation (guestObject){
       console.log ('incrementing song\'s request')
       var trackUpdate = {$inc: { numRequests: 1}}
       
-      model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestObject.currentTrack.trackID}, {'hostID' : guestObject.hostInfo.hostID}]}, trackUpdate).exec())
+      model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestObject.currentTrack.trackID}, {'hostID' : guestObject.hostInfo.hostID}]}, trackUpdate).exec()
       guestObject.response    = addResponse.songConfirmed (guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist, guestObject.databaseTrack.numRequests, guestObject.hostInfo.reqThreshold)
       fulfill (guestObject)
     }
