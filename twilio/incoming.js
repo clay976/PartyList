@@ -138,8 +138,7 @@ function searchDatabaseForTrack (guestObject){
       if (databaseTrack && databaseTrack.addedPaylist){
         console.log ('track added already to playlist' +databaseTrack)
         guestObject.trackUpdate = {$inc: { foundAmount: 1}}
-        addResponse.alreadyAdded (databaseTrack.name, databaseTrack.artist)
-        reject (guestObject)
+        reject (addResponse.alreadyAdded (databaseTrack.name, databaseTrack.artist))
       }
       //this track was found in our database so we are going to log that info (might be useful to know what tracks get searched most)
       else if (databaseTrack){
@@ -157,6 +156,7 @@ function searchDatabaseForTrack (guestObject){
       }
     })
     .then (function (guestObject){
+      
       model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.guest.hostID}]}, guestObject.trackUpdate, {upsert:true}).exec()
       fulfill (guestObject) 
     })
