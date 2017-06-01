@@ -136,13 +136,13 @@ function searchDatabaseForTrack (guestObject){
     .then (function (databaseTrack){
       //the track the guest has searched has already been added to the playlist so reject right away and tell them that
       if (databaseTrack && databaseTrack.addedPaylist){
-        console.log ('track added already to playlist' +databaseTrack)
+        console.log ('track added already to playlist')
         guestObject.trackUpdate = {$inc: { foundAmount: 1}}
         reject (addResponse.alreadyAdded (databaseTrack.name, databaseTrack.artist))
       }
       //this track was found in our database so we are going to log that info (might be useful to know what tracks get searched most)
       else if (databaseTrack){
-        console.log ('track not on playlist, but in database' +databaseTrack)
+        console.log ('track not on playlist, but in database')
         guestObject.databaseTrack = databaseTrack
         guestObject.trackUpdate = {$inc: { foundAmount: 1}}
         return (guestObject)
@@ -167,6 +167,7 @@ function searchDatabaseForTrack (guestObject){
 }
 
 function checkForPreviousRequests (guestObject){
+  console.log (guestObject)
   return new Promise (function (fulfill, reject){
     console.log ('checking for requests')
     for (var i = 0; i < guestObject.guest.prevRequests.length; i++){
@@ -185,26 +186,28 @@ function checkForPreviousRequests (guestObject){
 function handleTrackConfirmation (guestObject){
   return new Promise (function (fulfill, reject){
     model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$push: {'prevRequests' : guestObject.guest.currentTrack.trackID}});
-    if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
-      console.log ('attempting to add track to playlist')
-      addTrackToPlaylist (guestObject, guestObject.hostInfo, guestObject.guest.currentTrack)
-      .then (function (guestObject){
+    .then (function (update){
+      if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
+        console.log ('attempting to add track to playlist')
+        addTrackToPlaylist (guestObject, guestObject.hostInfo, guestObject.guest.currentTrack)
+        .then (function (guestObject){
+          fulfill (guestObject)
+        })
+        .catch (function (err){
+          console.log (err.stack)
+          reject (err)
+        })
+      }
+      // the song has been confirmed but will not be added to the playlist yet
+      else{
+        console.log ('incrementing song\'s request')
+        var trackUpdate = {$inc: { numRequests: 1}}
+        
+        model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.hostInfo.hostID}]}, trackUpdate).exec()
+        guestObject.response    = addResponse.songConfirmed (guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist, guestObject.databaseTrack.numRequests, guestObject.hostInfo.reqThreshold)
         fulfill (guestObject)
-      })
-      .catch (function (err){
-        console.log (err.stack)
-        reject (err)
-      })
-    }
-    // the song has been confirmed but will not be added to the playlist yet
-    else{
-      console.log ('incrementing song\'s request')
-      var trackUpdate = {$inc: { numRequests: 1}}
-      
-      model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.hostInfo.hostID}]}, trackUpdate).exec()
-      guestObject.response    = addResponse.songConfirmed (guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist, guestObject.databaseTrack.numRequests, guestObject.hostInfo.reqThreshold)
-      fulfill (guestObject)
-    }
+      }
+    })
   })
   .catch (function (err){
     console.log (err.stack)
