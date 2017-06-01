@@ -185,7 +185,7 @@ function checkForPreviousRequests (guestObject){
 // the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
 function handleTrackConfirmation (guestObject){
   return new Promise (function (fulfill, reject){
-    model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$push: {'prevRequests' : guestObject.guest.currentTrack.trackID}});
+    model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$push: {'prevRequests' : guestObject.guest.currentTrack.trackID}})
     .then (function (update){
       if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
         console.log ('attempting to add track to playlist')
