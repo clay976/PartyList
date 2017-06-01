@@ -155,8 +155,7 @@ function searchDatabaseForTrack (guestObject){
         return (guestObject)
       }
     })
-    .then (function (guestObject){
-      
+    .then (function (guestObject){    
       model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.guest.hostID}]}, guestObject.trackUpdate, {upsert:true}).exec()
       fulfill (guestObject) 
     })
@@ -200,7 +199,6 @@ function handleTrackConfirmation (guestObject){
     else{
       console.log ('incrementing song\'s request')
       guestObject.trackUpdate = {$inc: { numRequests: 1}}
-      console.log (guestObject.guest.currentTrack)
       guestObject.response    = addResponse.songConfirmed (guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist, guestObject.databaseTrack.numRequests, guestObject.hostInfo.reqThreshold)
       fulfill (guestObject)
     }
@@ -212,13 +210,13 @@ function handleTrackConfirmation (guestObject){
 
 function addTrackToPlaylist (guestObject, hostInfo, track){
   return new Promise (function (fulfill, reject){
+    var trackUpdate = {$set: { addedPaylist: true}}
+    guestObject.response    = addResponse.songConfirmedAndAdded (track.name, track.artist)
+
     hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
-    hostAcountTools.spotifyApi.addTracksToPlaylist (hostInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
-    .then (function (songAdded){
-      guestObject.trackUpdate = {$set: { addedPaylist: true}}
-      guestObject.response    = addResponse.songConfirmedAndAdded (track.name, track.artist)
-      fulfill (guestObject)
-    })
+    .then (hostAcountTools.spotifyApi.addTracksToPlaylist (hostInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID))
+    .then (model.Track.findOneAndUpdate({$and: [{ 'trackID' : track.trackID}, {'hostID' : hostInfo.hostID}]}, trackUpdate).exec())
+    .then (fulfill (guestObject))
     .catch (function (err){
       console.log (err.stack)
       reject (err)
