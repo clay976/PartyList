@@ -172,7 +172,7 @@ function checkForPreviousRequests (guestObject){
     for (var i = 0; i < guestObject.guest.prevRequests.length; i++){
       if (guestObject.guest.currentTrack.trackID === guestObject.guest.prevRequests[i]){
         //we found that the guest has already requested the same track they searched so reject with that message right away
-        reject (addResponse.youAlreadyRequested (guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist))
+        reject (addResponse.alreadyRequested (guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist))
       }
     }
     //this is a new request from this guest so continue on the function chain
