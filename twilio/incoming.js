@@ -38,9 +38,9 @@ function HandleIncomingMessage (req, res, db){
     var guestInfo           = validateGuest (guestNum, guestMessage)
     var hostID              = guestInfo.then (guestInfo.hostID)
     var spotifyTrack        = guestInfo.then (searchSpotify (guestMessage))
-    var spotifyTrackID      = spotifyTrack.then (spotifyTrack.body.tracks.items[0].id)
-    var spotifyTrackName    = spotifyTrack.then (spotifyTrack.body.tracks.items[0].name)
-    var spotifyTrackArtist  = spotifyTrack.then (spotifyTrack.body.tracks.items[0].artists[0].name)
+    var spotifyTrackID      = spotifyTrack.then (spotifyTrack.id)
+    var spotifyTrackName    = spotifyTrack.then (spotifyTrack.name)
+    var spotifyTrackArtist  = spotifyTrack.then (spotifyTrack.artists[0].name)
     var dataBaseTrack       = spotifyTrack.then (incrementOrAddSongInDatabase (hostID, spotifyTrackID, spotifyTrackName, spotifyTrackArtist))
     var response            = dataBaseTrack.then (addResponse.askToConfirm (spotifyTrackName, spotifyTrackArtist, dataBaseTrack.numRequests))
 
