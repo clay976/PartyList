@@ -180,19 +180,27 @@ function handleTrackConfirmation (guestObject){
     var update  = guestObject.clearGuestSong (-1, guestInfo.currentTrack.trackID)
 
     model.Guest.findOneAndUpdate(query, update)
-    .then (function (){
+    .then (function (update){
       if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
-        fulfill (addTrackToPlaylist (guestObject, guestObject.hostInfo, guestObject.guest.currentTrack)) //attempting to add track to playlist
-      }else{ // the song has been confirmed but will not be added to the playlist yet
-        var query     = {$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.hostInfo.hostID}]}
-        var update    = {$inc: { numRequests: 1}}
-        var trackName = guestObject.guest.currentTrack.name
-        var artist    = guestObject.guest.currentTrack.artist
-        var requests  = guestObject.databaseTrack.numRequests
-        var threshold = guestObject.hostInfo.reqThreshold
-
-        guestObject.response    = addResponse.songConfirmed (trackName, artist, requests, threshold)
-        model.Track.findOneAndUpdate(query, trackUpdate).exec() //incrementing song\'s request
+        console.log ('attempting to add track to playlist')
+        addTrackToPlaylist (guestObject, guestObject.hostInfo, guestObject.guest.currentTrack)
+        .then (function (guestObject){
+          fulfill (guestObject)
+        })
+        .catch (function (err){
+          console.log (err.stack)
+          reject (err)
+        })
+      }
+      // the song has been confirmed but will not be added to the playlist yet
+      else{
+        console.log ('incrementing song\'s request')
+        var trackUpdate = {$inc: { numRequests: 1}}
+        var hostID      = guestObject.hostInfo.hostID
+        var trackID     = guestObject.guest.currentTrack.trackID
+        
+        model.Track.findOneAndUpdate({$and: [{ 'trackID' : }, {'hostID' : }]}, trackUpdate).exec()
+        guestObject.response    = addResponse.songConfirmed (guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist, guestObject.databaseTrack.numRequests, guestObject.hostInfo.reqThreshold)
         fulfill (guestObject)
       }
     })
@@ -204,13 +212,12 @@ function handleTrackConfirmation (guestObject){
 
 function addTrackToPlaylist (guestObject, hostInfo, track){
   return new Promise (function (fulfill, reject){
-    var query             = {$and: [{ 'trackID' : track.trackID}, {'hostID' : hostInfo.hostID}]}
-    var trackUpdate       = {$set: { addedPaylist: true}}
-    guestObject.response  = addResponse.songConfirmedAndAdded (track.name, track.artist)
+    var trackUpdate = {$set: { addedPaylist: true}}
+    guestObject.response    = addResponse.songConfirmedAndAdded (track.name, track.artist)
 
-    hostAcountTools.spotifyApi.setAccessToken (hostInfo.access_token)
+    hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
     hostAcountTools.spotifyApi.addTracksToPlaylist (hostInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
-    .then (model.Track.findOneAndUpdate(query, trackUpdate).exec())
+    .then (model.Track.findOneAndUpdate({$and: [{ 'trackID' : track.trackID}, {'hostID' : hostInfo.hostID}]}, trackUpdate).exec())
     .then (fulfill (guestObject))
     .catch (function (err){
       console.log (err.stack)
