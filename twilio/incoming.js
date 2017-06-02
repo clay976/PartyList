@@ -41,13 +41,11 @@ function HandleIncomingMessage (req, res, db){
     var spotifyTrackID      = spotifyTrack.then (spotifyTrack.trackID)
     var spotifyTrackName    = spotifyTrack.then (spotifyTrack.name)
     var spotifyTrackArtist  = spotifyTrack.then (spotifyTrack.artist)
-    var dataBaseTrack       = spotifyTrack.then (incrementOrAddSongInDatabase (hostID, spotifyTrackID, spotifyTrackName, spotifyTrackArtist))
+    var dataBaseTrack       = spotifyTrackArtist.then (incrementOrAddSongInDatabase (hostID, spotifyTrackID, spotifyTrackName, spotifyTrackArtist))
     var response            = dataBaseTrack.then (addResponse.askToConfirm (spotifyTrackName, spotifyTrackArtist, dataBaseTrack.numRequests))
 
-    response.then (checkForPreviousRequests (spotifyTrackID, guestInfo.prevRequests))
-    .then (function (guestNum, spotifyTrackID, spotifyTrackName, spotifyTrackArtist, dataBaseTrack.numRequests){
-      return setGuestCurrentTrack (guestNum, spotifyTrackID, spotifyTrackName, spotifyTrackArtist, dataBaseTrack.numRequests)
-    })
+    spotifyTrackID.then (checkForPreviousRequests (spotifyTrackID, guestInfo.prevRequests))
+    .then (setGuestCurrentTrack (guestNum, spotifyTrackID, spotifyTrackName, spotifyTrackArtist, dataBaseTrack.numRequests))
     .then (function (response){
       resp.message (response)
       res.end(resp.toString())
