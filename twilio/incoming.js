@@ -45,7 +45,9 @@ function HandleIncomingMessage (req, res, db){
     var response            = dataBaseTrack.then (addResponse.askToConfirm (spotifyTrackName, spotifyTrackArtist, dataBaseTrack.numRequests))
 
     response.then (checkForPreviousRequests (spotifyTrackID, guestInfo.prevRequests))
-    .then (setGuestCurrentTrack (guestNum, spotifyTrackID, spotifyTrackName, spotifyTrackArtist, dataBaseTrack.numRequests))
+    .then (function (guestNum, spotifyTrackID, spotifyTrackName, spotifyTrackArtist, dataBaseTrack.numRequests){
+      return setGuestCurrentTrack (guestNum, spotifyTrackID, spotifyTrackName, spotifyTrackArtist, dataBaseTrack.numRequests)
+    })
     .then (function (response){
       resp.message (response)
       res.end(resp.toString())
