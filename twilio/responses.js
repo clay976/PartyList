@@ -1,18 +1,13 @@
-//node modules
-var model = require ('../database/models')
-
 //my modules
-var notGuest = ('Sorry, we could not find a party that you are currently a guest of. Send the host\'s phone number in the format "1234567890" and we will ask them to add you. \n\n if you are trying to join the HOCO playlist send back "add me please"');
+var notGuest          = ('Sorry, we could not find a party that you are currently a guest of. Send the host\'s phone number in the format "1234567890" and we will ask them to add you. \n\n if you are trying to join the HOCO playlist send back "add me please"');
 
 var emptyConfirmation = ('We don\'t have a request for you to confirm or decline. If your song is just "yes", or "no", add an artist name to search')
 
-var declineRequest = ('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.')
+var declineRequest    = ('Sorry about the wrong song, try modifying your search! Remember to not use any special characters.')
 
-var songNotFound = ('Sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
+var songNotFound      = ('Sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
 
-function error (){
-  return ('There was an error on our end. We are very sorry, please try again!')
-}
+var error             = ('There was an error on our end. We are very sorry, please try again!')
 
 function songConfirmedAndadvertisment (title, artist, numRequests){
   return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' request(s)! You are also recieving an advertisment because you have made 5 successful request')
@@ -28,10 +23,6 @@ function songConfirmedAndAdded (title, artist, numRequests){
 
 function songConfirmedAndAddedAndadvertisment (title, artist, numRequests){
   return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' requests and will be added to the playlist!')
-}
-
-function errorOnOurEnd (){
-  return ('We are very sorry there was an error on our end. Please try again!')
 }
 
 function welcome (hostID, reqThreshold, playlistID){
@@ -60,10 +51,8 @@ module.exports = {
   songConfirmed                         : songConfirmed,
   songConfirmedAndAdded                 : songConfirmedAndAdded,
   songConfirmedAndAddedAndadvertisment  : songConfirmedAndAddedAndadvertisment,
-  errorOnOurEnd                         : errorOnOurEnd,
   welcome                               : welcome,
   alreadyAdded                          : alreadyAdded,
   alreadyRequested                      : alreadyRequested,
   askToConfirm                          : askToConfirm
-
 }

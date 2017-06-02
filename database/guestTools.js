@@ -53,34 +53,6 @@ function validateRequest (req){
   })
 }
 
-//find the guest in our database by their phone number
-//if their number is not found or if they are not apart of anyone's parties currently. They are told they are not a guest.
-function validateGuest (body){
-  return new Promise (function (fulfill, reject){
-    var message = (body.Body).toLowerCase().trim()
-    model.Guest.findOne({ 'phoneNum' : body.From }).exec()
-    .then (function (guestInfo){
-      /*if (message === 'add me please'){
-        console.log ('adding guest: '+ body)
-        model.Guest.findOneAndUpdate({'phoneNum': body.From}, upsertTemplate.Guest ('clay976', body.From), {upsert:true}).exec()
-        .then (function (updated){
-          reject ('You have been added succesfully!\n\n Songs can be searched by sending a text like this "Drake One Dance". Confirm your request after it is found. Songs with 2 requests will be added to the playlist. You can find the playlist here:  https://open.spotify.com/user/clay976/playlist/4zTJyhtgvVuNvGFwDDSfJB')
-        })
-      }else */
-      if (guestInfo){
-        if (guestInfo.hostID){
-          guestInfo.lastMessage = message
-          fulfill (guestInfo) 
-        }else reject (response.notGuest)
-      }else reject (response.notGuest)
-    })
-    .catch (function (err){
-      console.log (err)
-      reject (response.errorOnOurEnd)
-    })
-  })
-}
-
 function welcomeMessage (toNum, hostID, reqThreshold, playlistID){
   return {
     to    :'+1' +toNum,
@@ -91,6 +63,5 @@ function welcomeMessage (toNum, hostID, reqThreshold, playlistID){
 
 module.exports = {
   addManyGuest                : addManyGuest,
-  addGuest                    : addGuest,
-  validateGuest               : validateGuest
+  addGuest                    : addGuest
 }

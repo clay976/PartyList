@@ -31,7 +31,7 @@ function Track (host, TrackID, name, artist){
 	  'artist'				: artist,
 	  'numRequests'		: 0,
 	  'timePlayed'		: 0,
-	  'foundAmount' 	: 0,
+	  'foundAmount' 	: 1,
 	}
 }
 
@@ -49,11 +49,12 @@ function guestConfirm(){
   }
 }
 
-function setGuestTrack (id, name, artist){
+function setGuestTrack (id, name, artist, numRequests){
 	return	{
     trackID     : id, 
     name        : name, 
-    artist      : artist
+    artist      : artist,
+    numRequests : numRequests
   }
 }
 
