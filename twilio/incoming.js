@@ -180,6 +180,7 @@ function clearAndAddGuestPreviousRequestInDatabase (guestNum, trackID){
 
 function incrementOrAddSongInDatabase (hostID, spotifyTrack){
   console.log ('incrementing or adding to database')
+  console.log (spotifyTrack)
   return new Promise (function (fulfill, reject){
     var query = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
     var error = 'there was an error updating the track\'s number of found times in our database'
