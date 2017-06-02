@@ -78,7 +78,7 @@ function validateGuest (guestNumber, message){
 }
 
 function searchSpotify (query){
-  console.log ('searchign spotify')
+  console.log ('searching spotify')
   return new Promise (function (fulfill, reject){
     var error = 'error searching spotify for song'
 
@@ -90,6 +90,7 @@ function searchSpotify (query){
           'name'    : spotifyTrack.body.tracks.items[0].name,
           'artist'  : spotifyTrack.body.tracks.items[0].artists[0].name,
         }
+        console.log (track)
         fulfill (track)
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
         reject (addResponse.songNotFound)
