@@ -41,7 +41,8 @@ function HandleIncomingMessage (req, res, db){
     dataBaseTrack = spotifyTrack.then (incrementOrAddSongInDatabase (hostID, spotifyTrack))
     response      = dataBaseTrack.then (addResponse.askToConfirm (spotifyTrack, dataBaseTrack.numRequests))
 
-    spotifyTrack.then (checkForPreviousRequests (spotifyTrack, guestInfo.prevRequests))
+    response
+    .then (checkForPreviousRequests (spotifyTrack, guestInfo.prevRequests))
     .then (setGuestCurrentTrack (guestNum, spotifyTrack, dataBaseTrack.numRequests))
     .then (function (response){
       resp.message (response)
