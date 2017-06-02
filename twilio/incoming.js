@@ -56,11 +56,11 @@ function HandleIncomingMessage (req, res, db){
 //find the guest in our database by their phone number
 //if their number is not found or if they are not apart of anyone's parties currently. They are told they are not a guest.
 function validateGuest (guestNumber, message){
-  console.log ('validating guest')
   return new Promise (function (fulfill, reject){
     var error = 'error searching for guest in our database'
     model.Guest.findOne({ 'phoneNum' : guestNumber })
     .then (function (guestInfo){
+      console.log ('validating guest')
       if (guestInfo){
         if (guestInfo.hostID){
           console.log (guestInfo)
@@ -76,18 +76,17 @@ function validateGuest (guestNumber, message){
 }
 
 function searchSpotify (query){
-  console.log ('searching spotify')
   return new Promise (function (fulfill, reject){
     var error = 'error searching spotify for song'
     hostAcountTools.spotifyApi.searchTracks (query, { limit : 1 })//search spotify for a track based on the message we got from the
     .then (function (spotifyTrack){
+      console.log ('searching spotify')
       if (spotifyTrack.body.tracks.total != 0){ //we found a track on spotify matching the guest message)
         var track = {
           'trackID' : spotifyTrack.body.tracks.items[0].id,
           'name'    : spotifyTrack.body.tracks.items[0].name,
           'artist'  : spotifyTrack.body.tracks.items[0].artists[0].name
         }
-        console.log (track)
         fulfill (track)
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
         reject (addResponse.songNotFound)
@@ -101,13 +100,15 @@ function searchSpotify (query){
 }
 
 function searchDatabaseForHost (hostID){
-  console.log ('searching database for host')
   return new Promise (function (fulfill, reject){
   var query     = {'hostID' : guestInfo.hostID}
   var error     = 'error searching for host in database'
 
   model.Host.findOne(query).exec()
-  .then (fulfill ('found host in database'))
+  .then (function (host){
+    console.log ('searching database for host')
+    fulfill (host)
+  })
   .catch (function (err){
       console.log (err)
       reject (error)
@@ -116,7 +117,6 @@ function searchDatabaseForHost (hostID){
 }
 
 function checkForPreviousRequests (spotifyTrack, prevRequests){
-  console.log ('checking for previous requests')
   return new Promise (function (fulfill, reject){
     var error = 'The guest has already requested this song'
     for (var i = 0; i < prevRequests.length; i++){
@@ -126,13 +126,13 @@ function checkForPreviousRequests (spotifyTrack, prevRequests){
       }
     }
     //this is a new request from this guest so continue on the function chain
+    console.log ('checking for previous requests')
     console.log (prevRequests)
     fulfill ()
   })
 }
 
 function setGuestCurrentTrack (guestNum, spotifyTrack, numRequests){
-  console.log ('setting current track')
   return new Promise (function (fulfill, reject){
     var track   = JSONtemplate.setGuestTrack (spotifyTrack.trackID, spotifyTrack.name, spotifyTrack.artist, numRequests)
     var query   = {'phoneNum' : guestNum}
@@ -140,9 +140,11 @@ function setGuestCurrentTrack (guestNum, spotifyTrack, numRequests){
     var success = 'successfully set the guest\'s current track in our database'
     var error   = 'error setting the guest\'s current track in our database'
 
-    console.log (guestNum)
     model.Guest.findOneAndUpdate(query, update).exec()
-    .then (fulfill (success))
+    .then (function (guest){
+      console.log ('setting current track')
+      fulfill (guest)
+    })
     .catch (function (err){
       console.log (err)
       reject (error)
@@ -151,14 +153,13 @@ function setGuestCurrentTrack (guestNum, spotifyTrack, numRequests){
 }
 
 function searchDatabaseForTrack (hostID, trackID){
-  console.log ('searching database for track')
   return new Promise (function (fulfill, reject){
     var query = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
     var error = 'error searching for song in our database'
 
     model.Track.findOne(query)
     .then (function (databaseTrack){
-      console.log (databaseTrack)
+      console.log ('searching database for track')
       fulfill (databaseTrack)
     })
     .catch (function (err){
@@ -170,7 +171,6 @@ function searchDatabaseForTrack (hostID, trackID){
 
 // the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
 function clearAndAddGuestPreviousRequestInDatabase (guestNum, trackID){
-  console.log ('clearing guest songs')
   return new Promise (function (fulfill, reject){
     var query   = { 'phoneNum' : guestNum}
     var update  = guestObj.clearGuestSong (-1, trackID)
@@ -178,7 +178,10 @@ function clearAndAddGuestPreviousRequestInDatabase (guestNum, trackID){
     var error   = 'there was an error clearing ' +guestNum+ '\'s current song'
 
     model.Guest.findOneAndUpdate(query, update).exec()
-    .then (fulfill (success))
+    .then (function (guest){
+      console.log ('clearing guest songs')
+      fulfill (success)
+    })
     .catch (function (err){
       console.log (err)
       reject (error)
@@ -187,14 +190,13 @@ function clearAndAddGuestPreviousRequestInDatabase (guestNum, trackID){
 }
 
 function incrementOrAddSongInDatabase (hostID, spotifyTrack){
-  console.log ('incrementing or adding to database')
-  console.log (spotifyTrack)
   return new Promise (function (fulfill, reject){
     var query = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
     var error = 'there was an error updating the track\'s number of found times in our database'
 
     model.Track.findOne(query)
     .then (function (track){
+      console.log ('incrementing or adding to database')
       console.log (track)
       if (track) {
         var update = {$inc: { foundAmount: 1}}
@@ -219,7 +221,6 @@ function incrementOrAddSongInDatabase (hostID, spotifyTrack){
 }
 
 function incrementSongsRequestsInDatabase (hostID, trackID){
-  console.log ('incrementing requests')
   return new Promise (function (fulfill, reject){
     var query   = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
     var update  = {$inc: { numRequests: 1}}
@@ -228,6 +229,7 @@ function incrementSongsRequestsInDatabase (hostID, trackID){
     
     model.Track.findOneAndUpdate(query, update)
     .then (function (track){
+      console.log ('incrementing requests')
       console.log (track)
       fulfill (success)
     })
