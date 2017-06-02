@@ -70,7 +70,10 @@ function validateGuest (guestNumber, message){
         }else reject (response.notGuest)
       }else reject (response.notGuest)
     })
-    .catch (reject (error))
+    .catch (function (err){
+      console.log (err)
+      reject (error)
+    })
   })
 }
 
