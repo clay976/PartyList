@@ -144,12 +144,6 @@ function setGuestCurrentTrack (guestNum, spotifyTrack, numRequests){
     var success = 'successfully set the guest\'s current track in our database'
     var error   = 'error setting the guest\'s current track in our database'
 
-    console.log (guestNum)
-    console.log (trackID)
-    console.log (name)
-    console.log (artist)
-    console.log (numRequests)
-
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (fulfill (success))
     .catch (function (err){
@@ -193,6 +187,9 @@ function clearAndAddGuestPreviousRequestInDatabase (guestNum, trackID){
 }
 
 function incrementOrAddSongInDatabase (hostID, trackID, name, artist){
+  console.log (trackID)
+  console.log (name)
+  console.log (artist)
   console.log ('incrementing or adding to database')
   return new Promise (function (fulfill, reject){
     var query = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
