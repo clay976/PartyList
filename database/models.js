@@ -11,6 +11,7 @@ var guest = mongoose.Schema({
     artist      : String
   },
   numRequests		: { type: Number, default: 4 },
+  lastMessage   : { type: String, default: '' },
   prevRequests  : [String]
 })
 

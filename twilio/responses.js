@@ -37,8 +37,8 @@ function alreadyRequested (title, artist){
   return ('We found: ' +title+ ', by: ' +artist+ '. You have already requested this Track. Ask someone else to request it and get it on the playlist!!')
 }
 
-function askToConfirm (spotifyTrack, requests){
-  return ('We found: ' +spotifyTrack.name+ ', by: ' +spotifyTrack.artist+ '. This Track has ' +requests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
+function askToConfirm (guestObject){
+  return ('We found: ' +guestObject.track.name+ ', by: ' +guestObject.track.artist+ '. This Track has ' +guestObject.track.numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
 }
 
 module.exports = {
