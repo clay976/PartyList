@@ -39,8 +39,8 @@ function HandleIncomingMessage (req, res, db){
     var hostID              = guestInfo.then (guestInfo.hostID)
     var spotifyTrack        = guestInfo.then (searchSpotify (guestMessage))
     var spotifyTrackID      = spotifyTrack.then (spotifyTrack.id)
-    var spotifyTrackName    = spotifyTrack.then (spotifyTrack.body.tracks.items[0].name)
-    var spotifyTrackArtist  = spotifyTrack.then (spotifyTrack.body.tracks.items[0].artists[0].name)
+    var spotifyTrackName    = spotifyTrack.then (spotifyTrack.name)
+    var spotifyTrackArtist  = spotifyTrack.then (spotifyTrack.artists[0].name)
     var dataBaseTrack       = spotifyTrack.then (incrementOrAddSongInDatabase (hostID, spotifyTrackID, spotifyTrackName, spotifyTrackArtist))
     var response            = dataBaseTrack.then (addResponse.askToConfirm (spotifyTrackName, spotifyTrackArtist, dataBaseTrack.numRequests))
 
@@ -81,8 +81,8 @@ function searchSpotify (query){
     hostAcountTools.spotifyApi.searchTracks (query, { limit : 1 })//search spotify for a track based on the message we got from the
     .then (function (spotifyTrack){
       if (spotifyTrack.body.tracks.total != 0){ //we found a track on spotify matching the guest message
-        console.log (spotifyTrack)
-        fulfill (spotifyTrack)
+        console.log (spotifyTrack.body.tracks.items[0])
+        fulfill (spotifyTrack.body.tracks.items[0])
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
         reject (addResponse.songNotFound)
       }
