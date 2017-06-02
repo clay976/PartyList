@@ -42,10 +42,10 @@ function HandleIncomingMessage (req, res, db){
     .then (function (guestObject){
       return checkForPreviousRequests (guestObject)
     })
-    .then (function(spotifyTrack){
+    .then (function(guestObject){
       return incrementOrAddSongInDatabase (guestObject)
     })
-    .then (function (){
+    .then (function (guestObject){
       return setGuestCurrentTrack (guestObject)
     })
     .then (function (guestObject){
