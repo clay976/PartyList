@@ -26,14 +26,9 @@ function HandleIncomingMessage (req, res, db){
   console.log ('incoming text from: ' +req.body.From+ ', message: '+ req.body.Body)
   var resp = new twilio.TwimlResponse();
   res.writeHead(200, {'Content-Type': 'text/xml'});
-  //make sure the guest is actually a guest of a party.
-  guestTools.validateGuest (req.body)
+  guestTools.validateGuest (req.body) //make sure the guest is actually a guest of a party.
   .then (function (guestInfo){
-    //check the state of the guest wether they are searching or confirming
-    return (checkGuestStateAndPerformAction (guestInfo))
-  })
-  .then (function (responseObject){
-    return guestTools.updateGuestAndTrackIfNeeded (responseObject)
+    return (checkGuestStateAndPerformAction (guestInfo)) //check the state of the guest wether they are searching or confirming
   })
   .then (function (responseObject){
     console.log ('sending to guest: ' +responseObject.response)
@@ -108,8 +103,7 @@ function searchSpotify (guestObject){
     .then (function (spotifyTrack){
 //we found a track on spotify matching the guest message
       if (spotifyTrack.body.tracks.total != 0){
-        var track = JSONtemplate.setGuestTrack (spotifyTrack.body.tracks.items[0].id, spotifyTrack.body.tracks.items[0].name, spotifyTrack.body.tracks.items[0].artists[0].name)
-        return (track)
+        return (JSONtemplate.setGuestTrack (spotifyTrack.body.tracks.items[0].id, spotifyTrack.body.tracks.items[0].name, spotifyTrack.body.tracks.items[0].artists[0].name))
       }
 // we did not find a track matching the guests search request so we reject immediatley and respond to them
       else{
@@ -119,8 +113,6 @@ function searchSpotify (guestObject){
     .then (function (track){
       guestObject.guest.currentTrack = track
       return (model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$set : {'currentTrack'  : track}}).exec())
-    })
-    .then (function (guest){
       fulfill (guestObject)
     })
     .catch (function (err){
@@ -184,26 +176,23 @@ function checkForPreviousRequests (guestObject){
 // the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
 function handleTrackConfirmation (guestObject){
   return new Promise (function (fulfill, reject){
-    model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$push: {'prevRequests' : guestObject.guest.currentTrack.trackID}})
-    .then (function (update){
+    var query   = { 'phoneNum' : guestObject.guest.phoneNum}
+    var update  = guestObject.clearGuestSong (-1, guestInfo.currentTrack.trackID)
+
+    model.Guest.findOneAndUpdate(query, update)
+    .then (function (){
       if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
-        console.log ('attempting to add track to playlist')
-        addTrackToPlaylist (guestObject, guestObject.hostInfo, guestObject.guest.currentTrack)
-        .then (function (guestObject){
-          fulfill (guestObject)
-        })
-        .catch (function (err){
-          console.log (err.stack)
-          reject (err)
-        })
-      }
-      // the song has been confirmed but will not be added to the playlist yet
-      else{
-        console.log ('incrementing song\'s request')
-        var trackUpdate = {$inc: { numRequests: 1}}
-        
-        model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.hostInfo.hostID}]}, trackUpdate).exec()
-        guestObject.response    = addResponse.songConfirmed (guestObject.guest.currentTrack.name, guestObject.guest.currentTrack.artist, guestObject.databaseTrack.numRequests, guestObject.hostInfo.reqThreshold)
+        fulfill (addTrackToPlaylist (guestObject, guestObject.hostInfo, guestObject.guest.currentTrack)) //attempting to add track to playlist
+      }else{ // the song has been confirmed but will not be added to the playlist yet
+        var query     = {$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.hostInfo.hostID}]}
+        var update    = {$inc: { numRequests: 1}}
+        var trackName = guestObject.guest.currentTrack.name
+        var artist    = guestObject.guest.currentTrack.artist
+        var requests  = guestObject.databaseTrack.numRequests
+        var threshold = guestObject.hostInfo.reqThreshold
+
+        guestObject.response    = addResponse.songConfirmed (trackName, artist, requests, threshold)
+        model.Track.findOneAndUpdate(query, trackUpdate).exec() //incrementing song\'s request
         fulfill (guestObject)
       }
     })
@@ -215,12 +204,13 @@ function handleTrackConfirmation (guestObject){
 
 function addTrackToPlaylist (guestObject, hostInfo, track){
   return new Promise (function (fulfill, reject){
-    var trackUpdate = {$set: { addedPaylist: true}}
-    guestObject.response    = addResponse.songConfirmedAndAdded (track.name, track.artist)
+    var query             = {$and: [{ 'trackID' : track.trackID}, {'hostID' : hostInfo.hostID}]}
+    var trackUpdate       = {$set: { addedPaylist: true}}
+    guestObject.response  = addResponse.songConfirmedAndAdded (track.name, track.artist)
 
-    hostAcountTools.spotifyApi.setAccessToken(hostInfo.access_token)
+    hostAcountTools.spotifyApi.setAccessToken (hostInfo.access_token)
     hostAcountTools.spotifyApi.addTracksToPlaylist (hostInfo.hostID, hostInfo.playlistID, 'spotify:track:'+track.trackID)
-    .then (model.Track.findOneAndUpdate({$and: [{ 'trackID' : track.trackID}, {'hostID' : hostInfo.hostID}]}, trackUpdate).exec())
+    .then (model.Track.findOneAndUpdate(query, trackUpdate).exec())
     .then (fulfill (guestObject))
     .catch (function (err){
       console.log (err.stack)
