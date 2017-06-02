@@ -57,6 +57,7 @@ function HandleIncomingMessage (req, res, db){
     })
     .catch (function (err){
       console.log (err)
+      console.log (err.stack)
     })
   }
 }
