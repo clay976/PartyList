@@ -44,8 +44,8 @@ function HandleIncomingMessage (req, res, db){
     var dataBaseTrack       = spotifyTrackArtist.then (incrementOrAddSongInDatabase (hostID, spotifyTrackID, spotifyTrackName, spotifyTrackArtist))
     var response            = dataBaseTrack.then (addResponse.askToConfirm (spotifyTrackName, spotifyTrackArtist, dataBaseTrack.numRequests))
 
-    spotifyTrackID.then (checkForPreviousRequests (spotifyTrackID, guestInfo.prevRequests))
-    .then (setGuestCurrentTrack (guestNum, spotifyTrackID, spotifyTrackName, spotifyTrackArtist, dataBaseTrack.numRequests))
+    spotifyTrack.then (checkForPreviousRequests (spotifyTrack, guestInfo.prevRequests))
+    .then (setGuestCurrentTrack (guestNum, spotifyTrack, dataBaseTrack.numRequests))
     .then (function (response){
       resp.message (response)
       res.end(resp.toString())
@@ -117,13 +117,13 @@ function searchDatabaseForHost (hostID){
   }) 
 }
 
-function checkForPreviousRequests (trackID, prevRequests){
-  console.log ('checking for previous requests')
+function checkForPreviousRequests (spotifyTrack, prevRequests){
+  console.log ('checking for previous requests' + spotifyTrack)
   return new Promise (function (fulfill, reject){
     var error = 'The guest has already requested this song'
     
     for (var i = 0; i < prevRequests.length; i++){
-      if (trackID === prevRequests[i]){
+      if (spotifyTrack.trackID === prevRequests[i]){
         //we found that the guest has already requested the same track they searched so reject with that message right away
         reject (true)
       }
@@ -133,10 +133,10 @@ function checkForPreviousRequests (trackID, prevRequests){
   })
 }
 
-function setGuestCurrentTrack (guestNum, trackID, name, artist, numRequests){
-  console.log ('setting current track')
+function setGuestCurrentTrack (guestNum, spotifyTrack, numRequests){
+  console.log ('setting current track'+ spotifyTrack)
   return new Promise (function (fulfill, reject){
-    var track   = JSONtemplate.setGuestTrack (trackID, name, artist, numRequests)
+    var track   = JSONtemplate.setGuestTrack (spotifyTrack.trackID, spotifyTrack.name, spotifyTrack.artist, numRequests)
     var query   = {'phoneNum' : guestNum}
     var update  = {$set : {'currentTrack' : track}}
     var success = 'successfully set the guest\'s current track in our database'
