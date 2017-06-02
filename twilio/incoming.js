@@ -35,6 +35,7 @@ function HandleIncomingMessage (req, res, db){
     var databaseTrack = searchDatabaseForTrack (hostID, trackID)
   
   }else{
+    console.log ('on the right path')
     var guestInfo           = validateGuest (guestNum, guestMessage)
     var hostID              = guestInfo.then (guestInfo.hostID)
     var spotifyTrack        = guestInfo.then (searchSpotify (guestMessage))
@@ -61,7 +62,7 @@ function HandleIncomingMessage (req, res, db){
 function validateGuest (guestNumber, message){
   return new Promise (function (fulfill, reject){
     var error   = 'error searching for guest in our database'
-
+    console.log (guestNumber+ ' ' +message)
     model.Guest.findOne({ 'phoneNum' : guestNumber }).exec()
     .then (function (guestInfo){
       if (guestInfo){
@@ -70,10 +71,7 @@ function validateGuest (guestNumber, message){
         }else reject (response.notGuest)
       }else reject (response.notGuest)
     })
-    .catch (function (err){
-      console.log (err)
-      reject (error)
-    })
+    .catch (reject (error))
   })
 }
 
