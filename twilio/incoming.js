@@ -78,7 +78,6 @@ function searchSpotify (query){
   console.log ('searching spotify')
   return new Promise (function (fulfill, reject){
     var error = 'error searching spotify for song'
-
     hostAcountTools.spotifyApi.searchTracks (query, { limit : 1 })//search spotify for a track based on the message we got from the
     .then (function (spotifyTrack){
       if (spotifyTrack.body.tracks.total != 0){ //we found a track on spotify matching the guest message
@@ -115,10 +114,8 @@ function searchDatabaseForHost (hostID){
 
 function checkForPreviousRequests (spotifyTrack, prevRequests){
   console.log ('checking for previous requests')
-  console.log (spotifyTrack)
   return new Promise (function (fulfill, reject){
     var error = 'The guest has already requested this song'
-    
     for (var i = 0; i < prevRequests.length; i++){
       if (spotifyTrack.trackID === prevRequests[i]){
         //we found that the guest has already requested the same track they searched so reject with that message right away
@@ -132,7 +129,6 @@ function checkForPreviousRequests (spotifyTrack, prevRequests){
 
 function setGuestCurrentTrack (guestNum, spotifyTrack, numRequests){
   console.log ('setting current track')
-  console.log (spotifyTrack)
   return new Promise (function (fulfill, reject){
     var track   = JSONtemplate.setGuestTrack (spotifyTrack.trackID, spotifyTrack.name, spotifyTrack.artist, numRequests)
     var query   = {'phoneNum' : guestNum}
@@ -183,7 +179,6 @@ function clearAndAddGuestPreviousRequestInDatabase (guestNum, trackID){
 }
 
 function incrementOrAddSongInDatabase (hostID, spotifyTrack){
-  console.log (spotifyTrack)
   console.log ('incrementing or adding to database')
   return new Promise (function (fulfill, reject){
     var query = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
