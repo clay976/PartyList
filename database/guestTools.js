@@ -81,47 +81,6 @@ function validateGuest (body){
   })
 }
 
-function updateGuestAndTrackIfNeeded (guestReqObject){
-  return new Promise (function (fulfill, reject){
-    updateGuestIfNeeded (guestReqObject)
-    .then (updateTrackIfNeeded (guestReqObject))
-    .then (function (updatedObject){
-      fulfill (guestReqObject)
-    })
-    .catch (function (err){
-      reject ('database '+err)
-    })
-  })
-}
-
-function updateGuestIfNeeded (guestReqObject){
-  return new Promise (function (fulfill, reject){
-    if (guestReqObject.guestUpdate){ 
-      model.Guest.findOneAndUpdate({ 'phoneNum' : guestReqObject.guest.phoneNum}, guestReqObject.guestUpdate).exec()
-      .then (function (updated){
-        fulfill (guestReqObject)
-      })
-      .catch (function (err){
-        reject ('error updating guest in database: ' +err)
-      })
-    }else fulfill (guestReqObject)
-  })
-}
-
-function updateTrackIfNeeded (guestReqObject){
-  return new Promise (function (fulfill, reject){
-    if (guestReqObject.trackUpdate){
-      model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestReqObject.guest.currentTrack.trackID}, {'hostID' : guestReqObject.guest.hostID}]}, guestReqObject.trackUpdate).exec()
-      .then (function (updated){
-        fulfill (guestReqObject)
-      })
-      .catch (function (err){
-        reject ('error updating track in database: ' +err)
-      })
-    }else fulfill (guestReqObject)
-  })
-}
-
 function welcomeMessage (toNum, hostID, reqThreshold, playlistID){
   return {
     to    :'+1' +toNum,
