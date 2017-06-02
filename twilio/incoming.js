@@ -38,11 +38,8 @@ function HandleIncomingMessage (req, res, db){
     var guestInfo           = validateGuest (guestNum, guestMessage)
     var hostID              = guestInfo.then (guestInfo.hostID)
     var spotifyTrack        = guestInfo.then (searchSpotify (guestMessage))
-    var spotifyTrackID      = spotifyTrack.then (spotifyTrack.trackID)
-    var spotifyTrackName    = spotifyTrack.then (spotifyTrack.name)
-    var spotifyTrackArtist  = spotifyTrack.then (spotifyTrack.artist)
-    var dataBaseTrack       = spotifyTrackArtist.then (incrementOrAddSongInDatabase (hostID, spotifyTrackID, spotifyTrackName, spotifyTrackArtist))
-    var response            = dataBaseTrack.then (addResponse.askToConfirm (spotifyTrackName, spotifyTrackArtist, dataBaseTrack.numRequests))
+    var dataBaseTrack       = spotifyTrack.then (incrementOrAddSongInDatabase (hostID, spotifyTrack))
+    var response            = dataBaseTrack.then (addResponse.askToConfirm (spotifyTrack, dataBaseTrack.numRequests))
 
     spotifyTrack.then (checkForPreviousRequests (spotifyTrack, guestInfo.prevRequests))
     .then (setGuestCurrentTrack (guestNum, spotifyTrack, dataBaseTrack.numRequests))
@@ -85,13 +82,11 @@ function searchSpotify (query){
     hostAcountTools.spotifyApi.searchTracks (query, { limit : 1 })//search spotify for a track based on the message we got from the
     .then (function (spotifyTrack){
       if (spotifyTrack.body.tracks.total != 0){ //we found a track on spotify matching the guest message
-        var track = {
+        fulfill ({
           'trackID' : spotifyTrack.body.tracks.items[0].id,
           'name'    : spotifyTrack.body.tracks.items[0].name,
           'artist'  : spotifyTrack.body.tracks.items[0].artists[0].name,
-        }
-        console.log (track)
-        fulfill (track)
+        })
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
         reject (addResponse.songNotFound)
       }
@@ -187,10 +182,8 @@ function clearAndAddGuestPreviousRequestInDatabase (guestNum, trackID){
   })
 }
 
-function incrementOrAddSongInDatabase (hostID, trackID, name, artist){
-  console.log (trackID)
-  console.log (name)
-  console.log (artist)
+function incrementOrAddSongInDatabase (hostID, spotifyTrack){
+  console.log (spotifyTrack)
   console.log ('incrementing or adding to database')
   return new Promise (function (fulfill, reject){
     var query = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
