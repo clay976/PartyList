@@ -35,7 +35,6 @@ function HandleIncomingMessage (req, res, db){
     var databaseTrack = searchDatabaseForTrack (hostID, trackID)
   
   }else{
-    console.log ('on the right path')
     var guestInfo           = validateGuest (guestNum, guestMessage)
     var hostID              = guestInfo.then (guestInfo.hostID)
     var spotifyTrack        = guestInfo.then (searchSpotify (guestMessage))
@@ -60,9 +59,9 @@ function HandleIncomingMessage (req, res, db){
 //find the guest in our database by their phone number
 //if their number is not found or if they are not apart of anyone's parties currently. They are told they are not a guest.
 function validateGuest (guestNumber, message){
+  console.log ('validating guest')
   return new Promise (function (fulfill, reject){
     var error = 'error searching for guest in our database'
-    console.log (guestNumber+ ' ' +message)
     model.Guest.findOne({ 'phoneNum' : guestNumber })
     .then (function (guestInfo){
       if (guestInfo){
@@ -79,6 +78,7 @@ function validateGuest (guestNumber, message){
 }
 
 function searchSpotify (query){
+  console.log ('searchign spotify')
   return new Promise (function (fulfill, reject){
     var error = 'error searching spotify for song'
 
@@ -103,6 +103,7 @@ function searchSpotify (query){
 }
 
 function searchDatabaseForHost (hostID){
+  console.log ('searching database for host')
   return new Promise (function (fulfill, reject){
   var query     = {'hostID' : guestInfo.hostID}
   var error     = 'error searching for host in database'
@@ -117,6 +118,7 @@ function searchDatabaseForHost (hostID){
 }
 
 function checkForPreviousRequests (trackID, prevRequests){
+  console.log ('checking for previous requests')
   return new Promise (function (fulfill, reject){
     var error = 'The guest has already requested this song'
     
@@ -132,6 +134,7 @@ function checkForPreviousRequests (trackID, prevRequests){
 }
 
 function setGuestCurrentTrack (guestNum, trackID, name, artist, numRequests){
+  console.log ('setting current track')
   return new Promise (function (fulfill, reject){
     var track   = JSONtemplate.setGuestTrack (trackID, name, artist, numRequests)
     var query   = {'phoneNum' : guestNum}
@@ -149,6 +152,7 @@ function setGuestCurrentTrack (guestNum, trackID, name, artist, numRequests){
 }
 
 function searchDatabaseForTrack (hostID, trackID){
+  console.log ('searching database for track')
   return new Promise (function (fulfill, reject){
     var query = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
     var error = 'error searching for song in our database'
@@ -164,6 +168,7 @@ function searchDatabaseForTrack (hostID, trackID){
 
 // the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
 function clearAndAddGuestPreviousRequestInDatabase (guestNum, trackID){
+  console.log ('clearing guest songs')
   return new Promise (function (fulfill, reject){
     var query   = { 'phoneNum' : guestNum}
     var update  = guestObj.clearGuestSong (-1, trackID)
@@ -180,6 +185,7 @@ function clearAndAddGuestPreviousRequestInDatabase (guestNum, trackID){
 }
 
 function incrementOrAddSongInDatabase (hostID, trackID, name, artist){
+  console.log ('incrementing or adding to database')
   return new Promise (function (fulfill, reject){
     var query = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
     var error = 'there was an error updating the track\'s number of found times in our database'
@@ -209,6 +215,7 @@ function incrementOrAddSongInDatabase (hostID, trackID, name, artist){
 }
 
 function incrementSongsRequestsInDatabase (hostID, trackID){
+  console.log ('incrementing requests')
   return new Promise (function (fulfill, reject){
     var query   = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
     var update  = {$inc: { numRequests: 1}}
@@ -225,6 +232,7 @@ function incrementSongsRequestsInDatabase (hostID, trackID){
 }
 
 function setTrackAddedToPlaylist (hostID, trackID){
+  console.log ('setting added track in database')
   return new Promise (function (fulfill, reject){
     var query   = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
     var update  = {$set: { addedPaylist: true}}
