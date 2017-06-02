@@ -72,7 +72,6 @@ function validateGuest (guestNumber, message){
       }else reject (response.notGuest)
     })
     .catch (function (err){
-      console.log ('error during find function')
       console.log (err)
       reject (error)
     })
@@ -96,7 +95,10 @@ function searchSpotify (query){
         reject (addResponse.songNotFound)
       }
     })
-    .catch (reject (error))
+    .catch (function (err){
+      console.log (err)
+      reject (error)
+    })
   })
 }
 
@@ -107,7 +109,10 @@ function searchDatabaseForHost (hostID){
 
   model.Host.findOne(query).exec()
   .then (fulfill ('found host in database'))
-  .catch (reject (error))
+  .catch (function (err){
+      console.log (err)
+      reject (error)
+    })
   }) 
 }
 
@@ -136,7 +141,10 @@ function setGuestCurrentTrack (guestNum, trackID, name, artist, numRequests){
 
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (fulfill (success))
-    .catch (reject (error))
+    .catch (function (err){
+      console.log (err)
+      reject (error)
+    })
   })
 }
 
@@ -147,7 +155,10 @@ function searchDatabaseForTrack (hostID, trackID){
 
     var databaseTrack = model.Track.findOne(query).exec()
     databaseTrack.then (fulfill (databaseTrack))
-    .catch (reject (error))
+    .catch (function (err){
+      console.log (err)
+      reject (error)
+    })
   })
 }
 
@@ -161,7 +172,10 @@ function clearAndAddGuestPreviousRequestInDatabase (guestNum, trackID){
 
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (fulfill (success))
-    .catch (reject (error))
+    .catch (function (err){
+      console.log (err)
+      reject (error)
+    })
   })
 }
 
@@ -187,7 +201,10 @@ function incrementOrAddSongInDatabase (hostID, trackID, name, artist){
         fulfill (JSONtemplate.Track (hostID, trackID, name, artist))
       }
     })
-    .catch (reject (error))
+    .catch (function (err){
+      console.log (err)
+      reject (error)
+    })
   })
 }
 
@@ -200,7 +217,10 @@ function incrementSongsRequestsInDatabase (hostID, trackID){
     
     model.Track.findOneAndUpdate(query, update).exec()
     .then (fulfill (success))
-    .catch (reject (error))
+    .catch (function (err){
+      console.log (err)
+      reject (error)
+    })
   })
 }
 
@@ -213,7 +233,10 @@ function setTrackAddedToPlaylist (hostID, trackID){
     
     model.Track.findOneAndUpdate(query, update).exec()
     .then (fulfill (success))
-    .catch (reject (error))
+    .catch (function (err){
+      console.log (err)
+      reject (error)
+    })
   })
 }
 
