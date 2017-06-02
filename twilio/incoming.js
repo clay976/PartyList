@@ -33,6 +33,9 @@ function HandleIncomingMessage (req, res, db){
     return (checkGuestStateAndPerformAction (guestInfo))
   })
   .then (function (responseObject){
+    return guestTools.updateGuestAndTrackIfNeeded (responseObject)
+  })
+  .then (function (responseObject){
     console.log ('sending to guest: ' +responseObject.response)
     resp.message (responseObject.response)
     res.end(resp.toString());
