@@ -118,7 +118,8 @@ function searchDatabaseForHost (hostID){
 }
 
 function checkForPreviousRequests (spotifyTrack, prevRequests){
-  console.log ('checking for previous requests' + spotifyTrack)
+  console.log ('checking for previous requests')
+  console.log (spotifyTrack)
   return new Promise (function (fulfill, reject){
     var error = 'The guest has already requested this song'
     
@@ -134,7 +135,8 @@ function checkForPreviousRequests (spotifyTrack, prevRequests){
 }
 
 function setGuestCurrentTrack (guestNum, spotifyTrack, numRequests){
-  console.log ('setting current track'+ spotifyTrack)
+  console.log ('setting current track')
+  console.log (spotifyTrack)
   return new Promise (function (fulfill, reject){
     var track   = JSONtemplate.setGuestTrack (spotifyTrack.trackID, spotifyTrack.name, spotifyTrack.artist, numRequests)
     var query   = {'phoneNum' : guestNum}
