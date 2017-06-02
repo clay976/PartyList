@@ -17,7 +17,7 @@ var guestObj        = require ('./JSONtemps')
 /*
 var dataBaseTrack             = model.Track.findOne({$and: [{ 'trackID' : guestReqObject.guest.currentTrack.trackID}, {'hostID' : guestReqObject.guest.hostID}]}).exec()
 var hostInfo                  = model.Host.findOne({ 'hostID' : guestInfo.hostID}).exec()
-guestReqObject.guestUpdate    = guestObject.clearGuestSong (-1, guestInfo.currentTrack.trackID)
+update    = guestObject.clearGuestSong (-1, guestInfo.currentTrack.trackID)
 var spotifyTrack              = hostAcountTools.spotifyApi.searchTracks (guestReqObject.guest.lastMessage, { limit : 1 })
 */
 
@@ -184,7 +184,10 @@ function checkForPreviousRequests (guestObject){
 // the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
 function handleTrackConfirmation (guestObject){
   return new Promise (function (fulfill, reject){
-    model.Guest.findOneAndUpdate({ 'phoneNum' : guestObject.guest.phoneNum}, {$push: {'prevRequests' : guestObject.guest.currentTrack.trackID}})
+    var query   = { 'phoneNum' : guestObject.guest.phoneNum}
+    var update  = guestObject.clearGuestSong (-1, guestObject.guest.currentTrack.trackID)
+
+    model.Guest.findOneAndUpdate(query, update)
     .then (function (update){
       if (guestObject.databaseTrack.numRequests === (guestObject.hostInfo.reqThreshold - 1)){
         console.log ('attempting to add track to playlist')
