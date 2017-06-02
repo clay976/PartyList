@@ -61,7 +61,7 @@ function HandleIncomingMessage (req, res, db){
 //if their number is not found or if they are not apart of anyone's parties currently. They are told they are not a guest.
 function validateGuest (guestNumber, message){
   return new Promise (function (fulfill, reject){
-    var error   = 'error searching for guest in our database'
+    var error = 'error searching for guest in our database'
     console.log (guestNumber+ ' ' +message)
     model.Guest.findOne({ 'phoneNum' : guestNumber })
     .then (function (guestInfo){
@@ -72,6 +72,7 @@ function validateGuest (guestNumber, message){
       }else reject (response.notGuest)
     })
     .catch (function (err){
+      console.log ('error during find function')
       console.log (err)
       reject (error)
     })
