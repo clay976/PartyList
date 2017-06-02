@@ -142,6 +142,10 @@ function setGuestCurrentTrack (guestNum, trackID, name, artist, numRequests){
     var success = 'successfully set the guest\'s current track in our database'
     var error   = 'error setting the guest\'s current track in our database'
 
+    console.log (track)
+    console.log (query)
+    console.log (update)
+
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (fulfill (success))
     .catch (function (err){
