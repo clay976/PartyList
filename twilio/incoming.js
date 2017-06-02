@@ -86,7 +86,7 @@ function searchSpotify (query){
           'name'    : spotifyTrack.body.tracks.items[0].name,
           'artist'  : spotifyTrack.body.tracks.items[0].artists[0].name
         }
-        console.log (track)
+        console.log ('track: ' +track)
         fulfill (track)
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
         reject (addResponse.songNotFound)
