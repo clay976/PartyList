@@ -82,6 +82,7 @@ function searchSpotify (query){
     .then (function (spotifyTrack){
       if (spotifyTrack.body.tracks.total != 0){ //we found a track on spotify matching the guest message
         console.log (spotifyTrack.body.tracks.items[0])
+        console.log (spotifyTrack.body.tracks.items[0].artists)
         fulfill (spotifyTrack.body.tracks.items[0])
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
         reject (addResponse.songNotFound)
