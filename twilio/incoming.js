@@ -81,11 +81,13 @@ function searchSpotify (query){
     hostAcountTools.spotifyApi.searchTracks (query, { limit : 1 })//search spotify for a track based on the message we got from the
     .then (function (spotifyTrack){
       if (spotifyTrack.body.tracks.total != 0){ //we found a track on spotify matching the guest message
-        fulfill ({
+        var track = {
           'trackID' : spotifyTrack.body.tracks.items[0].id,
           'name'    : spotifyTrack.body.tracks.items[0].name,
           'artist'  : spotifyTrack.body.tracks.items[0].artists[0].name
-        })
+        }
+        console.log (track)
+        fulfill (track)
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
         reject (addResponse.songNotFound)
       }
