@@ -35,11 +35,11 @@ function HandleIncomingMessage (req, res, db){
     var databaseTrack = searchDatabaseForTrack (hostID, trackID)
   
   }else{
-    var guestInfo           = validateGuest (guestNum, guestMessage)
-    var spotifyTrack        = guestInfo.then (searchSpotify (guestMessage))
-    var hostID              = guestInfo.then (guestInfo.hostID)
-    var dataBaseTrack       = spotifyTrack.then (incrementOrAddSongInDatabase (hostID, spotifyTrack))
-    var response            = dataBaseTrack.then (addResponse.askToConfirm (spotifyTrack, dataBaseTrack.numRequests))
+    guestInfo     = validateGuest (guestNum, guestMessage)
+    spotifyTrack  = guestInfo.then (searchSpotify (guestMessage))
+    hostID        = guestInfo.then (guestInfo.hostID)
+    dataBaseTrack = spotifyTrack.then (incrementOrAddSongInDatabase (hostID, spotifyTrack))
+    response      = dataBaseTrack.then (addResponse.askToConfirm (spotifyTrack, dataBaseTrack.numRequests))
 
     spotifyTrack.then (checkForPreviousRequests (spotifyTrack, guestInfo.prevRequests))
     .then (setGuestCurrentTrack (guestNum, spotifyTrack, dataBaseTrack.numRequests))
