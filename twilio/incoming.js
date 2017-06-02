@@ -133,7 +133,7 @@ function checkForPreviousRequests (guestObject){
       }
     }
     //this is a new request from this guest so continue on the function chain
-    fulfill (spotifyTrack)
+    fulfill (guestObject)
   })
 }
 
