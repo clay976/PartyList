@@ -63,7 +63,7 @@ function validateGuest (guestNumber, message){
   return new Promise (function (fulfill, reject){
     var error   = 'error searching for guest in our database'
     console.log (guestNumber+ ' ' +message)
-    model.Guest.findOne({ 'phoneNum' : guestNumber }).exec()
+    model.Guest.findOne({ 'phoneNum' : guestNumber })
     .then (function (guestInfo){
       if (guestInfo){
         if (guestInfo.hostID){
@@ -71,7 +71,10 @@ function validateGuest (guestNumber, message){
         }else reject (response.notGuest)
       }else reject (response.notGuest)
     })
-    .catch (reject (error))
+    .catch (function (err){
+      console.log (err)
+      reject (error)
+    })
   })
 }
 
