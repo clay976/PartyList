@@ -92,6 +92,5 @@ function welcomeMessage (toNum, hostID, reqThreshold, playlistID){
 module.exports = {
   addManyGuest                : addManyGuest,
   addGuest                    : addGuest,
-  validateGuest               : validateGuest,
-  updateGuestAndTrackIfNeeded : updateGuestAndTrackIfNeeded
+  validateGuest               : validateGuest
 }
