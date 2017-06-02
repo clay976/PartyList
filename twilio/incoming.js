@@ -185,7 +185,7 @@ function checkForPreviousRequests (guestObject){
 function handleTrackConfirmation (guestObject){
   return new Promise (function (fulfill, reject){
     var query   = { 'phoneNum' : guestObject.guest.phoneNum}
-    var update  = guestObject.clearGuestSong (-1, guestObject.guest.currentTrack.trackID)
+    var update  = guestObj.clearGuestSong (-1, guestObject.guest.currentTrack.trackID)
 
     model.Guest.findOneAndUpdate(query, update)
     .then (function (update){
