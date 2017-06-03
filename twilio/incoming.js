@@ -28,20 +28,27 @@ function HandleIncomingMessage (req, res, db){
   var resp          = new twilio.TwimlResponse();
   res.writeHead (200, {'Content-Type': 'text/xml'});
 
+  console.log ('validating guest')
   validateGuest (guestNum, guestMessage)
   .then (function (guestObject){
+  console.log ('checking for confirmation or for search')
     if ((guestMessage === 'yes') & (guestObject.guest.currentTrack.trackID != '')){ 
+      console.log ('guest confirming song')
       searchDatabaseForHost (guestObject)
       .then (function (guestObject){
+        console.log ('searching database for updated requests')
         return searchDatabaseForTrack (guestObject)
       })
       .then (function (guestObject){
         if (guestObject.track.numRequests >= guestObject.host.reqThreshold - 1){
+          console.log ('adding track to playlist')
           addTracksToPlaylist (guestObject)
           .then (function (guestObject){
+            console.log ('added track, updating database')
             return setTrackAddedToPlaylist (guestObject)
           })
         }else{
+          console.log ('incrementing songs number of requests')
           incrementSongsRequestsInDatabase (guestObject)
           .then (function (guestObject){
             return (guestObject)
@@ -49,25 +56,32 @@ function HandleIncomingMessage (req, res, db){
         }
       })
       .then (function (guestObject){
+        console.log ('clearing guests songs')
         return clearAndAddGuestPreviousRequestInDatabase (guestObject)
       })
     }else{
+      console.log ('searching spotify')
       searchSpotify (guestObject)
       .then (function (guestObject){
+        console.log ('checking for prev requests')
         return checkForPreviousRequests (guestObject)
       })
       .then (function(guestObject){
+        console.log ('incremementing or adding to database')
         return incrementOrAddSongInDatabase (guestObject)
       })
       .then (function (guestObject){
+        console.log ('updating guests requests')
         return setGuestCurrentTrack (guestObject)
       })
       .then (function (guestObject){
+        console.log ('asking to confirm')
         return addResponse.askToConfirm (guestObject)
       })
     }
   })
   .then (function (response){
+    console.log ('sending response')
     resp.message (response)
     res.end(resp.toString())
   })
