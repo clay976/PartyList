@@ -183,7 +183,7 @@ function checkForPreviousRequests (guestObject){
   return new Promise (function (fulfill, reject){
     var error = 'The guest has already requested this song'
     for (var i = 0; i < guestObject.guest.prevRequests.length; i++){
-      if (guestObject.track.trackID === prevRequests[i]){
+      if (guestObject.track.trackID === guestObject.guest.prevRequests[i]){
         //we found that the guest has already requested the same track they searched so reject with that message right away
         reject (addResponse.alreadyRequested (guestObject.track.name, guestObject.track.artist))
       }
