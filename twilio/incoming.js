@@ -47,14 +47,11 @@ function HandleIncomingMessage (req, res, db){
             console.log ('added track, updating database')
             return setTrackAddedToPlaylist (guestObject)
           })
-          .then (function (response){
+          .then (function (guestObject){
             console.log ('sending response')
+            var response = songConfirmedAndAdded (guestObject.track.title, guestObject.track.artist)
             resp.message (response)
             res.end(resp.toString())
-          })
-          .catch (function (err){
-            console.log (err)
-            console.log (err.stack)
           })
         }else{
           console.log ('incrementing songs number of requests')
@@ -62,14 +59,11 @@ function HandleIncomingMessage (req, res, db){
           .then (function (guestObject){
             return (guestObject)
           })
-          .then (function (response){
+          .then (function (guestObject){
             console.log ('sending response')
+            var response = songConfirmed (guestObject.track.title, guestObject.track.artist, guestObject.track.numRequests, guestObject.host.reqThreshold)
             resp.message (response)
             res.end(resp.toString())
-          })
-          .catch (function (err){
-            console.log (err)
-            console.log (err.stack)
           })
         }
       })
@@ -78,9 +72,9 @@ function HandleIncomingMessage (req, res, db){
         return clearAndAddGuestPreviousRequestInDatabase (guestObject)
       })
       .catch (function (err){
-            console.log (err)
-            console.log (err.stack)
-          })
+        console.log (err)
+        console.log (err.stack)
+      })
     }else{
       console.log ('searching spotify')
       searchSpotify (guestObject)
