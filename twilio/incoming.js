@@ -52,6 +52,7 @@ function HandleIncomingMessage (req, res, db){
             var response = songConfirmedAndAdded (guestObject.track.title, guestObject.track.artist)
             resp.message (response)
             res.end(resp.toString())
+            return (guestObject)
           })
         }else{
           console.log ('incrementing songs number of requests')
@@ -64,6 +65,7 @@ function HandleIncomingMessage (req, res, db){
             var response = songConfirmed (guestObject.track.title, guestObject.track.artist, guestObject.track.numRequests, guestObject.host.reqThreshold)
             resp.message (response)
             res.end(resp.toString())
+            return (guestObject)
           })
         }
       })
