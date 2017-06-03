@@ -47,11 +47,29 @@ function HandleIncomingMessage (req, res, db){
             console.log ('added track, updating database')
             return setTrackAddedToPlaylist (guestObject)
           })
+          .then (function (response){
+            console.log ('sending response')
+            resp.message (response)
+            res.end(resp.toString())
+          })
+          .catch (function (err){
+            console.log (err)
+            console.log (err.stack)
+          })
         }else{
           console.log ('incrementing songs number of requests')
           incrementSongsRequestsInDatabase (guestObject)
           .then (function (guestObject){
             return (guestObject)
+          })
+          .then (function (response){
+            console.log ('sending response')
+            resp.message (response)
+            res.end(resp.toString())
+          })
+          .catch (function (err){
+            console.log (err)
+            console.log (err.stack)
           })
         }
       })
@@ -59,6 +77,10 @@ function HandleIncomingMessage (req, res, db){
         console.log ('clearing guests songs')
         return clearAndAddGuestPreviousRequestInDatabase (guestObject)
       })
+      .catch (function (err){
+            console.log (err)
+            console.log (err.stack)
+          })
     }else{
       console.log ('searching spotify')
       searchSpotify (guestObject)
@@ -78,12 +100,16 @@ function HandleIncomingMessage (req, res, db){
         console.log ('asking to confirm')
         return addResponse.askToConfirm (guestObject)
       })
+      .then (function (response){
+        console.log ('sending response')
+        resp.message (response)
+        res.end(resp.toString())
+      })
+      .catch (function (err){
+        console.log (err)
+        console.log (err.stack)
+      })
     }
-  })
-  .then (function (response){
-    console.log ('sending response')
-    resp.message (response)
-    res.end(resp.toString())
   })
   .catch (function (err){
     console.log (err)
