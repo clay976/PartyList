@@ -48,6 +48,10 @@ function HandleIncomingMessage (req, res, db){
             return setTrackAddedToPlaylist (guestObject)
           })
           .then (function (guestObject){
+            console.log ('clearing guests songs')
+            return clearAndAddGuestPreviousRequestInDatabase (guestObject)
+          })
+          .then (function (guestObject){
             console.log ('sending response')
             var response = songConfirmedAndAdded (guestObject.track.title, guestObject.track.artist)
             resp.message (response)
@@ -61,17 +65,16 @@ function HandleIncomingMessage (req, res, db){
             return (guestObject)
           })
           .then (function (guestObject){
+            console.log ('clearing guests songs')
+            return clearAndAddGuestPreviousRequestInDatabase (guestObject)
+          })
+          .then (function (guestObject){
             console.log ('sending response')
             var response = songConfirmed (guestObject.track.title, guestObject.track.artist, guestObject.track.numRequests, guestObject.host.reqThreshold)
             resp.message (response)
             res.end(resp.toString())
-            return (guestObject)
           })
         }
-      })
-      .then (function (guestObject){
-        console.log ('clearing guests songs')
-        return clearAndAddGuestPreviousRequestInDatabase (guestObject)
       })
       .catch (function (err){
         console.log (err)
