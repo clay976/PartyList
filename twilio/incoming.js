@@ -53,7 +53,7 @@ function HandleIncomingMessage (req, res, db){
           })
           .then (function (guestObject){
             console.log ('sending response')
-            var response = songConfirmedAndAdded (guestObject.track.title, guestObject.track.artist)
+            var response = addResponse.songConfirmedAndAdded (guestObject.track.title, guestObject.track.artist)
             console.log (response)
             resp.message (response)
             res.end(resp.toString())
@@ -70,7 +70,7 @@ function HandleIncomingMessage (req, res, db){
             return clearAndAddGuestPreviousRequestInDatabase (guestObject)
           })
           .then (function (guestObject){
-            var response = songConfirmed (guestObject.track.title, guestObject.track.artist, guestObject.track.numRequests, guestObject.host.reqThreshold)
+            var response = addResponse.songConfirmed (guestObject.track.title, guestObject.track.artist, guestObject.track.numRequests, guestObject.host.reqThreshold)
             console.log (response)
             resp.message (response)
             res.end(resp.toString())
@@ -237,6 +237,7 @@ function clearAndAddGuestPreviousRequestInDatabase (guestObject){
 
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (function (guest){
+      console.log ('yup')
       fulfill (guestObject)
     })
     .catch (function (err){
