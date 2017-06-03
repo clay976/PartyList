@@ -53,8 +53,7 @@ function HandleIncomingMessage (req, res, db){
           })
           .then (function (guestObject){
             console.log ('sending response')
-            var response = addResponse.songConfirmedAndAdded (guestObject.track.title, guestObject.track.artist)
-            console.log (response)
+            var response = addResponse.songConfirmedAndAdded (guestObject.track.name, guestObject.track.artist)
             resp.message (response)
             res.end(resp.toString())
             return (guestObject)
@@ -70,8 +69,7 @@ function HandleIncomingMessage (req, res, db){
             return clearAndAddGuestPreviousRequestInDatabase (guestObject)
           })
           .then (function (guestObject){
-            var response = addResponse.songConfirmed (guestObject.track.title, guestObject.track.artist, guestObject.track.numRequests, guestObject.host.reqThreshold)
-            console.log (response)
+            var response = addResponse.songConfirmed (guestObject.track.name, guestObject.track.artist, guestObject.track.numRequests, guestObject.host.reqThreshold)
             resp.message (response)
             res.end(resp.toString())
           })
