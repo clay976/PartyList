@@ -27,39 +27,54 @@ function HandleIncomingMessage (req, res, db){
   var guestMessage  = req.body.Body.toLowerCase().trim()
   var resp          = new twilio.TwimlResponse();
   res.writeHead (200, {'Content-Type': 'text/xml'});
-  
-  //make sure the guest is actually a guest of a party.
-  if (guestMessage === 'yes'){ 
-    var trackID       = guestInfo.currentTrack.trackID
-    var hostInfo      = searchDatabaseForHost (hostID)
-    var databaseTrack = searchDatabaseForTrack (hostID, trackID)
-  
-  }else{
-    validateGuest (guestNum, guestMessage)
-    .then (function (guestObject){
-      return searchSpotify (guestObject)
-    })
-    .then (function (guestObject){
-      return checkForPreviousRequests (guestObject)
-    })
-    .then (function(guestObject){
-      return incrementOrAddSongInDatabase (guestObject)
-    })
-    .then (function (guestObject){
-      return setGuestCurrentTrack (guestObject)
-    })
-    .then (function (guestObject){
-      return addResponse.askToConfirm (guestObject)
-    })
-    .then (function (response){
-      resp.message (response)
-      res.end(resp.toString())
-    })
-    .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
-    })
-  }
+
+  validateGuest (guestNum, guestMessage)
+  .then (function (guestObject){
+    if ((guestMessage === 'yes') & (guestObject.guest.currentTrack.trackID != '')){ 
+      searchDatabaseForHost (guestObject)
+      .then (function (guestObject){
+        return searchDatabaseForTrack (guestObject)
+      })
+      .then (function (guestObject){
+        if (guestObject.track.numRequests >= guestObject.host.reqThreshold - 1){
+          addTracksToPlaylist (guestObject)
+          .then (function (guestObject){
+            return setTrackAddedToPlaylist (guestObject)
+          })
+        }else{
+          incrementSongsRequestsInDatabase (guestObject)
+          .then (function (guestObject){
+            return (guestObject)
+          })
+        }
+      })
+      .then (function (guestObject){
+        return clearAndAddGuestPreviousRequestInDatabase (guestObject)
+      })
+    }else{
+      searchSpotify (guestObject)
+      .then (function (guestObject){
+        return checkForPreviousRequests (guestObject)
+      })
+      .then (function(guestObject){
+        return incrementOrAddSongInDatabase (guestObject)
+      })
+      .then (function (guestObject){
+        return setGuestCurrentTrack (guestObject)
+      })
+      .then (function (guestObject){
+        return addResponse.askToConfirm (guestObject)
+      })
+    }
+  })
+  .then (function (response){
+    resp.message (response)
+    res.end(resp.toString())
+  })
+  .catch (function (err){
+    console.log (err)
+    console.log (err.stack)
+  })
 }
 
 //find the guest in our database by their phone number
@@ -108,14 +123,15 @@ function searchSpotify (guestObject){
   })
 }
 
-function searchDatabaseForHost (hostID){
+function searchDatabaseForHost (guestObject){
   return new Promise (function (fulfill, reject){
-  var query     = {'hostID' : guestInfo.hostID}
+  var query     = {'hostID' : guestObject.guest.hostID}
   var error     = 'error searching for host in database'
 
   model.Host.findOne(query).exec()
   .then (function (host){
-    fulfill (host)
+    guestObject.host = host
+    fulfill (guestObject)
   })
   .catch (function (err){
       reject (error)
@@ -129,7 +145,7 @@ function checkForPreviousRequests (guestObject){
     for (var i = 0; i < guestObject.guest.prevRequests.length; i++){
       if (guestObject.track.trackID === prevRequests[i]){
         //we found that the guest has already requested the same track they searched so reject with that message right away
-        reject (true)
+        reject (addResponse.alreadyRequested (guestObject.track.name, guestObject.track.artist))
       }
     }
     //this is a new request from this guest so continue on the function chain
@@ -155,14 +171,15 @@ function setGuestCurrentTrack (guestObject){
   })
 }
 
-function searchDatabaseForTrack (hostID, trackID){
+function searchDatabaseForTrack (guestObject){
   return new Promise (function (fulfill, reject){
-    var query = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
+    var query = {$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.host.hostID}]}
     var error = 'error searching for song in our database'
 
     model.Track.findOne(query)
     .then (function (databaseTrack){
-      fulfill (databaseTrack)
+      guestObject.track = databaseTrack
+      fulfill (guestObject)
     })
     .catch (function (err){
       reject (error)
@@ -171,16 +188,16 @@ function searchDatabaseForTrack (hostID, trackID){
 }
 
 // the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
-function clearAndAddGuestPreviousRequestInDatabase (guestNum, trackID){
+function clearAndAddGuestPreviousRequestInDatabase (guestObject){
   return new Promise (function (fulfill, reject){
-    var query   = { 'phoneNum' : guestNum}
-    var update  = guestObj.clearGuestSong (-1, trackID)
-    var success = guestNum + ' current track successfully cleared'
-    var error   = 'there was an error clearing ' +guestNum+ '\'s current song'
+    var query   = { 'phoneNum' : guestObject.guest.phoneNum}
+    var update  = guestObj.clearGuestSong (-1, guestObject.guest.currentTrack.trackID)
+    var success = guestObject.guest.phoneNum + ' current track successfully cleared'
+    var error   = 'there was an error clearing ' +guestObject.guest.phoneNum+ '\'s current song'
 
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (function (guest){
-      fulfill (success)
+      fulfill (guestObject)
     })
     .catch (function (err){
       reject (error)
@@ -217,16 +234,16 @@ function incrementOrAddSongInDatabase (guestObject){
   })
 }
 
-function incrementSongsRequestsInDatabase (hostID, trackID){
+function incrementSongsRequestsInDatabase (guestObject){
   return new Promise (function (fulfill, reject){
-    var query   = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
+    var query   = {$and: [{ 'trackID' : guestObject.track.trackID}, {'hostID' : guestObject.host.hostID}]}
     var update  = {$inc: { numRequests: 1}}
-    var success = trackID + ' requests successfully incremented'
+    var success = guestObject.track.trackID + ' requests successfully incremented'
     var error   = 'there was an error updating the track\'s number of requests in our database'
     
     model.Track.findOneAndUpdate(query, update)
     .then (function (track){
-      fulfill (success)
+      fulfill (guestObject)
     })
     .catch (function (err){
       reject (error)
@@ -234,34 +251,40 @@ function incrementSongsRequestsInDatabase (hostID, trackID){
   })
 }
 
-function setTrackAddedToPlaylist (hostID, trackID){
+function setTrackAddedToPlaylist (guestObject){
   return new Promise (function (fulfill, reject){
-    var query   = {$and: [{ 'trackID' : trackID}, {'hostID' : hostID}]}
+    var query   = {$and: [{ 'trackID' : guestObject.track.trackID}, {'hostID' : guestObject.host.hostID}]}
     var update  = {$set: { addedPaylist: true}}
     var success = trackID + ' successfully added to playlist in database'
     var error   = 'there was an error updating the track as "on playlist" in our database'
     
     model.Track.findOneAndUpdate(query, update).exec()
-    .then (fulfill (success))
+    .then (function (track){
+      fulfill (guestObject)
+    })
     .catch (function (err){
       reject (error)
     })
   })
 }
 
-// pulling data from spotify search
-//JSONtemplate.setGuestTrack (spotifyTrack.body.tracks.items[0].id, spotifyTrack.body.tracks.items[0].name, spotifyTrack.body.tracks.items[0].artists[0].name)
+function addTracksToPlaylist (guestObject){
+  return new Promise (function (fulfill, reject){
+    var error = 'there was an error adding the track to the playlist'
 
-// respose if the guest has already requested this song
-//addResponse.alreadyRequested (track.name, track.artist)
-
-// condition for number of requests to add to playlist
-//(track.numRequests === (hostInfo.reqThreshold - 1))
+    hostAcountTools.spotifyApi.setAccessToken(guestObject.host.access_token)
+    hostAcountTools.spotifyApi.addTracksToPlaylist (guestObject.host.hostID, guestObject.host.playlistID, 'spotify:track:'+guestObject.track.trackID)
+    .then (function (track){
+      fulfill (guestObject)
+    })
+    .catch (function (err){
+      reject (error)
+    })
+  })
+}
 
 //add track to playlist on spotify
-//hostAcountTools.spotifyApi.setAccessToken(access_token)
-//hostAcountTools.spotifyApi.addTracksToPlaylist (hostID, playlistID, 'spotify:track:'+trackID)
-
+//
 // response for succesfully adding song to playlist on spotify
 //guestObject.response  = addResponse.songConfirmedAndAdded (track.name, track.artist)
 
