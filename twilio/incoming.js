@@ -72,7 +72,7 @@ function guestConfirmingCurrentTrack (guestObject){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   })
 }
@@ -96,7 +96,7 @@ function confirmTrackandAddToPlaylist (guestObject){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   })
 }
@@ -119,7 +119,7 @@ function confirmTrackAndIncrementRequests (guestObject){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   })
 }
@@ -147,7 +147,7 @@ function searchForNewRequest (guestObject){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   })
 }
@@ -170,7 +170,7 @@ function validateGuest (guestNumber, message){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   })
 }
@@ -197,7 +197,7 @@ function searchSpotify (guestObject){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   })
 }
@@ -215,7 +215,7 @@ function searchDatabaseForHost (guestObject){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   }) 
 }
@@ -249,7 +249,7 @@ function setGuestCurrentTrack (guestObject){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   })
 }
@@ -267,7 +267,7 @@ function searchDatabaseForTrack (guestObject){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   })
 }
@@ -288,7 +288,7 @@ function clearAndAddGuestPreviousRequestInDatabase (guestObject){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   })
 }
@@ -319,7 +319,7 @@ function incrementOrAddSongInDatabase (guestObject){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   })
 }
@@ -338,7 +338,7 @@ function incrementSongsRequestsInDatabase (guestObject){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   })
 }
@@ -357,7 +357,7 @@ function setTrackAddedToPlaylist (guestObject){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   })
 }
@@ -374,7 +374,7 @@ function addTracksToPlaylist (guestObject){
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
-      reject (addResponse.error())
+      reject (err)
     })
   })
 }
