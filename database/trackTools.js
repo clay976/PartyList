@@ -11,8 +11,6 @@ function setTrackAddedToPlaylist (guestObject){
       fulfill (guestObject)
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   })
@@ -28,8 +26,6 @@ function incrementSongsRequestsInDatabase (guestObject){
       fulfill (guestObject)
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   })
@@ -49,7 +45,6 @@ function incrementOrAddSongInDatabase (guestObject){
       }
     })
     .then (function (track){
-      console.log (track)
       if (track) {
         guestObject.track = track
         fulfill (guestObject)
@@ -58,8 +53,6 @@ function incrementOrAddSongInDatabase (guestObject){
       }
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   })
@@ -75,8 +68,6 @@ function searchDatabaseForTrack (guestObject){
       fulfill (guestObject)
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   })

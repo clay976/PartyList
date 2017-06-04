@@ -35,8 +35,6 @@ function searchDatabaseForHost (guestObject){
       fulfill (guestObject)
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   }) 
