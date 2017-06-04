@@ -4,7 +4,7 @@ var JSONtemplate  = require ('./JSONtemps')
 function setTrackAddedToPlaylist (guestObject){
   return new Promise (function (fulfill, reject){
     var query   = {$and: [{ 'trackID' : guestObject.track.trackID}, {'hostID' : guestObject.host.hostID}]}
-    var update  = {$set: { addedPaylist: true}}
+    var update  = {$set: { addedPlaylist: true}}
 
     model.Track.findOneAndUpdate(query, update).exec()
     .then (function (track){
@@ -38,7 +38,6 @@ function incrementSongsRequestsInDatabase (guestObject){
 function incrementOrAddSongInDatabase (guestObject){
   return new Promise (function (fulfill, reject){
     var query = {$and: [{ 'trackID' : guestObject.track.trackID}, {'hostID' : guestObject.guest.hostID}]}
-
     model.Track.findOne (query)
     .then (function (track){
       if (track) {
@@ -50,6 +49,7 @@ function incrementOrAddSongInDatabase (guestObject){
       }
     })
     .then (function (track){
+      console.log (track)
       if (track) {
         guestObject.track = track
         fulfill (guestObject)
