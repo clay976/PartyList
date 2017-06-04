@@ -1,5 +1,5 @@
-var hostAcountTools = require ('../database/hostTools')
-var addResponse     = require ('../twilio/responses')
+var hostAcountTools = require ('../../database/hostTools')
+var addResponse     = require ('../../twilio/responses')
 
 function searchSpotify (guestObject){
   var query = guestObject.guest.lastMessage

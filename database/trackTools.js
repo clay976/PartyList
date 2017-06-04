@@ -1,4 +1,4 @@
-var model = require ('../models')
+var model = require ('./models')
 
 function setTrackAddedToPlaylist (guestObject){
   return new Promise (function (fulfill, reject){
@@ -81,7 +81,7 @@ function searchDatabaseForTrack (guestObject){
   })
 }
 
-module.exports {
+module.exports = {
   setTrackAddedToPlaylist           : setTrackAddedToPlaylist,
   incrementSongsRequestsInDatabase  : incrementSongsRequestsInDatabase,
   incrementOrAddSongInDatabase      : incrementOrAddSongInDatabase,

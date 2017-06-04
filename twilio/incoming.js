@@ -6,8 +6,8 @@ var client                = require('twilio/lib')(sid, atoken);
 
 //database modules
 var databaseHostTools     = require ('../database/hostTools')
-var databaseGuestTools    = require ('../database/databaseGuestTools')
-var databaseTrackTools    = require ('../database/databaseTrackTools')
+var databaseGuestTools    = require ('../database/guestTools')
+var databaseTrackTools    = require ('../database/trackTools')
 
 //spotify modules
 var spotifyGuestTools     = require ('../spotify/guest/tools')
