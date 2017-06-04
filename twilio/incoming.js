@@ -61,7 +61,7 @@ function HandleIncomingMessage (req, res, db){
   })
 }
 
-function confirmTrackAndIncrementRequests (guestObjects){
+function confirmTrackandAddToPlaylist (guestObjects){
   return new Promise (function (fulfill, reject){
     console.log ('adding track to playlist')
     addTracksToPlaylist (guestObject)
@@ -83,7 +83,7 @@ function confirmTrackAndIncrementRequests (guestObjects){
   })
 }
 
-function confirmSongAndIncrementRequests (guestObject){
+function confirmTrackAndIncrementRequests (guestObject){
   return new Promise (function (fulfill, reject){
     console.log ('incrementing songs number of requests')
     incrementSongsRequestsInDatabase (guestObject)
