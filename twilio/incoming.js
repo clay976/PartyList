@@ -191,7 +191,9 @@ function searchSpotify (guestObject){
         }
         fulfill (guestObject)
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
-        reject (addResponse.songNotFound)
+        guestObject.guest.currentTrack.trackID = null
+        clearAndAddGuestPreviousRequestInDatabase (guestObject)
+        .then (reject (addResponse.songNotFound))
       }
     })
     .catch (function (err){
