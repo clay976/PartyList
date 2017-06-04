@@ -1,5 +1,5 @@
 var databaseHostTools = require ('../../database/hostTools')
-var databaseGuestTools = require ('../../database/hostTools')
+var databaseGuestTools = require ('../../database/guestTools')
 var addResponse     = require ('../../twilio/responses')
 
 function searchSpotify (guestObject){
