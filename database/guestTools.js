@@ -68,8 +68,6 @@ function validateGuest (guestNumber, message){
       }else reject (response.notGuest)
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   })
@@ -86,8 +84,6 @@ function setCurrentTrack (guestObject){
       fulfill (guestObject)
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   })
@@ -104,8 +100,6 @@ function clearAndAddPreviousRequest (guestObject){
       fulfill (guestObject)
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   })

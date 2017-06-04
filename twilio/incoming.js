@@ -23,10 +23,8 @@ function HandleIncomingMessage (req, res, db){
   var resp          = new twilio.TwimlResponse();
   res.writeHead (200, {'Content-Type': 'text/xml'});
 
-  console.log ('validating guest')
   databaseGuestTools.validateGuest (guestNum, guestMessage)
   .then (function (guestObject){
-    console.log ('checking for confirmation or for search')
     if ((guestMessage === 'yes') & (guestObject.guest.currentTrack.trackID != '')){ 
       return guestConfirmingCurrentTrack (guestObject)
     }else{
@@ -34,12 +32,13 @@ function HandleIncomingMessage (req, res, db){
     }
   })
   .then (function (response){
-    console.log ('sending response')
     resp.message (response)
     res.end(resp.toString())
   })
   .catch (function (rejectMessage){
-    console.log ('rejecting')
+    if (rejectMessage.stack){
+      console.log (rejectMessage.stack)  
+    }
     console.log (rejectMessage)
     resp.message (rejectMessage)
     res.end(resp.toString())
@@ -48,10 +47,8 @@ function HandleIncomingMessage (req, res, db){
 
 function guestConfirmingCurrentTrack (guestObject){
   return new Promise (function (fulfill, reject){
-    console.log ('guest confirming song')
     databaseHostTools.searchDatabaseForHost (guestObject)
     .then (function (guestObject){
-      console.log ('searching database for updated requests')
       return databaseTrackTools.searchDatabaseForTrack (guestObject)
     })
     .then (function (guestObject){
@@ -65,8 +62,6 @@ function guestConfirmingCurrentTrack (guestObject){
       fulfill (response)
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   })
@@ -74,23 +69,17 @@ function guestConfirmingCurrentTrack (guestObject){
     
 function confirmTrackandAddToPlaylist (guestObject){
   return new Promise (function (fulfill, reject){
-    console.log ('adding track to playlist')
     spotifyPlaylistTools.addTracksToPlaylist (guestObject)
     .then (function (guestObject){
-      console.log ('added track, updating database')
       return databaseTrackTools.setTrackAddedToPlaylist (guestObject)
     })
     .then (function (guestObject){
-      console.log ('clearing guests songs')
       return databaseGuestTools.clearAndAddPreviousRequest (guestObject)
     })
     .then (function (guestObject){
-      var response = addResponse.songConfirmedAndAdded (guestObject.track.name, guestObject.track.artist)
-      fulfill (response)
+      fulfill (addResponse.songConfirmedAndAdded (guestObject.track.name, guestObject.track.artist))
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   })
@@ -98,22 +87,17 @@ function confirmTrackandAddToPlaylist (guestObject){
 
 function confirmTrackAndIncrementRequests (guestObject){
   return new Promise (function (fulfill, reject){
-    console.log ('incrementing songs number of requests')
     databaseTrackTools.incrementSongsRequestsInDatabase (guestObject)
     .then (function (guestObject){
       return (guestObject)
     })
     .then (function (guestObject){
-      console.log ('clearing guests songs')
       return databaseGuestTools.clearAndAddPreviousRequest (guestObject)
     })
     .then (function (guestObject){
-      var response = addResponse.songConfirmed (guestObject.track.name, guestObject.track.artist, guestObject.track.numRequests, guestObject.host.reqThreshold)
-      fulfill (response)
+      fulfill (addResponse.songConfirmed (guestObject.track.name, guestObject.track.artist, guestObject.track.numRequests, guestObject.host.reqThreshold))
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   })
@@ -121,27 +105,20 @@ function confirmTrackAndIncrementRequests (guestObject){
 
 function searchForNewRequest (guestObject){
   return new Promise (function (fulfill, reject){
-    console.log ('searching spotify')
     spotifyGuestTools.searchSpotify (guestObject)
     .then (function(guestObject){
-      console.log ('incremementing or adding to database')
       return databaseTrackTools.incrementOrAddSongInDatabase (guestObject)
     })
     .then (function (guestObject){
-      console.log ('checking for prev requests')
       return spotifyGuestTools.checkForPreviousRequests (guestObject)
     })
     .then (function (guestObject){
-      console.log ('updating guests requests')
       return databaseGuestTools.setCurrentTrack (guestObject)
     })
     .then (function (guestObject){
-      console.log ('asking to confirm')
       fulfill (addResponse.askToConfirm (guestObject))
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   })
