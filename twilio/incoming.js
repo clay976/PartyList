@@ -44,6 +44,7 @@ function HandleIncomingMessage (req, res, db){
     res.end(resp.toString())
   })
   .catch (function (rejectMessage){
+    console.log ('rejecting')
     console.log (rejectMessage)
     resp.message (rejectMessage)
     res.end(resp.toString())
