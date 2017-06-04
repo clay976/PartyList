@@ -79,6 +79,14 @@ function accessToken (aToken){
   }
 }
 
+function spotifyGuest (databaseObject){
+  return {
+    "guest" : databaseObject,
+    "track" : null,
+    "host"  : null
+  }
+}
+
 module.exports = {
 	Host					: Host,
 	Guest					: Guest,
@@ -86,5 +94,6 @@ module.exports = {
 	guestConfirm	: guestConfirm,
 	setGuestTrack	: setGuestTrack,
   bothTokens		: bothTokens,
-  accessToken		: accessToken
+  accessToken		: accessToken,
+  spotifyGuest  : spotifyGuest
 }
