@@ -41,77 +41,92 @@ function HandleIncomingMessage (req, res, db){
       })
       .then (function (guestObject){
         if (guestObject.track.numRequests >= guestObject.host.reqThreshold - 1){
-          console.log ('adding track to playlist')
-          addTracksToPlaylist (guestObject)
-          .then (function (guestObject){
-            console.log ('added track, updating database')
-            return setTrackAddedToPlaylist (guestObject)
-          })
-          .then (function (guestObject){
-            console.log ('clearing guests songs')
-            return clearAndAddGuestPreviousRequestInDatabase (guestObject)
-          })
-          .then (function (guestObject){
-            console.log ('sending response')
-            var response = addResponse.songConfirmedAndAdded (guestObject.track.name, guestObject.track.artist)
-            resp.message (response)
-            res.end(resp.toString())
-            return (guestObject)
-          })
+          return confirmTrackandAddToPlaylist (guestObject)
         }else{
-          console.log ('incrementing songs number of requests')
-          incrementSongsRequestsInDatabase (guestObject)
-          .then (function (guestObject){
-            return (guestObject)
-          })
-          .then (function (guestObject){
-            console.log ('clearing guests songs')
-            return clearAndAddGuestPreviousRequestInDatabase (guestObject)
-          })
-          .then (function (guestObject){
-            var response = addResponse.songConfirmed (guestObject.track.name, guestObject.track.artist, guestObject.track.numRequests, guestObject.host.reqThreshold)
-            resp.message (response)
-            res.end(resp.toString())
-          })
+          return confirmTrackAndIncrementRequests (guestObjects)
         }
       })
-      .catch (function (err){
-        console.log (err)
-        console.log (err.stack)
-      })
     }else{
-      console.log ('searching spotify')
-      searchSpotify (guestObject)
-      .then (function (guestObject){
-        console.log ('checking for prev requests')
-        return checkForPreviousRequests (guestObject)
-      })
-      .then (function(guestObject){
-        console.log ('incremementing or adding to database')
-        return incrementOrAddSongInDatabase (guestObject)
-      })
-      .then (function (guestObject){
-        console.log ('updating guests requests')
-        return setGuestCurrentTrack (guestObject)
-      })
-      .then (function (guestObject){
-        console.log ('asking to confirm')
-        return addResponse.askToConfirm (guestObject)
-      })
-      .then (function (response){
-        console.log ('sending response')
-        resp.message (response)
-        res.end(resp.toString())
-      })
-      .catch (function (err){
-        console.log (err)
-        console.log (err.stack)
-      })
+      return searchForNewRequest (guestObject)
     }
+  })
+  .then (function (response){
+    console.log ('sending response')
+    resp.message (response)
+    res.end(resp.toString())
   })
   .catch (function (err){
     console.log (err)
     console.log (err.stack)
+  })
+}
+
+function confirmTrackAndIncrementRequests (guestObjects){
+  return new Promise (function (fulfill, reject){
+    console.log ('adding track to playlist')
+    addTracksToPlaylist (guestObject)
+    .then (function (guestObject){
+      console.log ('added track, updating database')
+      return setTrackAddedToPlaylist (guestObject)
+    })
+    .then (function (guestObject){
+      console.log ('clearing guests songs')
+      return clearAndAddGuestPreviousRequestInDatabase (guestObject)
+    })
+    .then (function (guestObject){
+      console.log ('sending response')
+      var response = addResponse.songConfirmedAndAdded (guestObject.track.name, guestObject.track.artist)
+      resp.message (response)
+      res.end(resp.toString())
+      return (guestObject)
+    })
+  })
+}
+
+function confirmSongAndIncrementRequests (guestObject){
+  return new Promise (function (fulfill, reject){
+    console.log ('incrementing songs number of requests')
+    incrementSongsRequestsInDatabase (guestObject)
+    .then (function (guestObject){
+      return (guestObject)
+    })
+    .then (function (guestObject){
+      console.log ('clearing guests songs')
+      return clearAndAddGuestPreviousRequestInDatabase (guestObject)
+    })
+    .then (function (guestObject){
+      var response = addResponse.songConfirmed (guestObject.track.name, guestObject.track.artist, guestObject.track.numRequests, guestObject.host.reqThreshold)
+      resp.message (response)
+      res.end(resp.toString())
+    })
+  })
+}
+
+function searchForNewRequest (guestObject){
+  return new Promise (function (fulfill, reject){
+    console.log ('searching spotify')
+    searchSpotify (guestObject)
+    .then (function (guestObject){
+      console.log ('checking for prev requests')
+      return checkForPreviousRequests (guestObject)
+    })
+    .then (function(guestObject){
+      console.log ('incremementing or adding to database')
+      return incrementOrAddSongInDatabase (guestObject)
+    })
+    .then (function (guestObject){
+      console.log ('updating guests requests')
+      return setGuestCurrentTrack (guestObject)
+    })
+    .then (function (guestObject){
+      console.log ('asking to confirm')
+      fulfill (addResponse.askToConfirm (guestObject))
+    })
+    .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
+      reject (err)
+    })
   })
 }
 
@@ -296,7 +311,7 @@ function setTrackAddedToPlaylist (guestObject){
   return new Promise (function (fulfill, reject){
     var query   = {$and: [{ 'trackID' : guestObject.track.trackID}, {'hostID' : guestObject.host.hostID}]}
     var update  = {$set: { addedPaylist: true}}
-    var success = trackID + ' successfully added to playlist in database'
+    var success = guestObject.track.trackID + ' successfully added to playlist in database'
     var error   = 'there was an error updating the track as "on playlist" in our database'
     
     model.Track.findOneAndUpdate(query, update).exec()
