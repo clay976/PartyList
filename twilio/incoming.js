@@ -99,7 +99,7 @@ function confirmTrackandAddToPlaylist (guestObject){
 function confirmTrackAndIncrementRequests (guestObject){
   return new Promise (function (fulfill, reject){
     console.log ('incrementing songs number of requests')
-    databaseGuestTools.incrementSongsRequestsInDatabase (guestObject)
+    databaseTrackTools.incrementSongsRequestsInDatabase (guestObject)
     .then (function (guestObject){
       return (guestObject)
     })
