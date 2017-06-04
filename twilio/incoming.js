@@ -133,7 +133,7 @@ function searchForNewRequest (guestObject){
     })
     .then (function (guestObject){
       console.log ('updating guests requests')
-      return databaseGuestToolssetGuestCurrentTrack (guestObject)
+      return databaseGuestTools.setGuestCurrentTrack (guestObject)
     })
     .then (function (guestObject){
       console.log ('asking to confirm')
