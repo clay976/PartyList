@@ -1,4 +1,5 @@
-var hostAcountTools = require ('../../database/hostTools')
+var databaseHostTools = require ('../../database/hostTools')
+var databaseGuestTools = require ('../../database/hostTools')
 var addResponse     = require ('../../twilio/responses')
 
 function searchSpotify (guestObject){
@@ -6,7 +7,7 @@ function searchSpotify (guestObject){
 
   return new Promise (function (fulfill, reject){
     var error = 'error searching spotify for song, please try again'
-    hostAcountTools.spotifyApi.searchTracks (query, { limit : 1 })//search spotify for a track based on the message we got from the
+    databaseHostTools.spotifyApi.searchTracks (query, { limit : 1 })//search spotify for a track based on the message we got from the
     .then (function (spotifyTrack){
       if (spotifyTrack.body.tracks.total != 0){ //we found a track on spotify matching the guest message)
         guestObject.track = {
@@ -18,7 +19,7 @@ function searchSpotify (guestObject){
         fulfill (guestObject)
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
         guestObject.guest.currentTrack.trackID = null
-        return clearAndAddGuestPreviousRequestInDatabase (guestObject)
+        return databaseGuestTools.clearAndAddGuestPreviousRequestInDatabase (guestObject)
         .then (reject (addResponse.songNotFound))
         .catch (reject (error))
       }
