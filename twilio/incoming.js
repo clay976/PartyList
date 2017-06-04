@@ -49,10 +49,10 @@ function HandleIncomingMessage (req, res, db){
 function guestConfirmingCurrentTrack (guestObject){
   return new Promise (function (fulfill, reject){
     console.log ('guest confirming song')
-    searchDatabaseForHost (guestObject)
+    databaseHostTools.searchDatabaseForHost (guestObject)
     .then (function (guestObject){
       console.log ('searching database for updated requests')
-      return searchDatabaseForTrack (guestObject)
+      return databaseTrackTools.searchDatabaseForTrack (guestObject)
     })
     .then (function (guestObject){
       if (guestObject.track.numRequests >= guestObject.host.reqThreshold - 1){
@@ -78,7 +78,7 @@ function confirmTrackandAddToPlaylist (guestObject){
     spotifyPlaylistTools.addTracksToPlaylist (guestObject)
     .then (function (guestObject){
       console.log ('added track, updating database')
-      return setTrackAddedToPlaylist (guestObject)
+      return databaseTrackTools.setTrackAddedToPlaylist (guestObject)
     })
     .then (function (guestObject){
       console.log ('clearing guests songs')
