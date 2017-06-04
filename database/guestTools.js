@@ -75,7 +75,7 @@ function validateGuest (guestNumber, message){
   })
 }
 
-function setGuestCurrentTrack (guestObject){
+function setCurrentTrack (guestObject){
   return new Promise (function (fulfill, reject){
     var track   = JSONtemplate.setGuestTrack (guestObject.track.trackID, guestObject.track.name, guestObject.track.artist, guestObject.track.numRequests)
     var query   = {'phoneNum' : guestObject.guest.phoneNum}
@@ -94,7 +94,7 @@ function setGuestCurrentTrack (guestObject){
 }
 
 // the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
-function clearAndAddGuestPreviousRequestInDatabase (guestObject){
+function clearAndAddPreviousRequest (guestObject){
   return new Promise (function (fulfill, reject){
     var query   = { 'phoneNum' : guestObject.guest.phoneNum}
     var update  = JSONtemplate.clearGuestTrack (-1, guestObject.guest.currentTrack.trackID)
@@ -120,9 +120,9 @@ function welcomeMessage (toNum, hostID, reqThreshold, playlistID){
 }
 
 module.exports = {
-  addManyGuest                              : addManyGuest,
-  validateGuest                             : validateGuest,
-  setGuestCurrentTrack                      : setGuestCurrentTrack,
-  clearAndAddGuestPreviousRequestInDatabase : clearAndAddGuestPreviousRequestInDatabase,
-  addGuest                                  : addGuest
+  addManyGuest                : addManyGuest,
+  validate                    : validateGuest,
+  setCurrentTrack             : setCurrentTrack,
+  clearAndAddPreviousRequest  : clearAndAddPreviousRequest,
+  addGuest                    : addGuest
 }

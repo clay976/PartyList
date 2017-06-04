@@ -82,7 +82,7 @@ function confirmTrackandAddToPlaylist (guestObject){
     })
     .then (function (guestObject){
       console.log ('clearing guests songs')
-      return databaseGuestTools.clearAndAddGuestPreviousRequestInDatabase (guestObject)
+      return databaseGuestTools.clearAndAddPreviousRequest (guestObject)
     })
     .then (function (guestObject){
       var response = addResponse.songConfirmedAndAdded (guestObject.track.name, guestObject.track.artist)
@@ -133,7 +133,7 @@ function searchForNewRequest (guestObject){
     })
     .then (function (guestObject){
       console.log ('updating guests requests')
-      return databaseGuestTools.setGuestCurrentTrack (guestObject)
+      return databaseGuestTools.setCurrentTrack (guestObject)
     })
     .then (function (guestObject){
       console.log ('asking to confirm')
