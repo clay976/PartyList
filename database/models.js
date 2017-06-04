@@ -22,7 +22,7 @@ var track = mongoose.Schema({
   artist        : String,
   numRequests		: { type: Number, default: 0 },
   timePlayed		: Number,
-  addedPaylist  : { type: Boolean, defauult: false},
+  addedPlaylist  : { type: Boolean, defauult: false},
   foundAmount   : { type: Number, default: 0 }
 })
 
