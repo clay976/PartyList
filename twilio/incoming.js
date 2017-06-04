@@ -15,7 +15,6 @@ var spotifyPlaylistTools  = require ('../spotify/playlist/tools')
 
 //JSON templates
 var addResponse           = require ('./responses')
-var guestObj              = require ('./JSONtemps')
 
 //message incoming
 function HandleIncomingMessage (req, res, db){
