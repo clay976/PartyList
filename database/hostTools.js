@@ -25,7 +25,25 @@ function validateHost (host){
 	 })
 }
 
+function searchDatabaseForHost (guestObject){
+  return new Promise (function (fulfill, reject){
+    var query     = {'hostID' : guestObject.guest.hostID}
+
+    model.Host.findOne(query).exec()
+    .then (function (host){
+      guestObject.host = host
+      fulfill (guestObject)
+    })
+    .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
+      reject (err)
+    })
+  }) 
+}
+
 module.exports = {
-  validateHost	: validateHost,
-  spotifyApi		: spotifyApi
+  validateHost					: validateHost,
+  spotifyApi						: spotifyApi,
+  searchDatabaseForHost : searchDatabaseForHost
 }

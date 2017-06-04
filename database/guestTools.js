@@ -53,6 +53,64 @@ function validateRequest (req){
   })
 }
 
+//find the guest in our database by their phone number
+//if their number is not found or if they are not apart of anyone's parties currently. They are told they are not a guest.
+function validateGuest (guestNumber, message){
+  return new Promise (function (fulfill, reject){
+    model.Guest.findOne({ 'phoneNum' : guestNumber })
+    .then (function (guestInfo){
+      if (guestInfo){
+        if (guestInfo.hostID){
+          var guestObject = guestObj.guest (guestInfo)
+          guestObject.guest.lastMessage = message
+          fulfill (guestObject) 
+        }else reject (response.notGuest)
+      }else reject (response.notGuest)
+    })
+    .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
+      reject (err)
+    })
+  })
+}
+
+function setGuestCurrentTrack (guestObject){
+  return new Promise (function (fulfill, reject){
+    var track   = JSONtemplate.setGuestTrack (guestObject.track.trackID, guestObject.track.name, guestObject.track.artist, guestObject.track.numRequests)
+    var query   = {'phoneNum' : guestObject.guest.phoneNum}
+    var update  = {$set : {'currentTrack' : track}}
+
+    model.Guest.findOneAndUpdate(query, update).exec()
+    .then (function (guest){
+      fulfill (guestObject)
+    })
+    .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
+      reject (err)
+    })
+  })
+}
+
+// the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
+function clearAndAddGuestPreviousRequestInDatabase (guestObject){
+  return new Promise (function (fulfill, reject){
+    var query   = { 'phoneNum' : guestObject.guest.phoneNum}
+    var update  = guestObj.clearGuestSong (-1, guestObject.guest.currentTrack.trackID)
+
+    model.Guest.findOneAndUpdate(query, update).exec()
+    .then (function (guest){
+      fulfill (guestObject)
+    })
+    .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
+      reject (err)
+    })
+  })
+}
+
 function welcomeMessage (toNum, hostID, reqThreshold, playlistID){
   return {
     to    :'+1' +toNum,
@@ -62,6 +120,9 @@ function welcomeMessage (toNum, hostID, reqThreshold, playlistID){
 }
 
 module.exports = {
-  addManyGuest                : addManyGuest,
-  addGuest                    : addGuest
+  addManyGuest                              : addManyGuest,
+  validateGuest                             : validateGuest,
+  setGuestCurrentTrack                      : setGuestCurrentTrack,
+  clearAndAddGuestPreviousRequestInDatabase : clearAndAddGuestPreviousRequestInDatabase,
+  addGuest                                  : addGuest
 }

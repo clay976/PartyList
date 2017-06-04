@@ -136,10 +136,26 @@ function requestSpotifyPlaylistCreation (data){
   })
 }
 
+function addTracksToPlaylist (guestObject){
+  return new Promise (function (fulfill, reject){
+    hostAcountTools.spotifyApi.setAccessToken(guestObject.host.access_token)
+    hostAcountTools.spotifyApi.addTracksToPlaylist (guestObject.host.hostID, guestObject.host.playlistID, 'spotify:track:'+guestObject.track.trackID)
+    .then (function (track){
+      fulfill (guestObject)
+    })
+    .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
+      reject (err)
+    })
+  })
+}
+
 module.exports = {
   createPlaylist      : createPlaylist,
   setLatestPlaylist   : setLatestPlaylist,
   findAllPlaylists    : findAllPlaylists,
   setSpecificPlaylist : setSpecificPlaylist,
-  setRequestThreshold : setRequestThreshold
+  setRequestThreshold : setRequestThreshold,
+  addTracksToPlaylist : addTracksToPlaylist
 }
