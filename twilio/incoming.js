@@ -192,10 +192,10 @@ function searchSpotify (guestObject){
         fulfill (guestObject)
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
         guestObject.guest.currentTrack.trackID = null
-        clearAndAddGuestPreviousRequestInDatabase (guestObject)
-        .then (reject (addResponse.songNotFound))
+        return clearAndAddGuestPreviousRequestInDatabase (guestObject)
       }
     })
+    .then (reject (addResponse.songNotFound))
     .catch (function (err){
       console.log (err)
       console.log (err.stack)
@@ -284,7 +284,6 @@ function clearAndAddGuestPreviousRequestInDatabase (guestObject){
 
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (function (guest){
-      console.log ('yup')
       fulfill (guestObject)
     })
     .catch (function (err){
