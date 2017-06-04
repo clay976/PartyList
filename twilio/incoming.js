@@ -129,7 +129,7 @@ function searchForNewRequest (guestObject){
     })
     .then (function(guestObject){
       console.log ('incremementing or adding to database')
-      return databaseGuestTools.incrementOrAddSongInDatabase (guestObject)
+      return databaseTrackTools.incrementOrAddSongInDatabase (guestObject)
     })
     .then (function (guestObject){
       console.log ('updating guests requests')
