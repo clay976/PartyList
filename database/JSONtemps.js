@@ -87,13 +87,36 @@ function spotifyGuest (databaseObject){
   }
 }
 
+function clearGuestTrack (num, trackID){
+  return  {
+    $inc            : {
+      numRequests   : num
+    }, 
+    $set            : { 
+      currentTrack  : {
+        trackID     : '', 
+        name        : '', 
+        artist      : ''
+      }
+    },
+    $push           : {
+      prevRequests  : trackID
+    }
+  }
+}
+
 module.exports = {
-	Host					: Host,
-	Guest					: Guest,
-	Track					: Track,
-	guestConfirm	: guestConfirm,
-	setGuestTrack	: setGuestTrack,
-  bothTokens		: bothTokens,
-  accessToken		: accessToken,
-  spotifyGuest  : spotifyGuest
+  clearGuestSong  : clearGuestSong
+}
+
+module.exports = {
+	Host					  : Host,
+	Guest				    : Guest,
+	Track				    : Track,
+	guestConfirm	  : guestConfirm,
+	setGuestTrack   : setGuestTrack,
+  bothTokens		  : bothTokens,
+  accessToken	    : accessToken,
+  spotifyGuest    : spotifyGuest,
+  clearGuestTrack : clearGuestTrack
 }
