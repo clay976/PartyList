@@ -105,7 +105,7 @@ function confirmTrackAndIncrementRequests (guestObject){
     })
     .then (function (guestObject){
       console.log ('clearing guests songs')
-      return databaseGuestTools.clearAndAddGuestPreviousRequestInDatabase (guestObject)
+      return databaseGuestTools.clearAndAddPreviousRequest (guestObject)
     })
     .then (function (guestObject){
       var response = addResponse.songConfirmed (guestObject.track.name, guestObject.track.artist, guestObject.track.numRequests, guestObject.host.reqThreshold)
