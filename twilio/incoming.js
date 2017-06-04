@@ -31,21 +31,9 @@ function HandleIncomingMessage (req, res, db){
   console.log ('validating guest')
   validateGuest (guestNum, guestMessage)
   .then (function (guestObject){
-  console.log ('checking for confirmation or for search')
+    console.log ('checking for confirmation or for search')
     if ((guestMessage === 'yes') & (guestObject.guest.currentTrack.trackID != '')){ 
-      console.log ('guest confirming song')
-      searchDatabaseForHost (guestObject)
-      .then (function (guestObject){
-        console.log ('searching database for updated requests')
-        return searchDatabaseForTrack (guestObject)
-      })
-      .then (function (guestObject){
-        if (guestObject.track.numRequests >= guestObject.host.reqThreshold - 1){
-          return confirmTrackandAddToPlaylist (guestObject)
-        }else{
-          return confirmTrackAndIncrementRequests (guestObjects)
-        }
-      })
+      return guestConfirmingCurrentTrack (guestObject)
     }else{
       return searchForNewRequest (guestObject)
     }
@@ -57,10 +45,36 @@ function HandleIncomingMessage (req, res, db){
   })
   .catch (function (err){
     console.log (err)
-    console.log (err.stack)
+    resp.message (addResponse.error())
   })
 }
 
+function guestConfirmingCurrentTrack (guestObject){
+  return new Promise (function (fulfill, reject){
+    console.log ('guest confirming song')
+    searchDatabaseForHost (guestObject)
+    .then (function (guestObject){
+      console.log ('searching database for updated requests')
+      return searchDatabaseForTrack (guestObject)
+    })
+    .then (function (guestObject){
+      if (guestObject.track.numRequests >= guestObject.host.reqThreshold - 1){
+        return confirmTrackandAddToPlaylist (guestObject)
+      }else{
+        return confirmTrackAndIncrementRequests (guestObjects)
+      }
+    })
+    .then (function (response){
+      fulfill (response)
+    })
+    .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
+      reject (error)
+    })
+  })
+}
+    
 function confirmTrackandAddToPlaylist (guestObjects){
   return new Promise (function (fulfill, reject){
     console.log ('adding track to playlist')
@@ -74,11 +88,13 @@ function confirmTrackandAddToPlaylist (guestObjects){
       return clearAndAddGuestPreviousRequestInDatabase (guestObject)
     })
     .then (function (guestObject){
-      console.log ('sending response')
       var response = addResponse.songConfirmedAndAdded (guestObject.track.name, guestObject.track.artist)
-      resp.message (response)
-      res.end(resp.toString())
-      return (guestObject)
+      fulfill (response)
+    })
+    .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
+      reject (error)
     })
   })
 }
@@ -96,8 +112,12 @@ function confirmTrackAndIncrementRequests (guestObject){
     })
     .then (function (guestObject){
       var response = addResponse.songConfirmed (guestObject.track.name, guestObject.track.artist, guestObject.track.numRequests, guestObject.host.reqThreshold)
-      resp.message (response)
-      res.end(resp.toString())
+      fulfill (response)
+    })
+    .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
+      reject (error)
     })
   })
 }
@@ -146,6 +166,8 @@ function validateGuest (guestNumber, message){
       }else reject (response.notGuest)
     })
     .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
       reject (error)
     })
   })
@@ -171,6 +193,8 @@ function searchSpotify (guestObject){
       }
     })
     .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
       reject (error)
     })
   })
@@ -178,15 +202,17 @@ function searchSpotify (guestObject){
 
 function searchDatabaseForHost (guestObject){
   return new Promise (function (fulfill, reject){
-  var query     = {'hostID' : guestObject.guest.hostID}
-  var error     = 'error searching for host in database'
+    var query     = {'hostID' : guestObject.guest.hostID}
+    var error     = 'error searching for host in database'
 
-  model.Host.findOne(query).exec()
-  .then (function (host){
-    guestObject.host = host
-    fulfill (guestObject)
-  })
-  .catch (function (err){
+    model.Host.findOne(query).exec()
+    .then (function (host){
+      guestObject.host = host
+      fulfill (guestObject)
+    })
+    .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
       reject (error)
     })
   }) 
@@ -219,6 +245,8 @@ function setGuestCurrentTrack (guestObject){
       fulfill (guestObject)
     })
     .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
       reject (error)
     })
   })
@@ -235,6 +263,8 @@ function searchDatabaseForTrack (guestObject){
       fulfill (guestObject)
     })
     .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
       reject (error)
     })
   })
@@ -285,6 +315,8 @@ function incrementOrAddSongInDatabase (guestObject){
       }
     })
     .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
       reject (error)
     })
   })
@@ -302,6 +334,8 @@ function incrementSongsRequestsInDatabase (guestObject){
       fulfill (guestObject)
     })
     .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
       reject (error)
     })
   })
@@ -319,6 +353,8 @@ function setTrackAddedToPlaylist (guestObject){
       fulfill (guestObject)
     })
     .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
       reject (error)
     })
   })
@@ -334,6 +370,8 @@ function addTracksToPlaylist (guestObject){
       fulfill (guestObject)
     })
     .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
       reject (error)
     })
   })
