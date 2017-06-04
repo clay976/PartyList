@@ -61,7 +61,7 @@ function guestConfirmingCurrentTrack (guestObject){
       if (guestObject.track.numRequests >= guestObject.host.reqThreshold - 1){
         return confirmTrackandAddToPlaylist (guestObject)
       }else{
-        return confirmTrackAndIncrementRequests (guestObjects)
+        return confirmTrackAndIncrementRequests (guestObject)
       }
     })
     .then (function (response){
@@ -75,7 +75,7 @@ function guestConfirmingCurrentTrack (guestObject){
   })
 }
     
-function confirmTrackandAddToPlaylist (guestObjects){
+function confirmTrackandAddToPlaylist (guestObject){
   return new Promise (function (fulfill, reject){
     console.log ('adding track to playlist')
     addTracksToPlaylist (guestObject)
