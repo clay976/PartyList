@@ -129,7 +129,7 @@ function searchForNewRequest (guestObject){
     })
     .then (function (guestObject){
       console.log ('checking for prev requests')
-      console.log (guestObject.track.foundAmount)
+      console.log (guestObject.track)
       return spotifyGuestTools.checkForPreviousRequests (guestObject)
     })
     .then (function (guestObject){
