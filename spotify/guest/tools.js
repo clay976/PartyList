@@ -19,7 +19,7 @@ function searchSpotify (guestObject){
         fulfill (guestObject)
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
         guestObject.guest.currentTrack.trackID = null
-        return databaseGuestTools.clearAndAddGuestPreviousRequestInDatabase (guestObject)
+        return databaseGuestTools.clearAndAddPreviousRequest (guestObject)
         .then (reject (addResponse.songNotFound))
         .catch (reject (error))
       }
