@@ -106,10 +106,6 @@ function clearGuestTrack (num, trackID){
 }
 
 module.exports = {
-  clearGuestSong  : clearGuestSong
-}
-
-module.exports = {
 	Host					  : Host,
 	Guest				    : Guest,
 	Track				    : Track,
