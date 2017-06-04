@@ -31,7 +31,8 @@ function Track (host, TrackID, name, artist){
 	  'artist'				: artist,
 	  'numRequests'		: 0,
 	  'timePlayed'		: 0,
-	  'foundAmount' 	: 1,
+    'addedPaylist'  : false,
+	  'foundAmount' 	: 1
 	}
 }
 

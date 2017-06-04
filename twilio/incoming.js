@@ -123,13 +123,14 @@ function searchForNewRequest (guestObject){
   return new Promise (function (fulfill, reject){
     console.log ('searching spotify')
     spotifyGuestTools.searchSpotify (guestObject)
-    .then (function (guestObject){
-      console.log ('checking for prev requests')
-      return spotifyGuestTools.checkForPreviousRequests (guestObject)
-    })
     .then (function(guestObject){
       console.log ('incremementing or adding to database')
       return databaseTrackTools.incrementOrAddSongInDatabase (guestObject)
+    })
+    .then (function (guestObject){
+      console.log ('checking for prev requests')
+      console.log (guestObject.track.foundAmount)
+      return spotifyGuestTools.checkForPreviousRequests (guestObject)
     })
     .then (function (guestObject){
       console.log ('updating guests requests')
