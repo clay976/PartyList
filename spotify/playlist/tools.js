@@ -71,8 +71,9 @@ function setSpecificPlaylist (req, res, db){
   })
   .then (function (validRequest){
     console.log ('setting playlist')
-    console.log (validRequest)
-    return (model.Host.findOneAndUpdate({ 'hostID' : validRequest.HostID }, { $set: {'playlistID' : validRequest.playlistID}}).exec())
+    console.log (validRequest.hostID)
+    console.log (validRequest.playName)
+    return (model.Host.findOneAndUpdate({ 'hostID' : validRequest.HostID }, { $set: {'playlistID' : validRequest.playName}}).exec())
   })
   .then (function (updated){
     res.status(200).json ('playlist has been set successfully')
