@@ -99,9 +99,10 @@ function validatePlaylistOwnership (data){
     console.log (data)
     hostAcountTools.spotifyApi.getPlaylist(data.hostID, data.playName)
     .then (function(playlist){
+      console.log (playlist)
       fulfill ({
         'hostID' : data.hostID,
-        'playlistID' : playlist.id
+        'playlistID' : data.playName
       })
     })
     .catch (function (err){
