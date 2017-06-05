@@ -96,6 +96,7 @@ function setSpecificPlaylist (req, res, db){
 
 function validatePlaylistOwnership (data){
   return new Promise (function (fulfill, reject){
+    console.log (data)
     hostAcountTools.spotifyApi.getPlaylist(data.hostID, data.playName)
     .then (function(playlist){
       fulfill ({
