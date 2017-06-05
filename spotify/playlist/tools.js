@@ -70,6 +70,8 @@ function setSpecificPlaylist (req, res, db){
     return validatePlaylistOwnership (validatedInput)
   })
   .then (function (validRequest){
+    console.log (validRequest.HostID)
+    console.log (validRequest.playlistID)
     return (model.Host.findOneAndUpdate({ 'hostID' : validRequest.HostID }, { $set: {'playlistID' : validRequest.playlistID}}).exec())
   })
   .then (function (updated){
