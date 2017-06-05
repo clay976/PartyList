@@ -97,13 +97,10 @@ function setSpecificPlaylist (req, res, db){
 function validatePlaylistOwnership (data){
   return new Promise (function (fulfill, reject){
     console.log (data)
-    hostAcountTools.spotifyApi.getPlaylist(data.hostID+'543', data.playName)
+    hostAcountTools.spotifyApi.getPlaylist(data.hostID, data.playName)
     .then (function(playlist){
       console.log (playlist)
-      fulfill ({
-        'hostID' : data.hostID,
-        'playlistID' : data.playName
-      })
+      fulfill (data)
     })
     .catch (function (err){
       reject ('spotify error: you either do not own that playlist or it does not exist, '+ err)
