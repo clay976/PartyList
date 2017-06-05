@@ -70,7 +70,6 @@ function setSpecificPlaylist (req, res, db){
     return validatePlaylistOwnership (validatedInput)
   })
   .then (function (validRequest){
-    console.log (validRequest)
     return (model.Host.findOneAndUpdate({ 'hostID' : validRequest.HostID }, { $set: {'playlistID' : validRequest.playlistID}}).exec())
   })
   .then (function (updated){
@@ -96,10 +95,8 @@ function setSpecificPlaylist (req, res, db){
 
 function validatePlaylistOwnership (data){
   return new Promise (function (fulfill, reject){
-    console.log (data)
     hostAcountTools.spotifyApi.getPlaylist(data.hostID, data.playName)
     .then (function(playlist){
-      console.log (playlist)
       fulfill (data)
     })
     .catch (function (err){
