@@ -57,5 +57,6 @@ function explicitFilter (req, res){
 module.exports = {
   validateHost					: validateHost,
   spotifyApi						: spotifyApi,
-  searchDatabaseForHost : searchDatabaseForHost
+  searchDatabaseForHost : searchDatabaseForHost,
+  explicitFilter        : explicitFilter
 }
