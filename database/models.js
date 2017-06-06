@@ -34,7 +34,7 @@ var host = mongoose.Schema({
   playlistID		: { type: String, default: '' },
   playlistName  : { type: String, default: '' },
   homePage      : String,
-  explicit      : { type: Boolean, defauult: true},
+  explicit      : { type: Boolean, default: true},
   reqThreshold  : { type: Number, default: 2} 
 })
 
