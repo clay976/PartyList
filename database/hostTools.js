@@ -40,6 +40,20 @@ function searchDatabaseForHost (guestObject){
   }) 
 }
 
+function explicitFilter (req, res, db){
+  console.log (req)
+  validateHost (req.body.hostID)
+  .then (function (hostInfo){
+    console.log (hostInfo)
+    model.Host.findOneAndUpdate({ 'hostID' : hostInfo.hostID }, { $set: {'playlistID' : req.body.explicit}}).exec()
+  })
+  .then (res.status(200).json ('hostInfo.homePage'))  
+  .catch (function(err) {
+    res.status(err.status).json('failed to set explicit filter, '+ err) 
+    //fixed option: filter out genres next: go to sleep with girlfriend (all actively playing paties: katya), requested songs: sleep, songs requested: sleep
+  })
+}
+
 module.exports = {
   validateHost					: validateHost,
   spotifyApi						: spotifyApi,

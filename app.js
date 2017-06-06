@@ -151,7 +151,7 @@ TO BE SENT:
   }
 _______________________________________________________________________________________*/
   app.post('/playlist/explicit', function (req, res){
-    spotifyAccountTools.explicitFilter (req, res, db)
+    databaseHostTools.explicitFilter (req, res)
   })
 
 /*
