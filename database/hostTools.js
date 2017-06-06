@@ -41,7 +41,7 @@ function searchDatabaseForHost (guestObject){
 }
 
 function explicitFilter (req, res){
-  console.log (req)
+  console.log (req.body)
   validateHost (req.body.hostID)
   .then (function (hostInfo){
     console.log (hostInfo)
