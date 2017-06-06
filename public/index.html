@@ -89,8 +89,13 @@
       </form>
       <form id="input" action="/playlist/spotify/set" method="POST">
         <input id='hostID6' type='text' name ='hostID'>
-        <input type="text" name="playlistID" placeholder="playlist ID to be set as the partylist">
-        <input type="submit" value="find latest party playlist">
+        <input type="text" name="playlistID" placeholder="playlist ID">
+        <input type="submit" value="set specific spotify playlist">
+      </form>
+      <form id="input" action="/playlist/requestThreshold" method="POST">
+        <input id='hostID10' type='text' name ='hostID'>
+        <input type="number" name="requests" placeholder="Requests to add a song to a playlist">
+        <input type="submit" value="set request threshold">
       </form>
       </div>
     </div>
@@ -167,6 +172,7 @@
       document.getElementById('hostID7').value = params.hostID;
       document.getElementById('hostID8').value = params.hostID;
       document.getElementById('hostID9').value = params.hostID;
+      document.getElementById('hostID10').value = params.hostID;
 
     } else {
       document.getElementById('login').style.visibility = 'visible'

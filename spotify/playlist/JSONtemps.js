@@ -7,7 +7,6 @@ function userPlaylists (host, playlists, length){
  		}
   }
   playlistJSON = JSON.parse (playlistJSON + ']}')
-
   return (playlistJSON)
 }
 

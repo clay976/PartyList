@@ -1,18 +1,18 @@
 var SpotifyWebApi = require('spotify-web-api-node');
-var credentials = {
-  clientId : 'a000adffbd26453fbef24e8c1ff69c3b',
-  clientSecret : '899b3ec7d52b4baabba05d6031663ba2',
-  redirectUri : 'http://104.131.215.55:80/callback'
+var credentials 	= {
+  clientId 			: 'a000adffbd26453fbef24e8c1ff69c3b',
+  clientSecret 	: '899b3ec7d52b4baabba05d6031663ba2',
+  redirectUri 	: 'http://104.131.215.55:80/callback'
 };
-var spotifyApi = new SpotifyWebApi(credentials);
-var model = require ('./models')
+var spotifyApi 		= new SpotifyWebApi(credentials);
+var model 				= require ('./models')
 
 function validateHost (host){
-	console.log (host)
 	return new Promise (function (fulfill, reject){
 	  model.Host.findOne({ 'hostID' : host }).exec()
 	  .then (function (hostInfo){
 	    if (hostInfo){
+	    	console.log ('just validated this host: ' +hostInfo.hostID)
 	    	spotifyApi.setAccessToken (hostInfo.access_token)
 	      fulfill (hostInfo)
 	    }else{
@@ -25,7 +25,23 @@ function validateHost (host){
 	 })
 }
 
+function searchDatabaseForHost (guestObject){
+  return new Promise (function (fulfill, reject){
+    var query     = {'hostID' : guestObject.guest.hostID}
+
+    model.Host.findOne(query).exec()
+    .then (function (host){
+      guestObject.host = host
+      fulfill (guestObject)
+    })
+    .catch (function (err){
+      reject (err)
+    })
+  }) 
+}
+
 module.exports = {
-  validateHost	: validateHost,
-  spotifyApi		: spotifyApi
+  validateHost					: validateHost,
+  spotifyApi						: spotifyApi,
+  searchDatabaseForHost : searchDatabaseForHost
 }

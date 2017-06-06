@@ -4,13 +4,13 @@ mongoose.Promise = require('bluebird');
 
 var guest = mongoose.Schema({
 	hostID				: String,
-  phoneNum			: String,
-  numRequests		: { type: Number, default: 4 },
-  currentTrack	: { 
-    trackID     : { type: String, default: '' },
-    name        : { type: String, default: '' },
-    artist      : { type: String, default: '' }
+  phoneNum			: Number,
+  currentTrack  : { 
+    trackID     : String,
+    name        : String,
+    artist      : String
   },
+  numRequests		: { type: Number, default: 4 },
   lastMessage   : { type: String, default: '' },
   prevRequests  : [String]
 })
@@ -22,7 +22,7 @@ var track = mongoose.Schema({
   artist        : String,
   numRequests		: { type: Number, default: 0 },
   timePlayed		: Number,
-  addedPaylist  : { type: Boolean, defauult: false},
+  addedPlaylist  : { type: Boolean, defauult: false},
   foundAmount   : { type: Number, default: 0 }
 })
 
@@ -34,7 +34,8 @@ var host = mongoose.Schema({
   playlistID		: { type: String, default: '' },
   playlistName  : { type: String, default: '' },
   homePage      : String,
-  explicit      : { type: Boolean, defauult: true}
+  explicit      : { type: Boolean, defauult: true},
+  reqThreshold  : { type: Number, default: 2} 
 })
 
 var Guest = mongoose.model('Guest', guest);

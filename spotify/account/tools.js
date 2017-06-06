@@ -1,20 +1,20 @@
+//Database modules
+var databaseHostTools = require ('../../database/hostTools')
+var model             = require ('../../database/models')
+var JSONtemplate      = require ('../../database/JSONtemps')
+
+//spotify tools
+var playlistTool      = require ('../playlist/tools')
+var SpotifyWebApi     = require('spotify-web-api-node');
+var credentials       = {
+  clientId            : 'a000adffbd26453fbef24e8c1ff69c3b',
+  clientSecret        : '899b3ec7d52b4baabba05d6031663ba2',
+  redirectUri         : 'http://104.131.215.55:80/callback'
+}
+var spotifyApi        = new SpotifyWebApi(credentials);
 
 //node modules
-
-//my modules
-var databaseHostTools = require ('../../database/hostTools')
-var playlistTool = require ('../playlist/tools')
-
-var SpotifyWebApi = require('spotify-web-api-node');
-var credentials = {
-  clientId : 'a000adffbd26453fbef24e8c1ff69c3b',
-  clientSecret : '899b3ec7d52b4baabba05d6031663ba2',
-  redirectUri : 'http://104.131.215.55:80/callback'
-};
-var spotifyApi = new SpotifyWebApi(credentials);
-var model = require ('../../database/models')
-var upsertTemplate = require ('../../database/upsert/JSONtemps')
-var querystring = require('querystring')
+var querystring       = require('querystring')
 
 
 // makes a request to the spotify API to retrieve
@@ -27,10 +27,9 @@ function homepage (req, res) {
     return setTokensAndGetHostInfo(data)
   })
   .then (function (hostInfo){
-    console.log (hostInfo)
     var homePage = '/#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':hostInfo.refresh_token,'hostID':hostInfo.spotifyReturn.body.id})
     playlistTool.setLatestPlaylist (hostInfo.spotifyReturn.body.id)
-    model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, upsertTemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage), {upsert:true}).exec()
+    model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, JSONtemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage), {upsert:true}).exec()
     return (homePage)
   })
   .then (function (homePage){

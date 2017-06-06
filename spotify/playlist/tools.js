@@ -5,7 +5,6 @@ var model = require ('../../database/models')
 
 //TODO: add comments
 function createPlaylist (req, res, db){
-  console.log (req.body)
   hostAcountTools.validateHost (req.body.hostID)
   .then (function (hostInfo){
     return validatePlaylistInput(hostInfo, req.body.playName)
@@ -34,11 +33,9 @@ function createPlaylist (req, res, db){
     return playlistTemplate.userPlaylists (host, data.body.items, data.body.total)
   })
   .then (function (playlistInfo){
-    console.log (playlistInfo)
     return model.Host.findOneAndUpdate({ 'hostID' : playlistInfo.playlists[0].owner }, { $set: {'playlistID' : playlistInfo.playlists[0].id, 'playlistName' : playlistInfo.playlists[0].name}}).exec()
   })
   .then (function (update){
-    console.log (update)
     res.status(200).json ('playlist successfully set to latest playlist')
   })
   .catch (function (err){
@@ -73,7 +70,7 @@ function setSpecificPlaylist (req, res, db){
     return validatePlaylistOwnership (validatedInput)
   })
   .then (function (validRequest){
-    return (model.Host.findOneAndUpdate({ 'hostID' : validRequest.HostID }, { $set: {'playlistID' : validRequest.playlistID}}).exec())
+    return (model.Host.findOneAndUpdate({ 'hostID' : validRequest.hostID }, { $set: {'playlistID' : validRequest.playName}}).exec())
   })
   .then (function (updated){
     res.status(200).json ('playlist has been set successfully')
@@ -83,14 +80,24 @@ function setSpecificPlaylist (req, res, db){
   })
 }
 
+//This is the request threshold that will get a song added to the playlist, set by the host.
+ function setRequestThreshold (req, res){
+  console.log (req.body)
+  model.Host.findOneAndUpdate({ 'hostID' : req.body.hostID }, { $set: {'reqThreshold' : req.body.requests }}).exec()
+  .then (function (update){
+    res.status(200).json ('number of requests to add a song to a playlist has been set to ' +req.body.requests+ '!')
+  })
+  .catch (function (err){
+    console.log (err.stack)
+    res.status(400).json('error setting the request threshold: '+ err)
+  })
+}
+
 function validatePlaylistOwnership (data){
   return new Promise (function (fulfill, reject){
     hostAcountTools.spotifyApi.getPlaylist(data.hostID, data.playName)
     .then (function(playlist){
-      fulfill ({
-        'hostID' : data.hostID,
-        'playlistID' : playlist.id
-      })
+      fulfill (data)
     })
     .catch (function (err){
       reject ('spotify error: you either do not own that playlist or it does not exist, '+ err)
@@ -99,7 +106,6 @@ function validatePlaylistOwnership (data){
 }
 
 function validatePlaylistInput (hostInfo, playName) {
-  //TOD: add additional validation for things like spotify not allowing special characters in playlist names
   return new Promise (function (fulfill, reject){
     if (playName){
       fulfill ({
@@ -127,9 +133,26 @@ function requestSpotifyPlaylistCreation (data){
   })
 }
 
+function addTracksToPlaylist (guestObject){
+  return new Promise (function (fulfill, reject){
+    hostAcountTools.spotifyApi.setAccessToken(guestObject.host.access_token)
+    hostAcountTools.spotifyApi.addTracksToPlaylist (guestObject.host.hostID, guestObject.host.playlistID, 'spotify:track:'+guestObject.track.trackID)
+    .then (function (track){
+      fulfill (guestObject)
+    })
+    .catch (function (err){
+      console.log (err)
+      console.log (err.stack)
+      reject (err)
+    })
+  })
+}
+
 module.exports = {
-  createPlaylist: createPlaylist,
-  setLatestPlaylist: setLatestPlaylist,
-  findAllPlaylists: findAllPlaylists,
-  setSpecificPlaylist: setSpecificPlaylist
+  createPlaylist      : createPlaylist,
+  setLatestPlaylist   : setLatestPlaylist,
+  findAllPlaylists    : findAllPlaylists,
+  setSpecificPlaylist : setSpecificPlaylist,
+  setRequestThreshold : setRequestThreshold,
+  addTracksToPlaylist : addTracksToPlaylist
 }

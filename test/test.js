@@ -3,6 +3,7 @@ var should = require('should')
 var assert = require('assert')
 var request = require('supertest')
 var querystring = require('querystring')
+var spotifyAccountTemplate = require ('../spotify/account/JSONtemps')
 
 //variables
 var url = 'localhost'
@@ -12,24 +13,28 @@ var validHostFail = 'validation error: could not find this host in our database,
 use this url to retrieve a code so we can obtain access tokens
 for the tests. 
 
-https://accounts.spotify.com/authorize?response_type=code&client_id=a000adffbd26453fbef24e8c1ff69c3b&scope=user-read-private%20user-read-email%20user-read-birthdate%20streaming%20playlist-modify-private%20playlist-modify-public%20playlist-read-private&redirect_uri=http%3A%2F%2F104.131.215.55%3A80%2Fcallback
+localhost/login
 
 place the code in this next variable
 */
-var code = 'AQBbATIdw2c7AWYYWBjZNJTsOIZjwjuYZlv5o0ThXL7ZVVWhpgQWc5RK0_Tzkc82VCqvGO2clKhAyb_ZWP7c_W_iHIth843dD5KxBEw1AbFiWKdfFDOpXLchjm1mU-e95uch8KQerzEF9KXrc_31ngaFTVDrwKqfO7YRwcD-qYltJwz3bqZQmrHfzbE8UZUyqmSIT-ajtQF0r-reMWd0cBmKHBurOHcL3oOxBGDX8iIuz55yIgclHso_vd3L7FNcmlXQj7HVEC4e9XaJdDifAkQbSDW8GDPPUpkw_52jqD1VzmqDtr9XHG961Qm1Qf882iRlO11vEo3X3_iyUqavaAnf1Vk1NdDK0Kwy45wBxIQ8YAIexDPfBtvekzHEWTLewc05'
+
+// https://accounts.spotify.com/en/login?continue=https:%2F%2Faccounts.spotify.com%2Fen%2Fauthorize%3Fresponse_type%3Dcode%26client_id%3Da000adffbd26453fbef24e8c1ff69c3b%26scope%3Duser-read-private%2520user-read-email%2520user-read-birthdate%2520streaming%2520playlist-modify-private%2520playlist-modify-public%2520playlist-read-private%26redirect_uri%3Dhttp:%252F%252F104.131.215.55:80%252Fcallback
+
+var code = 'AQBZ6EqXSV-BgPyuJi1XOVdccng91fnsmLMilGasI24n92j-fg5BFIeMitxz-k3JxjmTS6i3x0GYhVNnl-4U4MTRRzTjxwjwRZB0w_0o4C1FcGSLk5s4PGVNFcyuBHvzw-PikW_nZ97QsxRL7MC7kypGArPmWA1mUfAn5WjrEEliPIdvvAxqWgNT2Z2KRREAWAzWjx-6GoeZng1nnNB_vJDDpbMFORWEIklCNTCUzsVd8X7lytd0rrxA83CiaZlpPoknmRGV1SDrXso2lCZC459_m2GQUv3--BGTLCyw9H0RcBjR329Aa7IrBd3Jq4sFYRyAeoVb2zXYU59Gs2r9TNu1_bYroC32-R63RCE0K_xvvvC2YbGqolKh3jH3R-JJJfzM'
 
 //start tests
 describe('GET /login', function(){
-  it('hit the login endpoint to make sure it redirects to spotify\'s login page', function(done){
+  it('login to spotify\' to obtain access and refresh tokens', function(done){
     request(url)
-    .get('/login')
+    .get ('/login')
     .end(function(err, res) {
       if (err) {
         throw err;
       }
+      console.log (res)
       res.status.should.equal(302);
       done();
-    });
+    })
   });
 })
 

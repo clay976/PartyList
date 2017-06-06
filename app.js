@@ -1,32 +1,34 @@
 //node modules
-var express = require('express') // Express web server framework
+var express = require('express')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
 var querystring = require('querystring')
-var model = require ('./database/models')
 
-//my modules
+//Spotify Tools
 var spotifyAccountTools = require ('./spotify/account/tools')
 var spotifyPlaylistTools = require ('./spotify/playlist/tools')
 var spotifyAccountTemplate = require ('./spotify/account/JSONtemps')
 
+//Messagign Tools
 var twilioIncoming = require ('./twilio/incoming')
-var upsertTemplate = require ('./database/upsert/JSONtemps')
-var databaseHostTools = require ('./database/hostTools')
-//app declaration and uses
-var app = express()
-app.use(bodyParser.json()) // for parsing application/json
-app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
-//required documents and tools
+//Database Tools
+var JSONtemplate = require ('./database/JSONtemps')
+var databaseHostTools = require ('./database/hostTools')
 var removeList = require ('./database/remove')
 var guestTools = require ('./database/guestTools')
+var model = require ('./database/models')
 
-//mongo database variables
+//database variable
 var MongoClient = require('mongodb').MongoClient
 var mongoose = require("mongoose");
 var mongoUrl = 'mongodb://localhost:27017/party'
 mongoose.Promise = global.Promise;
+
+//app declaration and uses
+var app = express()
+app.use(bodyParser.json()) // for parsing application/json
+app.use(bodyParser.urlencoded({ extended: true })) // for parsing application/x-www-form-urlencoded
 
 //connect to the database, this happens when api starts, and the conection doesn't close until the API shuts down/crashes
 mongoose.connect(mongoUrl)
@@ -103,7 +105,7 @@ RETURNED: properly formatted JSON object containing the name and spotify ID of t
   ]}
 _______________________________________________________________________________________*/
   app.post('/playlist/spotify/getAll', function (req, res){
-    spotifyPlaylistTools.findAllPlaylists (req, res, db)
+    spotifyPlaylistTools.findAllPlaylists (req, res)
   })
 
 /*
@@ -115,9 +117,20 @@ TO BE SENT:
   }
 _______________________________________________________________________________________*/
   app.post('/playlist/spotify/set', function (req, res){
-    spotifyPlaylistTools.setSpecificPlaylist (req, res, db)
+    spotifyPlaylistTools.setSpecificPlaylist (req, res)
   })  
 
+/*
+set a specific playlist id (most likely to be used after finding all the user's spotify playlists)
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.post('/playlist/requestThreshold', function (req, res){
+    spotifyPlaylistTools.setRequestThreshold (req, res)
+  })  
 /*
 find this user's latest playlist held in our database
 ________________________________________________________________________________________
@@ -227,7 +240,7 @@ ________________________________________________________________________________
       databaseHostTools.spotifyApi.refreshAccessToken()
       .then(function(data) {
         databaseHostTools.spotifyApi.setAccessToken(data.body.access_token)
-        model.Host.findOneAndUpdate({'hostID': 'clay976'}, upsertTemplate.Host ('clay976', data.body.access_token, hostInfo.refresh_token, hostInfo.homePage)).exec()
+        model.Host.findOneAndUpdate({'hostID': 'clay976'}, JSONtemplate.Host ('clay976', data.body.access_token, hostInfo.refresh_token, hostInfo.homePage)).exec()
         .then(function(update) {
           console.log ('getting refresh token successful')
         })

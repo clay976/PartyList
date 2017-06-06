@@ -1,8 +1,7 @@
-var queryTemplate = require ('./query/JSONtemps')
-var upsertTemplate = require ('./upsert/JSONtemps')
+var JSONtemplate = require ('./JSONtemps')
 var model = require ('./models')
 var hostAcountTools = require ('./hostTools')
-var addResponse = require ('../twilio/responses')
+var response = require ('../twilio/responses')
 
 //node modules
 var twilio = require('twilio')
@@ -20,106 +19,104 @@ function addManyGuest (req, res){
 }
 
 function addGuest (req, res){
-  hostAcountTools.validateHost (req.body.hostID)
-  .then (function (){
-    return validateRequest(req)
+  var guestNum = req.body.guestNum
+  var hostID = req.body.hostID
+  var guestQuery = {'phoneNum': '+1' +guestNum}
+  var infoToInsert = JSONtemplate.Guest (hostID, '+1' +guestNum)
+  var hostInfo = hostAcountTools.validateHost (hostID)
+  
+  hostInfo
+  .then (validateRequest(req))
+  .then (model.Guest.findOneAndUpdate(guestQuery, infoToInsert, {upsert:true}).exec())
+  .then (function (hostInfo){
+    client.sendMessage(welcomeMessage (guestNum, hostInfo.hostID, hostInfo.reqThreshold, hostInfo.playlistID))
   })
-  .then (function (){
-    return model.Guest.findOneAndUpdate({'phoneNum': '+1'+req.body.guestNum}, upsertTemplate.Guest (req.body.hostID, '+1'+req.body.guestNum), {upsert:true}).exec()
-  })
-  .then (function (){
-    return client.sendMessage({
-      to:'+1' +req.body.guestNum,
-      from:'+15878033620',
-      body:'You have been added to '+req.body.hostID+'\'s party. You can send back your song requests to this phone number!'
-    })
-  })
-  .then (function (update){
-    res.status(200).json ('guest added succsefully')
-  })
-  .catch (function (err){
+  .then (res.status(200).json ('guest, with phone number: ' +guestNum+ ', added succsefully'))
+  .catch(function (err){
+    console.log (err.stack)
     res.status(400).json('error adding guest: '+err)
   })
 }
 
+//validates that the request from client side is present and in the right format
 function validateRequest (req){
   return new Promise (function (fulfill, reject){
     if (req.body.guestNum){
-      if (req.body.guestNum.length === 10) fulfill (true)
-      else reject ('number not the right length, please retry with the format "1234567890" (no speacial characters)')
-    }else reject ('no phone number recieved to add as a guest')
+      if (req.body.guestNum.length === 10) {
+        fulfill (true)
+      }else{
+        reject ('number not the right length, please retry with the format "1234567890" (no speacial characters)')
+      }
+    }else{
+      reject ('no phone number recieved to add as a guest')
+    }
   })
 }
 
-function validateGuest (body){
+//find the guest in our database by their phone number
+//if their number is not found or if they are not apart of anyone's parties currently. They are told they are not a guest.
+function validateGuest (guestNumber, message){
   return new Promise (function (fulfill, reject){
-    var message = (body.Body).toLowerCase().trim()
-    model.Guest.findOne({ 'phoneNum' : body.From }).exec()
+    model.Guest.findOne({ 'phoneNum' : guestNumber })
     .then (function (guestInfo){
-      if (message === 'add me please'){
-        console.log ('adding guest: '+ body)
-        model.Guest.findOneAndUpdate({'phoneNum': body.From}, upsertTemplate.Guest ('clay976', body.From), {upsert:true}).exec()
-        .then (function (updated){
-          reject ('You have been added succesfully!\n\n Songs can be searched by sending a text like this "Drake One Dance". Confirm your request after it is found. Songs with 2 requests will be added to the playlist. You can find the playlist here:  https://open.spotify.com/user/clay976/playlist/4zTJyhtgvVuNvGFwDDSfJB')
-        })
-      }else if (guestInfo){
+      if (guestInfo){
         if (guestInfo.hostID){
-          guestInfo.lastMessage = message
-          fulfill (guestInfo) 
-        }else reject (addResponse.notGuest)
-      }else reject (addResponse.notGuest)
+          var guestObject = JSONtemplate.spotifyGuest (guestInfo)
+          guestObject.guest.lastMessage = message
+          fulfill (guestObject) 
+        }else reject (response.notGuest)
+      }else reject (response.notGuest)
     })
     .catch (function (err){
-      reject ('validating guest failed: ' +err)
+      reject (err)
     })
   })
 }
 
-function updateGuestAndTrackIfNeeded (guestReqObject){
+function setCurrentTrack (guestObject){
   return new Promise (function (fulfill, reject){
-    updateGuestIfNeeded (guestReqObject)
-    .then (updateTrackIfNeeded (guestReqObject))
-    .then (function (updatedObject){
-      fulfill (guestReqObject)
+    var track   = JSONtemplate.setGuestTrack (guestObject.track.trackID, guestObject.track.name, guestObject.track.artist, guestObject.track.numRequests)
+    var query   = {'phoneNum' : guestObject.guest.phoneNum}
+    var update  = {$set : {'currentTrack' : track}}
+
+    model.Guest.findOneAndUpdate(query, update).exec()
+    .then (function (guest){
+      fulfill (guestObject)
     })
     .catch (function (err){
-      reject ('database '+err)
+      reject (err)
     })
   })
 }
 
-function updateGuestIfNeeded (guestReqObject){
+// the guest has confirmed the last song that they sent to us so we will see about adding it to the playlist.
+function clearAndAddPreviousRequest (guestObject){
   return new Promise (function (fulfill, reject){
-    if (guestReqObject.guestUpdate){
-      console.log (guestReqObject.guestUpdate)
-      model.Guest.findOneAndUpdate({ 'phoneNum' : guestReqObject.guest.phoneNum}, guestReqObject.guestUpdate).exec()
-      .then (function (updated){
-        fulfill (guestReqObject)
-      })
-      .catch (function (err){
-        reject ('error updating guest in database: ' +err)
-      })
-    }else fulfill (guestReqObject)
+    var query   = { 'phoneNum' : guestObject.guest.phoneNum}
+    var update  = JSONtemplate.clearGuestTrack (-1, guestObject.guest.currentTrack.trackID)
+
+    model.Guest.findOneAndUpdate(query, update).exec()
+    .then (function (guest){
+      fulfill (guestObject)
+    })
+    .catch (function (err){
+      reject (err)
+    })
   })
 }
 
-function updateTrackIfNeeded (guestReqObject){
-  return new Promise (function (fulfill, reject){
-    if (guestReqObject.trackUpdate){
-      model.Track.findOneAndUpdate({$and: [{ 'trackID' : guestReqObject.guest.currentTrack.trackID}, {'hostID' : guestReqObject.guest.hostID}]}, guestReqObject.trackUpdate).exec()
-      .then (function (updated){
-        fulfill (guestReqObject)
-      })
-      .catch (function (err){
-        reject ('error updating track in database: ' +err)
-      })
-    }else fulfill (guestReqObject)
-  })
+function welcomeMessage (toNum, hostID, reqThreshold, playlistID){
+  return {
+    to    :'+1' +toNum,
+    from  :'+15878033620',
+    body  : response.welcome (hostID, reqThreshold, playlistID)
+  }
 }
 
 module.exports = {
   addManyGuest                : addManyGuest,
-  addGuest                    : addGuest,
   validateGuest               : validateGuest,
-  updateGuestAndTrackIfNeeded : updateGuestAndTrackIfNeeded
+  setCurrentTrack             : setCurrentTrack,
+  clearAndAddPreviousRequest  : clearAndAddPreviousRequest,
+  addGuest                    : addGuest
 }
