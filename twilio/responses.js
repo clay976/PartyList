@@ -1,9 +1,9 @@
 //my modules
-var notGuest          = ('Sorry, we could not find a party that you are currently a guest of. Send the host\'s phone number in the format "1234567890" and we will ask them to add you. \n\n if you are trying to join the HOCO playlist send back "add me please"');
+var notGuest      = ('Sorry, we could not find a party that you are currently a guest of. Send the host\'s phone number in the format "1234567890" and we will ask them to add you. \n\n if you are trying to join the HOCO playlist send back "add me please"');
 
-var songNotFound      = ('Sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
+var songNotFound  = ('Sorry, that song could be found, use as many key words as possible, make sure to not use any special characters either!')
 
-var error             = ('There was an error on our end. We are very sorry, please try again!')
+var errorMessage  = ('There was an error on our end. We are very sorry, please try again!')
 
 function songConfirmedAndadvertisment (title, artist, numRequests){
   return ('Your song: ' +title+ ', by: ' +artist+ ' now has ' +(numRequests+1)+ ' request(s)! You are also recieving an advertisment because you have made 5 successful request')
@@ -37,8 +37,12 @@ function askToConfirm (guestObject){
   return ('We found: ' +guestObject.track.name+ ', by: ' +guestObject.track.artist+ '. This Track has ' +guestObject.track.numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
 }
 
+function explicit (title, artist){
+  return ('We found: ' +title+ ', by: ' +artist+ '. This track cannot be added to the playlist as it is explicit and the host does not allow that')
+}
+
 module.exports = {
-  error                                 : error,
+  errorMessage                          : errorMessage,
   notGuest                              : notGuest,
   songNotFound                          : songNotFound,
   songConfirmedAndadvertisment          : songConfirmedAndadvertisment,
@@ -48,5 +52,6 @@ module.exports = {
   welcome                               : welcome,
   alreadyAdded                          : alreadyAdded,
   alreadyRequested                      : alreadyRequested,
-  askToConfirm                          : askToConfirm
+  askToConfirm                          : askToConfirm,
+  explicit                              : explicit
 }

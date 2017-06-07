@@ -14,7 +14,8 @@ function searchSpotify (guestObject){
           'trackID'     : spotifyTrack.body.tracks.items[0].id,
           'name'        : spotifyTrack.body.tracks.items[0].name,
           'artist'      : spotifyTrack.body.tracks.items[0].artists[0].name,
-          'numRequests' : 0
+          'numRequests' : 0,
+          'explicit'    : spotifyTrack.body.tracks.items[0].explicit
         }
         fulfill (guestObject)
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
@@ -25,8 +26,6 @@ function searchSpotify (guestObject){
       }
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   })

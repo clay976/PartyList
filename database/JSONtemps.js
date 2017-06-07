@@ -23,7 +23,7 @@ function Guest (host, number){
   }
 }
 
-function Track (host, TrackID, name, artist){
+function Track (host, TrackID, name, artist, exp){
 	return {
 		'hostID'				: host,
 	  'trackID'				: TrackID,
@@ -32,12 +32,10 @@ function Track (host, TrackID, name, artist){
 	  'numRequests'		: 0,
 	  'timePlayed'		: 0,
     'addedPlaylist' : false,
-	  'foundAmount' 	: 1
+	  'foundAmount' 	: 1,
+    'explicit'      : exp
 	}
 }
-
-//$set:{ "playlistID": ID }
-//$set: { "currentTrack": trackID }
 
 function guestConfirm(){
   return {
