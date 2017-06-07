@@ -16,7 +16,7 @@ function searchSpotify (guestObject){
           'name'        : spotifyTrack.body.tracks.items[0].name,
           'artist'      : spotifyTrack.body.tracks.items[0].artists[0].name,
           'numRequests' : 0,
-          'explicit'    : true
+          'explicit'    : spotifyTrack.body.tracks.items[0].explicit
         }
         fulfill (guestObject)
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
