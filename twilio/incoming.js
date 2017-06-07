@@ -40,8 +40,8 @@ function HandleIncomingMessage (req, res, db){
   })
   .catch (function (rejectMessage){
     if (rejectMessage.stack){
-      var message = addResponse.error()
-      console.log (message)
+      console.log ('error')
+      console.log (addResponse.error())
       console.log (rejectMessage.stack)
       resp.message (message)
       res.end(resp.toString())
