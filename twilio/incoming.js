@@ -25,6 +25,9 @@ function HandleIncomingMessage (req, res, db){
 
   databaseGuestTools.validateGuest (guestNum, guestMessage)
   .then (function (guestObject){
+    return databaseHostTools.searchDatabaseForHost (guestObject)
+  })
+  .then (function (guestObject){
     if ((guestMessage === 'yes') & (guestObject.guest.currentTrack.trackID != '')){ 
       return guestConfirmingCurrentTrack (guestObject)
     }else{
@@ -47,10 +50,7 @@ function HandleIncomingMessage (req, res, db){
 
 function guestConfirmingCurrentTrack (guestObject){
   return new Promise (function (fulfill, reject){
-    databaseHostTools.searchDatabaseForHost (guestObject)
-    .then (function (guestObject){
-      return databaseTrackTools.searchDatabaseForTrack (guestObject)
-    })
+    databaseTrackTools.searchDatabaseForTrack (guestObject)
     .then (function (guestObject){
       if (guestObject.track.numRequests >= guestObject.host.reqThreshold - 1){
         return confirmTrackandAddToPlaylist (guestObject)
@@ -108,6 +108,9 @@ function searchForNewRequest (guestObject){
     spotifyGuestTools.searchSpotify (guestObject)
     .then (function(guestObject){
       return databaseTrackTools.incrementOrAddSongInDatabase (guestObject)
+    })
+    .then (function (guestObject){
+      return databaseHostTools.verifyExplicitFilter (guestObject)
     })
     .then (function (guestObject){
       return spotifyGuestTools.checkForPreviousRequests (guestObject)

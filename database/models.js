@@ -22,8 +22,9 @@ var track = mongoose.Schema({
   artist        : String,
   numRequests		: { type: Number, default: 0 },
   timePlayed		: Number,
-  addedPlaylist  : { type: Boolean, defauult: false},
-  foundAmount   : { type: Number, default: 0 }
+  addedPlaylist : { type: Boolean, defauult: false},
+  foundAmount   : { type: Number, default: 0 },
+  explicit      : Boolean
 })
 
 var host = mongoose.Schema({
@@ -43,7 +44,7 @@ var Track = mongoose.model('Track', track);
 var Host  = mongoose.model('Host', host);
 
 module.exports = {
-  Guest: Guest,
-  Track: Track,
-  Host: Host
+  Guest : Guest,
+  Track : Track,
+  Host  : Host
 }
