@@ -40,7 +40,9 @@ function HandleIncomingMessage (req, res, db){
   })
   .catch (function (rejectMessage){
     if (rejectMessage.stack){
-      console.log (rejectMessage.stack)  
+      console.log (rejectMessage.stack)
+      resp.message (addResponse.error())
+      res.end(resp.toString())
     }
     console.log (rejectMessage)
     resp.message (rejectMessage)
@@ -110,7 +112,7 @@ function searchForNewRequest (guestObject){
       return databaseTrackTools.incrementOrAddSongInDatabase (guestObject)
     })
     .then (function (guestObject){
-      return databaseHostTools.verifyExplicitFilter (guestObject)
+      return databaseHostTools.verifyExplicitFiltere (guestObject)
     })
     .then (function (guestObject){
       return spotifyGuestTools.checkForPreviousRequests (guestObject)
