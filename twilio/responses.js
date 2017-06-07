@@ -37,6 +37,10 @@ function askToConfirm (guestObject){
   return ('We found: ' +guestObject.track.name+ ', by: ' +guestObject.track.artist+ '. This Track has ' +guestObject.track.numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
 }
 
+function explicit (title, artist){
+  return ('We found: ' +title+ ', by: ' +artist+ '. This track cannot be added to the playlist as it is explicit and the host does not allow that')
+}
+
 module.exports = {
   error                                 : error,
   notGuest                              : notGuest,
@@ -48,5 +52,6 @@ module.exports = {
   welcome                               : welcome,
   alreadyAdded                          : alreadyAdded,
   alreadyRequested                      : alreadyRequested,
-  askToConfirm                          : askToConfirm
+  askToConfirm                          : askToConfirm,
+  explicit                              : explicit
 }
