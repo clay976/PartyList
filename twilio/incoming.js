@@ -114,6 +114,9 @@ function searchForNewRequest (guestObject){
     .then (function (guestObject){
       return databaseHostTools.verifyExplicitFilter (guestObject)
     })
+    //.then (function (guestObject){
+      //return databaseHostTools.verifyYearFilter (guestObject)
+    //})
     .then (function (guestObject){
       return spotifyGuestTools.checkForPreviousRequests (guestObject)
     })

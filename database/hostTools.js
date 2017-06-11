@@ -65,10 +65,21 @@ function verifyExplicitFilter (guestObject) {
   })
 }
 
+function verifyYearFilter (guestObject) {
+  return new Promise (function (fulfill, reject){
+    if (!guestObject.host.explicit && guestObject.track.explicit){
+      reject (addResponse.explicit(guestObject.track.name, guestObject.track.artist))
+    }else{
+      fulfill (guestObject)
+    }
+  })
+}
+
 module.exports = {
   validateHost					: validateHost,
   spotifyApi						: spotifyApi,
   searchDatabaseForHost : searchDatabaseForHost,
   explicitFilter        : explicitFilter,
-  verifyExplicitFilter  : verifyExplicitFilter
+  verifyExplicitFilter  : verifyExplicitFilter,
+  verifyYearFilter      : verifyYearFilter
 }
