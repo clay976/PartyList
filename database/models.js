@@ -38,7 +38,7 @@ var host = mongoose.Schema({
   homePage      : String,
   explicit      : { type: Boolean, default: true},
   minYear       : { type: Number, default: 0},
-  maxYear       : { type: Number, default: 10000},å
+  maxYear       : { type: Number, default: 10000},
   reqThreshold  : { type: Number, default: 2} 
 })
 
