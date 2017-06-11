@@ -9,9 +9,9 @@ function searchSpotify (guestObject){
     databaseHostTools.spotifyApi.searchTracks (query, { limit : 1 })//search spotify for a track based on the message we got from the
     .then (function (spotifyTrack){
       if (spotifyTrack.body.tracks.total != 0){ //we found a track on spotify matching the guest message)
-        console.log (spotifyTrack.body.tracks.items[0].album)
         guestObject.track = {
           'trackID'     : spotifyTrack.body.tracks.items[0].id,
+          'albumID'     : spotifyTrack.body.tracks.items[0].album.id,
           'name'        : spotifyTrack.body.tracks.items[0].name,
           'artist'      : spotifyTrack.body.tracks.items[0].artists[0].name,
           'numRequests' : 0,

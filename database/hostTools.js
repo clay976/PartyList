@@ -67,7 +67,7 @@ function verifyExplicitFilter (guestObject) {
 
 function verifyYearFilter (guestObject) {
   return new Promise (function (fulfill, reject){
-    spotifyApi.getAlbum (guestObject.albumID)
+    spotifyApi.getAlbum (guestObject.track.albumID)
     .then (function (album){
       console.log (album)
       fulfill (guestObject)
