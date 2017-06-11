@@ -39,11 +39,11 @@ function Track (host, TrackID, name, artist, exp){
 
 function guestConfirm(){
   return {
-    $inc							: { 
-    	numRequests			: -1
+    $inc             : { 
+    	numRequests    : -1
     },
-    $set							: { 
-    	"currentTrack"	: ""
+    $set						 : { 
+    	"currentTrack" : ""
     }
   }
 }

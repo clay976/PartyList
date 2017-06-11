@@ -1,17 +1,17 @@
-var JSONtemplate = require ('./JSONtemps')
-var model = require ('./models')
+var JSONtemplate    = require ('./JSONtemps')
+var model           = require ('./models')
 var hostAcountTools = require ('./hostTools')
-var response = require ('../twilio/responses')
+var response        = require ('../twilio/responses')
 
 //node modules
-var twilio = require('twilio')
-var sid = 'AC85573f40ef0c3fb0c5aa58477f61b02e'
-var atoken = 'fcea26b2b0ae541d904ba23e12e2c499'
-var client = require('twilio/lib')(sid, atoken);
+var twilio          = require('twilio')
+var sid             = 'AC85573f40ef0c3fb0c5aa58477f61b02e'
+var atoken          = 'fcea26b2b0ae541d904ba23e12e2c499'
+var client          = require('twilio/lib')(sid, atoken);
 
 function addManyGuest (req, res){
-  var body = JSON.parse(req)
-  var nums = body.guestNums
+  var body  = JSON.parse(req)
+  var nums  = body.guestNums
   var count = nums.length
   for (var i = 0; i < count; i++) {
     addGuest (res, db, body.host, nums[i])
@@ -19,11 +19,11 @@ function addManyGuest (req, res){
 }
 
 function addGuest (req, res){
-  var guestNum = req.body.guestNum
-  var hostID = req.body.hostID
-  var guestQuery = {'phoneNum': '+1' +guestNum}
-  var infoToInsert = JSONtemplate.Guest (hostID, '+1' +guestNum)
-  var hostInfo = hostAcountTools.validateHost (hostID)
+  var guestNum      = req.body.guestNum
+  var hostID        = req.body.hostID
+  var guestQuery    = {'phoneNum': '+1' +guestNum}
+  var infoToInsert  = JSONtemplate.Guest (hostID, '+1' +guestNum)
+  var hostInfo      = hostAcountTools.validateHost (hostID)
   
   hostInfo
   .then (validateRequest(req))

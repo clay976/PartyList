@@ -1,10 +1,9 @@
-var databaseHostTools = require ('../../database/hostTools')
-var databaseGuestTools = require ('../../database/guestTools')
-var addResponse     = require ('../../twilio/responses')
+var databaseHostTools   = require ('../../database/hostTools')
+var databaseGuestTools  = require ('../../database/guestTools')
+var addResponse         = require ('../../twilio/responses')
 
 function searchSpotify (guestObject){
   var query = guestObject.guest.lastMessage
-
   return new Promise (function (fulfill, reject){
     var error = 'error searching spotify for song, please try again'
     databaseHostTools.spotifyApi.searchTracks (query, { limit : 1 })//search spotify for a track based on the message we got from the

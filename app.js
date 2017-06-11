@@ -1,28 +1,27 @@
 //node modules
-var express = require('express')
+var express      = require('express')
 var cookieParser = require('cookie-parser')
-var bodyParser = require('body-parser')
-var querystring = require('querystring')
+var bodyParser   = require('body-parser')
+var querystring  = require('querystring')
 
 //Spotify Tools
-var spotifyAccountTools = require ('./spotify/account/tools')
-var spotifyPlaylistTools = require ('./spotify/playlist/tools')
-var spotifyAccountTemplate = require ('./spotify/account/JSONtemps')
+var spotifyAccountTools     = require ('./spotify/account/tools')
+var spotifyPlaylistTools    = require ('./spotify/playlist/tools')
+var spotifyAccountTemplate  = require ('./spotify/account/JSONtemps')
 
 //Messagign Tools
 var twilioIncoming = require ('./twilio/incoming')
 
 //Database Tools
-var JSONtemplate = require ('./database/JSONtemps')
+var JSONtemplate      = require ('./database/JSONtemps')
 var databaseHostTools = require ('./database/hostTools')
-var removeList = require ('./database/remove')
-var guestTools = require ('./database/guestTools')
-var model = require ('./database/models')
+var guestTools        = require ('./database/guestTools')
+var model             = require ('./database/models')
 
 //database variable
-var MongoClient = require('mongodb').MongoClient
-var mongoose = require("mongoose");
-var mongoUrl = 'mongodb://localhost:27017/party'
+var MongoClient  = require('mongodb').MongoClient
+var mongoose     = require("mongoose");
+var mongoUrl     = 'mongodb://localhost:27017/party'
 mongoose.Promise = global.Promise;
 
 //app declaration and uses

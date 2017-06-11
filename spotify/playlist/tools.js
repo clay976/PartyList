@@ -1,7 +1,7 @@
 //my modules
-var hostAcountTools = require ('../../database/hostTools')
-var playlistTemplate = require ('./JSONtemps')
-var model = require ('../../database/models')
+var hostAcountTools   = require ('../../database/hostTools')
+var playlistTemplate  = require ('./JSONtemps')
+var model             = require ('../../database/models')
 
 //TODO: add comments
 function createPlaylist (req, res, db){
@@ -82,7 +82,6 @@ function setSpecificPlaylist (req, res, db){
 
 //This is the request threshold that will get a song added to the playlist, set by the host.
  function setRequestThreshold (req, res){
-  console.log (req.body)
   model.Host.findOneAndUpdate({ 'hostID' : req.body.hostID }, { $set: {'reqThreshold' : req.body.requests }}).exec()
   .then (function (update){
     res.status(200).json ('number of requests to add a song to a playlist has been set to ' +req.body.requests+ '!')
@@ -141,8 +140,6 @@ function addTracksToPlaylist (guestObject){
       fulfill (guestObject)
     })
     .catch (function (err){
-      console.log (err)
-      console.log (err.stack)
       reject (err)
     })
   })
