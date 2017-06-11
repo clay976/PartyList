@@ -36,7 +36,6 @@ function incrementOrAddSongInDatabase (guestObject){
     var query = {$and: [{ 'trackID' : guestObject.track.trackID}, {'hostID' : guestObject.guest.hostID}]}
     model.Track.findOne (query)
     .then (function (track){
-      console.log (track)
       if (track) {
         var update = {$inc: { foundAmount: 1}}
         return model.Track.findOneAndUpdate(query, update).exec()
