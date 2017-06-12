@@ -59,7 +59,7 @@ function minYear (req, res){
   .then (function (hostInfo){
     model.Host.findOneAndUpdate({ 'hostID' : hostInfo.hostID }, { $set: {'minYear' : req.body.year}}).exec()
   })
-  .then (res.status(200).json ('explicit filter successfully set to ' +req.body.explicit))
+  .then (res.status(200).json ('minimum year of songs set to ' +req.body.year))
   .catch (function(err) {
     res.status(err.status).json('failed to set explicit filter, ' +err)
     //fixed option: filter out genres next: go to sleep with girlfriend (all actively playing paties: katya), requested songs: sleep, songs requested: sleep
@@ -71,7 +71,7 @@ function maxYear (req, res){
   .then (function (hostInfo){
     model.Host.findOneAndUpdate({ 'hostID' : hostInfo.hostID }, { $set: {'maxYear' : req.body.year}}).exec()
   })
-  .then (res.status(200).json ('explicit filter successfully set to ' +req.body.explicit))
+  .then (res.status(200).json ('maximum year of songs set to ' +req.body.year))
   .catch (function(err) {
     res.status(err.status).json('failed to set explicit filter, ' +err)
     //fixed option: filter out genres next: go to sleep with girlfriend (all actively playing paties: katya), requested songs: sleep, songs requested: sleep
@@ -90,6 +90,8 @@ function verifyExplicitFilter (guestObject) {
 
 function verifyYearFilter (guestObject) {
   return new Promise (function (fulfill, reject){
+    console.log (guestObject.host)
+    console.log (guestObject.track)
     fulfill (guestObject)
   })
 }
