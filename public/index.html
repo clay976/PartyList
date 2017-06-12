@@ -81,16 +81,16 @@
       </form>
       <form id="input" action="/playlist/spotify/latest" method="POST">
         <input id='hostID4' type='text' name ='hostID'>
-        <input type="submit" value="find latest spotify playlist">
+        <input type="submit" value="find playlist">
       </form>
       <form id="input" action="/playlist/spotify/getAll" method="POST">
         <input id='hostID5' type='text' name ='hostID'>
-        <input type="submit" value="retreive all spotify playlists in a list">
+        <input type="submit" value="retreive all playlists">
       </form>
       <form id="input" action="/playlist/spotify/set" method="POST">
         <input id='hostID6' type='text' name ='hostID'>
         <input type="text" name="playlistID" placeholder="playlist ID">
-        <input type="submit" value="set specific spotify playlist">
+        <input type="submit" value="set playlist">
       </form>
       <form id="input" action="/playlist/requestThreshold" method="POST">
         <input id='hostID10' type='text' name ='hostID'>
@@ -98,14 +98,14 @@
         <input type="submit" value="set request threshold">
       </form>
       <form id="input" action="/playlist/minYear" method="POST">
-        <input id='hostID6' type='text' name ='hostID'>
+        <input id='hostID11' type='text' name ='hostID'>
         <input type="text" name="year" placeholder="1990">
-        <input type="submit" value="set specific spotify playlist">
+        <input type="submit" value="set min">
       </form>
       <form id="input" action="/playlist/maxYear" method="POST">
-        <input id='hostID6' type='text' name ='hostID'>
+        <input id='hostID12' type='text' name ='hostID'>
         <input type="text" name="year" placeholder="1999">
-        <input type="submit" value="set specific spotify playlist">
+        <input type="submit" value="set max">
       </form>
       </div>
     </div>
@@ -183,6 +183,8 @@
       document.getElementById('hostID8').value = params.hostID;
       document.getElementById('hostID9').value = params.hostID;
       document.getElementById('hostID10').value = params.hostID;
+      document.getElementById('hostID11').value = params.hostID;
+      document.getElementById('hostID12').value = params.hostID;
 
     } else {
       document.getElementById('login').style.visibility = 'visible'
