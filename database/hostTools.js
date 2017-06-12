@@ -90,9 +90,12 @@ function verifyExplicitFilter (guestObject) {
 
 function verifyYearFilter (guestObject) {
   return new Promise (function (fulfill, reject){
-    console.log (guestObject.host)
-    console.log (guestObject.track)
-    fulfill (guestObject)
+    console.log ('min ' +guestObject.host.minYear+ ' is less than ' +guestObject.track.yearReleased+ ' which is less than ' +guestObject.host.maxYear)
+    if ((guestObject.host.minYear <= guestObject.track.yearReleased) & (guestObject.track.yearReleased <= guestObject.host.maxYear)){
+      fulfill (guestObject)
+    }else{
+      reject (addResponse.yearFilter(guestObject.track.name, guestObject.track.artist, guestObject.host.minYear, guestObject.track.yearReleased, guestObject.host.maxYear))
+    }
   })
 }
 

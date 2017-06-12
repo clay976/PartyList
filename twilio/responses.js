@@ -41,6 +41,10 @@ function explicit (title, artist){
   return ('We found: ' +title+ ', by: ' +artist+ '. This track cannot be added to the playlist as it is explicit and the host does not allow that')
 }
 
+function yearFilter (title, artist, min, year, max){
+  return ('We found: ' +title+ ', by: ' +artist+ '. This track cannot be added to the playlist as it is was released in ' +year+ '. Tracks must have been released between ' +min+ ' and ' +max+ '.')
+}
+
 module.exports = {
   errorMessage                          : errorMessage,
   notGuest                              : notGuest,
@@ -53,5 +57,6 @@ module.exports = {
   alreadyAdded                          : alreadyAdded,
   alreadyRequested                      : alreadyRequested,
   askToConfirm                          : askToConfirm,
-  explicit                              : explicit
+  explicit                              : explicit,
+  yearFilter                            : yearFilter
 }
