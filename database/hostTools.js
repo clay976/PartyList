@@ -42,15 +42,38 @@ function searchDatabaseForHost (guestObject){
 }
 
 function explicitFilter (req, res){
-  console.log (req.body)
   validateHost (req.body.hostID)
   .then (function (hostInfo){
     console.log (hostInfo)
     model.Host.findOneAndUpdate({ 'hostID' : hostInfo.hostID }, { $set: {'explicit' : req.body.explicit}}).exec()
   })
-  .then (res.status(200).json ('explicit filter successfully set to ' +req.body.explicit))  
+  .then (res.status(200).json ('explicit filter successfully set to ' +req.body.explicit))
   .catch (function(err) {
-    res.status(err.status).json('failed to set explicit filter, ' +err) 
+    res.status(err.status).json('failed to set explicit filter, ' +err)
+    //fixed option: filter out genres next: go to sleep with girlfriend (all actively playing paties: katya), requested songs: sleep, songs requested: sleep
+  })
+}
+
+function minYear (req, res){
+  validateHost (req.body.hostID)
+  .then (function (hostInfo){
+    model.Host.findOneAndUpdate({ 'hostID' : hostInfo.hostID }, { $set: {'minYear' : req.body.year}}).exec()
+  })
+  .then (res.status(200).json ('explicit filter successfully set to ' +req.body.explicit))
+  .catch (function(err) {
+    res.status(err.status).json('failed to set explicit filter, ' +err)
+    //fixed option: filter out genres next: go to sleep with girlfriend (all actively playing paties: katya), requested songs: sleep, songs requested: sleep
+  })
+}
+
+function maxYear (req, res){
+  validateHost (req.body.hostID)
+  .then (function (hostInfo){
+    model.Host.findOneAndUpdate({ 'hostID' : hostInfo.hostID }, { $set: {'maxYear' : req.body.year}}).exec()
+  })
+  .then (res.status(200).json ('explicit filter successfully set to ' +req.body.explicit))
+  .catch (function(err) {
+    res.status(err.status).json('failed to set explicit filter, ' +err)
     //fixed option: filter out genres next: go to sleep with girlfriend (all actively playing paties: katya), requested songs: sleep, songs requested: sleep
   })
 }
@@ -67,7 +90,6 @@ function verifyExplicitFilter (guestObject) {
 
 function verifyYearFilter (guestObject) {
   return new Promise (function (fulfill, reject){
-    console.log (guestObject.track)
     fulfill (guestObject)
   })
 }
@@ -78,5 +100,7 @@ module.exports = {
   searchDatabaseForHost : searchDatabaseForHost,
   explicitFilter        : explicitFilter,
   verifyExplicitFilter  : verifyExplicitFilter,
-  verifyYearFilter      : verifyYearFilter
+  verifyYearFilter      : verifyYearFilter,
+  minYear               : minYear,
+  maxYear               : maxYear
 }

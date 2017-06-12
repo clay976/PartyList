@@ -44,10 +44,11 @@ function HandleIncomingMessage (req, res, db){
       console.log (rejectMessage.stack)
       resp.message (addResponse.errorMessage)
       res.end(resp.toString())
+    }else{
+      console.log (rejectMessage)
+      resp.message (rejectMessage)
+      res.end(resp.toString())
     }
-    console.log (rejectMessage)
-    resp.message (rejectMessage)
-    res.end(resp.toString())
   })
 }
 

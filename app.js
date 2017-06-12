@@ -154,6 +154,31 @@ ________________________________________________________________________________
   })
 
 /*
+Set wether songs added can be explicit or not.
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.post('/playlist/minYear', function (req, res){
+    databaseHostTools.minYear (req, res)
+  })
+
+/*
+Set wether songs added can be explicit or not.
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________*/
+  app.post('/playlist/maxYear', function (req, res){
+    databaseHostTools.maxYear (req, res)
+  })
+
+
+/*
 remove every guest that is associated with this user
 ________________________________________________________________________________________
 TO BE SENT:
