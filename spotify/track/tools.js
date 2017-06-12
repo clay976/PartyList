@@ -4,8 +4,9 @@ function obtainYearReleased (guestObject){
 	return new Promise (function (fulfill, reject){
 		hostAcountTools.spotifyApi.getAlbum (guestObject.track.albumID)
 		.then (function(album){
-			console.log (album.body.release_date)
-			guestObject.track.yearReleased = album.body.release_date
+			var date = album.body.release_date.substring(0, 3);
+			console.log (date)
+			guestObject.track.yearReleased = date
 			fulfill (guestObject)
 		})
 	})
