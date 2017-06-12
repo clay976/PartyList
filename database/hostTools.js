@@ -68,12 +68,7 @@ function verifyExplicitFilter (guestObject) {
 function verifyYearFilter (guestObject) {
   return new Promise (function (fulfill, reject){
     console.log (guestObject.track)
-    .then (function (album){
-      fulfill (guestObject)
-    })
-    .catch (function (err){
-      console.log (err)
-    })
+    fulfill (guestObject)
   })
 }
 
