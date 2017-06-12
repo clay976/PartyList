@@ -40,7 +40,7 @@ function incrementOrAddSongInDatabase (guestObject){
         var update = {$inc: { foundAmount: 1}}
         return model.Track.findOneAndUpdate(query, update).exec()
       }else{
-        var update  = JSONtemplate.Track (guestObject.guest.hostID, guestObject.track.trackID, guestObject.track.name, guestObject.track.artist, guestObject.track.explicit)
+        var update  = JSONtemplate.Track (guestObject.guest.hostID, guestObject.track.trackID, guestObject.track.name, guestObject.track.artist, guestObject.track.explicit, guestObject.track.yearReleased)
         return model.Track.findOneAndUpdate(query, update, {upsert : true}).exec()
       }
     })

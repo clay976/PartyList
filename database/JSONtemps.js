@@ -23,7 +23,7 @@ function Guest (host, number){
   }
 }
 
-function Track (host, TrackID, name, artist, exp){
+function Track (host, TrackID, name, artist, exp, year){
 	return {
 		'hostID'				: host,
 	  'trackID'				: TrackID,
@@ -33,7 +33,8 @@ function Track (host, TrackID, name, artist, exp){
 	  'timePlayed'		: 0,
     'addedPlaylist' : false,
 	  'foundAmount' 	: 1,
-    'explicit'      : exp
+    'explicit'      : exp,
+    'yearReleased'  : year
 	}
 }
 

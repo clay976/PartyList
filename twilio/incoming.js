@@ -12,6 +12,7 @@ var databaseTrackTools    = require ('../database/trackTools')
 //spotify modules
 var spotifyGuestTools     = require ('../spotify/guest/tools')
 var spotifyPlaylistTools  = require ('../spotify/playlist/tools')
+var spotifyTrackTools     = require ('../spotify/track/tools')
 
 //JSON templates
 var addResponse           = require ('./responses')
@@ -108,6 +109,9 @@ function confirmTrackAndIncrementRequests (guestObject){
 function searchForNewRequest (guestObject){
   return new Promise (function (fulfill, reject){
     spotifyGuestTools.searchSpotify (guestObject)
+    .then (function (guestObject){
+      return spotifyTrackTools.obtainYearReleased (guestObject)
+    })
     .then (function(guestObject){
       return databaseTrackTools.incrementOrAddSongInDatabase (guestObject)
     })
