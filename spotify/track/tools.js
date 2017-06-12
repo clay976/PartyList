@@ -11,6 +11,6 @@ function obtainYearReleased (guestObject){
 	})
 }
 
-module.exports {
+module.exports = {
 	obtainYearReleased : obtainYearReleased
 }
