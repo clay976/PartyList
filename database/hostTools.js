@@ -42,15 +42,38 @@ function searchDatabaseForHost (guestObject){
 }
 
 function explicitFilter (req, res){
-  console.log (req.body)
   validateHost (req.body.hostID)
   .then (function (hostInfo){
     console.log (hostInfo)
     model.Host.findOneAndUpdate({ 'hostID' : hostInfo.hostID }, { $set: {'explicit' : req.body.explicit}}).exec()
   })
-  .then (res.status(200).json ('explicit filter successfully set to ' +req.body.explicit))  
+  .then (res.status(200).json ('explicit filter successfully set to ' +req.body.explicit))
   .catch (function(err) {
-    res.status(err.status).json('failed to set explicit filter, ' +err) 
+    res.status(err.status).json('failed to set explicit filter, ' +err)
+    //fixed option: filter out genres next: go to sleep with girlfriend (all actively playing paties: katya), requested songs: sleep, songs requested: sleep
+  })
+}
+
+function minYear (req, res){
+  validateHost (req.body.hostID)
+  .then (function (hostInfo){
+    model.Host.findOneAndUpdate({ 'hostID' : hostInfo.hostID }, { $set: {'minYear' : req.body.year}}).exec()
+  })
+  .then (res.status(200).json ('minimum year of songs set to ' +req.body.year))
+  .catch (function(err) {
+    res.status(err.status).json('failed to set explicit filter, ' +err)
+    //fixed option: filter out genres next: go to sleep with girlfriend (all actively playing paties: katya), requested songs: sleep, songs requested: sleep
+  })
+}
+
+function maxYear (req, res){
+  validateHost (req.body.hostID)
+  .then (function (hostInfo){
+    model.Host.findOneAndUpdate({ 'hostID' : hostInfo.hostID }, { $set: {'maxYear' : req.body.year}}).exec()
+  })
+  .then (res.status(200).json ('maximum year of songs set to ' +req.body.year))
+  .catch (function(err) {
+    res.status(err.status).json('failed to set explicit filter, ' +err)
     //fixed option: filter out genres next: go to sleep with girlfriend (all actively playing paties: katya), requested songs: sleep, songs requested: sleep
   })
 }
@@ -65,10 +88,24 @@ function verifyExplicitFilter (guestObject) {
   })
 }
 
+function verifyYearFilter (guestObject) {
+  return new Promise (function (fulfill, reject){
+    console.log ('min ' +guestObject.host.minYear+ ' is less than ' +guestObject.track.yearReleased+ ' which is less than ' +guestObject.host.maxYear)
+    if ((guestObject.host.minYear <= guestObject.track.yearReleased) & (guestObject.track.yearReleased <= guestObject.host.maxYear)){
+      fulfill (guestObject)
+    }else{
+      reject (addResponse.yearFilter(guestObject.track.name, guestObject.track.artist, guestObject.host.minYear, guestObject.track.yearReleased, guestObject.host.maxYear))
+    }
+  })
+}
+
 module.exports = {
   validateHost					: validateHost,
   spotifyApi						: spotifyApi,
   searchDatabaseForHost : searchDatabaseForHost,
   explicitFilter        : explicitFilter,
-  verifyExplicitFilter  : verifyExplicitFilter
+  verifyExplicitFilter  : verifyExplicitFilter,
+  verifyYearFilter      : verifyYearFilter,
+  minYear               : minYear,
+  maxYear               : maxYear
 }

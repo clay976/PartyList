@@ -12,6 +12,7 @@ var databaseTrackTools    = require ('../database/trackTools')
 //spotify modules
 var spotifyGuestTools     = require ('../spotify/guest/tools')
 var spotifyPlaylistTools  = require ('../spotify/playlist/tools')
+var spotifyTrackTools     = require ('../spotify/track/tools')
 
 //JSON templates
 var addResponse           = require ('./responses')
@@ -43,10 +44,11 @@ function HandleIncomingMessage (req, res, db){
       console.log (rejectMessage.stack)
       resp.message (addResponse.errorMessage)
       res.end(resp.toString())
+    }else{
+      console.log (rejectMessage)
+      resp.message (rejectMessage)
+      res.end(resp.toString())
     }
-    console.log (rejectMessage)
-    resp.message (rejectMessage)
-    res.end(resp.toString())
   })
 }
 
@@ -108,11 +110,17 @@ function confirmTrackAndIncrementRequests (guestObject){
 function searchForNewRequest (guestObject){
   return new Promise (function (fulfill, reject){
     spotifyGuestTools.searchSpotify (guestObject)
+    .then (function (guestObject){
+      return spotifyTrackTools.obtainYearReleased (guestObject)
+    })
     .then (function(guestObject){
       return databaseTrackTools.incrementOrAddSongInDatabase (guestObject)
     })
     .then (function (guestObject){
       return databaseHostTools.verifyExplicitFilter (guestObject)
+    })
+    .then (function (guestObject){
+      return databaseHostTools.verifyYearFilter (guestObject)
     })
     .then (function (guestObject){
       return spotifyGuestTools.checkForPreviousRequests (guestObject)

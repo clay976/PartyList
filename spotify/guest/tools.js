@@ -11,6 +11,7 @@ function searchSpotify (guestObject){
       if (spotifyTrack.body.tracks.total != 0){ //we found a track on spotify matching the guest message)
         guestObject.track = {
           'trackID'     : spotifyTrack.body.tracks.items[0].id,
+          'albumID'     : spotifyTrack.body.tracks.items[0].album.id,
           'name'        : spotifyTrack.body.tracks.items[0].name,
           'artist'      : spotifyTrack.body.tracks.items[0].artists[0].name,
           'numRequests' : 0,

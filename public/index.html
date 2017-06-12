@@ -9,7 +9,7 @@
     <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
   </head>
 
-<!-- Side Navigation -->
+<!-- Side Navigation 
 <nav class="w3-sidenav w3-white w3-card-2 w3-animate-left" style="display:none" id="mySidenav">
   <h1 class="w3-xxxlarge w3-text-teal">Side Navigation</h1>
   <a href="javascript:void(0)" onclick="w3_close()" class="w3-closenav w3-xxxlarge w3-text-theme">Close <i class="fa fa-remove"></i></a>
@@ -18,7 +18,7 @@
   <a href="javascript:void(0)">Link 3</a>
   <a href="javascript:void(0)">Link 4</a>
   <a href="javascript:void(0)">Link 5</a>
-</nav>
+</nav> -->
   <div id="login">
     <!-- Header -->
     <header class="w3-container w3-theme w3-padding" id="myHeader">
@@ -57,7 +57,7 @@
     </div>
     </div>
   </div>
-
+  <!-- 
   <div id="loggedin">
     <div class="w3-third">
     <div class="w3-row-padding w3-center w3-margin-top">
@@ -81,21 +81,31 @@
       </form>
       <form id="input" action="/playlist/spotify/latest" method="POST">
         <input id='hostID4' type='text' name ='hostID'>
-        <input type="submit" value="find latest spotify playlist">
+        <input type="submit" value="find playlist">
       </form>
       <form id="input" action="/playlist/spotify/getAll" method="POST">
         <input id='hostID5' type='text' name ='hostID'>
-        <input type="submit" value="retreive all spotify playlists in a list">
+        <input type="submit" value="retreive all playlists">
       </form>
       <form id="input" action="/playlist/spotify/set" method="POST">
         <input id='hostID6' type='text' name ='hostID'>
         <input type="text" name="playlistID" placeholder="playlist ID">
-        <input type="submit" value="set specific spotify playlist">
+        <input type="submit" value="set playlist">
       </form>
       <form id="input" action="/playlist/requestThreshold" method="POST">
         <input id='hostID10' type='text' name ='hostID'>
         <input type="number" name="requests" placeholder="Requests to add a song to a playlist">
         <input type="submit" value="set request threshold">
+      </form>
+      <form id="input" action="/playlist/minYear" method="POST">
+        <input id='hostID11' type='text' name ='hostID'>
+        <input type="text" name="year" placeholder="1990">
+        <input type="submit" value="set min">
+      </form>
+      <form id="input" action="/playlist/maxYear" method="POST">
+        <input id='hostID12' type='text' name ='hostID'>
+        <input type="text" name="year" placeholder="1999">
+        <input type="submit" value="set max">
       </form>
       </div>
     </div>
@@ -136,7 +146,7 @@
     </div>
     </div>
   </div>
-
+  
 <script>
 
   document.getElementById('login').style.visibility = 'visible'
@@ -173,6 +183,8 @@
       document.getElementById('hostID8').value = params.hostID;
       document.getElementById('hostID9').value = params.hostID;
       document.getElementById('hostID10').value = params.hostID;
+      document.getElementById('hostID11').value = params.hostID;
+      document.getElementById('hostID12').value = params.hostID;
 
     } else {
       document.getElementById('login').style.visibility = 'visible'
@@ -182,3 +194,4 @@
 
 
 </script>
+-->

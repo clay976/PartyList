@@ -24,7 +24,8 @@ var track = mongoose.Schema({
   timePlayed		: Number,
   addedPlaylist : { type: Boolean, defauult: false},
   foundAmount   : { type: Number, default: 0 },
-  explicit      : Boolean
+  explicit      : Boolean,
+  yearReleased  : Number
 })
 
 var host = mongoose.Schema({
@@ -36,6 +37,8 @@ var host = mongoose.Schema({
   playlistName  : { type: String, default: '' },
   homePage      : String,
   explicit      : { type: Boolean, default: true},
+  minYear       : Number,
+  maxYear       : Number,
   reqThreshold  : { type: Number, default: 2} 
 })
 
