@@ -99,8 +99,6 @@
 </div>
 
 <script>
-
-  document.getElementById('login').style.visibility = 'visible'
   /**
    * Obtains parameters from the hash of the URL
    * @return Object
@@ -122,8 +120,6 @@
     alert('There was an error during the authentication')
   } else {
     if (access_token) {
-      document.getElementById('login').style.visibility = 'hidden'
-      document.getElementById('loggedin').style.visibility = 'visible'
       document.getElementById('hostID1').value = params.hostID;
       document.getElementById('hostID2').value = params.hostID;
       document.getElementById('hostID3').value = params.hostID;
@@ -136,10 +132,6 @@
       document.getElementById('hostID10').value = params.hostID;
       document.getElementById('hostID11').value = params.hostID;
       document.getElementById('hostID12').value = params.hostID;
-
-    } else {
-      document.getElementById('login').style.visibility = 'visible'
-      document.getElementById('loggedin').style.visibility = 'hidden'
     }
   }
 </script>
