@@ -24,7 +24,7 @@ function createPlaylist (req, res, db){
 }
 
 //TODO: add comments
- function setLatestPlaylist (req, res, db, host){
+ function setLatestPlaylist (res, host){
   hostAcountTools.validateHost (host)
   .then (function (hostInfo){
     return hostAcountTools.spotifyApi.getUserPlaylists(hostInfo.hostID)

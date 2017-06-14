@@ -196,25 +196,25 @@ function getHashParams() {
   return hashParams
 }
 var params = getHashParams()
-var access_token = params.access_token,
-    refresh_token = params.refresh_token,
+var hostID = params.hostID,
     error = params.error
+    
 if (error) {
   alert('There was an error during the authentication')
 } else {
-  if (access_token) {
-    document.getElementById('hostID1').value = params.hostID;
-    document.getElementById('hostID2').value = params.hostID;
-    document.getElementById('hostID3').value = params.hostID;
-    document.getElementById('hostID4').value = params.hostID;
-    document.getElementById('hostID5').value = params.hostID;
-    document.getElementById('hostID6').value = params.hostID;
-    document.getElementById('hostID7').value = params.hostID;
-    document.getElementById('hostID8').value = params.hostID;
-    document.getElementById('hostID9').value = params.hostID;
-    document.getElementById('hostID10').value = params.hostID;
-    document.getElementById('hostID11').value = params.hostID;
-    document.getElementById('hostID12').value = params.hostID;
+  if (hostID) {
+    document.getElementById('hostID1').value = hostID;
+    document.getElementById('hostID2').value = hostID;
+    document.getElementById('hostID3').value = hostID;
+    document.getElementById('hostID4').value = hostID;
+    document.getElementById('hostID5').value = hostID;
+    document.getElementById('hostID6').value = hostID;
+    document.getElementById('hostID7').value = hostID;
+    document.getElementById('hostID8').value = hostID;
+    document.getElementById('hostID9').value = hostID;
+    document.getElementById('hostID10').value = hostID;
+    document.getElementById('hostID11').value = hostID;
+    document.getElementById('hostID12').value = hostID;
   }
 }
 </script>

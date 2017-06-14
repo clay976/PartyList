@@ -27,8 +27,15 @@ function homepage (req, res) {
     return setTokensAndGetHostInfo(data)
   })
   .then (function (hostInfo){
-    var homePage = '/loggedIn.html#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':hostInfo.refresh_token,'hostID':hostInfo.spotifyReturn.body.id})
-    playlistTool.setLatestPlaylist (hostInfo.spotifyReturn.body.id)
+    return hostAcountTools.spotifyApi.getUserPlaylists(hostInfo.hostID)
+  })
+  .then (function(data){
+    console.log (data)
+    return playlistTemplate.userPlaylists (host, data.body.items, data.body.total)
+  })
+  .then (function (){
+    var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostInfo.spotifyReturn.body.id, 'playlistID': 'frwjnwrkj'})
+    
     model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, JSONtemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage), {upsert:true}).exec()
     return (homePage)
   })
@@ -45,6 +52,7 @@ function setTokensAndGetHostInfo (data) {
     spotifyApi.setAccessToken(data.body['access_token'])
     spotifyApi.getMe()
     .then (function (spotifyReturn) {
+      console.log (spotifyReturn)
       fulfill  ({ 
         "spotifyReturn" : spotifyReturn,
         "access_token"  : data.body['access_token'],

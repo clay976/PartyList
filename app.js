@@ -81,7 +81,7 @@ TO BE SENT: a JSON object in the body of the request
   }
 _______________________________________________________________________________________*/
   app.post('/playlist/spotify/latest', function (req, res){
-    spotifyPlaylistTools.setLatestPlaylist (req, res, db, req.body.hostID)
+    spotifyPlaylistTools.setLatestPlaylist (res, req.body.hostID)
   })
 
 /*
