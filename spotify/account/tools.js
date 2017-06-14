@@ -28,20 +28,12 @@ function homepage (req, res) {
     return setTokensAndGetHostInfo(data)
   })
   .then (function (hostInfo){
-    return { 
-      'hostID'    : spotifyReturn.body.id,
-      'playlists' : spotifyApi.getUserPlaylists(hostInfo.hostID)
-    }
+    return setPlaylistOnLogin (hostInfo)
   })
-  .then (function(data){
-    console.log (data.playlists.body.total)
-    return playlistTemplate.userPlaylists (data.hostID, data.playlists.body.items, data.playlists.body.total)
-  })
-  .then (function (playlists){
-    console.log (playlists)
-    var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostInfo.spotifyReturn.body.id, 'playlistID': 'frwjnwrkj'})
+  .then (function (hostInfo){
+    var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostInfo.host.id, 'playlistID': hostInfo.playlist.id})
     
-    model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, JSONtemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage), {upsert:true}).exec()
+    model.Host.findOneAndUpdate({'hostID': hostInfo.host.id}, JSONtemplate.Host (hostInfo.host.id, hostInfo.access_token, hostInfo.refresh_token, homePage, hostInfo.playlist.id, hostInfo.playlist.name), {upsert:true}).exec()
     return (homePage)
   })
   .then (function (homePage){
@@ -57,8 +49,9 @@ function setTokensAndGetHostInfo (data) {
     spotifyApi.setAccessToken(data.body['access_token'])
     spotifyApi.getMe()
     .then (function (spotifyReturn) {
+      console.log (spotifyReturn.body)
       fulfill  ({ 
-        "spotifyReturn" : spotifyReturn,
+        "host"          : spotifyReturn.body,
         "access_token"  : data.body['access_token'],
         "refresh_token" : data.body['refresh_token']
       })
@@ -68,6 +61,25 @@ function setTokensAndGetHostInfo (data) {
     })
   })
 }
+
+function setPlaylistOnLogin (hostInfo){
+  return new Promise (function (fulfill, reject){
+    spotifyApi.getUserPlaylists(hostInfo.host.id)
+    .then (function (data){
+      return playlistTemplate.userPlaylists (hostInfo.host.id, data.playlists.body.items, data.playlists.body.total)
+    })
+    .then (function (playlists){
+      console.log (playlists)
+    })
+    .then (function (){
+      return 
+    })
+    .catch (function (err){
+      reject (err)
+    })
+  })
+}
+
 
 //exports for external modules to use.
 module.exports = {
