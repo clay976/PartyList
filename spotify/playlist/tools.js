@@ -14,18 +14,15 @@ function createPlaylist (req, res, db){
     return (requestSpotifyPlaylistCreation(validatedInput))
   })     
   .then (function(createdPlaylist){
-    console.log (createdPlaylist)
     return setNewHomePage (createdPlaylist.hostID, createdPlaylist.playlistData.body['id'], createdPlaylist.playlistData.body['name'])
   })
   .then (function (update){
-    console.log (update)
     res.redirect (update.homepage)
+    res.alert ('playlist updated')
     return model.Host.findOneAndUpdate({ 'hostID' : update.hostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
   })
-  .then (function(update){
-    console.log (update)
-  })
   .catch (function(err) {
+    res.redirect (err.stack)
     res.status(400).json ('error creating playlist: '+ err)
   })
 }
