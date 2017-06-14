@@ -51,7 +51,6 @@ function setTokensAndGetHostInfo (data) {
     spotifyApi.setAccessToken(data.body['access_token'])
     spotifyApi.getMe()
     .then (function (spotifyReturn) {
-      console.log (spotifyReturn.body)
       fulfill  ({ 
         "host"          : spotifyReturn.body,
         "access_token"  : data.body['access_token'],
@@ -71,8 +70,7 @@ function setPlaylistOnLogin (hostInfo){
       return playlistTemplate.userPlaylists (hostInfo.host.id, playlists.body.items, playlists.body.total)
     })
     .then (function (playlists){
-      console.log (playlists [0])
-      hostInfo.playlist = playlists [0]
+      hostInfo.playlist = playlists[0]
       fulfill (hostInfo)
     })
     .catch (function (err){
