@@ -66,8 +66,9 @@ function setTokensAndGetHostInfo (data) {
 function setPlaylistOnLogin (hostInfo){
   return new Promise (function (fulfill, reject){
     spotifyApi.getUserPlaylists(hostInfo.host.id)
-    .then (function (data){
-      return playlistTemplate.userPlaylists (hostInfo.host.id, data.playlists.body.items, data.playlists.body.total)
+    .then (function (playlists){
+      console.log (playlists)
+      return playlistTemplate.userPlaylists (hostInfo.host.id, playlists.body.items, playlists.body.total)
     })
     .then (function (playlists){
       console.log (playlists)
