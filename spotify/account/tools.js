@@ -40,6 +40,7 @@ function homepage (req, res) {
     res.redirect (homePage)
   })
   .catch (function (err){
+    console.log (err.stack)
     return res.status(400).json ('error loggin in: '+err)
   })
 }
