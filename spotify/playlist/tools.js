@@ -13,10 +13,12 @@ function createPlaylist (req, res, db){
     return (requestSpotifyPlaylistCreation(validatedInput))
   })     
   .then (function(createdPlaylist){
-    return model.Host.findOneAndUpdate({ 'hostID' : createdPlaylist.HostID }, { $set: {'playlistID' : createdPlaylist.playlistData.body['id']}}).exec()
+    return setNewHomePage (createdPlaylist.HostID, createdPlaylist.playlistData.body['id'], createdPlaylist.playlistData.body['name'])
   })
-  .then (function (updated){
-    res.status(200).json ('playlist was created successfully')
+  .then (function (update){
+    console.log (update)
+    return model.Host.findOneAndUpdate({ 'hostID' : update.HostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
+    res.status(200).redirect (update.homepage)
   })
   .catch (function(err) {
     res.status(400).json ('error creating playlist: '+ err)
@@ -130,6 +132,18 @@ function requestSpotifyPlaylistCreation (data){
     .catch (function (err){
       reject ('spotify error: '+err)
     })
+  })
+}
+
+function setNewHomePage (hostID, playlistID, playlistName){
+  return new Promise (function (fulfill, reject){
+    var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostID, 'playlistID': playlistID})
+    return {
+      'hostID'        : hostID,
+      "playlistID"    : playlistID,
+      "playlistName"  : playlistName,
+      "homepage"      : homePage
+    }
   })
 }
 
