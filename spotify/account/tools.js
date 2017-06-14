@@ -15,6 +15,7 @@ var spotifyApi        = new SpotifyWebApi(credentials);
 
 //node modules
 var querystring       = require('querystring')
+var playlistTemplate  = require ('../playlist/JSONtemps')
 
 
 // makes a request to the spotify API to retrieve
@@ -30,7 +31,7 @@ function homepage (req, res) {
     return spotifyApi.getUserPlaylists(hostInfo.hostID)
   })
   .then (function(data){
-    console.log (data)
+    console.log (data.body.items)
     return playlistTemplate.userPlaylists (host, data.body.items, data.body.total)
   })
   .then (function (){
