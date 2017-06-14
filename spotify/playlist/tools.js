@@ -15,11 +15,11 @@ function createPlaylist (req, res, db){
   })     
   .then (function(createdPlaylist){
     console.log (createdPlaylist)
-    return setNewHomePage (createdPlaylist.HostID, createdPlaylist.playlistData.body['id'], createdPlaylist.playlistData.body['name'])
+    return setNewHomePage (createdPlaylist.hostID, createdPlaylist.playlistData.body['id'], createdPlaylist.playlistData.body['name'])
   })
   .then (function (update){
     console.log (update)
-    return model.Host.findOneAndUpdate({ 'hostID' : update.HostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
+    return model.Host.findOneAndUpdate({ 'hostID' : update.hostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
     res.status(200).redirect (update.homepage)
   })
   .catch (function(err) {
