@@ -137,6 +137,11 @@ function newSite() {
     document.getElementById('myIframe').src = sites
 }
 
+function newPlaylist() {
+    var sites = "https://open.spotify.com/embed?uri=spotify:user:" +params.hostID+ ":playlist:21TSvb5k8BblexCYD2oHJD"
+    document.getElementById('playlistiFrame').src = sites
+}
+
 // Tabs
 function openPlaylist(evt, cityName) {
   var i;
