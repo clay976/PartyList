@@ -9,7 +9,7 @@ function userPlaylists (host, playlists, length){
   }
   console.log ('done creating')
   console.log (playlistJSON)
-  playlistJSON = JSON.parse (playlistJSON + ']}')
+  playlistJSON = JSON.parse (playlistJSON + '{"name": "none", "id" : "none", "owner": "none"}]}')
   return (playlistJSON)
 }
 
