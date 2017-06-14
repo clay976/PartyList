@@ -176,62 +176,13 @@ pbtn.click();
 var gbtn = document.getElementsByClassName("guestbtn")[0];
 gbtn.click();
 
-// Accordions
-function myAccFunc(id) {
-    var x = document.getElementById(id);
-    if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-        x.previousElementSibling.className += " w3-dark-grey";
-    } else {
-        x.className = x.className.replace(" w3-show", "");
-        x.previousElementSibling.className =
-        x.previousElementSibling.className.replace(" w3-dark-grey", "");
-    }
-}
-
-// Slideshows
-var slideIndex = 1;
-
-function plusDivs(n) {
-slideIndex = slideIndex + n;
-showDivs(slideIndex);
-}
-
-function showDivs(n) {
-  var x = document.getElementsByClassName("mySlides");
-  if (n > x.length) {slideIndex = 1}
-  if (n < 1) {slideIndex = x.length} ;
-  for (i = 0; i < x.length; i++) {
-     x[i].style.display = "none";
-  }
-  x[slideIndex-1].style.display = "block";
-}
-
-showDivs(1);
-
-// Progress Bars
-function move() {
-  var elem = document.getElementById("myBar");
-  var width = 1;
-  var id = setInterval(frame, 10);
-  function frame() {
-    if (width == 100) {
-      clearInterval(id);
-    } else {
-      width++;
-      elem.style.width = width + '%';
-      document.getElementById("demoprgr").innerHTML = width * 1  + '%';
-    }
-  }
-}
+/**
+ * Obtains parameters from the hash of the URL
+ * @return Object
 
 function newPlaylist() {
   document.getElementById('playlistiFrame').src = params.playlistID;
 }
-
-/**
- * Obtains parameters from the hash of the URL
- * @return Object
  */
 function getHashParams() {
   var hashParams = {}
