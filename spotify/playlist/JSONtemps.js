@@ -1,5 +1,7 @@
 function userPlaylists (host, playlists, length){
-	console.log (playlists)
+	if (length > 20){
+		length = 20
+	}
 	var playlistJSON = '{ "playlists": ['
   for (var index = 0; index < length; index ++){
   	if (playlists[index].owner.id === host){
