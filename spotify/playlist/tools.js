@@ -27,18 +27,22 @@ function createPlaylist (req, res, db){
  function setLatestPlaylist (req, res, db, host){
   hostAcountTools.validateHost (host)
   .then (function (hostInfo){
+    console.log (hostInfo)
     return hostAcountTools.spotifyApi.getUserPlaylists(hostInfo.hostID)
   })
   .then (function(data){
+    console.log (data)
     return playlistTemplate.userPlaylists (host, data.body.items, data.body.total)
   })
   .then (function (playlistInfo){
+    console.log (playlistInfo)
     return model.Host.findOneAndUpdate({ 'hostID' : playlistInfo.playlists[0].owner }, { $set: {'playlistID' : playlistInfo.playlists[0].id, 'playlistName' : playlistInfo.playlists[0].name}}).exec()
   })
   .then (function (update){
     res.status(200).json ('playlist successfully set to latest playlist')
   })
   .catch (function (err){
+    console.log (err.stack)
     res.status(400).json('error setting latest playlist: '+ err)
   })
 }
