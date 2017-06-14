@@ -17,15 +17,11 @@ function createPlaylist (req, res, db){
     return setNewHomePage (createdPlaylist.hostID, createdPlaylist.playlistData.body['id'], createdPlaylist.playlistData.body['name'])
   })
   .then (function (update){
-    res.alert ('updated')
     res.redirect (update.homepage)
     return model.Host.findOneAndUpdate({ 'hostID' : update.hostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
   })
-  .then (function(update){
-    console.log (update)
-  })
   .catch (function(err) {
-    res.redirect (err.stack)
+    console.log (err.stack)
     res.status(400).json ('error creating playlist: '+ err)
   })
 }
@@ -39,8 +35,12 @@ function createPlaylist (req, res, db){
   .then (function(data){
     return playlistTemplate.userPlaylists (host, data.body.items, data.body.total)
   })
-  .then (function (playlistInfo){
-    return model.Host.findOneAndUpdate({ 'hostID' : playlistInfo.playlists[0].owner }, { $set: {'playlistID' : playlistInfo.playlists[0].id, 'playlistName' : playlistInfo.playlists[0].name}}).exec()
+  .then (function(playlistInfo){
+    return setNewHomePage (playlistInfo.playlists[0].owner, playlistInfo.playlists[0].id, playlistInfo.playlists[0].id)
+  })
+  .then (function (update){
+    res.redirect (update.homepage)
+    return model.Host.findOneAndUpdate({ 'hostID' : update.hostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
   })
   .then (function (update){
     res.status(200).json ('playlist successfully set to latest playlist')
@@ -77,6 +77,15 @@ function setSpecificPlaylist (req, res, db){
   .then (function (validatedInput){
     return validatePlaylistOwnership (validatedInput)
   })
+  .then (function(playlistInfo){
+    return setNewHomePage (playlistInfo.playlists[0].owner, playlistInfo.playlists[0].id, playlistInfo.playlists[0].id)
+  })
+  .then (function (update){
+    res.redirect (update.homepage)
+    return model.Host.findOneAndUpdate({ 'hostID' : update.hostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
+  })
+
+
   .then (function (validRequest){
     return (model.Host.findOneAndUpdate({ 'hostID' : validRequest.hostID }, { $set: {'playlistID' : validRequest.playName}}).exec())
   })
@@ -104,6 +113,7 @@ function validatePlaylistOwnership (data){
   return new Promise (function (fulfill, reject){
     hostAcountTools.spotifyApi.getPlaylist(data.hostID, data.playName)
     .then (function(playlist){
+      console.log (playlist)
       fulfill (data)
     })
     .catch (function (err){
