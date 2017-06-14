@@ -27,7 +27,7 @@ function homepage (req, res) {
     return setTokensAndGetHostInfo(data)
   })
   .then (function (hostInfo){
-    return hostAcountTools.spotifyApi.getUserPlaylists(hostInfo.hostID)
+    return spotifyApi.getUserPlaylists(hostInfo.hostID)
   })
   .then (function(data){
     console.log (data)
@@ -52,7 +52,6 @@ function setTokensAndGetHostInfo (data) {
     spotifyApi.setAccessToken(data.body['access_token'])
     spotifyApi.getMe()
     .then (function (spotifyReturn) {
-      console.log (spotifyReturn)
       fulfill  ({ 
         "spotifyReturn" : spotifyReturn,
         "access_token"  : data.body['access_token'],
