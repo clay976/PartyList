@@ -70,7 +70,9 @@ function setPlaylistOnLogin (hostInfo){
       return playlistTemplate.userPlaylists (hostInfo.host.id, playlists.body.items, playlists.body.total)
     })
     .then (function (playlists){
-      hostInfo.playlist = playlists[0]
+      console.log (playlists[0])
+      console.log (playlists[1])
+      hostInfo.playlist = playlists
       fulfill (hostInfo)
     })
     .catch (function (err){
