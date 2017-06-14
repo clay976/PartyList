@@ -28,13 +28,17 @@ function homepage (req, res) {
     return setTokensAndGetHostInfo(data)
   })
   .then (function (hostInfo){
-    return spotifyApi.getUserPlaylists(hostInfo.hostID)
+    return { 
+      'hostID'    : spotifyReturn.body.id,
+      'playlists' : hostInfo spotifyApi.getUserPlaylists(hostInfo.hostID)
+    }
   })
   .then (function(data){
-    console.log (data.body.items)
-    return playlistTemplate.userPlaylists (host, data.body.items, data.body.total)
+    console.log (data.playlists.body.total)
+    return playlistTemplate.userPlaylists (data.hostID, data.playlists.body.items, data.playlists.body.total)
   })
-  .then (function (){
+  .then (function (playlists){
+    console.log (playlists)
     var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostInfo.spotifyReturn.body.id, 'playlistID': 'frwjnwrkj'})
     
     model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, JSONtemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage), {upsert:true}).exec()
