@@ -18,7 +18,7 @@ function createPlaylist (req, res, db){
   })
   .then (function (update){
     res.redirect (update.homepage)
-    res.alert ('playlist updated')
+    res.send ('playlist updated')
     return model.Host.findOneAndUpdate({ 'hostID' : update.hostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
   })
   .catch (function(err) {
