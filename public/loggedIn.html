@@ -138,7 +138,7 @@ function newSite() {
 }
 
 function newPlaylist() {
-    var sites = "https://open.spotify.com/embed?uri=spotify:user:" +params.hostID+ ":playlist:21TSvb5k8BblexCYD2oHJD"
+    var sites = "https://open.spotify.com/embed?uri=spotify:user:" +params.hostID+ ":playlist:" +params.playlistID
     document.getElementById('playlistiFrame').src = sites
 }
 
@@ -197,8 +197,9 @@ function getHashParams() {
 }
 var params = getHashParams()
 var hostID = params.hostID,
+    playlistID = params.playlistID,
     error = params.error
-    
+
 if (error) {
   alert('There was an error during the authentication')
 } else {
