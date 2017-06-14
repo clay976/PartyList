@@ -225,6 +225,10 @@ function move() {
   }
 }
 
+function newPlaylist() {
+  document.getElementById('playlistiFrame').src = params.playlistID;
+}
+
 /**
  * Obtains parameters from the hash of the URL
  * @return Object
@@ -259,10 +263,6 @@ if (error) {
     document.getElementById('hostID11').value = params.hostID;
     document.getElementById('hostID12').value = params.hostID;
   }
-}
-
-function newPlaylist() {
-  document.getElementById('playlistiFrame').src = params.playlistID;
 }
 </script>
 
