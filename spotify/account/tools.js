@@ -30,7 +30,7 @@ function homepage (req, res) {
   .then (function (hostInfo){
     return { 
       'hostID'    : spotifyReturn.body.id,
-      'playlists' : hostInfo spotifyApi.getUserPlaylists(hostInfo.hostID)
+      'playlists' : spotifyApi.getUserPlaylists(hostInfo.hostID)
     }
   })
   .then (function(data){
