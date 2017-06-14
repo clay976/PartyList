@@ -139,12 +139,12 @@ function requestSpotifyPlaylistCreation (data){
 function setNewHomePage (hostID, playlistID, playlistName){
   return new Promise (function (fulfill, reject){
     var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostID, 'playlistID': playlistID})
-    return {
+    fulfill ({
       'hostID'        : hostID,
       "playlistID"    : playlistID,
       "playlistName"  : playlistName,
       "homepage"      : homePage
-    }
+    })
   })
 }
 
