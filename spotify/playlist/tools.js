@@ -14,6 +14,7 @@ function createPlaylist (req, res, db){
     return (requestSpotifyPlaylistCreation(validatedInput))
   })     
   .then (function(createdPlaylist){
+    console.log (createdPlaylist)
     return setNewHomePage (createdPlaylist.HostID, createdPlaylist.playlistData.body['id'], createdPlaylist.playlistData.body['name'])
   })
   .then (function (update){
