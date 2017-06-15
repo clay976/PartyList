@@ -20,14 +20,8 @@
 
   <div class="w3-third w3-container">
   <div class="w3-center">
-  <h4 class="w3-xlarge" >Playlist Settings</h4><br>
+    <h4 class="w3-xlarge" >Playlist Settings</h4><br>
   </div>
-    <!--
-    <ul class="w3-navbar w3-light-grey">
-      <li><a class="w3-btn playlistbtn" onclick="openPlaylist(event, 'playlistSettings')">Settings</a></li>
-      <li><a class="w3-btn playlistbtn" onclick="openPlaylist(event, 'PlaylistView')">Playlist</a></li>
-    </ul>
-    -->
     <div id="playlistSettings" class="w3-container playlist">
       <form id="input" action="/playlist/explicit" method="POST">
         <input id='hostID1' type='hidden' name ='hostID' > 
@@ -89,13 +83,17 @@
   </div>
 
   <div class="w3-third w3-container">
-    <h4 class="w3-xlarge" >Playlist</h4><br>
+    <div class="w3-center">
+      <h4 class="w3-xlarge" >Playlist</h4><br>
+    </div>
     <div id="PlaylistView" class="w3-container playlist">
       <iframe id="playlistiFrame" src="" width="100%" height="400" frameborder="0" allowtransparency="true"></iframe>
     </div>
   </div>
   <div class="w3-third w3-container">
-    <h4 class="w3-xlarge" >Guests</h4><br>
+    <div class="w3-center">
+      <h4 class="w3-xlarge" >Guests</h4><br>
+    </div>
     <ul class="w3-navbar w3-light-grey">
       <li><a class="w3-btn guestbtn" onclick="openGuests(event, 'guestSettings')">Settings</a></li>
       <li><a class="w3-btn guestbtn" onclick="openGuests(event, 'guestList')">List of Guests</a></li>
