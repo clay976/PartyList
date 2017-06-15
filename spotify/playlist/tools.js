@@ -17,7 +17,6 @@ function createPlaylist (req, res, db){
     return setNewHomePage (createdPlaylist.hostID, createdPlaylist.playlistData.body['id'], createdPlaylist.playlistData.body['name'])
   })
   .then (function (update){
-    console.log (update)
     res.redirect (update.homepage)
     return model.Host.findOneAndUpdate({ 'hostID' : update.hostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
   })
@@ -40,7 +39,6 @@ function createPlaylist (req, res, db){
     return setNewHomePage (playlistInfo.playlists[0].owner, playlistInfo.playlists[0].id, playlistInfo.playlists[0].name)
   })
   .then (function (update){
-    console.log (update)
     res.redirect (update.homepage)
     return model.Host.findOneAndUpdate({ 'hostID' : update.hostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
   })
@@ -80,7 +78,6 @@ function setSpecificPlaylist (req, res, db){
     return setNewHomePage (playlistInfo.body.owner.id, playlistInfo.body.id, playlistInfo.body.name)
   })
   .then (function (update){
-    console.log (update)
     res.redirect (update.homepage)
     return model.Host.findOneAndUpdate({ 'hostID' : update.hostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
   })

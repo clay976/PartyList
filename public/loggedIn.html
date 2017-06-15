@@ -103,17 +103,18 @@
 
     <div id="guestSettings" class="w3-container guest">
       <form id="input" action="/guests/removeAll" method="POST">
+        <input id='hostID13' type='hidden' name ='hostID'>
         <input type="submit" value="Remove All Guests">
       </form>
 
       <form id="input" action="/guests/add" method="POST">
-        <input id='hostID8' type='text' name ='hostID'>
+        <input id='hostID8' type='hidden' name ='hostID'>
         <input type="text" name="guestNum" placeholder="ex. 9055554260">
         <input type="submit" value="add">
       </form>
 
       <form id="input" action="/guests/remove" method="POST">
-        <input id='hostID9' type='text' name ='hostID'>
+        <input id='hostID9' type='hidden' name ='hostID'>
         <input type="text" name="guestNum" placeholder="ex. 9055554260">
         <input type="submit" value="remove">
       </form>
@@ -220,6 +221,7 @@ if (error) {
     document.getElementById('hostID10').value = hostID;
     document.getElementById('hostID11').value = hostID;
     document.getElementById('hostID12').value = hostID;
+    document.getElementById('hostID13').value = hostID;
   }
 }
 </script>
