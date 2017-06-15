@@ -18,9 +18,9 @@
     </div>
   </header>
 
-  <div class="w3-half w3-container">
+  <div class="w3-third w3-container">
   <div class="w3-center">
-  <h4 class="w3-xlarge" >Playlist</h4><br>
+  <h4 class="w3-xlarge" >Playlist Settings</h4><br>
   </div>
     <ul class="w3-navbar w3-light-grey">
       <li><a class="w3-btn playlistbtn" onclick="openPlaylist(event, 'playlistSettings')">Settings</a></li>
@@ -85,13 +85,15 @@
         <input type="submit" value="reset song requests">
       </form>
     </div>
+  </div>
 
+  <div class="w3-third w3-container">
+    <h4 class="w3-xlarge" >Playlist</h4><br>
     <div id="PlaylistView" class="w3-container playlist">
       <iframe id="playlistiFrame" src="" width="100%" height="400" frameborder="0" allowtransparency="true"></iframe>
     </div>
   </div>
-
-  <div class="w3-half w3-container">
+  <div class="w3-third w3-container">
     <h4 class="w3-xlarge" >Guests</h4><br>
     <ul class="w3-navbar w3-light-grey">
       <li><a class="w3-btn guestbtn" onclick="openGuests(event, 'guestSettings')">Settings</a></li>
