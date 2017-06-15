@@ -58,7 +58,7 @@ function findAllPlaylists (req, res, db){
     return playlistTemplate.userPlaylists (req.body.hostID, data.body.items, data.body.total)
   })
   .then (function (playlistInfo){
-    return res.status(200).json (playlistInfo)
+    return res.send (playlistInfo)
   })
   .catch (function (err){
     res.status(400).json ('error retriving user\'s playlists: '+err)
