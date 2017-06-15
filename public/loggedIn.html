@@ -30,59 +30,59 @@
     -->
     <div id="playlistSettings" class="w3-container playlist">
       <form id="input" action="/playlist/explicit" method="POST">
-        <input id='hostID1' type='text hidden' name ='hostID'> 
+        <input id='hostID1' type='hidden' name ='hostID' > 
         <input type="hidden" name="explicit" value= "true">
         <input type="submit" value="set explicit">
       </form>
 
       <form id="input" action="/playlist/explicit" method="POST">
-        <input id='hostID2' type='text' name ='hostID'>
+        <input id='hostID2' type='hidden' name ='hostID'>
         <input type="hidden" name="explicit" value= "false">
         <input type="submit" value="set clean">
       </form>
 
       <form id="input" action="/playlist/spotify/create" method="POST">
-        <input id='hostID3' type='text' name ='hostID'>
+        <input id='hostID3' type='hidden' name ='hostID'>
         <input type="text" name="playName" placeholder="new playlist Name">
         <input type="submit" value="create">
       </form>
 
       <form id="input" action="/playlist/spotify/latest" method="POST">
-        <input id='hostID4' type='text hidden' name ='hostID'>
+        <input id='hostID4' type='hidden' name ='hostID'>
         <input type="submit" value="find playlist">
       </form>
 
       <form id="input" action="/playlist/spotify/getAll" method="POST">
-        <input id='hostID5' type='text' name ='hostID'>
+        <input id='hostID5' type='hidden' name ='hostID'>
         <input type="submit" value="retreive all playlists">
       </form>
 
       <form id="input" action="/playlist/spotify/set" method="POST">
-        <input id='hostID6' type='text' name ='hostID'>
+        <input id='hostID6' type='hidden' name ='hostID'>
         <input type="text" name="playlistID" placeholder="playlist ID">
         <input type="submit" value="set playlist">
       </form>
 
       <form id="input" action="/playlist/requestThreshold" method="POST">
-        <input id='hostID10' type='text' name ='hostID'>
+        <input id='hostID10' type='hidden' name ='hostID'>
         <input type="number" name="requests" placeholder="Requests to add a song to a playlist">
         <input type="submit" value="set request threshold">
       </form>
 
       <form id="input" action="/playlist/minYear" method="POST">
-        <input id='hostID11' type='text' name ='hostID'>
+        <input id='hostID11' type='hidden' name ='hostID'>
         <input type="text" name="year" placeholder="1990">
         <input type="submit" value="set min">
       </form>
 
       <form id="input" action="/playlist/maxYear" method="POST">
-        <input id='hostID12' type='text' name ='hostID'>
+        <input id='hostID12' type='hidden' name ='hostID'>
         <input type="text" name="year" placeholder="1999">
         <input type="submit" value="set max">
       </form>
 
       <form id="input" action="/songs/removeAll" method="POST">
-        <input id='hostID7' type='text' name ='hostID'>
+        <input id='hostID7' type='hidden' name ='hostID'>
         <input type="submit" value="reset song requests">
       </form>
     </div>
