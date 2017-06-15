@@ -58,7 +58,7 @@ function findAllPlaylists (req, res, db){
     return playlistTemplate.userPlaylists (req.body.hostID, data.body.items, data.body.total)
   })
   .then (function (playlistInfo){
-    return res.send('<script>alert('+playlistInfo+')</script>')
+    res.send('<script>alert('+playlistInfo+')</script>')
   })
   .catch (function (err){
     console.log (err.stack)
