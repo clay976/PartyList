@@ -6,8 +6,13 @@ function searchSpotify (guestObject){
   var query = guestObject.guest.lastMessage
   return new Promise (function (fulfill, reject){
     var error = 'error searching spotify for song, please try again'
-    databaseHostTools.spotifyApi.searchTracks (query, { limit : 1 })//search spotify for a track based on the message we got from the
+    databaseHostTools.spotifyApi.searchTracks (query, { limit : 4 })//search spotify for a track based on the message we got from the
     .then (function (spotifyTrack){
+      console.log ('number of items found on Spotify :' +spotifyTrack.body.tracks.total)
+      console.log ('item 1: 'spotifyTrack.body.tracks.items[0].name)
+      console.log ('item 2: 'spotifyTrack.body.tracks.items[1].name)
+      console.log ('item 3: 'spotifyTrack.body.tracks.items[2].name)
+      console.log ('item 4: 'spotifyTrack.body.tracks.items[3].name)
       if (spotifyTrack.body.tracks.total != 0){ //we found a track on spotify matching the guest message)
         guestObject.track = {
           'trackID'     : spotifyTrack.body.tracks.items[0].id,
