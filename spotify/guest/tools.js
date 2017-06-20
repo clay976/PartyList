@@ -1,6 +1,7 @@
 var databaseHostTools   = require ('../../database/hostTools')
 var databaseGuestTools  = require ('../../database/guestTools')
 var addResponse         = require ('../../twilio/responses')
+var JSONtemp            = require ('./JSONtemps')
 
 function searchSpotify (guestObject){
   var query = guestObject.guest.lastMessage
@@ -9,19 +10,9 @@ function searchSpotify (guestObject){
     databaseHostTools.spotifyApi.searchTracks (query, { limit : 4 })//search spotify for a track based on the message we got from the
     .then (function (spotifyTrack){
       console.log ('number of items found on Spotify :' +spotifyTrack.body.tracks.total)
-      console.log ('item 1: ' +spotifyTrack.body.tracks.items[0].name)
-      console.log ('item 2: ' +spotifyTrack.body.tracks.items[1].name)
-      console.log ('item 3: ' +spotifyTrack.body.tracks.items[2].name)
-      console.log ('item 4: ' +spotifyTrack.body.tracks.items[3].name)
       if (spotifyTrack.body.tracks.total != 0){ //we found a track on spotify matching the guest message)
-        guestObject.track = {
-          'trackID'     : spotifyTrack.body.tracks.items[0].id,
-          'albumID'     : spotifyTrack.body.tracks.items[0].album.id,
-          'name'        : spotifyTrack.body.tracks.items[0].name,
-          'artist'      : spotifyTrack.body.tracks.items[0].artists[0].name,
-          'numRequests' : 0,
-          'explicit'    : spotifyTrack.body.tracks.items[0].explicit
-        }
+        guestObject.totalTracks = spotifyTrack.body.tracks.total
+        guestObject.tracks = JSONtemp.populateGuestObjectTracks (spotifyTrack)
         fulfill (guestObject)
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
         guestObject.guest.currentTrack.trackID = null

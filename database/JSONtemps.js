@@ -84,7 +84,7 @@ function accessToken (aToken){
 function spotifyGuest (databaseObject){
   return {
     "guest" : databaseObject,
-    "track" : null,
+    "tracks" : null,
     "host"  : null
   }
 }

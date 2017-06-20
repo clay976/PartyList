@@ -111,6 +111,9 @@ function searchForNewRequest (guestObject){
   return new Promise (function (fulfill, reject){
     spotifyGuestTools.searchSpotify (guestObject)
     .then (function (guestObject){
+      console.log (guestObject)
+      console.log (guestObject.totalTracks)
+      console.log (guestObject.tracks)
       return spotifyTrackTools.obtainYearReleased (guestObject)
     })
     .then (function(guestObject){
