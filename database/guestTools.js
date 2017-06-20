@@ -61,7 +61,6 @@ function validateGuest (guestNumber, message){
     .then (function (guestInfo){
       if (guestInfo){
         if (guestInfo.hostID){
-          console.log (guestInfo)
           var guestObject = JSONtemplate.spotifyGuest (guestInfo)
           guestObject.guest.lastMessage = message
           fulfill (guestObject) 

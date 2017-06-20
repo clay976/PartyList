@@ -7,6 +7,7 @@ function searchSpotify (guestObject){
   var query = guestObject.guest.lastMessage
   return new Promise (function (fulfill, reject){
     var error = 'error searching spotify for song, please try again'
+    databaseHostTools.spotifyApi.setAccessToken(guestObject.host.AccessToken)
     databaseHostTools.spotifyApi.searchTracks (query, { limit : 4 })//search spotify for a track based on the message we got from the
     .then (function (spotifyTrack){
       console.log ('number of items found on Spotify :' +spotifyTrack.body.tracks.total)
