@@ -9,12 +9,13 @@ var SpotifyWebApi     = require('spotify-web-api-node');
 var credentials       = {
   clientId            : 'a000adffbd26453fbef24e8c1ff69c3b',
   clientSecret        : '899b3ec7d52b4baabba05d6031663ba2',
-  redirectUri         : 'http://104.131.215.55:80/callback'
+  redirectUri         : 'http://criwcomputing.com/callback'
 }
 var spotifyApi        = new SpotifyWebApi(credentials);
 
 //node modules
 var querystring       = require('querystring')
+var playlistTemplate  = require ('../playlist/JSONtemps')
 
 
 // makes a request to the spotify API to retrieve
@@ -27,15 +28,19 @@ function homepage (req, res) {
     return setTokensAndGetHostInfo(data)
   })
   .then (function (hostInfo){
-    var homePage = '/loggedIn.html#' +querystring.stringify({'access_token': hostInfo.access_token,'refresh_token':hostInfo.refresh_token,'hostID':hostInfo.spotifyReturn.body.id})
-    playlistTool.setLatestPlaylist (hostInfo.spotifyReturn.body.id)
-    model.Host.findOneAndUpdate({'hostID': hostInfo.spotifyReturn.body.id}, JSONtemplate.Host (hostInfo.spotifyReturn.body.id, hostInfo.access_token, hostInfo.refresh_token, homePage), {upsert:true}).exec()
+    return setPlaylistOnLogin (hostInfo)
+  })
+  .then (function (hostInfo){
+    var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostInfo.host.id, 'playlistID': hostInfo.playlist.id})
+    
+    model.Host.findOneAndUpdate({'hostID': hostInfo.host.id}, JSONtemplate.Host (hostInfo.host.id, hostInfo.access_token, hostInfo.refresh_token, homePage, hostInfo.playlist.id, hostInfo.playlist.name), {upsert:true}).exec()
     return (homePage)
   })
   .then (function (homePage){
     res.redirect (homePage)
   })
   .catch (function (err){
+    console.log (err.stack)
     return res.status(400).json ('error loggin in: '+err)
   })
 }
@@ -46,7 +51,7 @@ function setTokensAndGetHostInfo (data) {
     spotifyApi.getMe()
     .then (function (spotifyReturn) {
       fulfill  ({ 
-        "spotifyReturn" : spotifyReturn,
+        "host"          : spotifyReturn.body,
         "access_token"  : data.body['access_token'],
         "refresh_token" : data.body['refresh_token']
       })
@@ -56,6 +61,23 @@ function setTokensAndGetHostInfo (data) {
     })
   })
 }
+
+function setPlaylistOnLogin (hostInfo){
+  return new Promise (function (fulfill, reject){
+    spotifyApi.getUserPlaylists(hostInfo.host.id)
+    .then (function (playlists){
+      return playlistTemplate.userPlaylists (hostInfo.host.id, playlists.body.items, playlists.body.total)
+    })
+    .then (function (playlists){
+      hostInfo.playlist = playlists.playlists[0]
+      fulfill (hostInfo)
+    })
+    .catch (function (err){
+      reject (err)
+    })
+  })
+}
+
 
 //exports for external modules to use.
 module.exports = {

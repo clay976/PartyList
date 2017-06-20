@@ -1,11 +1,13 @@
-function Host (data, accessToken, refreshToken, homePage){
+function Host (data, accessToken, refreshToken, homePage, playID, playName){
 	return {
 	  'hostID' 				: data,
 	  'access_token'	: accessToken,
 	  'expires_in'		: 3600,
 	  'refresh_token'	: refreshToken,
 	  'homePage'			: homePage,
-	  'exlpicit'			: true
+	  'exlpicit'			: true,
+    'playlistID'    : playID,
+    'playName'      : playName
 	}
 }
 

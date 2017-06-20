@@ -2,6 +2,7 @@
 var hostAcountTools   = require ('../../database/hostTools')
 var playlistTemplate  = require ('./JSONtemps')
 var model             = require ('../../database/models')
+var querystring       = require('querystring')
 
 //TODO: add comments
 function createPlaylist (req, res, db){
@@ -13,18 +14,20 @@ function createPlaylist (req, res, db){
     return (requestSpotifyPlaylistCreation(validatedInput))
   })     
   .then (function(createdPlaylist){
-    return model.Host.findOneAndUpdate({ 'hostID' : createdPlaylist.HostID }, { $set: {'playlistID' : createdPlaylist.playlistData.body['id']}}).exec()
+    return setNewHomePage (createdPlaylist.hostID, createdPlaylist.playlistData.body['id'], createdPlaylist.playlistData.body['name'])
   })
-  .then (function (updated){
-    res.status(200).json ('playlist was created successfully')
+  .then (function (update){
+    res.redirect (update.homepage)
+    return model.Host.findOneAndUpdate({ 'hostID' : update.hostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
   })
   .catch (function(err) {
+    console.log (err.stack)
     res.status(400).json ('error creating playlist: '+ err)
   })
 }
 
 //TODO: add comments
- function setLatestPlaylist (req, res, db, host){
+ function setLatestPlaylist (res, host){
   hostAcountTools.validateHost (host)
   .then (function (hostInfo){
     return hostAcountTools.spotifyApi.getUserPlaylists(hostInfo.hostID)
@@ -32,13 +35,15 @@ function createPlaylist (req, res, db){
   .then (function(data){
     return playlistTemplate.userPlaylists (host, data.body.items, data.body.total)
   })
-  .then (function (playlistInfo){
-    return model.Host.findOneAndUpdate({ 'hostID' : playlistInfo.playlists[0].owner }, { $set: {'playlistID' : playlistInfo.playlists[0].id, 'playlistName' : playlistInfo.playlists[0].name}}).exec()
+  .then (function(playlistInfo){
+    return setNewHomePage (playlistInfo.playlists[0].owner, playlistInfo.playlists[0].id, playlistInfo.playlists[0].name)
   })
   .then (function (update){
-    res.status(200).json ('playlist successfully set to latest playlist')
+    res.redirect (update.homepage)
+    return model.Host.findOneAndUpdate({ 'hostID' : update.hostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
   })
   .catch (function (err){
+    console.log (err.stack)
     res.status(400).json('error setting latest playlist: '+ err)
   })
 }
@@ -53,7 +58,7 @@ function findAllPlaylists (req, res, db){
     return playlistTemplate.userPlaylists (req.body.hostID, data.body.items, data.body.total)
   })
   .then (function (playlistInfo){
-    return res.status(200).json (playlistInfo)
+    res.status(200).json (playlistInfo)
   })
   .catch (function (err){
     res.status(400).json ('error retriving user\'s playlists: '+err)
@@ -69,11 +74,12 @@ function setSpecificPlaylist (req, res, db){
   .then (function (validatedInput){
     return validatePlaylistOwnership (validatedInput)
   })
-  .then (function (validRequest){
-    return (model.Host.findOneAndUpdate({ 'hostID' : validRequest.hostID }, { $set: {'playlistID' : validRequest.playName}}).exec())
+  .then (function(playlistInfo){
+    return setNewHomePage (playlistInfo.body.owner.id, playlistInfo.body.id, playlistInfo.body.name)
   })
-  .then (function (updated){
-    res.status(200).json ('playlist has been set successfully')
+  .then (function (update){
+    res.redirect (update.homepage)
+    return model.Host.findOneAndUpdate({ 'hostID' : update.hostID }, { $set: {'playlistID' : update.playlistID, 'playlistName' : update.playlistName, 'homepage' : update.homepage}}).exec()
   })
   .catch (function(err) {
     res.status(400).json ('error setting playlist: '+ err)
@@ -81,7 +87,7 @@ function setSpecificPlaylist (req, res, db){
 }
 
 //This is the request threshold that will get a song added to the playlist, set by the host.
- function setRequestThreshold (req, res){
+function setRequestThreshold (req, res){
   model.Host.findOneAndUpdate({ 'hostID' : req.body.hostID }, { $set: {'reqThreshold' : req.body.requests }}).exec()
   .then (function (update){
     res.status(200).json ('number of requests to add a song to a playlist has been set to ' +req.body.requests+ '!')
@@ -96,7 +102,7 @@ function validatePlaylistOwnership (data){
   return new Promise (function (fulfill, reject){
     hostAcountTools.spotifyApi.getPlaylist(data.hostID, data.playName)
     .then (function(playlist){
-      fulfill (data)
+      fulfill (playlist)
     })
     .catch (function (err){
       reject ('spotify error: you either do not own that playlist or it does not exist, '+ err)
@@ -128,6 +134,18 @@ function requestSpotifyPlaylistCreation (data){
     })
     .catch (function (err){
       reject ('spotify error: '+err)
+    })
+  })
+}
+
+function setNewHomePage (hostID, playlistID, playlistName){
+  return new Promise (function (fulfill, reject){
+    var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostID, 'playlistID': playlistID})
+    fulfill ({
+      'hostID'        : hostID,
+      "playlistID"    : playlistID,
+      "playlistName"  : playlistName,
+      "homepage"      : homePage
     })
   })
 }

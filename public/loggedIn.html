@@ -4,134 +4,226 @@
   <title>Party List</title>
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <link rel="stylesheet" href="http://www.w3schools.com/lib/w3.css">
-  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3-theme-red.css">
+  <link rel="stylesheet" href="http://www.w3schools.com/lib/w3-theme-green.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.min.css">
   <link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
 </head>
 
 <div id="loggedin">
-  <div class="w3-third">
-  <div class="w3-row-padding w3-center w3-margin-top">
-    <h4>Playlists</h4><br>
-    <div class="w3-card-2 w3-padding-top" style="min-height:400px">
-    <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
-    <form id="input" action="/playlist/explicit" method="POST">
-      <input id='hostID1' type='text' name ='hostID'> 
-      <input type="hidden" name="explicit" value= "true">
-      <input type="submit" value="set explicit">
-    </form>
-    <form id="input" action="/playlist/explicit" method="POST">
-      <input id='hostID2' type='text' name ='hostID'>
-      <input type="hidden" name="explicit" value= "false">
-      <input type="submit" value="set clean">
-    </form>
-    <form id="input" action="/playlist/spotify/create" method="POST">
-      <input id='hostID3' type='text' name ='hostID'>
-      <input type="text" name="playName" placeholder="new playlist Name">
-      <input type="submit" value="create">
-    </form>
-    <form id="input" action="/playlist/spotify/latest" method="POST">
-      <input id='hostID4' type='text' name ='hostID'>
-      <input type="submit" value="find playlist">
-    </form>
-    <form id="input" action="/playlist/spotify/getAll" method="POST">
-      <input id='hostID5' type='text' name ='hostID'>
-      <input type="submit" value="retreive all playlists">
-    </form>
-    <form id="input" action="/playlist/spotify/set" method="POST">
-      <input id='hostID6' type='text' name ='hostID'>
-      <input type="text" name="playlistID" placeholder="playlist ID">
-      <input type="submit" value="set playlist">
-    </form>
-    <form id="input" action="/playlist/requestThreshold" method="POST">
-      <input id='hostID10' type='text' name ='hostID'>
-      <input type="number" name="requests" placeholder="Requests to add a song to a playlist">
-      <input type="submit" value="set request threshold">
-    </form>
-    <form id="input" action="/playlist/minYear" method="POST">
-      <input id='hostID11' type='text' name ='hostID'>
-      <input type="text" name="year" placeholder="1990">
-      <input type="submit" value="set min">
-    </form>
-    <form id="input" action="/playlist/maxYear" method="POST">
-      <input id='hostID12' type='text' name ='hostID'>
-      <input type="text" name="year" placeholder="1999">
-      <input type="submit" value="set max">
-    </form>
+  <body onload="newPlaylist()">
+
+  <header class="w3-container w3-theme w3-padding" id="myHeader">
+    <div class="w3-center">
+    <h1 class="w3-xxxlarge">Party List</h1>
     </div>
+  </header>
+
+  <div class="w3-third w3-container">
+  <div class="w3-center">
+    <h4 class="w3-xlarge" >Playlist Settings</h4><br>
   </div>
+    <div id="playlistSettings" class="w3-container playlist">
+      <form id="input" action="/playlist/explicit" method="POST">
+        <input id='hostID1' type='hidden' name ='hostID' > 
+        <input type="hidden" name="explicit" value= "true">
+        <input type="submit" value="set explicit">
+      </form>
+
+      <form id="input" action="/playlist/explicit" method="POST">
+        <input id='hostID2' type='hidden' name ='hostID'>
+        <input type="hidden" name="explicit" value= "false">
+        <input type="submit" value="set clean">
+      </form>
+
+      <form id="input" action="/playlist/spotify/create" method="POST">
+        <input id='hostID3' type='hidden' name ='hostID'>
+        <input type="text" name="playName" placeholder="new playlist Name">
+        <input type="submit" value="create">
+      </form>
+
+      <form id="input" action="/playlist/spotify/latest" method="POST">
+        <input id='hostID4' type='hidden' name ='hostID'>
+        <input type="submit" value="find playlist">
+      </form>
+
+      <form id="input" action="/playlist/spotify/getAll" method="POST">
+        <input id='hostID5' type='hidden' name ='hostID'>
+        <input type="submit" value="retreive all playlists">
+      </form>
+
+      <form id="input" action="/playlist/spotify/set" method="POST">
+        <input id='hostID6' type='hidden' name ='hostID'>
+        <input type="text" name="playlistID" placeholder="playlist ID">
+        <input type="submit" value="set playlist">
+      </form>
+
+      <form id="input" action="/playlist/requestThreshold" method="POST">
+        <input id='hostID10' type='hidden' name ='hostID'>
+        <input type="number" name="requests" placeholder="Requests to add a song to a playlist">
+        <input type="submit" value="set request threshold">
+      </form>
+
+      <form id="input" action="/playlist/minYear" method="POST">
+        <input id='hostID11' type='hidden' name ='hostID'>
+        <input type="text" name="year" placeholder="1990">
+        <input type="submit" value="set min">
+      </form>
+
+      <form id="input" action="/playlist/maxYear" method="POST">
+        <input id='hostID12' type='hidden' name ='hostID'>
+        <input type="text" name="year" placeholder="1999">
+        <input type="submit" value="set max">
+      </form>
+
+      <form id="input" action="/songs/removeAll" method="POST">
+        <input id='hostID7' type='hidden' name ='hostID'>
+        <input type="submit" value="reset song requests">
+      </form>
+    </div>
   </div>
 
-  <div class="w3-third">
-  <div class="w3-row-padding w3-center w3-margin-top">
-    <h4>Songs</h4><br>
-    <div class="w3-card-2 w3-padding-top" style="min-height:400px">
-    <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
-    <form id="input" action="/songs/removeAll" method="POST">
-      <input id='hostID7' type='text' name ='hostID'>
-      <input type="submit" value="reset song requests">
-    </form>
+  <div class="w3-third w3-container">
+    <div class="w3-center">
+      <h4 class="w3-xlarge" >Playlist</h4><br>
+    </div>
+    <div id="PlaylistView" class="w3-container playlist">
+      <iframe id="playlistiFrame" src="" width="100%" height="400" frameborder="0" allowtransparency="true"></iframe>
     </div>
   </div>
-  </div>
+  <div class="w3-third w3-container">
+    <div class="w3-center">
+      <h4 class="w3-xlarge" >Guests</h4><br>
+    </div>
+    <ul class="w3-navbar w3-light-grey">
+      <li><a class="w3-btn guestbtn" onclick="openGuests(event, 'guestSettings')">Settings</a></li>
+      <li><a class="w3-btn guestbtn" onclick="openGuests(event, 'guestList')">List of Guests</a></li>
+    </ul>
 
-  <div class="w3-third">
-  <div class="w3-row-padding w3-center w3-margin-top">
-    <h4>Guests</h4><br>
-    <div class="w3-card-2 w3-padding-top" style="min-height:400px">
-    <i class="fa fa-desktop w3-margin-bottom w3-text-theme" style="font-size:120px"></i>
-    <form id="input" action="/guests/removeAll" method="POST">
-      <input type="submit" value="Remove All Guests">
-    </form>
-    <form id="input" action="/guests/add" method="POST">
-      <input id='hostID8' type='text' name ='hostID'>
-      <input type="text" name="guestNum" placeholder="ex. 9055554260">
-      <input type="submit" value="add">
-    </form>
-    <form id="input" action="/guests/remove" method="POST">
-      <input id='hostID9' type='text' name ='hostID'>
-      <input type="text" name="guestNum" placeholder="ex. 9055554260">
-      <input type="submit" value="remove">
-    </form>
+    <div id="guestSettings" class="w3-container guest">
+      <form id="input" action="/guests/removeAll" method="POST">
+        <input id='hostID13' type='hidden' name ='hostID'>
+        <input type="submit" value="Remove All Guests">
+      </form>
+
+      <form id="input" action="/guests/add" method="POST">
+        <input id='hostID8' type='hidden' name ='hostID'>
+        <input type="text" name="guestNum" placeholder="ex. 9055554260">
+        <input type="submit" value="add">
+      </form>
+
+      <form id="input" action="/guests/remove" method="POST">
+        <input id='hostID9' type='hidden' name ='hostID'>
+        <input type="text" name="guestNum" placeholder="ex. 9055554260">
+        <input type="submit" value="remove">
+      </form>
     </div>
-  </div>
+
+    <div id="guestList" class="w3-container guest">
+      <input type="button" value="Change site" onClick="newSite()" />
+      <iframe id="myIframe" src="http://getprismatic.com/" "></iframe>
+    </div>
+
   </div>
 </div>
 
+<!--onLoad="iframeDidLoad();
+
+Script for Sidenav, Tabs, Accordions, Progress bars and slideshows -->
 <script>
-  /**
-   * Obtains parameters from the hash of the URL
-   * @return Object
-   */
-  function getHashParams() {
-    var hashParams = {}
-    var e, r = /([^&=]+)=?([^&]*)/g,
-        q = window.location.hash.substring(1)
-    while ( e = r.exec(q)) {
-       hashParams[e[1]] = decodeURIComponent(e[2])
-    }
-    return hashParams
+
+function iframeDidLoad() {
+  alert('Done');
+}
+
+function newSite() {
+    var sites = "https://open.spotify.com/embed?uri=spotify:user:" +params.hostID+ ":playlist:21TSvb5k8BblexCYD2oHJD"
+    document.getElementById('myIframe').src = sites
+}
+
+function newPlaylist() {
+    var sites = "https://open.spotify.com/embed?uri=spotify:user:" +params.hostID+ ":playlist:" +params.playlistID
+    document.getElementById('playlistiFrame').src = sites
+}
+
+// Tabs
+function openGuests(evt, cityName) {
+  var i;
+  var x = document.getElementsByClassName("guest");
+  for (i = 0; i < x.length; i++) {
+     x[i].style.display = "none";
   }
-  var params = getHashParams()
-  var access_token = params.access_token,
-      refresh_token = params.refresh_token,
-      error = params.error
-  if (error) {
-    alert('There was an error during the authentication')
-  } else {
-    if (access_token) {
-      document.getElementById('hostID1').value = params.hostID;
-      document.getElementById('hostID2').value = params.hostID;
-      document.getElementById('hostID3').value = params.hostID;
-      document.getElementById('hostID4').value = params.hostID;
-      document.getElementById('hostID5').value = params.hostID;
-      document.getElementById('hostID6').value = params.hostID;
-      document.getElementById('hostID7').value = params.hostID;
-      document.getElementById('hostID8').value = params.hostID;
-      document.getElementById('hostID9').value = params.hostID;
-      document.getElementById('hostID10').value = params.hostID;
-      document.getElementById('hostID11').value = params.hostID;
-      document.getElementById('hostID12').value = params.hostID;
-    }
+  var activebtn = document.getElementsByClassName("guestbtn");
+  for (i = 0; i < x.length; i++) {
+      activebtn[i].className = activebtn[i].className.replace(" w3-dark-grey", "");
   }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " w3-dark-grey";
+}
+/**
+var pbtn = document.getElementsByClassName("playlistbtn")[0];
+pbtn.click();
+
+// Tabs
+function openPlaylist(evt, cityName) {
+  var i;
+  var x = document.getElementsByClassName("playlist");
+  for (i = 0; i < x.length; i++) {
+     x[i].style.display = "none";
+  }
+  var activebtn = document.getElementsByClassName("playlistbtn");
+  for (i = 0; i < x.length; i++) {
+      activebtn[i].className = activebtn[i].className.replace(" w3-dark-grey", "");
+  }
+  document.getElementById(cityName).style.display = "block";
+  evt.currentTarget.className += " w3-dark-grey";
+}
+*/
+var gbtn = document.getElementsByClassName("guestbtn")[0];
+gbtn.click();
+
+/**
+ * Obtains parameters from the hash of the URL
+ * @return Object
+
+function newPlaylist() {
+  document.getElementById('playlistiFrame').src = params.playlistID;
+}
+ */
+function getHashParams() {
+  var hashParams = {}
+  var e, r = /([^&=]+)=?([^&]*)/g,
+      q = window.location.hash.substring(1)
+  while ( e = r.exec(q)) {
+     hashParams[e[1]] = decodeURIComponent(e[2])
+  }
+  return hashParams
+}
+var params = getHashParams()
+var hostID = params.hostID,
+    playlistID = params.playlistID,
+    error = params.error
+
+if (error) {
+  alert('There was an error during the authentication')
+} else {
+  if (hostID) {
+    document.getElementById('hostID1').value = hostID;
+    document.getElementById('hostID2').value = hostID;
+    document.getElementById('hostID3').value = hostID;
+    document.getElementById('hostID4').value = hostID;
+    document.getElementById('hostID5').value = hostID;
+    document.getElementById('hostID6').value = hostID;
+    document.getElementById('hostID7').value = hostID;
+    document.getElementById('hostID8').value = hostID;
+    document.getElementById('hostID9').value = hostID;
+    document.getElementById('hostID10').value = hostID;
+    document.getElementById('hostID11').value = hostID;
+    document.getElementById('hostID12').value = hostID;
+    document.getElementById('hostID13').value = hostID;
+  }
+}
 </script>
+
+</body>
+</html>
+
