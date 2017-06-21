@@ -29,7 +29,6 @@ function HandleIncomingMessage (req, res, db){
     return databaseHostTools.searchDatabaseForHost (guestObject)
   })
   .then (function (guestObject){
-    console.log (guestObject)
     if ((guestMessage === 'yes') & (guestObject.guest.currentTrack.trackID != '')){ 
       return guestConfirmingCurrentTrack (guestObject)
     }else{
@@ -112,9 +111,6 @@ function searchForNewRequest (guestObject){
   return new Promise (function (fulfill, reject){
     spotifyGuestTools.searchSpotify (guestObject)
     .then (function (guestObject){
-      console.log (guestObject)
-      console.log (guestObject.totalTracks)
-      console.log (guestObject.tracks)
       return spotifyTrackTools.obtainYearReleased (guestObject)
     })
     .then (function(guestObject){
