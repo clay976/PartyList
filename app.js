@@ -234,6 +234,7 @@ TO BE SENT:
   }
 _______________________________________________________________________*/
   app.post('/guests/add', function (req, res){
+    console.log (req.body)
     guestTools.addGuest (req, res, db)
   })
 
