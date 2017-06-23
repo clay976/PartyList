@@ -114,6 +114,7 @@ function searchForNewRequest (guestObject){
       return spotifyTrackTools.obtainYearReleased (guestObject)
     })
     .then (function(guestObject){
+      console.log (guestObject.tracks)
       return databaseTrackTools.incrementOrAddSongInDatabase (guestObject)
     })
     .then (function (guestObject){
