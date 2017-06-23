@@ -130,6 +130,7 @@ function searchForNewRequest (guestObject){
       return spotifyGuestTools.checkForPreviousRequests (guestObject)
     })
     .then (function (guestObject){
+      console.log (guestObject.tracks)
       return (databaseGuestTools.setCurrentTrack (guestObject))
     })
     .catch (function (err){
