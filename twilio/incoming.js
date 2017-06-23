@@ -119,6 +119,7 @@ function searchForNewRequest (guestObject){
       return databaseTrackTools.incrementOrAddSongInDatabase (guestObject)
     })
     .then (function (guestObject){
+      console.log (guestObject.guest)
       console.log ('explicit filter__________________________________________________')
       return databaseHostTools.verifyExplicitFilter (guestObject)
     })
