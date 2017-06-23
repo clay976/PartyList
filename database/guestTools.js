@@ -91,7 +91,8 @@ function setCurrentTracks (guestObject){
 function clearAndAddPreviousRequest (guestObject){
   return new Promise (function (fulfill, reject){
     var query   = { 'phoneNum' : guestObject.guest.phoneNum}
-    var update  = JSONtemplate.clearGuestTrack (-1, guestObject.guest.currentTrack.trackID)
+
+    var update  = JSONtemplate.clearGuestTrack (-1, guestObject.guest.currentTracks[guestObject.guest.lastMessage - 1].trackID)
 
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (function (guest){
