@@ -12,6 +12,7 @@ function obtainYearReleased (guestObject){
 				reject (err)
 			})
 		}
+		console.log (guestObject.tracks)
 		fulfill (guestObject)
 	})
 }
