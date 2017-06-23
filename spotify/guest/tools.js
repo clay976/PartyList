@@ -55,6 +55,7 @@ function buildResponse (guestObject){
       }
       response = response+(index+1)+ ': ' +guestObject.tracks[index]+ '\n\n'
     }
+    response = response + 'Send back the track\'s number to confirm.'
     guestObject.response = response
     fulfill (guestObject.response)
   })
