@@ -8,7 +8,10 @@ function obtainYearReleased (guestObject){
 		var y4 = hostAcountTools.spotifyApi.getAlbum (guestObject.tracks[3].albumID)
 
 		Promise.all([y1, y2, y3, y4]).then(function (values){ 
-			console.log (values)
+			guestObject.tracks[0].yearReleased = values[0].body.release_date.substring(0, 4)
+			guestObject.tracks[1].yearReleased = values[1].body.release_date.substring(0, 4)
+			guestObject.tracks[2].yearReleased = values[2].body.release_date.substring(0, 4)
+			guestObject.tracks[3].yearReleased = values[3].body.release_date.substring(0, 4)
 			fulfill (guestObject)
 		})
 		.catch (function (err){
