@@ -48,11 +48,14 @@ function checkForPreviousRequests (guestObject){
 
 function buildResponse (guestObject){
   return new Promise (function (fulfill, reject){
+    var response = ''
     for (var index = 0; index < 4; index ++){
       if (guestObject.tracks[index].trackID){
         guestObject.tracks[index] = addResponse.askToConfirm (guestObject.tracks[index].name, guestObject.tracks[index].artist, guestObject.tracks[index].numRequests)
       }
+      response = response + guestObject.tracks[index]
     }
+    guestObject.response = response
     fulfill (guestObject)
   })
 }

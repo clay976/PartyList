@@ -26,23 +26,23 @@ function welcome (hostID, reqThreshold, playlistID){
 }
 
 function alreadyAdded (title, artist){
-  return ('We found: ' +title+ ', by: ' +artist+ '. This Track has already been added to the playlist. Search for a new one!')
+  return (title+ ', by: ' +artist+ '. Already added to playlist.')
 }
 
 function alreadyRequested (title, artist){
-  return ('We found: ' +title+ ', by: ' +artist+ '. You have already requested this Track. Ask someone else to request it and get it on the playlist!!')
+  return (title+ ', by: ' +artist+ '. You already requested this Track.')
 }
 
 function askToConfirm (name, artist, numRequests){
-  return ('We found: ' +name+ ', by: ' +artist+ '. This Track has ' +numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
+  return (name+ ', by: ' +artist+ ', ' +numRequests+ ' request(s)!')
 }
 
 function explicit (title, artist){
-  return ('We found: ' +title+ ', by: ' +artist+ '. This track cannot be added to the playlist as it is explicit and the host does not allow that')
+  return (title+ ', by: ' +artist+ '. Cannot be added, it is explicit')
 }
 
 function yearFilter (title, artist, min, year, max){
-  return ('We found: ' +title+ ', by: ' +artist+ '. This track cannot be added to the playlist as it is was released in ' +year+ '. Tracks must have been released between ' +min+ ' and ' +max+ '.')
+  return (title+ ', by: ' +artist+ '. Cannot be added. released in ' +year+ '. Must be released between ' +min+ ' and ' +max+ '.')
 }
 
 module.exports = {

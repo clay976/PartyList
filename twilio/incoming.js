@@ -36,6 +36,7 @@ function HandleIncomingMessage (req, res, db){
     }
   })
   .then (function (response){
+    console.log (response)
     resp.message (response)
     res.end(resp.toString())
   })
@@ -134,10 +135,7 @@ function searchForNewRequest (guestObject){
       return (databaseGuestTools.setCurrentTrack (guestObject))
     })
     .then (function (guestObject){
-      return (spotifyGuestTools.buildResponse (guestObject))
-    })
-    .then (function (guestObject){
-      console.log (guestObject.tracks)
+      fulfill (spotifyGuestTools.buildResponse (guestObject))
     })
     .catch (function (err){
       reject (err)
