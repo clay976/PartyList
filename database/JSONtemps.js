@@ -91,7 +91,8 @@ function clearGuestTrack (num, trackID){
       numRequests   : num
     }, 
     $set            : { 
-      currentTracks : [],
+      currentTracks : []
+    },
     $push           : {
       prevRequests  : trackID
     }
