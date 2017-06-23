@@ -40,6 +40,7 @@ function checkForPreviousRequests (guestObject){
             guestObject.tracks[index] = addResponse.alreadyRequested (guestObject.tracks[index].name, guestObject.tracks[index].artist)
           }
           else {
+            console.log (addResponse.askToConfirm (guestObject.tracks[index].name, guestObject.tracks[index].artist, guestObject.tracks[index].numRequests))
             guestObject.tracks[index] = addResponse.askToConfirm (guestObject.tracks[index].name, guestObject.tracks[index].artist, guestObject.tracks[index].numRequests)
           }
         }

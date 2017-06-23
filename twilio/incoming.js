@@ -115,30 +115,22 @@ function searchForNewRequest (guestObject){
     })
     .then (function(guestObject){
       console.log ('incrementing or adding__________________________________________________')
-      console.log (guestObject)
       return databaseTrackTools.incrementOrAddSongInDatabase (guestObject)
     })
     .then (function (guestObject){
       console.log ('explicit filter__________________________________________________')
-      console.log (guestObject)
       return databaseHostTools.verifyExplicitFilter (guestObject)
     })
     .then (function (guestObject){
       console.log ('year filter__________________________________________________')
-      console.log (guestObject)
       return databaseHostTools.verifyYearFilter (guestObject)
     })
     .then (function (guestObject){
       console.log ('previous requests__________________________________________________')
-      console.log (guestObject)
       return spotifyGuestTools.checkForPreviousRequests (guestObject)
     })
     .then (function (guestObject){
-      console.log (guestObject)
       return (databaseGuestTools.setCurrentTrack (guestObject))
-    })
-    .then (function (guestObject){
-      fulfill (databaseGuestTools.setCurrentTrack (guestObject))
     })
     .catch (function (err){
       reject (err)
