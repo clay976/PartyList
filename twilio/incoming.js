@@ -117,13 +117,13 @@ function searchForNewRequest (guestObject){
       return databaseTrackTools.incrementOrAddSongInDatabase (guestObject)
     })
     .then (function (guestObject){
-      console.log (guestObject)
       return databaseHostTools.verifyExplicitFilter (guestObject)
     })
     .then (function (guestObject){
       return databaseHostTools.verifyYearFilter (guestObject)
     })
     .then (function (guestObject){
+      console.log (guestObject)
       return spotifyGuestTools.checkForPreviousRequests (guestObject)
     })
     .then (function (guestObject){
