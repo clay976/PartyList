@@ -56,7 +56,7 @@ function buildResponse (guestObject){
       response = response + guestObject.tracks[index]
     }
     guestObject.response = response
-    fulfill (guestObject)
+    fulfill (guestObject.response)
   })
 }
 
