@@ -123,14 +123,10 @@ function searchForNewRequest (guestObject){
       return databaseHostTools.verifyYearFilter (guestObject)
     })
     .then (function (guestObject){
-      console.log (guestObject)
       return spotifyGuestTools.checkForPreviousRequests (guestObject)
     })
     .then (function (guestObject){
-      return databaseGuestTools.setCurrentTrack (guestObject)
-    })
-    .then (function (guestObject){
-      fulfill (addResponse.askToConfirm (guestObject))
+      fulfill (databaseGuestTools.setCurrentTrack (guestObject))
     })
     .catch (function (err){
       reject (err)

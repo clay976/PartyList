@@ -76,11 +76,11 @@ function validateGuest (guestNumber, message){
 function setCurrentTrack (guestObject){
   return new Promise (function (fulfill, reject){
     var query   = {'phoneNum' : guestObject.guest.phoneNum}
-    var update  = {$set : {'currentTrack' : guestObject.tracks[index]}}
+    var update  = {$set : {'currentTracks' : [guestObject.tracks[0], guestObject.tracks[1], guestObject.tracks[2], guestObject.tracks[3]]}}
 
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (function (guest){
-      fulfill (guestObject)
+      fulfill (guestObject.response)
     })
     .catch (function (err){
       reject (err)
