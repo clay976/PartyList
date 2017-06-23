@@ -80,7 +80,7 @@ function setCurrentTrack (guestObject){
 
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (function (guest){
-      fulfill (guestObject.response)
+      fulfill (guestObject)
     })
     .catch (function (err){
       reject (err)

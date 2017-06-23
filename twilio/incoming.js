@@ -135,6 +135,9 @@ function searchForNewRequest (guestObject){
     })
     .then (function (guestObject){
       console.log (guestObject)
+      return (databaseGuestTools.setCurrentTrack (guestObject))
+    })
+    .then (function (guestObject){
       fulfill (databaseGuestTools.setCurrentTrack (guestObject))
     })
     .catch (function (err){

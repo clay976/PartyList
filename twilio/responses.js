@@ -34,7 +34,7 @@ function alreadyRequested (title, artist){
 }
 
 function askToConfirm (guestObject, index){
-  return ('We found: ' +guestObject.tracks[index].name+ ', by: ' +guestObject.tracks[index].artist+ '. This Track has ' +guestObject.tracks[index].numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
+  return ('We found: ' +name+ ', by: ' +artist+ '. This Track has ' +numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
 }
 
 function explicit (title, artist){
