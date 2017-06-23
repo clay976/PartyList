@@ -1,22 +1,19 @@
 var databaseHostTools   = require ('../../database/hostTools')
 var databaseGuestTools  = require ('../../database/guestTools')
 var addResponse         = require ('../../twilio/responses')
+var JSONtemp            = require ('./JSONtemps')
 
 function searchSpotify (guestObject){
   var query = guestObject.guest.lastMessage
   return new Promise (function (fulfill, reject){
     var error = 'error searching spotify for song, please try again'
-    databaseHostTools.spotifyApi.searchTracks (query, { limit : 1 })//search spotify for a track based on the message we got from the
+    databaseHostTools.spotifyApi.setAccessToken(guestObject.host.access_token)
+    databaseHostTools.spotifyApi.searchTracks (query, { limit : 4 })//search spotify for a track based on the message we got from the
     .then (function (spotifyTrack){
+      console.log ('number of items found on Spotify :' +spotifyTrack.body.tracks.total)
       if (spotifyTrack.body.tracks.total != 0){ //we found a track on spotify matching the guest message)
-        guestObject.track = {
-          'trackID'     : spotifyTrack.body.tracks.items[0].id,
-          'albumID'     : spotifyTrack.body.tracks.items[0].album.id,
-          'name'        : spotifyTrack.body.tracks.items[0].name,
-          'artist'      : spotifyTrack.body.tracks.items[0].artists[0].name,
-          'numRequests' : 0,
-          'explicit'    : spotifyTrack.body.tracks.items[0].explicit
-        }
+        guestObject.totalTracks = spotifyTrack.body.tracks.total
+        guestObject.tracks = JSONtemp.populateGuestObjectTracks (spotifyTrack)
         fulfill (guestObject)
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
         guestObject.guest.currentTrack.trackID = null
@@ -33,22 +30,39 @@ function searchSpotify (guestObject){
 
 function checkForPreviousRequests (guestObject){
   return new Promise (function (fulfill, reject){
-    if (guestObject.track.addedPlaylist){
-      reject (addResponse.alreadyAdded (guestObject.track.name, guestObject.track.artist))
-    }else{
-      for (var i = 0; i < guestObject.guest.prevRequests.length; i++){
-        if (guestObject.track.trackID === guestObject.guest.prevRequests[i]){
-          //we found that the guest has already requested the same track they searched so reject with that message right away
-          reject (addResponse.alreadyRequested (guestObject.track.name, guestObject.track.artist))
+    for (var index = 0; index < 4; index ++){
+      if (guestObject.tracks[index].addedPlaylist){
+        guestObject.tracks[index] = addResponse.alreadyAdded (guestObject.tracks[index].name, guestObject.tracks[index].artist)
+      }else{
+        for (var i = 0; i < guestObject.guest.prevRequests.length; i++){
+          if (guestObject.tracks[index].trackID === guestObject.guest.prevRequests[i]){
+            //we found that the guest has already requested the same track they searched so reject with that message right away
+            guestObject.tracks[index] = addResponse.alreadyRequested (guestObject.tracks[index].name, guestObject.tracks[index].artist)
+          }
         }
       }
-      //this is a new request from this guest so continue on the function chain
-      fulfill (guestObject)
     }
+    fulfill (guestObject)
+  })
+}
+
+function buildResponse (guestObject){
+  return new Promise (function (fulfill, reject){
+    var response = 'We Found: \n'
+    for (var index = 0; index < 4; index ++){
+      if (guestObject.tracks[index].trackID){
+        guestObject.tracks[index] = addResponse.askToConfirm (guestObject.tracks[index].name, guestObject.tracks[index].artist, guestObject.tracks[index].numRequests)
+      }
+      response = response+(index+1)+ ': ' +guestObject.tracks[index]+ '\n\n'
+    }
+    response = response + 'Send back the track number to confirm.'
+    guestObject.response = response
+    fulfill (guestObject.response)
   })
 }
 
 module.exports = {
   searchSpotify             : searchSpotify,
-  checkForPreviousRequests  : checkForPreviousRequests
+  checkForPreviousRequests  : checkForPreviousRequests,
+  buildResponse             : buildResponse
 }

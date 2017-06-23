@@ -29,7 +29,7 @@ function HandleIncomingMessage (req, res, db){
     return databaseHostTools.searchDatabaseForHost (guestObject)
   })
   .then (function (guestObject){
-    if ((guestMessage === 'yes') & (guestObject.guest.currentTrack.trackID != '')){ 
+    if (((guestMessage === '1') || (guestMessage === '2') || (guestMessage === '3') ||(guestMessage === '4')) & (guestObject.guest.currentTracks != '')){ 
       return guestConfirmingCurrentTrack (guestObject)
     }else{
       return searchForNewRequest (guestObject)
@@ -126,10 +126,10 @@ function searchForNewRequest (guestObject){
       return spotifyGuestTools.checkForPreviousRequests (guestObject)
     })
     .then (function (guestObject){
-      return databaseGuestTools.setCurrentTrack (guestObject)
+      return (databaseGuestTools.setCurrentTracks (guestObject))
     })
     .then (function (guestObject){
-      fulfill (addResponse.askToConfirm (guestObject))
+      fulfill (spotifyGuestTools.buildResponse (guestObject))
     })
     .catch (function (err){
       reject (err)

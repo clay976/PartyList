@@ -13,11 +13,7 @@ function Host (data, accessToken, refreshToken, homePage, playID, playName){
 
 function Guest (host, number){
 	return {
-		'currentTrack'	: { 
-		  'trackID'     : '',
-		  'name'        : '',
-		  'artist'      : ''
-		},
+		'currentTracks'	: [],
 		'lastMessage'   : '',
 		'prevRequests'  : [],
   	'hostID'				: host,
@@ -51,7 +47,7 @@ function guestConfirm(){
   }
 }
 
-function setGuestTrack (id, name, artist, numRequests){
+function setGuestTrack (tracks){
 	return	{
     trackID     : id, 
     name        : name, 
@@ -84,7 +80,7 @@ function accessToken (aToken){
 function spotifyGuest (databaseObject){
   return {
     "guest" : databaseObject,
-    "track" : null,
+    "tracks" : null,
     "host"  : null
   }
 }
@@ -95,11 +91,7 @@ function clearGuestTrack (num, trackID){
       numRequests   : num
     }, 
     $set            : { 
-      currentTrack  : {
-        trackID     : '', 
-        name        : '', 
-        artist      : ''
-      }
+      currentTracks : []
     },
     $push           : {
       prevRequests  : trackID

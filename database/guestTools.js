@@ -24,7 +24,6 @@ function addGuest (req, res){
   var guestQuery    = {'phoneNum': '+1' +guestNum}
   var infoToInsert  = JSONtemplate.Guest (hostID, '+1' +guestNum)
   var hostInfo      = hostAcountTools.validateHost (hostID)
-  
   hostInfo
   .then (validateRequest(req))
   .then (model.Guest.findOneAndUpdate(guestQuery, infoToInsert, {upsert:true}).exec())
@@ -73,11 +72,10 @@ function validateGuest (guestNumber, message){
   })
 }
 
-function setCurrentTrack (guestObject){
+function setCurrentTracks (guestObject){
   return new Promise (function (fulfill, reject){
-    var track   = JSONtemplate.setGuestTrack (guestObject.track.trackID, guestObject.track.name, guestObject.track.artist, guestObject.track.numRequests)
     var query   = {'phoneNum' : guestObject.guest.phoneNum}
-    var update  = {$set : {'currentTrack' : track}}
+    var update  = {$set : {'currentTracks' : [guestObject.tracks[0], guestObject.tracks[1], guestObject.tracks[2], guestObject.tracks[3]]}}
 
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (function (guest){
@@ -93,7 +91,8 @@ function setCurrentTrack (guestObject){
 function clearAndAddPreviousRequest (guestObject){
   return new Promise (function (fulfill, reject){
     var query   = { 'phoneNum' : guestObject.guest.phoneNum}
-    var update  = JSONtemplate.clearGuestTrack (-1, guestObject.guest.currentTrack.trackID)
+
+    var update  = JSONtemplate.clearGuestTrack (-1, guestObject.guest.currentTracks[guestObject.guest.lastMessage - 1].trackID)
 
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (function (guest){
@@ -116,7 +115,7 @@ function welcomeMessage (toNum, hostID, reqThreshold, playlistID){
 module.exports = {
   addManyGuest                : addManyGuest,
   validateGuest               : validateGuest,
-  setCurrentTrack             : setCurrentTrack,
+  setCurrentTracks             : setCurrentTracks,
   clearAndAddPreviousRequest  : clearAndAddPreviousRequest,
   addGuest                    : addGuest
 }

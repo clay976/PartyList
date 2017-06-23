@@ -80,22 +80,23 @@ function maxYear (req, res){
 
 function verifyExplicitFilter (guestObject) {
   return new Promise (function (fulfill, reject){
-    if (!guestObject.host.explicit && guestObject.track.explicit){
-      reject (addResponse.explicit(guestObject.track.name, guestObject.track.artist))
-    }else{
-      fulfill (guestObject)
+    for (var index = 0; index < 4; index ++){
+      if (!guestObject.host.explicit && guestObject.tracks[index].explicit){
+        guestObject.tracks[index] = addResponse.explicit(guestObject.tracks[index].name, guestObject.tracks[index].artist)
+      }
     }
+    fulfill (guestObject)
   })
 }
 
 function verifyYearFilter (guestObject) {
   return new Promise (function (fulfill, reject){
-    console.log ('min ' +guestObject.host.minYear+ ' is less than ' +guestObject.track.yearReleased+ ' which is less than ' +guestObject.host.maxYear)
-    if ((guestObject.host.minYear <= guestObject.track.yearReleased) & (guestObject.track.yearReleased <= guestObject.host.maxYear)){
-      fulfill (guestObject)
-    }else{
-      reject (addResponse.yearFilter(guestObject.track.name, guestObject.track.artist, guestObject.host.minYear, guestObject.track.yearReleased, guestObject.host.maxYear))
+    for (var index = 0; index < 4; index ++){
+      if ((guestObject.tracks[index].yearReleased < guestObject.host.minYear ) || (guestObject.host.maxYear < guestObject.tracks[index].yearReleased)){
+        guestObject.tracks[index] = addResponse.yearFilter(guestObject.tracks[index].name, guestObject.tracks[index].artist, guestObject.host.minYear, guestObject.tracks[index].yearReleased, guestObject.host.maxYear)
+      }
     }
+    fulfill (guestObject)
   })
 }
 
