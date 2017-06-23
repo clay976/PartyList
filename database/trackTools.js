@@ -83,9 +83,16 @@ function searchDatabaseForTrack (guestObject){
 
 function updateOrInsert (guestObject, track, q, index){
   return new Promise (function (fulfill, reject){
+    console.log (track)
     if (track) {
       var update = {$inc: { foundAmount: 1}}
-      fulfill (model.Track.findOneAndUpdate(q, update).exec())
+      model.Track.findOneAndUpdate(q, update).exec()
+      .then (function (){
+        fulfill (guestObject)
+      })
+      .catch (function (err){
+        reject (err)
+      })
     }else{
       var update  = JSONtemplate.Track (guestObject.guest.hostID, guestObject.tracks[index].trackID, guestObject.tracks[index].name, guestObject.tracks[index].artist, guestObject.tracks[index].explicit, guestObject.tracks[index].yearReleased)
       model.Track.findOneAndUpdate(q, update, {upsert : true}).exec()
