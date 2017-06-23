@@ -51,7 +51,7 @@ function guestConfirm(){
   }
 }
 
-function setGuestTrack (id, name, artist, numRequests){
+function setGuestTrack (tracks){
 	return	{
     trackID     : id, 
     name        : name, 

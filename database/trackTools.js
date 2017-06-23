@@ -34,14 +34,14 @@ function incrementSongsRequestsInDatabase (guestObject){
 function incrementOrAddSongInDatabase (guestObject){
   return new Promise (function (fulfill, reject){
     for (var index = 0; index < 4; index ++){
-      var query = {$and: [{ 'trackID' : guestObject.track[index].trackID}, {'hostID' : guestObject.guest.hostID}]}
+      var query = {$and: [{ 'trackID' : guestObject.tracks[index].trackID}, {'hostID' : guestObject.guest.hostID}]}
       model.Track.findOne (query)
       .then (function (track){
         if (track) {
           var update = {$inc: { foundAmount: 1}}
           return model.Track.findOneAndUpdate(query, update).exec()
         }else{
-          var update  = JSONtemplate.Track (guestObject.guest.hostID, guestObject.track[index].trackID, guestObject.track[index].name, guestObject.track[index].artist, guestObject.track[index].explicit, guestObject.track[index].yearReleased)
+          var update  = JSONtemplate.Track (guestObject.guest.hostID, guestObject.tracks[index].trackID, guestObject.tracks[index].name, guestObject.tracks[index].artist, guestObject.tracks[index].explicit, guestObject.tracks[index].yearReleased)
           return model.Track.findOneAndUpdate(query, update, {upsert : true}).exec()
         }
       })

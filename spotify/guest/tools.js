@@ -30,17 +30,19 @@ function searchSpotify (guestObject){
 
 function checkForPreviousRequests (guestObject){
   return new Promise (function (fulfill, reject){
-    if (guestObject.track.addedPlaylist){
-      reject (addResponse.alreadyAdded (guestObject.track.name, guestObject.track.artist))
-    }else{
-      for (var i = 0; i < guestObject.guest.prevRequests.length; i++){
-        if (guestObject.track.trackID === guestObject.guest.prevRequests[i]){
-          //we found that the guest has already requested the same track they searched so reject with that message right away
-          reject (addResponse.alreadyRequested (guestObject.track.name, guestObject.track.artist))
+    for (var index = 0; index < 4; index ++){
+      if (guestObject.tracks[index].addedPlaylist){
+        reject (addResponse.alreadyAdded (guestObject.tracks[index].name, guestObject.tracks[index].artist))
+      }else{
+        for (var i = 0; i < guestObject.guest.prevRequests.length; i++){
+          if (guestObject.tracks[index].trackID === guestObject.guest.prevRequests[i]){
+            //we found that the guest has already requested the same track they searched so reject with that message right away
+            reject (addResponse.alreadyRequested (guestObject.tracks[index].name, guestObject.tracks[index].artist))
+          }
         }
+        //this is a new request from this guest so continue on the function chain
+        fulfill (guestObject)
       }
-      //this is a new request from this guest so continue on the function chain
-      fulfill (guestObject)
     }
   })
 }

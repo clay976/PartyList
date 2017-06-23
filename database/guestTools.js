@@ -75,9 +75,8 @@ function validateGuest (guestNumber, message){
 
 function setCurrentTrack (guestObject){
   return new Promise (function (fulfill, reject){
-    var track   = JSONtemplate.setGuestTrack (guestObject.track.trackID, guestObject.track.name, guestObject.track.artist, guestObject.track.numRequests)
     var query   = {'phoneNum' : guestObject.guest.phoneNum}
-    var update  = {$set : {'currentTrack' : track}}
+    var update  = {$set : {'currentTrack' : guestObject.tracks[index]}}
 
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (function (guest){
