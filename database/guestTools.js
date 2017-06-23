@@ -59,6 +59,7 @@ function validateGuest (guestNumber, message){
   return new Promise (function (fulfill, reject){
     model.Guest.findOne({ 'phoneNum' : guestNumber })
     .then (function (guestInfo){
+      console.log (guestInfo)
       if (guestInfo){
         if (guestInfo.hostID){
           var guestObject = JSONtemplate.spotifyGuest (guestInfo)
