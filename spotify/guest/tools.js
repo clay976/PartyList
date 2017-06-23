@@ -53,7 +53,7 @@ function buildResponse (guestObject){
       if (guestObject.tracks[index].trackID){
         guestObject.tracks[index] = addResponse.askToConfirm (guestObject.tracks[index].name, guestObject.tracks[index].artist, guestObject.tracks[index].numRequests)
       }
-      response = response+index+ ': ' +guestObject.tracks[index] '\n\n'
+      response = response+index+ ': ' +guestObject.tracks[index]+ '\n\n'
     }
     guestObject.response = response
     fulfill (guestObject.response)
