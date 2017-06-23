@@ -72,7 +72,7 @@ function validateGuest (guestNumber, message){
   })
 }
 
-function setCurrentTrack (guestObject){
+function setCurrentTracks (guestObject){
   return new Promise (function (fulfill, reject){
     var query   = {'phoneNum' : guestObject.guest.phoneNum}
     var update  = {$set : {'currentTracks' : [guestObject.tracks[0], guestObject.tracks[1], guestObject.tracks[2], guestObject.tracks[3]]}}
@@ -114,7 +114,7 @@ function welcomeMessage (toNum, hostID, reqThreshold, playlistID){
 module.exports = {
   addManyGuest                : addManyGuest,
   validateGuest               : validateGuest,
-  setCurrentTrack             : setCurrentTrack,
+  setCurrentTracks             : setCurrentTracks,
   clearAndAddPreviousRequest  : clearAndAddPreviousRequest,
   addGuest                    : addGuest
 }

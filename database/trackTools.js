@@ -50,7 +50,6 @@ function incrementOrAddSongInDatabase (guestObject){
       var u4 = updateOrInsert (guestObject, tracks[3], q4, 3)
 
       Promise.all([u1, u2, u3, u4]).then(function (updates){
-        console.log (updates)
         guestObject.tracks[0] = updates[0]
         guestObject.tracks[1] = updates[1]
         guestObject.tracks[2] = updates[2]
