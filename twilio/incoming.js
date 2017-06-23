@@ -125,17 +125,14 @@ function searchForNewRequest (guestObject){
       return databaseHostTools.verifyExplicitFilter (guestObject)
     })
     .then (function (guestObject){
-      console.log (guestObject)
       console.log ('year filter__________________________________________________')
       return databaseHostTools.verifyYearFilter (guestObject)
     })
     .then (function (guestObject){
-      console.log (guestObject)
       console.log ('previous requests__________________________________________________')
       return spotifyGuestTools.checkForPreviousRequests (guestObject)
     })
     .then (function (guestObject){
-      console.log (guestObject)
       console.log ('setting tracks__________________________________________________')
       return (databaseGuestTools.setCurrentTrack (guestObject))
     })

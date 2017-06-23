@@ -50,6 +50,7 @@ function incrementOrAddSongInDatabase (guestObject){
       var u4 = updateOrInsert (guestObject, tracks[3], q4, 3)
 
       Promise.all([u1, u2, u3, u4]).then(function (updates){
+        console.log (updates)
         guestObject.tracks[0] = updates[0]
         guestObject.tracks[1] = updates[1]
         guestObject.tracks[2] = updates[2]
@@ -83,12 +84,11 @@ function searchDatabaseForTrack (guestObject){
 
 function updateOrInsert (guestObject, track, q, index){
   return new Promise (function (fulfill, reject){
-    console.log (track)
     if (track) {
       var update = {$inc: { foundAmount: 1}}
       model.Track.findOneAndUpdate(q, update).exec()
-      .then (function (){
-        fulfill (guestObject)
+      .then (function (track){
+        fulfill (track)
       })
       .catch (function (err){
         reject (err)
@@ -96,7 +96,7 @@ function updateOrInsert (guestObject, track, q, index){
     }else{
       var update  = JSONtemplate.Track (guestObject.guest.hostID, guestObject.tracks[index].trackID, guestObject.tracks[index].name, guestObject.tracks[index].artist, guestObject.tracks[index].explicit, guestObject.tracks[index].yearReleased)
       model.Track.findOneAndUpdate(q, update, {upsert : true}).exec()
-      .then (function (update){
+      .then (function (value){
         fulfill (update)
       })
       .catch (function (err){
