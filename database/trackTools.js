@@ -88,7 +88,13 @@ function updateOrInsert (guestObject, track, q, index){
       fulfill (model.Track.findOneAndUpdate(q, update).exec())
     }else{
       var update  = JSONtemplate.Track (guestObject.guest.hostID, guestObject.tracks[index].trackID, guestObject.tracks[index].name, guestObject.tracks[index].artist, guestObject.tracks[index].explicit, guestObject.tracks[index].yearReleased)
-      fulfill (model.Track.findOneAndUpdate(q, update, {upsert : true}).exec())
+      model.Track.findOneAndUpdate(q, update, {upsert : true}).exec()
+      .then (function (update){
+        fulfill (update)
+      })
+      .catch (function (err){
+        reject (err)
+      })
     }
   })
 }
