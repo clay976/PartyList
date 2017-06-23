@@ -7,12 +7,12 @@ function obtainYearReleased (guestObject){
 			.then (function(album){
 				var date = album.body.release_date.substring(0, 4);
 				guestObject.tracks[index].yearReleased = date
+				console.log (guestObject.tracks[index].yearReleased)
 			})
 			.catch (function (err){
 				reject (err)
 			})
 		}
-		console.log (guestObject.tracks)
 		fulfill (guestObject)
 	})
 }
