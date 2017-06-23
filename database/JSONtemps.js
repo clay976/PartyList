@@ -13,11 +13,7 @@ function Host (data, accessToken, refreshToken, homePage, playID, playName){
 
 function Guest (host, number){
 	return {
-		'currentTrack'	: { 
-		  'trackID'     : '',
-		  'name'        : '',
-		  'artist'      : ''
-		},
+		'currentTracks'	: [],
 		'lastMessage'   : '',
 		'prevRequests'  : [],
   	'hostID'				: host,

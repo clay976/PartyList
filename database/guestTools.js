@@ -24,7 +24,7 @@ function addGuest (req, res){
   var guestQuery    = {'phoneNum': '+1' +guestNum}
   var infoToInsert  = JSONtemplate.Guest (hostID, '+1' +guestNum)
   var hostInfo      = hostAcountTools.validateHost (hostID)
-  console.log (guestNum, infoToInsert)
+  console.log (infoToInsert)
   hostInfo
   .then (validateRequest(req))
   .then (model.Guest.findOneAndUpdate(guestQuery, infoToInsert, {upsert:true}).exec())
