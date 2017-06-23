@@ -32,6 +32,7 @@ function incrementSongsRequestsInDatabase (guestObject){
 }
 
 function incrementOrAddSongInDatabase (guestObject){
+  console.log (guestObject)
   return new Promise (function (fulfill, reject){
     for (var index = 0; index < 4; index ++){
       var query = {$and: [{ 'trackID' : guestObject.tracks[index].trackID}, {'hostID' : guestObject.guest.hostID}]}
