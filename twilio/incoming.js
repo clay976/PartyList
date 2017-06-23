@@ -115,23 +115,27 @@ function searchForNewRequest (guestObject){
       return spotifyTrackTools.obtainYearReleased (guestObject)
     })
     .then (function(guestObject){
+      console.log (guestObject)
       console.log ('incrementing or adding__________________________________________________')
       return databaseTrackTools.incrementOrAddSongInDatabase (guestObject)
     })
     .then (function (guestObject){
-      console.log (guestObject.guest)
+      console.log (guestObject)
       console.log ('explicit filter__________________________________________________')
       return databaseHostTools.verifyExplicitFilter (guestObject)
     })
     .then (function (guestObject){
+      console.log (guestObject)
       console.log ('year filter__________________________________________________')
       return databaseHostTools.verifyYearFilter (guestObject)
     })
     .then (function (guestObject){
+      console.log (guestObject)
       console.log ('previous requests__________________________________________________')
       return spotifyGuestTools.checkForPreviousRequests (guestObject)
     })
     .then (function (guestObject){
+      console.log (guestObject)
       console.log ('setting tracks__________________________________________________')
       return (databaseGuestTools.setCurrentTrack (guestObject))
     })
