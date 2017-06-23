@@ -19,7 +19,8 @@ function populateGuestObjectTracks (spotifyTracks){
 	    'artist'      : spotifyTracks.body.tracks.items[index].artists[0].name,
 	    'albumID'     : spotifyTracks.body.tracks.items[index].album.id,
 	    'numRequests' : 0,
-	    'explicit'    : spotifyTracks.body.tracks.items[index].explicit
+	    'explicit'    : spotifyTracks.body.tracks.items[index].explicit,
+	    'yearReleased': null
   	}
 	}
 	return arr
