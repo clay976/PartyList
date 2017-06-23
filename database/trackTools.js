@@ -45,9 +45,9 @@ function incrementOrAddSongInDatabase (guestObject){
 
     Promise.all([t1, t2, t3, t4]).then(function (tracks){
       var u1 = updateOrInsert (guestObject, tracks[0], q1, 0)
-      var u1 = updateOrInsert (guestObject, tracks[1], q2, 1)
-      var u1 = updateOrInsert (guestObject, tracks[2], q3, 2)
-      var u1 = updateOrInsert (guestObject, tracks[3], q4, 3)
+      var u2 = updateOrInsert (guestObject, tracks[1], q2, 1)
+      var u3 = updateOrInsert (guestObject, tracks[2], q3, 2)
+      var u4 = updateOrInsert (guestObject, tracks[3], q4, 3)
 
       Promise.all([u1, u2, u3, u4]).then(function (updates){
         console.log (updates)
