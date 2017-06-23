@@ -33,7 +33,7 @@ function alreadyRequested (title, artist){
   return ('We found: ' +title+ ', by: ' +artist+ '. You have already requested this Track. Ask someone else to request it and get it on the playlist!!')
 }
 
-function askToConfirm (guestObject, index){
+function askToConfirm (name, artist, numRequests){
   return ('We found: ' +name+ ', by: ' +artist+ '. This Track has ' +numRequests+ ' request(s)! \n\n Send back "yes" to confirm or search another song to discard this request.')
 }
 
