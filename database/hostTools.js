@@ -82,7 +82,7 @@ function verifyExplicitFilter (guestObject) {
   return new Promise (function (fulfill, reject){
     for (var index = 0; index < 4; index ++){
       if (!guestObject.host.explicit && guestObject.tracks[index].explicit){
-        guestObject.tracks[index] = null
+        guestObject.tracks[index] = addResponse.explicit(guestObject.tracks[index].name, guestObject.tracks[index].artist)
       }
     }
     fulfill (guestObject)
@@ -94,7 +94,7 @@ function verifyYearFilter (guestObject) {
     console.log ('min ' +guestObject.host.minYear+ ' is less than ' +guestObject.tracks[index].yearReleased+ ' which is less than ' +guestObject.host.maxYear)
     for (var index = 0; index < 4; index ++){
       if ((guestObject.tracks[index].yearReleased < guestObject.host.minYear ) || (guestObject.host.maxYear < guestObject.tracks[index].yearReleased)){
-        guestObject.tracks[index] = null
+        guestObject.tracks[index] = addResponse.yearFilter(guestObject.tracks[index].name, guestObject.tracks[index].artist, guestObject.host.minYear, guestObject.tracks[index].yearReleased, guestObject.host.maxYear)
       }
     }
     fulfill (guestObject)
