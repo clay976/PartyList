@@ -24,10 +24,10 @@ function addGuest (req, res){
   var guestQuery    = {'phoneNum': '+1' +guestNum}
   var infoToInsert  = JSONtemplate.Guest (hostID, '+1' +guestNum)
   var hostInfo      = hostAcountTools.validateHost (hostID)
-  
+  console.log (guestNum, infoToInsert)
   hostInfo
   .then (validateRequest(req))
-  .then (model.Guest.findOneAndUpdate(guestQuery, infoToInsert, {upsert:true}))
+  .then (model.Guest.findOneAndUpdate(guestQuery, infoToInsert, {upsert:true}).exec())
   .then (function (hostInfo){
     client.sendMessage(welcomeMessage (guestNum, hostInfo.hostID, hostInfo.reqThreshold, hostInfo.playlistID))
   })
@@ -57,10 +57,8 @@ function validateRequest (req){
 //if their number is not found or if they are not apart of anyone's parties currently. They are told they are not a guest.
 function validateGuest (guestNumber, message){
   return new Promise (function (fulfill, reject){
-    console.log (guestNumber)
     model.Guest.findOne({ 'phoneNum' : guestNumber })
     .then (function (guestInfo){
-      console.log (guestInfo)
       if (guestInfo){
         if (guestInfo.hostID){
           var guestObject = JSONtemplate.spotifyGuest (guestInfo)
@@ -82,7 +80,7 @@ function setCurrentTrack (guestObject){
 
     model.Guest.findOneAndUpdate(query, update).exec()
     .then (function (guest){
-      fulfill (guestObject)
+      fulfill (guestObject.response)
     })
     .catch (function (err){
       reject (err)
