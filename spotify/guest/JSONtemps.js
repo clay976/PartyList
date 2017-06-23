@@ -23,7 +23,6 @@ function populateGuestObjectTracks (spotifyTracks){
 	    'explicit'    : spotifyTracks.body.tracks.items[index].explicit
   	}
 	}
-	console.log (arr)
 	return arr
 }
 

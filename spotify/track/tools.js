@@ -6,7 +6,7 @@ function obtainYearReleased (guestObject){
 			hostAcountTools.spotifyApi.getAlbum (guestObject.tracks[index].albumID)
 			.then (function(album){
 				var date = album.body.release_date.substring(0, 4);
-				guestObject.track.yearReleased = date
+				guestObject.tracks[index].yearReleased = date
 			})
 			.catch (function (err){
 				reject (err)
