@@ -27,7 +27,7 @@ function addGuest (req, res){
   
   hostInfo
   .then (validateRequest(req))
-  .then (model.Guest.findOneAndUpdate(guestQuery, infoToInsert, {upsert:true}).exec())
+  .then (model.Guest.findOneAndUpdate(guestQuery, infoToInsert, {upsert:true}))
   .then (function (hostInfo){
     client.sendMessage(welcomeMessage (guestNum, hostInfo.hostID, hostInfo.reqThreshold, hostInfo.playlistID))
   })
