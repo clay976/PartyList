@@ -57,6 +57,7 @@ function validateRequest (req){
 //if their number is not found or if they are not apart of anyone's parties currently. They are told they are not a guest.
 function validateGuest (guestNumber, message){
   return new Promise (function (fulfill, reject){
+    console.log (guestNumber)
     model.Guest.findOne({ 'phoneNum' : guestNumber })
     .then (function (guestInfo){
       console.log (guestInfo)
