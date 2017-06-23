@@ -29,8 +29,7 @@ function HandleIncomingMessage (req, res, db){
     return databaseHostTools.searchDatabaseForHost (guestObject)
   })
   .then (function (guestObject){
-    console.log (guestObject.guest.currentTracks)
-    if ((guestMessage === 'yes') & (guestObject.guest.currentTracks.trackID != '')){ 
+    if (((guestMessage === '1') || (guestMessage === '2') || (guestMessage === '3') ||(guestMessage === '4')) & (guestObject.guest.currentTracks != '')){ 
       return guestConfirmingCurrentTrack (guestObject)
     }else{
       return searchForNewRequest (guestObject)

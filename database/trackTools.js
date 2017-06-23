@@ -68,7 +68,7 @@ function incrementOrAddSongInDatabase (guestObject){
 
 function searchDatabaseForTrack (guestObject){
   return new Promise (function (fulfill, reject){
-    var query = {$and: [{ 'trackID' : guestObject.guest.currentTrack.trackID}, {'hostID' : guestObject.host.hostID}]}
+    var query = {$and: [{ 'trackID' : guestObject.guest.currentTracks[guestObject.guest.lastMessage].trackID}, {'hostID' : guestObject.host.hostID}]}
 
     model.Track.findOne(query)
     .then (function (databaseTrack){
