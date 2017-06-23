@@ -33,28 +33,30 @@ function incrementSongsRequestsInDatabase (guestObject){
 
 function incrementOrAddSongInDatabase (guestObject){
   return new Promise (function (fulfill, reject){
-    var query = {$and: [{ 'trackID' : guestObject.track.trackID}, {'hostID' : guestObject.guest.hostID}]}
-    model.Track.findOne (query)
-    .then (function (track){
-      if (track) {
-        var update = {$inc: { foundAmount: 1}}
-        return model.Track.findOneAndUpdate(query, update).exec()
-      }else{
-        var update  = JSONtemplate.Track (guestObject.guest.hostID, guestObject.track.trackID, guestObject.track.name, guestObject.track.artist, guestObject.track.explicit, guestObject.track.yearReleased)
-        return model.Track.findOneAndUpdate(query, update, {upsert : true}).exec()
-      }
-    })
-    .then (function (track){
-      if (track) {
-        guestObject.track = track
-        fulfill (guestObject)
-      }else{
-        fulfill (guestObject)
-      }
-    })
-    .catch (function (err){
-      reject (err)
-    })
+    for (var index = 0; index < 4; index ++){
+      var query = {$and: [{ 'trackID' : guestObject.track[index].trackID}, {'hostID' : guestObject.guest.hostID}]}
+      model.Track.findOne (query)
+      .then (function (track){
+        if (track) {
+          var update = {$inc: { foundAmount: 1}}
+          return model.Track.findOneAndUpdate(query, update).exec()
+        }else{
+          var update  = JSONtemplate.Track (guestObject.guest.hostID, guestObject.track[index].trackID, guestObject.track[index].name, guestObject.track[index].artist, guestObject.track[index].explicit, guestObject.track[index].yearReleased)
+          return model.Track.findOneAndUpdate(query, update, {upsert : true}).exec()
+        }
+      })
+      .then (function (track){
+        if (track) {
+          guestObject.track[index] = track
+          fulfill (guestObject)
+        }else{
+          fulfill (guestObject)
+        }
+      })
+      .catch (function (err){
+        reject (err)
+      })
+    }
   })
 }
 

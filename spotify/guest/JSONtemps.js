@@ -13,7 +13,6 @@ function populateGuestObjectTracks (spotifyTracks){
 	}
 
 	for (var index = 0; index <= limit; index ++){
-		console.log ('____________________________TRACK______________________________')
 		arr[index] = {
 	    'trackID'     : spotifyTracks.body.tracks.items[index].id,
 	    'name'        : spotifyTracks.body.tracks.items[index].name,
