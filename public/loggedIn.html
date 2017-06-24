@@ -19,11 +19,15 @@
   </header>
 
   <div class="w3-third w3-container">
-  <div class="w3-center">
-    <h4 class="w3-xlarge" >Playlist Settings</h4><br>
-  </div>
-    <div id="playlistSettings" class="w3-container playlist">
+    <div class="w3-center">
+      <h4 class="w3-xlarge" >Playlist Settings</h4><br>
+    </div>
+    <ul class="w3-navbar w3-light-grey">
+      <li><a class="w3-btn playlistbtn" onclick="openPlaylist(event, 'playlistSettings')">Settings</a></li>
+      <li><a class="w3-btn playlistbtn" onclick="openPlaylist(event, 'playlistss')">Playlists</a></li>
+    </ul>
 
+    <div id="playlistSettings" class="w3-container playlistDiv">
       <form id="input" action="/playlist/explicit" method="POST">
         <input id='hostID1' type='hidden' name ='hostID' > 
 
@@ -35,29 +39,6 @@
         <input type="submit" value="set">
       </form>
       <br>
-
-      <form id="input" action="/playlist/spotify/create" method="POST">
-        <input id='hostID3' type='hidden' name ='hostID'>
-        <input type="text" name="playName" placeholder="new playlist Name">
-        <input type="submit" value="create">
-      </form>
-
-      <form id="input" action="/playlist/spotify/latest" method="POST">
-        <input id='hostID4' type='hidden' name ='hostID'>
-        <input type="submit" value="find playlist">
-      </form>
-
-      <form id="input" action="/playlist/spotify/getAll" method="POST">
-        <input id='hostID5' type='hidden' name ='hostID'>
-        <input type="submit" value="retreive all playlists">
-      </form>
-
-      <form id="input" action="/playlist/spotify/set" method="POST">
-        <input id='hostID6' type='hidden' name ='hostID'>
-        <input type="text" name="playlistID" placeholder="playlist ID">
-        <input type="submit" value="set playlist">
-      </form>
-
       <form id="input" action="/playlist/requestThreshold" method="POST">
         <input id='hostID10' type='hidden' name ='hostID'>
         <input type="number" name="requests" placeholder="Requests to add a song to a playlist">
@@ -81,6 +62,30 @@
         <input type="submit" value="reset song requests">
       </form>
     </div>
+
+    <div id="playlistss" class="w3-container playlistDiv">
+      <form id="input" action="/playlist/spotify/create" method="POST">
+        <input id='hostID3' type='hidden' name ='hostID'>
+        <input type="text" name="playName" placeholder="new playlist Name">
+        <input type="submit" value="create">
+      </form>
+
+      <form id="input" action="/playlist/spotify/latest" method="POST">
+        <input id='hostID4' type='hidden' name ='hostID'>
+        <input type="submit" value="find playlist">
+      </form>
+
+      <form id="input" action="/playlist/spotify/getAll" method="POST">
+        <input id='hostID5' type='hidden' name ='hostID'>
+        <input type="submit" value="retreive all playlists">
+      </form>
+
+      <form id="input" action="/playlist/spotify/set" method="POST">
+        <input id='hostID6' type='hidden' name ='hostID'>
+        <input type="text" name="playlistID" placeholder="playlist ID">
+        <input type="submit" value="set playlist">
+      </form>
+    </div>  
   </div>
 
   <div class="w3-third w3-container">
@@ -88,9 +93,10 @@
       <h4 class="w3-xlarge" >Playlist</h4><br>
     </div>
     <div id="PlaylistView" class="w3-container playlist">
-      <iframe id="playlistiFrame" src="" width="100%" height="400" frameborder="0" allowtransparency="true"></iframe>
+      <iframe id="playlistiFrame" src="" width="100%" height="100%" frameborder="0" allowtransparency="true"></iframe>
     </div>
   </div>
+
   <div class="w3-third w3-container">
     <div class="w3-center">
       <h4 class="w3-xlarge" >Guests</h4><br>
@@ -123,8 +129,8 @@
       <input type="button" value="Change site" onClick="newSite()" />
       <iframe id="myIframe" src="http://getprismatic.com/" "></iframe>
     </div>
-
   </div>
+
 </div>
 
 <!--onLoad="iframeDidLoad();
@@ -160,14 +166,11 @@ function openGuests(evt, cityName) {
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.className += " w3-dark-grey";
 }
-/**
-var pbtn = document.getElementsByClassName("playlistbtn")[0];
-pbtn.click();
 
 // Tabs
 function openPlaylist(evt, cityName) {
   var i;
-  var x = document.getElementsByClassName("playlist");
+  var x = document.getElementsByClassName("playlistDiv");
   for (i = 0; i < x.length; i++) {
      x[i].style.display = "none";
   }
@@ -178,7 +181,10 @@ function openPlaylist(evt, cityName) {
   document.getElementById(cityName).style.display = "block";
   evt.currentTarget.className += " w3-dark-grey";
 }
-*/
+
+var pbtn = document.getElementsByClassName("playlistbtn")[0];
+pbtn.click();
+
 var gbtn = document.getElementsByClassName("guestbtn")[0];
 gbtn.click();
 

@@ -10,6 +10,7 @@ var addResponse   = require ('../twilio/responses')
 
 function validateHost (host){
 	return new Promise (function (fulfill, reject){
+    console.log (host)
 	  model.Host.findOne({ 'hostID' : host }).exec()
 	  .then (function (hostInfo){
 	    if (hostInfo){
@@ -42,7 +43,6 @@ function searchDatabaseForHost (guestObject){
 }
 
 function explicitFilter (req, res){
-  console.log (req.body)
   validateHost (req.body.hostID)
   .then (function (hostInfo){
     console.log (hostInfo)
