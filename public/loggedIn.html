@@ -27,20 +27,14 @@
       <form id="input" action="/playlist/explicit" method="POST">
         <input id='hostID1' type='hidden' name ='hostID' > 
 
-        <input id="Explicit" class="w3-radio" type="radio" name="explicit" value="True" checked>
+        <input id="Explicit" class="w3-radio" type="radio" name="explicit" value="true" checked>
         <label class="w3-validate">Explicit</label>
 
-        <input id="Clean" class="w3-radio" type="radio" name="explicit" value="False">
+        <input id="Clean" class="w3-radio" type="radio" name="explicit" value="false">
         <label class="w3-validate">Clean</label>
         <input type="submit" value="set">
       </form>
       <br>
-
-      <form id="input" action="/playlist/explicit" method="POST">
-        <input id='hostID2' type='hidden' name ='hostID'>
-        <input type="hidden" name="explicit" value= "false">
-        <input type="submit" value="set clean">
-      </form>
 
       <form id="input" action="/playlist/spotify/create" method="POST">
         <input id='hostID3' type='hidden' name ='hostID'>
