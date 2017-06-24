@@ -23,11 +23,18 @@
     <h4 class="w3-xlarge" >Playlist Settings</h4><br>
   </div>
     <div id="playlistSettings" class="w3-container playlist">
+
       <form id="input" action="/playlist/explicit" method="POST">
         <input id='hostID1' type='hidden' name ='hostID' > 
-        <input type="hidden" name="explicit" value= "true">
-        <input type="submit" value="set explicit">
+
+        <input id="Explicit" class="w3-radio" type="radio" name="explicit" value="True" checked>
+        <label class="w3-validate">Explicit</label>
+
+        <input id="Clean" class="w3-radio" type="radio" name="explicit" value="False">
+        <label class="w3-validate">Clean</label>
+        <input type="submit" value="set">
       </form>
+      <br>
 
       <form id="input" action="/playlist/explicit" method="POST">
         <input id='hostID2' type='hidden' name ='hostID'>
