@@ -72,7 +72,6 @@ function searchDatabaseForTrack (guestObject){
 
     model.Track.findOne(query)
     .then (function (databaseTrack){
-      console.log (databaseTrack)
       guestObject.track = databaseTrack
       fulfill (guestObject)
     })
@@ -83,7 +82,6 @@ function searchDatabaseForTrack (guestObject){
 }
 
 function updateOrInsert (guestObject, track, q, index){
-  console.log (track)
   return new Promise (function (fulfill, reject){
     if (track) {
       var update = {$inc: { foundAmount: 1}}
