@@ -105,24 +105,29 @@
     </ul>
 
     <div id="guestSettings" class="w3-container guest">
-      <form id="input" action="/guests/removeAll" method="POST">
-        <input id='hostID2' type='hidden' name ='hostID'>
-        <input type="submit" value="Remove All Guests">
-      </form>
+      <div class="w3-group" style="height:130px;">
+        <form id="input" action="/guests/add" method="POST">
+          <input id='hostID2' type='hidden' name ='hostID'>
+          <input class="w3-input" type="text" name="guestNum" placeholder="4165558030" required>
+          <input class="w3-input" type="submit" value="Add Guest">
+        </form>
+      </div>
 
-      <form id="input" action="/guests/add" method="POST">
-        <input id='hostID8' type='hidden' name ='hostID'>
-        <input type="text" name="guestNum" placeholder="ex. 9055554260">
-        <input type="submit" value="add">
-      </form>
+      <div class="w3-group" style="height:130px;">
+        <form id="input" action="/guests/remove" method="POST">
+          <input id='hostID9' type='hidden' name ='hostID'>
+          <input class="w3-input" type="text" name="guestNum" placeholder="4165558030" required>
+          <input class="w3-input" type="submit" value="Remove Guest">
+        </form>
+      </div>
 
-      <form id="input" action="/guests/remove" method="POST">
-        <input id='hostID9' type='hidden' name ='hostID'>
-        <input type="text" name="guestNum" placeholder="ex. 9055554260">
-        <input type="submit" value="remove">
-      </form>
+      <div class="w3-group" style="height:130px;">
+        <form id="input" action="/guests/removeAll" method="POST">
+          <input id='hostID2' type='hidden' name ='hostID'>
+          <input class="w3-input" type="submit" value="Remove All Guests">
+        </form>
+      </div>
     </div>
-
     <div id="guestList" class="w3-container guest">
       <input type="button" value="Change site" onClick="newSite()" />
       <iframe id="myIframe" src="http://getprismatic.com/" "></iframe>
