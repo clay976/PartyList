@@ -30,17 +30,16 @@
     <div id="playlistSettings" class="w3-container playlistDiv">
       <form id="input" action="/playlist/explicit" method="POST">
         <input id='hostID1' type='hidden' name ='hostID' > 
-
         <input id="Explicit" class="w3-radio" type="radio" name="explicit" value="true" checked>
-        <label class="w3-validate">Explicit</label>
 
+        <label class="w3-validate">Explicit</label>
         <input id="Clean" class="w3-radio" type="radio" name="explicit" value="false">
         <label class="w3-validate">Clean</label>
         <input type="submit" value="set">
       </form>
-      <br>
+
       <form id="input" action="/playlist/requestThreshold" method="POST">
-        <input id='hostID10' type='hidden' name ='hostID'>
+        <input id='hostID10' type='text' name ='hostID'>
         <input type="number" name="requests" placeholder="Requests to add a song to a playlist">
         <input type="submit" value="set request threshold">
       </form>
@@ -65,7 +64,7 @@
 
     <div id="playlistss" class="w3-container playlistDiv">
       <form id="input" action="/playlist/spotify/create" method="POST">
-        <input id='hostID3' type='hidden' name ='hostID'>
+        <input id='hostID3' type='text' name ='hostID'>
         <input type="text" name="playName" placeholder="new playlist Name">
         <input type="submit" value="create">
       </form>
@@ -93,7 +92,7 @@
       <h4 class="w3-xlarge" >Playlist</h4><br>
     </div>
     <div id="PlaylistView" class="w3-container playlist">
-      <iframe id="playlistiFrame" src="" width="100%" height="100%" frameborder="0" allowtransparency="true"></iframe>
+      <iframe id="playlistiFrame" src="" width="100%" height="600" frameborder="0" allowtransparency="true"></iframe>
     </div>
   </div>
 
@@ -108,7 +107,7 @@
 
     <div id="guestSettings" class="w3-container guest">
       <form id="input" action="/guests/removeAll" method="POST">
-        <input id='hostID13' type='hidden' name ='hostID'>
+        <input id='hostID2' type='hidden' name ='hostID'>
         <input type="submit" value="Remove All Guests">
       </form>
 
@@ -226,7 +225,6 @@ if (error) {
     document.getElementById('hostID10').value = hostID;
     document.getElementById('hostID11').value = hostID;
     document.getElementById('hostID12').value = hostID;
-    document.getElementById('hostID13').value = hostID;
   }
 }
 </script>
