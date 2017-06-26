@@ -114,8 +114,8 @@ function validatePlaylistInput (hostInfo, playName) {
   return new Promise (function (fulfill, reject){
     if (playName){
       fulfill ({
-        'hostID' : hostInfo.hostID,
-        'playName' : playName
+        'hostID'    : hostInfo.hostID,
+        'playName'  : playName
       })
     }else{
       reject ('we did not recieve playlist information')
