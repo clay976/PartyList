@@ -29,7 +29,11 @@ function homepage (req, res) {
   })
   .then (function (hostInfo){
     console.log (hostInfo)
-    if (hostInfo.playlistID) return hostInfo
+    if (hostInfo.host.playlistID){
+      hostInfo.playlistID = hostInfo.host.playlistID
+      hostInfo.playlistName = hostInfo.host.playlistName
+      return hostInfo
+    } 
     else return setPlaylistOnLogin (hostInfo)
   })
   .then (function (hostInfo){
