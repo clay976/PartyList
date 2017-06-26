@@ -28,7 +28,8 @@ function homepage (req, res) {
     return setTokensAndGetHostInfo(data)
   })
   .then (function (hostInfo){
-    return setPlaylistOnLogin (hostInfo)
+    if (hostInfo.playlist.id) return hostInfo
+    else return setPlaylistOnLogin (hostInfo)
   })
   .then (function (hostInfo){
     var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostInfo.host.id, 'playlistID': hostInfo.playlist.id})
