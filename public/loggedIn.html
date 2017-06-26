@@ -55,6 +55,15 @@
         <input id='hostID3' type='hidden' name ='hostID'>
         <input class="w3-input" type="submit" value="use my most recent playlist">
       </form>
+
+      <button onclick="myAccFunc('Demo2')" class="w3-btn w3-block">All your playlists</button>
+      <div id="Demo2" class="w3-accordion-content">
+        <a class="w3-text-black w3-padding-16" href="javascript:void(0)">Link 1</a>
+        <a class="w3-text-black w3-padding-16" href="javascript:void(0)">Link 2</a>
+        <a class="w3-text-black w3-padding-16" href="javascript:void(0)">Link 3</a>
+      </div>
+
+
       <form id="input" action="/playlist/spotify/getAll" method="POST">
         <input id='hostID4' type='hidden' name ='hostID'>
         <input type="submit" value="retreive all playlists">
@@ -115,13 +124,13 @@ function iframeDidLoad() {
 }
 
 function newSite() {
-    var sites = "https://open.spotify.com/embed?uri=spotify:user:" +params.hostID+ ":playlist:21TSvb5k8BblexCYD2oHJD"
-    document.getElementById('myIframe').src = sites
+  var sites = "https://open.spotify.com/embed?uri=spotify:user:" +params.hostID+ ":playlist:21TSvb5k8BblexCYD2oHJD"
+  document.getElementById('myIframe').src = sites
 }
 
 function newPlaylist() {
-    var sites = "https://open.spotify.com/embed?uri=spotify:user:" +params.hostID+ ":playlist:" +params.playlistID
-    document.getElementById('playlistiFrame').src = sites
+  var sites = "https://open.spotify.com/embed?uri=spotify:user:" +params.hostID+ ":playlist:" +params.playlistID
+  document.getElementById('playlistiFrame').src = sites
 }
 
 // Tabs
@@ -159,6 +168,19 @@ pbtn.click();
 
 var gbtn = document.getElementsByClassName("guestbtn")[0];
 gbtn.click();
+
+// Accordions
+function myAccFunc(id) {
+    var x = document.getElementById(id);
+    if (x.className.indexOf("w3-show") == -1) {
+        x.className += " w3-show";
+        x.previousElementSibling.className += " w3-dark-grey";
+    } else {
+        x.className = x.className.replace(" w3-show", "");
+        x.previousElementSibling.className =
+        x.previousElementSibling.className.replace(" w3-dark-grey", "");
+    }
+}
 
 /**
  * Obtains parameters from the hash of the URL
