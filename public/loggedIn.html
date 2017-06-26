@@ -11,75 +11,56 @@
 
 <div id="loggedin">
   <body onload="newPlaylist()">
-
   <header class="w3-container w3-theme w3-padding" id="myHeader">
-    <div class="w3-center">
-    <h1 class="w3-xxxlarge">Party List</h1>
-    </div>
+    <h1 class="w3-xxxlarge w3-center">Party List</h1>
   </header>
 
   <div class="w3-third w3-container">
-    <div class="w3-center">
-      <h4 class="w3-xlarge" >Playlist Settings</h4><br>
-    </div>
-    <ul class="w3-navbar w3-light-grey">
-      <li><a class="w3-btn playlistbtn" onclick="openPlaylist(event, 'playlistSettings')">Settings</a></li>
-      <li><a class="w3-btn playlistbtn" onclick="openPlaylist(event, 'playlistss')">Playlists</a></li>
-    </ul>
+    <h4 class="w3-xlarge w3-center" >Playlist Settings</h4>
+    <button class="w3-button w3-block w3-half w3-black playlistbtn" onclick="openPlaylist(event, 'playlistSettings')">Settings</button>
+    <button class="w3-button w3-block w3-half w3-black playlistbtn" onclick="openPlaylist(event, 'playlistss')">Playlists</button>
 
     <form class="w3-container playlistDiv" id="playlistSettings" action="/playlist/settings" method="POST">
-      <div class="w3-group">
-        <input id='hostID1' type='hidden' name ='hostID' > 
+      <div class="w3-half w3-group">
         <input id="Explicit" class="w3-radio" type="radio" name="explicit" value="true" checked>
         <label class="w3-validate">Explicit</label>
+      </div>
+      <div class="w3-half w3-group">
         <input id="Clean" class="w3-radio" type="radio" name="explicit" value="false">
         <label class="w3-validate">Clean</label>
       </div>
-
       <div class="w3-group">
-        <input id='hostID10' type='hidden' name ='hostID'>
         <input class="w3-input" type="number" name="requests" value=2 required>
         <label class="w3-label w3-validate">Requests to add to playlist</label>
       </div>
-
       <div class="w3-group">
-        <input id='hostID11' type='hidden' name ='hostID'>
         <input class="w3-input" type="number" name="minYear" value=0 required>
         <label class="w3-label w3-validate">Minimum release year</label>
       </div>
-
       <div class="w3-group">
-        <input id='hostID12' type='hidden' name ='hostID'>
         <input class="w3-input" type="number" name="maxYear" value=2017 required>
         <label class="w3-label w3-validate">Maximum release year</label>
       </div>
-      
-      <input class="w3-input" type="submit" value="submit">
+      <input id='hostID1' type='hidden' name ='hostID'>
+      <input class="w3-input " type="submit" value="submit">
     </form>
 
     <div class="w3-container playlistDiv" id="playlistss">
-      <div class="w3-group">
-        <form id="input" action="/playlist/spotify/create" method="POST">
-          <input id='hostID3' type='hidden' name ='hostID'>
-          <input class="w3-input" type="text" name="playName" placeholder="My Party List" required>
-          <input class="w3-input" type="submit" value="create">
-        </form>
-      </div>
-
-      <div class="w3-group">
-        <form id="input" action="/playlist/spotify/latest" method="POST">
-          <input id='hostID4' type='hidden' name ='hostID'>
-          <input class="w3-input" type="submit" value="use my most recent playlist">
-        </form>
-      </div>
-
+      <form class="w3-group" id="input" action="/playlist/spotify/create" method="POST">
+        <input id='hostID2' type='hidden' name ='hostID'>
+        <input class="w3-input" type="text" name="playName" placeholder="My Party List" required>
+        <input class="w3-input" type="submit" value="create">
+      </form>
+      <form class="w3-group" id="input" action="/playlist/spotify/latest" method="POST">
+        <input id='hostID3' type='hidden' name ='hostID'>
+        <input class="w3-input" type="submit" value="use my most recent playlist">
+      </form>
       <form id="input" action="/playlist/spotify/getAll" method="POST">
-        <input id='hostID5' type='hidden' name ='hostID'>
+        <input id='hostID4' type='hidden' name ='hostID'>
         <input type="submit" value="retreive all playlists">
       </form>
-
       <form id="input" action="/playlist/spotify/set" method="POST">
-        <input id='hostID6' type='hidden' name ='hostID'>
+        <input id='hostID5' type='hidden' name ='hostID'>
         <input type="text" name="playlistID" placeholder="playlist ID">
         <input type="submit" value="set playlist">
       </form>
@@ -87,53 +68,41 @@
   </div>
 
   <div class="w3-third w3-container">
-    <div class="w3-center">
-      <h4 class="w3-xlarge" >Playlist</h4><br>
-    </div>
+    <h4 class="w3-xlarge w3-center" >Playlist</h4>
     <div id="PlaylistView" class="w3-container playlist">
       <iframe id="playlistiFrame" src="" width="100%" height="410" frameborder="0" allowtransparency="true"></iframe>
     </div>
   </div>
 
   <div class="w3-third w3-container">
-    <div class="w3-center">
-      <h4 class="w3-xlarge" >Guests</h4><br>
-    </div>
-    <ul class="w3-navbar w3-light-grey">
-      <li><a class="w3-btn guestbtn" onclick="openGuests(event, 'guestSettings')">Settings</a></li>
-      <li><a class="w3-btn guestbtn" onclick="openGuests(event, 'guestList')">List of Guests</a></li>
-    </ul>
+    <h4 class="w3-xlarge w3-center" >Guests</h4>
+    <button class="w3-button w3-block w3-black w3-half guestbtn" onclick="openGuests(event, 'guestSettings')">Settings</button>
+    <button class="w3-button w3-block w3-black w3-half guestbtn" onclick="openGuests(event, 'guestList')">List of Guests</button>
 
     <div id="guestSettings" class="w3-container guest">
-      <div class="w3-group" style="height:130px;">
-        <form id="input" action="/guests/add" method="POST">
-          <input id='hostID2' type='hidden' name ='hostID'>
-          <input class="w3-input" type="text" name="guestNum" placeholder="4165558030" required>
-          <input class="w3-input" type="submit" value="Add Guest">
-        </form>
-      </div>
+      <form class="w3-group" style="height:110px;" id="input" action="/guests/add" method="POST">
+        <input id='hostID6' type='hidden' name ='hostID'>
+        <input class="w3-input" type="text" name="guestNum" placeholder="4165558030" required>
+        <input class="w3-input" type="submit" value="Add Guest">
+      </form>
 
-      <div class="w3-group" style="height:130px;">
-        <form id="input" action="/guests/remove" method="POST">
-          <input id='hostID9' type='hidden' name ='hostID'>
-          <input class="w3-input" type="text" name="guestNum" placeholder="4165558030" required>
-          <input class="w3-input" type="submit" value="Remove Guest">
-        </form>
-      </div>
+      <form class="w3-group" style="height:150px;" id="input" action="/guests/remove" method="POST">
+        <input id='hostID7' type='hidden' name ='hostID'>
+        <input class="w3-input" type="text" name="guestNum" placeholder="4165558030" required>
+        <input class="w3-input" type="submit" value="Remove Guest">
+      </form>
 
-      <div class="w3-group" style="height:130px;">
-        <form id="input" action="/guests/removeAll" method="POST">
-          <input id='hostID2' type='hidden' name ='hostID'>
-          <input class="w3-input" type="submit" value="Remove All Guests">
-        </form>
-      </div>
+      <form class="w3-group" style="height:130px;" id="input" action="/guests/removeAll" method="POST">
+        <input id='hostID8' type='hidden' name ='hostID'>
+        <input class="w3-input" type="submit" value="Remove All Guests">
+      </form>
     </div>
+
     <div id="guestList" class="w3-container guest">
       <input type="button" value="Change site" onClick="newSite()" />
       <iframe id="myIframe" src="http://getprismatic.com/" "></iframe>
     </div>
   </div>
-
 </div>
 
 <!--onLoad="iframeDidLoad();
@@ -225,10 +194,6 @@ if (error) {
     document.getElementById('hostID6').value = hostID;
     document.getElementById('hostID7').value = hostID;
     document.getElementById('hostID8').value = hostID;
-    document.getElementById('hostID9').value = hostID;
-    document.getElementById('hostID10').value = hostID;
-    document.getElementById('hostID11').value = hostID;
-    document.getElementById('hostID12').value = hostID;
   }
 }
 </script>
