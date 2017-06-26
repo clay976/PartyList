@@ -42,10 +42,38 @@ function searchDatabaseForHost (guestObject){
   }) 
 }
 
+function playlistSettings (req, res){
+  var resp = {
+    'explicit'      : req.body.explicit,
+    'minYear'       : req.body.minYear,
+    'maxYear'       : req.body.maxYear,
+    'reqThreshold'  : req.body.requests
+  }
+
+  validateHost (req.body.hostID)
+  .then (function (hostInfo){
+    var query = { 'hostID' : hostInfo.hostID }
+    var update = { 
+      $set: {
+        'explicit'      : req.body.explicit,
+        'minYear'       : req.body.minYear,
+        'maxYear'       : req.body.maxYear,
+        'reqThreshold'  : req.body.requests
+      }
+    }
+    return model.Host.findOneAndUpdate(query, update).exec()
+  })
+  .then (res.status(200).json (resp))
+  .catch (function(err) {
+    res.status(err.status).json('failed to update playlist settings, ' +err)
+    //fixed option: filter out genres next: go to sleep with girlfriend (all actively playing paties: katya), requested songs: sleep, songs requested: sleep
+  })
+}
+
+/*
 function explicitFilter (req, res){
   validateHost (req.body.hostID)
   .then (function (hostInfo){
-    console.log (hostInfo)
     model.Host.findOneAndUpdate({ 'hostID' : hostInfo.hostID }, { $set: {'explicit' : req.body.explicit}}).exec()
   })
   .then (res.status(200).json ('explicit filter successfully set to ' +req.body.explicit))
@@ -77,7 +105,7 @@ function maxYear (req, res){
     res.status(err.status).json('failed to set explicit filter, ' +err)
     //fixed option: filter out genres next: go to sleep with girlfriend (all actively playing paties: katya), requested songs: sleep, songs requested: sleep
   })
-}
+}*/
 
 function verifyExplicitFilter (guestObject) {
   return new Promise (function (fulfill, reject){
@@ -105,9 +133,7 @@ module.exports = {
   validateHost					: validateHost,
   spotifyApi						: spotifyApi,
   searchDatabaseForHost : searchDatabaseForHost,
-  explicitFilter        : explicitFilter,
+  playlistSettings      : playlistSettings,
   verifyExplicitFilter  : verifyExplicitFilter,
-  verifyYearFilter      : verifyYearFilter,
-  minYear               : minYear,
-  maxYear               : maxYear
+  verifyYearFilter      : verifyYearFilter
 }

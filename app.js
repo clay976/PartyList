@@ -120,17 +120,6 @@ ________________________________________________________________________________
   })  
 
 /*
-set a specific playlist id (most likely to be used after finding all the user's spotify playlists)
-________________________________________________________________________________________
-TO BE SENT:
-  JSON from req.body{               :  type  :              Description                |
-    host                            : string :  the username of their spotify account. |
-  }
-_______________________________________________________________________________________*/
-  app.post('/playlist/requestThreshold', function (req, res){
-    spotifyPlaylistTools.setRequestThreshold (req, res)
-  })  
-/*
 find this user's latest playlist held in our database
 ________________________________________________________________________________________
 TO BE SENT:
@@ -141,7 +130,8 @@ ________________________________________________________________________________
   app.post('/playlist/partyList/latest', function (req, res){
   })
 
-/*
+
+/*_____________________________________________________PLAYLIST SETTINGS______________________________________
 Set wether songs added can be explicit or not.
 ________________________________________________________________________________________
 TO BE SENT:
@@ -149,8 +139,33 @@ TO BE SENT:
     host                            : string :  the username of their spotify account. |
   }
 _______________________________________________________________________________________*/
+  app.post('/playlist/settings', function (req, res){
+    databaseHostTools.playlistSettings (req, res)
+  })
+
+
+/*
+Set wether songs added can be explicit or not.
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________
   app.post('/playlist/explicit', function (req, res){
     databaseHostTools.explicitFilter (req, res)
+  })
+
+/*
+set a specific playlist id (most likely to be used after finding all the user's spotify playlists)
+________________________________________________________________________________________
+TO BE SENT:
+  JSON from req.body{               :  type  :              Description                |
+    host                            : string :  the username of their spotify account. |
+  }
+_______________________________________________________________________________________
+  app.post('/playlist/requestThreshold', function (req, res){
+    spotifyPlaylistTools.setRequestThreshold (req, res)
   })
 
 /*
@@ -160,7 +175,7 @@ TO BE SENT:
   JSON from req.body{               :  type  :              Description                |
     host                            : string :  the username of their spotify account. |
   }
-_______________________________________________________________________________________*/
+_______________________________________________________________________________________
   app.post('/playlist/minYear', function (req, res){
     databaseHostTools.minYear (req, res)
   })
@@ -172,11 +187,14 @@ TO BE SENT:
   JSON from req.body{               :  type  :              Description                |
     host                            : string :  the username of their spotify account. |
   }
-_______________________________________________________________________________________*/
+_______________________________________________________________________________________
   app.post('/playlist/maxYear', function (req, res){
     databaseHostTools.maxYear (req, res)
   })
+/*____________________________________________________________________________________________________________
 
+
+/*_____________________________________________________GUEST SETTINGS_________________________________________
 
 /*
 remove every guest that is associated with this user
