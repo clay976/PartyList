@@ -28,18 +28,12 @@ function homepage (req, res) {
     return setTokensAndGetHostInfo(data)
   })
   .then (function (hostInfo){
-    console.log (hostInfo)
-    if (hostInfo.host.playlistID){
-      hostInfo.playlistID = hostInfo.host.playlistID
-      hostInfo.playlistName = hostInfo.host.playlistName
-      return hostInfo
-    } 
-    else return setPlaylistOnLogin (hostInfo)
+    return setPlaylistOnLogin (hostInfo)
   })
   .then (function (hostInfo){
-    var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostInfo.host.id, 'playlistID': hostInfo.playlistID})
+    var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostInfo.host.id, 'playlistID': hostInfo.playlist.id})
     
-    model.Host.findOneAndUpdate({'hostID': hostInfo.host.id}, JSONtemplate.Host (hostInfo.host.id, hostInfo.access_token, hostInfo.refresh_token, homePage, hostInfo.playlistID, hostInfo.playlistName), {upsert:true}).exec()
+    model.Host.findOneAndUpdate({'hostID': hostInfo.host.id}, JSONtemplate.Host (hostInfo.host.id, hostInfo.access_token, hostInfo.refresh_token, homePage, hostInfo.playlist.id, hostInfo.playlist.name), {upsert:true}).exec()
     return (homePage)
   })
   .then (function (homePage){
@@ -75,8 +69,7 @@ function setPlaylistOnLogin (hostInfo){
       return playlistTemplate.userPlaylists (hostInfo.host.id, playlists.body.items, playlists.body.total)
     })
     .then (function (playlists){
-      hostInfo.playlistID = playlists.playlists[0].id
-      hostInfo.playlistName = playlists.playlists[0].name
+      hostInfo.playlist = playlists.playlists[0]
       fulfill (hostInfo)
     })
     .catch (function (err){
