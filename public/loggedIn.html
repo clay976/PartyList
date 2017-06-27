@@ -57,7 +57,7 @@
       </form>
 
       <div id="demo">
-        <button type="button" onclick="loadDoc(hostID)">Get All PLaylists</button>
+        <button type="button" onclick="getAllPlaylists(hostID)">Get All PLaylists</button>
       </div>
 
 
@@ -121,16 +121,17 @@
 Script for Sidenav, Tabs, Accordions, Progress bars and slideshows -->
 <script>
 
-function loadDoc(host) {
+function getAllPlaylists(host) {
+  var args = '{"hostID":"'+host+'"}'
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("demo").innerHTML = this.responseText;
+      document.getElementById("demo").innerHTML = JSON.parse (this.responseText);
     }
   };
   xhttp.open("POST", "/playlist/spotify/getAll", true);
   xhttp.setRequestHeader("Content-type", "application/json");
-  xhttp.send('{"hostID":"'+host+'"}' );
+  xhttp.send(args);
 }
 
 function iframeDidLoad() {
