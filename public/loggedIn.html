@@ -60,6 +60,7 @@
       <div id="Demo2" class="w3-accordion-content">
         <button id="playL" class="w3-input" value="playlist1"></button>
       </div>
+
       <form id="input" action="/playlist/spotify/getAll" method="POST">
         <input id='hostID4' type='hidden' name ='hostID'>
         <input type="submit" value="retreive all playlists">
@@ -177,6 +178,7 @@ function listCookies() {
 
 // Accordions
 function getAllPlaylists(id, id2){
+  alert(document.cookie);
   var x = document.getElementById(id); 
   var y = document.getElementById(id2);
   if (x.className.indexOf("w3-show") == -1){
