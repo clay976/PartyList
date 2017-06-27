@@ -132,7 +132,11 @@ function getAllPlaylists(host) {
 
 function buildPlaylistView (plays){
   var playlists = JSON.parse (plays)
-  var HTML = '<input class="w3-input" type="submit" value="Remove All Guests">'
+  var HTML = ''
+  for (var index = 0; index < playlists.length-1.; index ++){
+    HTML =+ '<input id="playlistID" class="w3-radio" type="radio" name='+playlists[index].name+'" value='+playlists[index].id+'">'
+  }
+  HTML =+ '<input class="w3-input" type="submit" value="set">'
   return (HTML)
 }
 
