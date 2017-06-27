@@ -56,17 +56,13 @@
         <input class="w3-input" type="submit" value="use my most recent playlist">
       </form>
 
-      <div id="demo">
-        <button type="button" onclick="getAllPlaylists(hostID)">Get All PLaylists</button>
+      <button type="button" class="w3-input" onclick="getAllPlaylists(hostID)">Choose from your playlists</button>
+      <div id="allPlaylsits" class="w3-accordion-content">
       </div>
 
 
       <button onclick="myAccFunc('Demo2')" class="w3-input">All your playlists</button>
-      <div id="Demo2" class="w3-accordion-content">
-        <a class="w3-text-black w3-padding-16" href="javascript:void(0)">Link 1</a>
-        <a class="w3-text-black w3-padding-16" href="javascript:void(0)">Link 2</a>
-        <a class="w3-text-black w3-padding-16" href="javascript:void(0)">Link 3</a>
-      </div>
+      
       <form id="input" action="/playlist/spotify/getAll" method="POST">
         <input id='hostID4' type='hidden' name ='hostID'>
         <input type="submit" value="retreive all playlists">
@@ -124,13 +120,14 @@ Script for Sidenav, Tabs, Accordions, Progress bars and slideshows -->
 function getAllPlaylists(host) {
   var args = '{"hostID":"'+host+'"}'
   var xhttp = new XMLHttpRequest();
+
   xhttp.open("POST", "/playlist/spotify/getAll", true);
   xhttp.setRequestHeader("Content-type", "application/json");
   xhttp.send(args);
 
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("demo").innerHTML = JSON.parse (this.responseText);
+      document.getElementById("allPlaylsits").innerHTML = JSON.parse (this.responseText);
     }else if (this.readyState == 4 && this.status != 200){
       alert ('there was an error retrieving your playlists, sorry')
     }
