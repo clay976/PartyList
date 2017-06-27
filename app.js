@@ -103,7 +103,6 @@ RETURNED: properly formatted JSON object containing the name and spotify ID of t
   ]}
 _______________________________________________________________________________________*/
   app.post('/playlist/spotify/getAll', function (req, res){
-    console.log (req.body)
     spotifyPlaylistTools.findAllPlaylists (req, res)
   })
 

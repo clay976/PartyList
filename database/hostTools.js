@@ -10,7 +10,6 @@ var addResponse   = require ('../twilio/responses')
 
 function validateHost (host){
 	return new Promise (function (fulfill, reject){
-    console.log (host)
 	  model.Host.findOne({ 'hostID' : host }).exec()
 	  .then (function (hostInfo){
 	    if (hostInfo){
