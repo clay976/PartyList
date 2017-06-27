@@ -8,7 +8,7 @@ function userPlaylists (host, playlists, length){
     	playlistJSON = playlistJSON + '{"name": "' +playlists[index].name+ '", "id" : "' +playlists[index].id+ '", "owner": "'+playlists[index].owner.id+'"},'
  		}
   }
-  playlistJSON = playlistJSON + '{"name": "none", "id" : "none", "owner": "none"}]'
+  playlistJSON = JSON.parse (playlistJSON + '{"name": "none", "id" : "none", "owner": "none"}]')
   return (playlistJSON)
 }
 
