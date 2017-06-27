@@ -114,16 +114,6 @@ Script for Sidenav, Tabs, Accordions, Progress bars and slideshows -->
 <script>
 
 function getAllPlaylists(host) {
-
-  var x = document.getElementById(allPlaylists);
-  if (x.className.indexOf("w3-show") == -1){
-    x.className += " w3-show";
-    x.previousElementSibling.className += " w3-dark-grey";
-  }else{
-    x.className = x.className.replace(" w3-show", "");
-    x.previousElementSibling.className = x.previousElementSibling.className.replace(" w3-dark-grey", "");
-  }
-
   var args = '{"hostID":"'+host+'"}'
   var xhttp = new XMLHttpRequest();
 
@@ -133,11 +123,16 @@ function getAllPlaylists(host) {
 
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("allPlaylists").innerHTML = JSON.parse (this.responseText);
+      document.getElementById("allPlaylists").innerHTML = buildPlaylistView (this.responseText);
     }else if (this.readyState == 4 && this.status != 200){
       alert ('there was an error retrieving your playlists, sorry')
     }
   };
+}
+
+function buildPlaylistView (plays){
+  var playlists = JSON.parse (plays)
+  return (playlists)
 }
 
 function iframeDidLoad() {
