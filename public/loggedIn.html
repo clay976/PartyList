@@ -57,11 +57,8 @@
       </form>
 
       <button type="button" class="w3-input" onclick="getAllPlaylists(hostID)">Choose from your playlists</button>
-      <div id="allPlaylsits"></div>
+      <div id="allPlaylists"></div>
 
-
-      <button onclick="myAccFunc('Demo2')" class="w3-input">All your playlists</button>
-      
       <form id="input" action="/playlist/spotify/getAll" method="POST">
         <input id='hostID4' type='hidden' name ='hostID'>
         <input type="submit" value="retreive all playlists">
@@ -117,6 +114,16 @@ Script for Sidenav, Tabs, Accordions, Progress bars and slideshows -->
 <script>
 
 function getAllPlaylists(host) {
+
+  var x = document.getElementById(allPlaylists);
+  if (x.className.indexOf("w3-show") == -1){
+    x.className += " w3-show";
+    x.previousElementSibling.className += " w3-dark-grey";
+  }else{
+    x.className = x.className.replace(" w3-show", "");
+    x.previousElementSibling.className = x.previousElementSibling.className.replace(" w3-dark-grey", "");
+  }
+
   var args = '{"hostID":"'+host+'"}'
   var xhttp = new XMLHttpRequest();
 
@@ -126,7 +133,7 @@ function getAllPlaylists(host) {
 
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("allPlaylsits").innerHTML = JSON.parse (this.responseText);
+      document.getElementById("allPlaylists").innerHTML = JSON.parse (this.responseText);
     }else if (this.readyState == 4 && this.status != 200){
       alert ('there was an error retrieving your playlists, sorry')
     }
@@ -182,21 +189,6 @@ pbtn.click();
 
 var gbtn = document.getElementsByClassName("guestbtn")[0];
 gbtn.click();
-
-// Accordions
-function myAccFunc(id){
-
-
-
-  var x = document.getElementById(id);
-  if (x.className.indexOf("w3-show") == -1){
-    x.className += " w3-show";
-    x.previousElementSibling.className += " w3-dark-grey";
-  }else{
-    x.className = x.className.replace(" w3-show", "");
-    x.previousElementSibling.className = x.previousElementSibling.className.replace(" w3-dark-grey", "");
-  }
-}
 
 /**
  * Obtains parameters from the hash of the URL
