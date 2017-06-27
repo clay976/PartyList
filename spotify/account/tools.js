@@ -31,9 +31,10 @@ function homepage (req, res) {
     return setPlaylistOnLogin (hostInfo)
   })
   .then (function (hostInfo){
-    var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostInfo.host.id, 'playlistID': hostInfo.playlist.id})
-    
-    model.Host.findOneAndUpdate({'hostID': hostInfo.host.id}, JSONtemplate.Host (hostInfo.host.id, hostInfo.access_token, hostInfo.refresh_token, homePage, hostInfo.playlist.id, hostInfo.playlist.name), {upsert:true}).exec()
+    console.log (hostInfo.playlists)
+    res.cookie ('playlists', hostInfo.playlists)
+    var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostInfo.host.id, 'playlistID': hostInfo.playlists[0].id})
+    model.Host.findOneAndUpdate({'hostID': hostInfo.host.id}, JSONtemplate.Host (hostInfo.host.id, hostInfo.access_token, hostInfo.refresh_token, homePage, hostInfo.playlists[0].id, hostInfo.playlists[0].name), {upsert:true}).exec()
     return (homePage)
   })
   .then (function (homePage){
@@ -69,7 +70,7 @@ function setPlaylistOnLogin (hostInfo){
       return playlistTemplate.userPlaylists (hostInfo.host.id, playlists.body.items, playlists.body.total)
     })
     .then (function (playlists){
-      hostInfo.playlist = playlists.playlists[0]
+      hostInfo.playlists = playlists
       fulfill (hostInfo)
     })
     .catch (function (err){
