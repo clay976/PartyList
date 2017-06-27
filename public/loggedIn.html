@@ -129,7 +129,7 @@ function loadDoc() {
       document.getElementById("demo").innerHTML = this.responseText;
     }
   };
-  xhttp.open("POST", "playlist/spotify/getAll", true);
+  xhttp.open("POST", "http://www.criwcomputing.com/playlist/spotify/getAll", true);
   xhttp.setRequestHeader("Content-type", "application/json");
   xhttp.send("hostID="+hostID);
 }
