@@ -91,7 +91,6 @@ TO BE SENT:
   JSON from req.body{               :  type  :              Description                 |
     host                            : string :  the username of their spotify account.  |
   }                                                                                     |
-                                                                                        |
 RETURNED: properly formatted JSON object containing the name and spotify ID of the      |
           playlist of playlist that the user controls.                                  |
   {playlists"[                                                                          |                     
@@ -283,6 +282,7 @@ ________________________________________________________________________________
       databaseHostTools.spotifyApi.refreshAccessToken()
       .then(function(data) {
         databaseHostTools.spotifyApi.setAccessToken(data.body.access_token)
+        console.log (hostInfo)
         model.Host.findOneAndUpdate({'hostID': 'clay976'}, JSONtemplate.Host ('clay976', data.body.access_token, hostInfo.refresh_token, hostInfo.homePage)).exec()
         .then(function(update) {
           console.log ('getting refresh token successful')

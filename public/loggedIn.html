@@ -56,14 +56,12 @@
         <input class="w3-input" type="submit" value="use my most recent playlist">
       </form>
 
-      <button onclick="myAccFunc('Demo2')" class="w3-btn w3-block">All your playlists</button>
+      <button onclick="askForPlaylist()" class="w3-input">All your playlists</button>
       <div id="Demo2" class="w3-accordion-content">
         <a class="w3-text-black w3-padding-16" href="javascript:void(0)">Link 1</a>
         <a class="w3-text-black w3-padding-16" href="javascript:void(0)">Link 2</a>
         <a class="w3-text-black w3-padding-16" href="javascript:void(0)">Link 3</a>
       </div>
-
-
       <form id="input" action="/playlist/spotify/getAll" method="POST">
         <input id='hostID4' type='hidden' name ='hostID'>
         <input type="submit" value="retreive all playlists">
@@ -170,16 +168,15 @@ var gbtn = document.getElementsByClassName("guestbtn")[0];
 gbtn.click();
 
 // Accordions
-function myAccFunc(id) {
-    var x = document.getElementById(id);
-    if (x.className.indexOf("w3-show") == -1) {
-        x.className += " w3-show";
-        x.previousElementSibling.className += " w3-dark-grey";
-    } else {
-        x.className = x.className.replace(" w3-show", "");
-        x.previousElementSibling.className =
-        x.previousElementSibling.className.replace(" w3-dark-grey", "");
-    }
+function myAccFunc(id){
+  var x = document.getElementById(id);
+  if (x.className.indexOf("w3-show") == -1){
+    x.className += " w3-show";
+    x.previousElementSibling.className += " w3-dark-grey";
+  }else{
+    x.className = x.className.replace(" w3-show", "");
+    x.previousElementSibling.className = x.previousElementSibling.className.replace(" w3-dark-grey", "");
+  }
 }
 
 /**
@@ -190,6 +187,22 @@ function newPlaylist() {
   document.getElementById('playlistiFrame').src = params.playlistID;
 }
  */
+
+
+function askForPlaylist() {
+   var txt;
+   var person = prompt("Please enter your name:", "Harry Potter");
+   if (person == null || person == "") {
+       txt = "User cancelled the prompt.";
+   } else {
+       txt = "Hello " + person + "! How are you today?";
+   }
+   document.getElementById("demo").innerHTML = txt;
+}
+
+
+
+
 function getHashParams() {
   var hashParams = {}
   var e, r = /([^&=]+)=?([^&]*)/g,
