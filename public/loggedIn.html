@@ -124,6 +124,10 @@ Script for Sidenav, Tabs, Accordions, Progress bars and slideshows -->
 function getAllPlaylists(host) {
   var args = '{"hostID":"'+host+'"}'
   var xhttp = new XMLHttpRequest();
+  xhttp.open("POST", "/playlist/spotify/getAll", true);
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.send(args);
+
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
       document.getElementById("demo").innerHTML = JSON.parse (this.responseText);
@@ -131,9 +135,6 @@ function getAllPlaylists(host) {
       alert ('there was an error retrieving your playlists, sorry')
     }
   };
-  xhttp.open("POST", "/playlist/spotify/getAll", true);
-  xhttp.setRequestHeader("Content-type", "application/json");
-  xhttp.send(args);
 }
 
 function iframeDidLoad() {
