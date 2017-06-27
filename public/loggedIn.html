@@ -123,6 +123,7 @@ Script for Sidenav, Tabs, Accordions, Progress bars and slideshows -->
 <script>
 
 function loadDoc(host) {
+  console.log (host)
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
