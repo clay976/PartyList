@@ -56,6 +56,11 @@
         <input class="w3-input" type="submit" value="use my most recent playlist">
       </form>
 
+      <div id="demo">
+        <button type="button" onclick="loadDoc()">Get All PLaylists</button>
+      </div>
+
+
       <button onclick="myAccFunc('Demo2')" class="w3-input">All your playlists</button>
       <div id="Demo2" class="w3-accordion-content">
         <a class="w3-text-black w3-padding-16" href="javascript:void(0)">Link 1</a>
@@ -117,6 +122,18 @@
 Script for Sidenav, Tabs, Accordions, Progress bars and slideshows -->
 <script>
 
+function loadDoc() {
+  var xhttp = new XMLHttpRequest();
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("demo").innerHTML = this.responseText;
+    }
+  };
+  xhttp.open("POST", "playlist/spotify/getAll", true);
+  xhttp.setRequestHeader("Content-type", "application/json");
+  xhttp.send("hostID="+hostID);
+}
+
 function iframeDidLoad() {
   alert('Done');
 }
@@ -169,6 +186,9 @@ gbtn.click();
 
 // Accordions
 function myAccFunc(id){
+
+
+
   var x = document.getElementById(id);
   if (x.className.indexOf("w3-show") == -1){
     x.className += " w3-show";
@@ -187,22 +207,6 @@ function newPlaylist() {
   document.getElementById('playlistiFrame').src = params.playlistID;
 }
  */
-
-
-function askForPlaylist() {
-  var x = document.cookie;
-   var txt;
-   var person = prompt("enter playlist ID:", x);
-   if (person == null || person == "") {
-       txt = "User cancelled the prompt.";
-   } else {
-       txt = "Hello " + person + "! How are you today?";
-   }
-   document.getElementById("demo").innerHTML = txt;
-}
-
-
-
 
 function getHashParams() {
   var hashParams = {}
