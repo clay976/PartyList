@@ -56,11 +56,12 @@
         <input class="w3-input" type="submit" value="use my most recent playlist">
       </form>
 
-      <button onclick="getAllPlaylists('Demo2', 'playL')" class="w3-input">All your playlists</button>
+      <button onclick="myAccFunc('Demo2')" class="w3-input">All your playlists</button>
       <div id="Demo2" class="w3-accordion-content">
-        <button id="playL" class="w3-input" value="playlist1"></button>
+        <a class="w3-text-black w3-padding-16" href="javascript:void(0)">Link 1</a>
+        <a class="w3-text-black w3-padding-16" href="javascript:void(0)">Link 2</a>
+        <a class="w3-text-black w3-padding-16" href="javascript:void(0)">Link 3</a>
       </div>
-
       <form id="input" action="/playlist/spotify/getAll" method="POST">
         <input id='hostID4' type='hidden' name ='hostID'>
         <input type="submit" value="retreive all playlists">
@@ -165,24 +166,11 @@ pbtn.click();
 
 var gbtn = document.getElementsByClassName("guestbtn")[0];
 gbtn.click();
-/*
-function listCookies() {
-
-    var theCookies = document.cookie.split(';');
-    var aString = '';
-    for (var i = 1 ; i <= theCookies.length; i++) {
-        aString += i + ' ' + theCookies[i-1] + "\n";
-}
-    return aString;
-}*/
 
 // Accordions
-function getAllPlaylists(id, id2){
-  alert(document.cookie);
-  var x = document.getElementById(id); 
-  var y = document.getElementById(id2);
+function myAccFunc(id){
+  var x = document.getElementById(id);
   if (x.className.indexOf("w3-show") == -1){
-    y.value = document.cookie
     x.className += " w3-show";
     x.previousElementSibling.className += " w3-dark-grey";
   }else{

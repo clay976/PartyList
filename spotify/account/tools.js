@@ -32,7 +32,6 @@ function homepage (req, res) {
   })
   .then (function (hostInfo){
     var playlists = JSON.parse (hostInfo.playlists)
-    res.cookie ('playlists', playlists)
     var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostInfo.host.id, 'playlistID': playlists[0].id})
     model.Host.findOneAndUpdate({'hostID': hostInfo.host.id}, JSONtemplate.Host (hostInfo.host.id, hostInfo.access_token, hostInfo.refresh_token, homePage, playlists[0].id, playlists[0].name), {upsert:true}).exec()
     return (homePage)
