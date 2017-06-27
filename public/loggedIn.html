@@ -57,7 +57,7 @@
       </form>
 
       <div id="demo">
-        <button type="button" onclick="loadDoc()">Get All PLaylists</button>
+        <button type="button" onclick="loadDoc(hostID)">Get All PLaylists</button>
       </div>
 
 
@@ -122,7 +122,7 @@
 Script for Sidenav, Tabs, Accordions, Progress bars and slideshows -->
 <script>
 
-function loadDoc() {
+function loadDoc(host) {
   var xhttp = new XMLHttpRequest();
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
@@ -131,7 +131,7 @@ function loadDoc() {
   };
   xhttp.open("POST", "/playlist/spotify/getAll", true);
   xhttp.setRequestHeader("Content-type", "application/json");
-  xhttp.send("hostID="+hostID);
+  xhttp.send("hostID="+host);
 }
 
 function iframeDidLoad() {
