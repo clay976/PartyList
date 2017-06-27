@@ -130,7 +130,7 @@ function loadDoc(host) {
   };
   xhttp.open("POST", "/playlist/spotify/getAll", true);
   xhttp.setRequestHeader("Content-type", "application/json");
-  xhttp.send("hostID:"+host);
+  xhttp.send('{"hostID":"'+host+'"}' );
 }
 
 function iframeDidLoad() {
