@@ -67,6 +67,7 @@ function findAllPlaylists (req, res, db){
 
 
 function setSpecificPlaylist (req, res, db){
+  console.log (req.body)
   hostAcountTools.validateHost (req.body.hostID)
   .then (function (hostInfo){
     return validatePlaylistInput(hostInfo, req.body.playlistID)
