@@ -31,7 +31,7 @@ function homepage (req, res) {
     return setPlaylistOnLogin (hostInfo)
   })
   .then (function (hostInfo){
-    var playlists = JSON.parse (hostInfo.playlists)
+    console.log (hostInfo.playlists)
     var homePage = '/loggedIn.html#' +querystring.stringify({'hostID':hostInfo.host.id, 'playlistID': playlists[0].id})
     model.Host.findOneAndUpdate({'hostID': hostInfo.host.id}, JSONtemplate.Host (hostInfo.host.id, hostInfo.access_token, hostInfo.refresh_token, homePage, playlists[0].id, playlists[0].name), {upsert:true}).exec()
     return (homePage)
@@ -69,8 +69,8 @@ function setPlaylistOnLogin (hostInfo){
       return playlistTemplate.userPlaylists (hostInfo.host.id, playlists.body.items, playlists.body.total)
     })
     .then (function (play){
-      console.log (play)
-      hostInfo.playlists = play.playlists
+      var x = JSON.parse (play)
+      hostInfo.playlists = x.playlists
       fulfill (hostInfo)
     })
     .catch (function (err){
