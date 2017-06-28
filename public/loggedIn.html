@@ -131,10 +131,11 @@ function getAllPlaylists(host) {
 }
 
 function buildPlaylistView (plays){
-  console.log (plays)
+  var playlists = JSON.parse (plays)
+  console.log (playlists[0])
   var HTML = ''
-  for (var index = 0; index < (plays.length-1); index ++){
-    HTML += '<input id="playlistID" class="w3-radio" type="radio" name='+plays[index].name+'" value='+plays[index].id+'">'
+  for (var index = 0; index < (playlists.length-1); index ++){
+    HTML += '<input id="playlistID" class="w3-radio" type="radio" name='+playlists[index].name+'" value='+playlists[index].id+'">'
   }
   HTML += '<input class="w3-input" type="submit" value="set">'
   return (HTML)
