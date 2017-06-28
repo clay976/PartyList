@@ -112,23 +112,25 @@ function getAllPlaylists(host) {
 
   xhttp.onreadystatechange = function() {
     if (this.readyState == 4 && this.status == 200) {
-      document.getElementById("allPlaylists").innerHTML = buildPlaylistView (this.responseText);
+      document.getElementById("allPlaylists").innerHTML = buildPlaylistView (this.responseText, host);
     }else if (this.readyState == 4 && this.status != 200){
       alert ('there was an error retrieving your playlists, sorry')
     }
   };
 }
 
-function buildPlaylistView (plays){
+function buildPlaylistView (plays, host){
   var play = JSON.parse (plays)
   var play = JSON.parse (play)
-  console.log (play)
   var HTML = '<form class="w3-group" id="input" action="/playlist/spotify/set" method="POST">'
   for (var index = 0; index < (play.playlists.length-1); index ++){
-    HTML += '<input id="playlistID" class="w3-radio" type="radio" name="playlistID" "value='+play.playlists[index].id+'">'
+    console.log (play.playlists[index].name)
+    console.log (play.playlists[index].id)
+
+    HTML += '<input class="w3-radio" type="radio" name="playlistID" "value='+play.playlists[index].id+'">'
     HTML += '<label class="w3-validate">'+play.playlists[index].name+'</label><br>'
   }
-  HTML += '<input id="'+hostID+'" type="hidden" name="hostID">'
+  HTML += '<input value="'+host+'" type="hidden" name="hostID">'
   HTML += '<input class="w3-input" type="submit" value="set selected playlist"></form>'
   return (HTML)
 }
