@@ -143,8 +143,9 @@ function buildGuestView (plays, host){
   console.log (play)
   var HTML = '<form class="w3-group" id="input" action="/guests/removeMany" method="POST">'
   for (var index = 0; index < (play.length); index ++){
-    HTML += '<input class="w3-radio" type="radio" name="guestNum" value="'+play[index].phoneNum+'">'
-    HTML += '<label class="w3-validate">'+play[index].phoneNum+'</label><br>'
+    HTML += '<input class="w3-check" type="checkbox" name="guestNum" value="'+play[index].phoneNum+'">'
+    HTML += '<label class="w3-validate">'+play[index].phoneNum+'</label>'
+    HTML += '<input type="submit" value="view requests"><br>'
   }
   HTML += '<input value="'+host+'" type="hidden" name="hostID">'
   HTML += '<input class="w3-input" type="submit" value="Remove Selected Guests"></form>'
