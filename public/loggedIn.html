@@ -56,10 +56,7 @@
         <input class="w3-input" type="submit" value="use my most recent playlist">
       </form>
       <button type="button" class="w3-input" onclick="getAllPlaylists(hostID)">Choose from your playlists</button>
-      <form class="w3-group" id="input" action="/playlist/spotify/getAll" method="POST">
-        <div id="allPlaylists"></div>
-        <input id='hostID9' type='hidden' name='hostID'>
-      </form>
+      <div id="allPlaylists"></div>
     </div>  
   </div>
 
@@ -126,12 +123,13 @@ function buildPlaylistView (plays){
   var play = JSON.parse (plays)
   var play = JSON.parse (play)
   console.log (play)
-  var HTML = ''
+  var HTML = '<form class="w3-group" id="input" action="/playlist/spotify/getAll" method="POST">'
   for (var index = 0; index < (play.playlists.length-1); index ++){
     HTML += '<input id="playlistID" class="w3-radio" type="radio" name="playlistID" "value='+play.playlists[index].id+'">'
     HTML += '<label class="w3-validate">'+play.playlists[index].name+'</label><br>'
   }
-  HTML += '<input class="w3-input" type="submit" value="set selected playlist">'
+  HTML += '<input id="'+hostID+'" type="hidden" name="hostID">'
+  HTML += '<input class="w3-input" type="submit" value="set selected playlist"></form>'
   return (HTML)
 }
 
@@ -220,7 +218,6 @@ if (error) {
     document.getElementById('hostID6').value = hostID;
     document.getElementById('hostID7').value = hostID;
     document.getElementById('hostID8').value = hostID;
-    document.getElementById('hostID9').value = hostID;
   }
 }
 </script>
