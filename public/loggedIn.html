@@ -92,7 +92,8 @@
     </div>
 
     <div id="guestList" class="w3-container guest">
-      <input type="button" value="Change site">
+      <button type="button" class="w3-input" onclick="getAllGuests(hostID)">Update Guest Lists</button>
+      <div id="allGuests"></div>
     </div>
   </div>
 </div>
@@ -117,6 +118,36 @@ function getAllPlaylists(host) {
       alert ('there was an error retrieving your playlists, sorry')
     }
   };
+}
+
+function getAllGuests(host) {
+  var args = '{"hostID":"'+host+'"}'
+  var xhttp = new XMLHttpRequest();
+
+  xhttp.open("POST", "/guests/getAll", true);
+  xhttp.setRequestHeader ("Content-type", "application/json");
+  xhttp.send(args);
+
+  xhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      document.getElementById("allPlaylists").innerHTML = buildGuestView (this.responseText, host);
+    }else if (this.readyState == 4 && this.status != 200){
+      alert ('there was an error retrieving your playlists, sorry')
+    }
+  };
+}
+
+function buildGuestView (plays, host){
+  var play = JSON.parse (plays)
+  var play = JSON.parse (play)
+  var HTML = '<form class="w3-group" id="input" action="/guests/removeMany" method="POST">'
+  for (var index = 0; index < (play.guests.length-1); index ++){
+    HTML += '<input class="w3-radio" type="radio" name="guestNum" value="'+play.guests[index].id+'">'
+    HTML += '<label class="w3-validate">'+play.guests[index].name+'</label><br>'
+  }
+  HTML += '<input value="'+host+'" type="hidden" name="hostID">'
+  HTML += '<input class="w3-input" type="submit" value="Remove Selected Guests"></form>'
+  return (HTML)
 }
 
 function buildPlaylistView (plays, host){
