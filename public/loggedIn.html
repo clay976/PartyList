@@ -17,8 +17,22 @@
 
   <div class="w3-third w3-container">
     <h4 class="w3-xlarge w3-center" >Playlist Settings</h4>
-    <button class="w3-button w3-block w3-half w3-black playlistbtn" onclick="openPlaylist(event, 'playlistSettings')">Settings</button>
     <button class="w3-button w3-block w3-half w3-black playlistbtn" onclick="openPlaylist(event, 'playlistss')">Playlists</button>
+    <button class="w3-button w3-block w3-half w3-black playlistbtn" onclick="openPlaylist(event, 'playlistSettings')">Settings</button>
+
+    <div class="w3-container playlistDiv" id="playlistss">
+      <form class="w3-group" id="input" action="/playlist/spotify/create" method="POST">
+        <input id='hostID2' type='hidden' name ='hostID'>
+        <input class="w3-input" type="text" name="playName" placeholder="My Party List" required>
+        <input class="w3-input" type="submit" value="create">
+      </form>
+      <form class="w3-group" id="input" action="/playlist/spotify/latest" method="POST">
+        <input id='hostID3' type='hidden' name ='hostID'>
+        <input class="w3-input" type="submit" value="use my most recent playlist">
+      </form>
+      <button type="button" class="w3-input" onclick="getAllPlaylists(hostID)">Choose from your playlists</button>
+      <div id="allPlaylists"></div>
+    </div> 
 
     <form class="w3-container playlistDiv" id="playlistSettings" action="/playlist/settings" method="POST">
       <div class="w3-half w3-group">
@@ -43,21 +57,7 @@
       </div>
       <input id='hostID1' type='hidden' name ='hostID'>
       <input class="w3-input " type="submit" value="submit">
-    </form>
-
-    <div class="w3-container playlistDiv" id="playlistss">
-      <form class="w3-group" id="input" action="/playlist/spotify/create" method="POST">
-        <input id='hostID2' type='hidden' name ='hostID'>
-        <input class="w3-input" type="text" name="playName" placeholder="My Party List" required>
-        <input class="w3-input" type="submit" value="create">
-      </form>
-      <form class="w3-group" id="input" action="/playlist/spotify/latest" method="POST">
-        <input id='hostID3' type='hidden' name ='hostID'>
-        <input class="w3-input" type="submit" value="use my most recent playlist">
-      </form>
-      <button type="button" class="w3-input" onclick="getAllPlaylists(hostID)">Choose from your playlists</button>
-      <div id="allPlaylists"></div>
-    </div>  
+    </form> 
   </div>
 
   <div class="w3-third w3-container">
