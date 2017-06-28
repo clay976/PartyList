@@ -36,6 +36,7 @@ function createPlaylist (req, res, db){
     return playlistTemplate.userPlaylists (host, data.body.items, data.body.total)
   })
   .then (function(playlistInfo){
+    playlistInfo = JSON.parse (playlistInfo)
     return setNewHomePage (playlistInfo.playlists[0].owner, playlistInfo.playlists[0].id, playlistInfo.playlists[0].name)
   })
   .then (function (update){
