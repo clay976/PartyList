@@ -142,8 +142,8 @@ function buildGuestView (plays, host){
   var play = JSON.parse (play)
   var HTML = '<form class="w3-group" id="input" action="/guests/removeMany" method="POST">'
   for (var index = 0; index < (play.guests.length-1); index ++){
-    HTML += '<input class="w3-radio" type="radio" name="guestNum" value="'+play.guests[index].id+'">'
-    HTML += '<label class="w3-validate">'+play.guests[index].name+'</label><br>'
+    HTML += '<input class="w3-radio" type="radio" name="guestNum" value="'+play.guests[index].phoneNum+'">'
+    HTML += '<label class="w3-validate">'+play.guests[index].phoneNum+'</label><br>'
   }
   HTML += '<input value="'+host+'" type="hidden" name="hostID">'
   HTML += '<input class="w3-input" type="submit" value="Remove Selected Guests"></form>'
