@@ -74,19 +74,19 @@
 
     <div id="guestSettings" class="w3-container guest">
       <form class="w3-group" style="height:110px;" id="input" action="/guests/add" method="POST">
-        <input id='hostID6' type='hidden' name ='hostID'>
+        <input id='hostID4' type='hidden' name ='hostID'>
         <input class="w3-input" type="text" name="guestNum" placeholder="4165558030" required>
         <input class="w3-input" type="submit" value="Add Guest">
       </form>
 
       <form class="w3-group" style="height:150px;" id="input" action="/guests/remove" method="POST">
-        <input id='hostID7' type='hidden' name ='hostID'>
+        <input id='hostID5' type='hidden' name ='hostID'>
         <input class="w3-input" type="text" name="guestNum" placeholder="4165558030" required>
         <input class="w3-input" type="submit" value="Remove Guest">
       </form>
 
       <form class="w3-group" style="height:130px;" id="input" action="/guests/removeAll" method="POST">
-        <input id='hostID8' type='hidden' name ='hostID'>
+        <input id='hostID6' type='hidden' name ='hostID'>
         <input class="w3-input" type="submit" value="Remove All Guests">
       </form>
     </div>
@@ -216,8 +216,6 @@ if (error) {
     document.getElementById('hostID4').value = hostID;
     document.getElementById('hostID5').value = hostID;
     document.getElementById('hostID6').value = hostID;
-    document.getElementById('hostID7').value = hostID;
-    document.getElementById('hostID8').value = hostID;
   }
 }
 </script>
