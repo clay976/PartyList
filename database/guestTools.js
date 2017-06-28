@@ -46,7 +46,9 @@ function getAll (req, res){
     console.log (guests)
     return guests
   })
-  .then (res.status(200).json (guests))
+  .then (function (guests){
+    res.status(200).json (guests)
+  })
   .catch(function (err){
     console.log (err.stack)
     res.status(400).json('error adding guest: '+err)

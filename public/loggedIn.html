@@ -132,7 +132,7 @@ function getAllGuests(host) {
     if (this.readyState == 4 && this.status == 200) {
       document.getElementById("allPlaylists").innerHTML = buildGuestView (this.responseText, host);
     }else if (this.readyState == 4 && this.status != 200){
-      alert ('there was an error retrieving your playlists, sorry')
+      alert ('there was an error retrieving your guest list, sorry')
     }
   };
 }
