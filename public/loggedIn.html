@@ -123,7 +123,7 @@ function buildPlaylistView (plays){
   var play = JSON.parse (plays)
   var play = JSON.parse (play)
   console.log (play)
-  var HTML = '<form class="w3-group" id="input" action="/playlist/spotify/getAll" method="POST">'
+  var HTML = '<form class="w3-group" id="input" action="/playlist/spotify/set" method="POST">'
   for (var index = 0; index < (play.playlists.length-1); index ++){
     HTML += '<input id="playlistID" class="w3-radio" type="radio" name="playlistID" "value='+play.playlists[index].id+'">'
     HTML += '<label class="w3-validate">'+play.playlists[index].name+'</label><br>'
