@@ -134,7 +134,7 @@ function buildPlaylistView (plays){
   var playlists = JSON.parse (plays)
   console.log (playlists)
   var HTML = ''
-  for (var index = 0; index < (playlists[].length-1); index ++){
+  for (var index = 0; index < (playlists.length-1); index ++){
     HTML += '<input id="playlistID" class="w3-radio" type="radio" name='+playlists[index].name+'" value='+playlists[index].id+'">'
   }
   HTML += '<input class="w3-input" type="submit" value="set">'
