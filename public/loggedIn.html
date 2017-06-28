@@ -131,8 +131,8 @@ function getAllPlaylists(host) {
 }
 
 function buildPlaylistView (plays){
-  console.log (plays)
   var play = JSON.parse (plays)
+  var play = JSON.parse (play)
   var HTML = ''
   for (var index = 0; index < (play.playlists.length-1); index ++){
     HTML += '<input id="playlistID" class="w3-radio" type="radio" name='+play.playlists[index].name+'" value='+play.playlists[index].id+'">'
