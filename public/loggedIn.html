@@ -138,8 +138,9 @@ function getAllGuests(host) {
 }
 
 function buildGuestView (plays, host){
+  console.log (plays)
   var play = JSON.parse (plays)
-  var play = JSON.parse (play)
+  console.log (play)
   var HTML = '<form class="w3-group" id="input" action="/guests/removeMany" method="POST">'
   for (var index = 0; index < (play.guests.length-1); index ++){
     HTML += '<input class="w3-radio" type="radio" name="guestNum" value="'+play.guests[index].phoneNum+'">'
