@@ -37,6 +37,24 @@ function addGuest (req, res){
   })
 }
 
+function getAll (req, res){
+  var hostID      = req.body.hostID
+  var guestQuery  = {'hostID': hostID}
+
+  model.Guest.find(guestQuery).exec()
+  .then (function (guests){
+    console.log (guests)
+    return guests
+  })
+  .then (function (guests){
+    res.status(200).json (guests)
+  })
+  .catch(function (err){
+    console.log (err.stack)
+    res.status(400).json('error adding guest: '+err)
+  })
+}
+
 //validates that the request from client side is present and in the right format
 function validateRequest (req){
   return new Promise (function (fulfill, reject){
@@ -115,7 +133,8 @@ function welcomeMessage (toNum, hostID, reqThreshold, playlistID){
 module.exports = {
   addManyGuest                : addManyGuest,
   validateGuest               : validateGuest,
-  setCurrentTracks             : setCurrentTracks,
+  getAll                      : getAll,
+  setCurrentTracks            : setCurrentTracks,
   clearAndAddPreviousRequest  : clearAndAddPreviousRequest,
   addGuest                    : addGuest
 }

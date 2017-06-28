@@ -29,7 +29,8 @@ function HandleIncomingMessage (req, res, db){
     return databaseHostTools.searchDatabaseForHost (guestObject)
   })
   .then (function (guestObject){
-    if (((guestMessage === '1') || (guestMessage === '2') || (guestMessage === '3') ||(guestMessage === '4')) & (guestObject.guest.currentTracks != '')){ 
+    var dictionary = ((guestMessage === '1') || (guestMessage === '2') || (guestMessage === '3') ||(guestMessage === '4'))
+    if (dictionary & (guestObject.guest.currentTracks != '')){ 
       return guestConfirmingCurrentTrack (guestObject)
     }else{
       return searchForNewRequest (guestObject)
@@ -92,9 +93,6 @@ function confirmTrackandAddToPlaylist (guestObject){
 function confirmTrackAndIncrementRequests (guestObject){
   return new Promise (function (fulfill, reject){
     databaseTrackTools.incrementSongsRequestsInDatabase (guestObject)
-    .then (function (guestObject){
-      return (guestObject)
-    })
     .then (function (guestObject){
       return databaseGuestTools.clearAndAddPreviousRequest (guestObject)
     })

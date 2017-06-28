@@ -91,7 +91,6 @@ TO BE SENT:
   JSON from req.body{               :  type  :              Description                 |
     host                            : string :  the username of their spotify account.  |
   }                                                                                     |
-                                                                                        |
 RETURNED: properly formatted JSON object containing the name and spotify ID of the      |
           playlist of playlist that the user controls.                                  |
   {playlists"[                                                                          |                     
@@ -120,17 +119,6 @@ ________________________________________________________________________________
   })  
 
 /*
-set a specific playlist id (most likely to be used after finding all the user's spotify playlists)
-________________________________________________________________________________________
-TO BE SENT:
-  JSON from req.body{               :  type  :              Description                |
-    host                            : string :  the username of their spotify account. |
-  }
-_______________________________________________________________________________________*/
-  app.post('/playlist/requestThreshold', function (req, res){
-    spotifyPlaylistTools.setRequestThreshold (req, res)
-  })  
-/*
 find this user's latest playlist held in our database
 ________________________________________________________________________________________
 TO BE SENT:
@@ -141,7 +129,8 @@ ________________________________________________________________________________
   app.post('/playlist/partyList/latest', function (req, res){
   })
 
-/*
+
+/*_____________________________________________________PLAYLIST SETTINGS______________________________________
 Set wether songs added can be explicit or not.
 ________________________________________________________________________________________
 TO BE SENT:
@@ -149,34 +138,11 @@ TO BE SENT:
     host                            : string :  the username of their spotify account. |
   }
 _______________________________________________________________________________________*/
-  app.post('/playlist/explicit', function (req, res){
-    databaseHostTools.explicitFilter (req, res)
+  app.post('/playlist/settings', function (req, res){
+    databaseHostTools.playlistSettings (req, res)
   })
 
-/*
-Set wether songs added can be explicit or not.
-________________________________________________________________________________________
-TO BE SENT:
-  JSON from req.body{               :  type  :              Description                |
-    host                            : string :  the username of their spotify account. |
-  }
-_______________________________________________________________________________________*/
-  app.post('/playlist/minYear', function (req, res){
-    databaseHostTools.minYear (req, res)
-  })
-
-/*
-Set wether songs added can be explicit or not.
-________________________________________________________________________________________
-TO BE SENT:
-  JSON from req.body{               :  type  :              Description                |
-    host                            : string :  the username of their spotify account. |
-  }
-_______________________________________________________________________________________*/
-  app.post('/playlist/maxYear', function (req, res){
-    databaseHostTools.maxYear (req, res)
-  })
-
+/*_____________________________________________________GUEST SETTINGS_________________________________________
 
 /*
 remove every guest that is associated with this user
@@ -234,8 +200,20 @@ TO BE SENT:
   }
 _______________________________________________________________________*/
   app.post('/guests/add', function (req, res){
-    console.log (req.body)
-    guestTools.addGuest (req, res, db)
+    guestTools.addGuest (req, res)
+  })
+
+/*
+add a single guest to the party in a JSON block
+___________________________________________________________________
+TO BE SENT:
+  JSON from req.body{  :  type  :              Description                |
+    host               : string :  the username of their spotify account. |
+    guestNum           : string : phone number of the guest to be added   |
+  }
+_______________________________________________________________________*/
+  app.post('/guests/getAll', function (req, res){
+    guestTools.getAll (req, res)
   })
 
 /*
@@ -265,6 +243,7 @@ ________________________________________________________________________________
       databaseHostTools.spotifyApi.refreshAccessToken()
       .then(function(data) {
         databaseHostTools.spotifyApi.setAccessToken(data.body.access_token)
+        console.log (hostInfo)
         model.Host.findOneAndUpdate({'hostID': 'clay976'}, JSONtemplate.Host ('clay976', data.body.access_token, hostInfo.refresh_token, hostInfo.homePage)).exec()
         .then(function(update) {
           console.log ('getting refresh token successful')

@@ -36,6 +36,7 @@ function createPlaylist (req, res, db){
     return playlistTemplate.userPlaylists (host, data.body.items, data.body.total)
   })
   .then (function(playlistInfo){
+    playlistInfo = JSON.parse (playlistInfo)
     return setNewHomePage (playlistInfo.playlists[0].owner, playlistInfo.playlists[0].id, playlistInfo.playlists[0].name)
   })
   .then (function (update){
@@ -67,6 +68,7 @@ function findAllPlaylists (req, res, db){
 
 
 function setSpecificPlaylist (req, res, db){
+  console.log (req.body)
   hostAcountTools.validateHost (req.body.hostID)
   .then (function (hostInfo){
     return validatePlaylistInput(hostInfo, req.body.playlistID)
@@ -114,8 +116,8 @@ function validatePlaylistInput (hostInfo, playName) {
   return new Promise (function (fulfill, reject){
     if (playName){
       fulfill ({
-        'hostID' : hostInfo.hostID,
-        'playName' : playName
+        'hostID'    : hostInfo.hostID,
+        'playName'  : playName
       })
     }else{
       reject ('we did not recieve playlist information')

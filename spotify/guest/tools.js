@@ -16,7 +16,8 @@ function searchSpotify (guestObject){
         guestObject.tracks = JSONtemp.populateGuestObjectTracks (spotifyTrack)
         fulfill (guestObject)
       }else{ // we did not find a track matching the guests search request so we reject immediatley and respond to them
-        guestObject.guest.currentTrack.trackID = null
+        guestObject.guest.lastMessage = 1
+        guestObject.guest.currentTracks[0].trackID = null
         return databaseGuestTools.clearAndAddPreviousRequest (guestObject)
         .then (reject (addResponse.songNotFound))
         .catch (reject (error))
