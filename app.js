@@ -236,10 +236,10 @@ ________________________________________________________________________________
   app.listen(80)
 
   setInterval(function refreshToken () {
-    var currentTime = Date.now
+    var currentTime = Date.now ()
     var diff = currentTime - 99
     console.log (diff)
-    
+
     model.Host.find({ 'timeSet' : { $lt: diff }}).exec()
     .then (function (hostInfo){
       console.log (hostInfo)

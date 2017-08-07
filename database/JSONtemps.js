@@ -4,7 +4,7 @@ function Host (data, accessToken, refreshToken, homePage, playID, playName){
 	  'access_token'	: accessToken,
 	  'expires_in'		: 3600,
 	  'refresh_token'	: refreshToken,
-    'timeSet'       : Date.now,
+    'timeSet'       : Date.now(),
 	  'homePage'			: homePage,
 	  'exlpicit'			: true,
     'playlistID'    : playID,
