@@ -236,10 +236,12 @@ ________________________________________________________________________________
   app.listen(80)
 
   setInterval(function refreshToken () {
-    var tokenExpirationEpoch
-    model.Host.findOne({ 'hostID' : 'clay976' }).exec()
+    var currentTime = Date.now
+
+    model.Host.find({ 'timeSet' : { $lt: currentTime - 99 }}).exec()
     .then (function (hostInfo){
-      databaseHostTools.spotifyApi.setRefreshToken(hostInfo.refresh_token)
+      console.log (hostInfo)
+      /*databaseHostTools.spotifyApi.setRefreshToken(hostInfo.refresh_token)
       databaseHostTools.spotifyApi.refreshAccessToken()
       .then(function(data) {
         databaseHostTools.spotifyApi.setAccessToken(data.body.access_token)
@@ -254,10 +256,10 @@ ________________________________________________________________________________
       })
       .catch (function (err){
         console.log ('error getting token: '+ err)
-      })
+      })*/
     })
     .catch (function (err){
       console.log (err)
     })
-  }, 3500000)
+  }, 100)
 })
