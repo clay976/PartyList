@@ -237,12 +237,14 @@ ________________________________________________________________________________
 
   setInterval(function refreshToken () {
     var currentTime = Date.now ()
-    var diff = currentTime - 99
-    console.log (diff)
-
+    var diff = currentTime - 3000000
     model.Host.find({ 'timeSet' : { $lt: diff }}).exec()
     .then (function (hostInfo){
-      console.log (hostInfo)
+      if (hostInfo){
+        console.log (hostInfo)
+      }else{
+        console.log ('no hosts to refresh')
+      }
       /*databaseHostTools.spotifyApi.setRefreshToken(hostInfo.refresh_token)
       databaseHostTools.spotifyApi.refreshAccessToken()
       .then(function(data) {
@@ -264,5 +266,5 @@ ________________________________________________________________________________
       console.log ("mongo search error")
       console.log (err)
     })
-  }, 100)
+  }, 300000)
 })
