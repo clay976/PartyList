@@ -239,28 +239,26 @@ ________________________________________________________________________________
     var currentTime = Date.now ()
     var diff = currentTime - 3000000
     model.Host.find({ 'timeSet' : { $lt: diff }}).exec()
-    .then (function (hostInfo){
-      if (hostInfo){
-        console.log (hostInfo)
+    .then (function (hosts){
+      if (hosts){
+        for (host of hosts){
+          console.log ('first host found')
+          console.log (host)
+          databaseHostTools.spotifyApi.setRefreshToken(host.refresh_token)
+          databaseHostTools.spotifyApi.refreshAccessToken()
+          .then (function (data){
+            return model.Host.findOneAndUpdate({'hostID': host.hostID}, JSONtemplate.Host ('clay976', data.body.access_token, host.refresh_token, host.homePage)).exec()
+          })
+          .then(function(update) {
+            console.log ('getting refresh token successful')
+          })
+          .catch (function (err){
+            console.log ('error getting token: '+ err)
+          })
+        }
       }else{
         console.log ('no hosts to refresh')
       }
-      /*databaseHostTools.spotifyApi.setRefreshToken(hostInfo.refresh_token)
-      databaseHostTools.spotifyApi.refreshAccessToken()
-      .then(function(data) {
-        databaseHostTools.spotifyApi.setAccessToken(data.body.access_token)
-        console.log (hostInfo)
-        model.Host.findOneAndUpdate({'hostID': 'clay976'}, JSONtemplate.Host ('clay976', data.body.access_token, hostInfo.refresh_token, hostInfo.homePage)).exec()
-        .then(function(update) {
-          console.log ('getting refresh token successful')
-        })
-        .catch (function (err){
-          console.log (err)
-        })
-      })
-      .catch (function (err){
-        console.log ('error getting token: '+ err)
-      })*/
     })
     .catch (function (err){
       console.log ("mongo search error")
