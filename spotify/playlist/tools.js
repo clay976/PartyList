@@ -156,7 +156,8 @@ function addTracksToPlaylist (guestObject){
   return new Promise (function (fulfill, reject){
     hostAcountTools.spotifyApi.setAccessToken(guestObject.host.access_token)
     console.log ("added token success")
-    hostAcountTools.spotifyApi.addTracksToPlaylist (guestObject.host.hostID, guestObject.host.playlistID, 'spotify:track:'+guestObject.track.trackID)
+    hostAcountTools.spotifyApi.addTracksToPlaylist ('clay976', '1DcKFsBIGK6py7Oe7pvKXv', 'spotify:track:4iV5W9uYEdYUVa79Axb7Rh')
+    //hostAcountTools.spotifyApi.addTracksToPlaylist (guestObject.host.hostID, guestObject.host.playlistID, 'spotify:track:'+guestObject.track.trackID)
     .then (function (track){
       fulfill (guestObject)
     })
