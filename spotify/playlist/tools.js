@@ -155,11 +155,14 @@ function setNewHomePage (hostID, playlistID, playlistName){
 function addTracksToPlaylist (guestObject){
   return new Promise (function (fulfill, reject){
     hostAcountTools.spotifyApi.setAccessToken(guestObject.host.access_token)
+    console.log ("added token success")
     hostAcountTools.spotifyApi.addTracksToPlaylist (guestObject.host.hostID, guestObject.host.playlistID, 'spotify:track:'+guestObject.track.trackID)
     .then (function (track){
       fulfill (guestObject)
     })
     .catch (function (err){
+      console.log (err)
+      console.log ("error adding to playlist")
       reject (err)
     })
   })

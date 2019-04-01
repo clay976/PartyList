@@ -4,7 +4,7 @@
   "description": "text a twilio number to add a song to a spotify playlist",
   "version": "0.0.1",
   "main": "app.js",
-  "repository": "https://github.com/BrentBrightling/PartyList.git",
+  "repository": "https://github.com/clay976/PartyList.git",
   "license": "UNLICENSED",
   "dependencies": {
     "bluebird": "^3.4.1",
