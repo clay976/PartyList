@@ -15,7 +15,7 @@
     "mongoose": "^4.5.7",
     "querystring": "^0.2.0",
     "request": "^2.34.0",
-    "spotify-web-api-node": "^2.1.0",
+    "spotify-web-api-node": "^4.0.0",
     "twilio": "^2.6.0"
   },
   "devDependencies": {
