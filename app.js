@@ -21,7 +21,7 @@ var model             = require ('./database/models')
 //database variable
 var MongoClient  = require('mongodb').MongoClient
 var mongoose     = require("mongoose");
-var mongoUrl     = 'mongodb://localhost:27017/party'
+var mongoUrl     = 'mongodb://AdminClayton:P2h3b1xckmy@localhost:27017/party'
 mongoose.Promise = global.Promise;
 
 //app declaration and uses
