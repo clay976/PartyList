@@ -1,5 +1,5 @@
-var model         = require ('./models')
-var JSONtemplate  = require ('./JSONtemps')
+var model         = require ('database/models')
+var JSONtemplate  = require ('database/JSONtemps')
 
 function setTrackAddedToPlaylist (guestObject){
   return new Promise (function (fulfill, reject){

@@ -1,4 +1,4 @@
-var hostAcountTools	= require ('../../database/hostTools')
+var hostAcountTools	= require ('database/hostTools')
 
 function obtainYearReleased (guestObject){
 	return new Promise (function (fulfill, reject){

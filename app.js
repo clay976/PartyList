@@ -1,28 +1,31 @@
+// module paths without the ../../.. shit.
+require('app-module-path').addPath(__dirname);
+
 //node modules
-var express      = require('express')
-var cookieParser = require('cookie-parser')
-var bodyParser   = require('body-parser')
-var querystring  = require('querystring')
+var express                 = require('express')
+var cookieParser            = require('cookie-parser')
+var bodyParser              = require('body-parser')
+var querystring             = require('querystring')
 
 //Spotify Tools
-var spotifyAccountTools     = require ('./spotify/account/tools')
-var spotifyPlaylistTools    = require ('./spotify/playlist/tools')
-var spotifyAccountTemplate  = require ('./spotify/account/JSONtemps')
+var spotifyAccountTools     = require ('spotify/account/tools')
+var spotifyPlaylistTools    = require ('spotify/playlist/tools')
+var spotifyAccountTemplate  = require ('spotify/account/JSONtemps')
 
 //Messagign Tools
-var twilioIncoming = require ('./twilio/incoming')
+var twilioIncoming          = require ('twilio/incoming')
 
 //Database Tools
-var JSONtemplate      = require ('./database/JSONtemps')
-var databaseHostTools = require ('./database/hostTools')
-var guestTools        = require ('./database/guestTools')
-var model             = require ('./database/models')
+var JSONtemplate            = require ('database/JSONtemps')
+var databaseHostTools       = require ('database/hostTools')
+var guestTools              = require ('database/guestTools')
+var model                   = require ('database/models')
 
 //database variable
-var MongoClient  = require('mongodb').MongoClient
-var mongoose     = require("mongoose");
-var mongoUrl     = 'mongodb://AdminClayton:P2h3b1xckmy@localhost:27017/party'
-mongoose.Promise = global.Promise;
+var MongoClient             = require('mongodb').MongoClient
+var mongoose                = require("mongoose");
+var mongoUrl                = 'mongodb://localhost:27017/party'
+mongoose.Promise            = global.Promise;
 
 //app declaration and uses
 var app = express()
@@ -48,7 +51,7 @@ ________________________________________________________________________*/
     res.redirect('https://accounts.spotify.com/authorize?' + querystring.stringify(spotifyAccountTemplate.buildScope()))
   })
 
-/*
+/*1
 log the user in to access the rest of our things, and to save their access and refresh tokens
 ________________________________________________________________________________________
 TO BE SENT:
@@ -236,33 +239,28 @@ ________________________________________________________________________________
   app.listen(80)
 
   setInterval(function refreshToken () {
-    var currentTime = Date.now ()
-    var diff = currentTime - 3000000
-    model.Host.find({ 'timeSet' : { $lt: diff }}).exec()
-    .then (function (hosts){
-      if (hosts){
-        for (host of hosts){
-          console.log ('first host found')
-          console.log (host)
-          databaseHostTools.spotifyApi.setRefreshToken(host.refresh_token)
-          databaseHostTools.spotifyApi.refreshAccessToken()
-          .then (function (data){
-            return model.Host.findOneAndUpdate({'hostID': host.hostID}, JSONtemplate.Host ('clay976', data.body.access_token, host.refresh_token, host.homePage)).exec()
-          })
-          .then(function(update) {
-            console.log ('getting refresh token successful')
-          })
-          .catch (function (err){
-            console.log ('error getting token: '+ err)
-          })
-        }
-      }else{
-        console.log ('no hosts to refresh')
-      }
+    var tokenExpirationEpoch
+    model.Host.findOne({ 'hostID' : 'clay976' }).exec()
+    .then (function (hostInfo){
+      databaseHostTools.spotifyApi.setRefreshToken(hostInfo.refresh_token)
+      databaseHostTools.spotifyApi.refreshAccessToken()
+      .then(function(data) {
+        databaseHostTools.spotifyApi.setAccessToken(data.body.access_token)
+        console.log (hostInfo)
+        model.Host.findOneAndUpdate({'hostID': 'clay976'}, JSONtemplate.Host ('clay976', data.body.access_token, hostInfo.refresh_token, hostInfo.homePage)).exec()
+        .then(function(update) {
+          console.log ('getting refresh token successful')
+        })
+        .catch (function (err){
+          console.log (err)
+        })
+      })
+      .catch (function (err){
+        console.log ('error getting token: '+ err)
+      })
     })
     .catch (function (err){
-      console.log ("mongo search error")
       console.log (err)
     })
-  }, 300000)
+  }, 3500000)
 })

@@ -1,7 +1,7 @@
-var databaseHostTools   = require ('../../database/hostTools')
-var databaseGuestTools  = require ('../../database/guestTools')
-var addResponse         = require ('../../twilio/responses')
-var JSONtemp            = require ('./JSONtemps')
+var databaseHostTools   = require ('database/hostTools')
+var databaseGuestTools  = require ('database/guestTools')
+var addResponse         = require ('twilio/responses')
+var JSONtemp            = require ('spotify/guest/JSONtemps')
 
 function searchSpotify (guestObject){
   var query = guestObject.guest.lastMessage

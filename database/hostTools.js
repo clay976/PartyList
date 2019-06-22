@@ -1,12 +1,5 @@
-var SpotifyWebApi = require('spotify-web-api-node');
-var credentials 	= {
-  clientId 			  : 'a000adffbd26453fbef24e8c1ff69c3b',
-  clientSecret 	  : '899b3ec7d52b4baabba05d6031663ba2',
-  redirectUri     : 'http://criwcomputing.com/callback'
-}
-var spotifyApi 		= new SpotifyWebApi(credentials);
-var model 				= require ('./models')
-var addResponse   = require ('../twilio/responses')
+var model 				= require ('database/models')
+var addResponse   = require ('twilio/responses')
 
 function validateHost (host){
 	return new Promise (function (fulfill, reject){
@@ -93,7 +86,6 @@ function verifyYearFilter (guestObject) {
 
 module.exports = {
   validateHost					: validateHost,
-  spotifyApi						: spotifyApi,
   searchDatabaseForHost : searchDatabaseForHost,
   playlistSettings      : playlistSettings,
   verifyExplicitFilter  : verifyExplicitFilter,

@@ -1,8 +1,8 @@
 //my modules
-var hostAcountTools   = require ('../../database/hostTools')
-var playlistTemplate  = require ('./JSONtemps')
-var model             = require ('../../database/models')
-var querystring       = require('querystring')
+var hostAcountTools   = require ('database/hostTools')
+var playlistTemplate  = require ('spotify/playlist/JSONtemps')
+var model             = require ('database/models')
+var querystring       = require ('querystring')
 
 //TODO: add comments
 function createPlaylist (req, res, db){

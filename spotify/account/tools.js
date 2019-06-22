@@ -1,11 +1,11 @@
 //Database modules
-var databaseHostTools = require ('../../database/hostTools')
-var model             = require ('../../database/models')
-var JSONtemplate      = require ('../../database/JSONtemps')
+var databaseHostTools = require ('database/hostTools')
+var model             = require ('database/models')
+var JSONtemplate      = require ('database/JSONtemps')
 
 //spotify tools
-var playlistTool      = require ('../playlist/tools')
-var SpotifyWebApi     = require('spotify-web-api-node');
+var playlistTool      = require ('spotify/playlist/tools')
+var SpotifyWebApi     = require ('spotify-web-api-node');
 var credentials       = {
   clientId            : 'a000adffbd26453fbef24e8c1ff69c3b',
   clientSecret        : '899b3ec7d52b4baabba05d6031663ba2',
@@ -15,7 +15,7 @@ var spotifyApi        = new SpotifyWebApi(credentials);
 
 //node modules
 var querystring       = require('querystring')
-var playlistTemplate  = require ('../playlist/JSONtemps')
+var playlistTemplate  = require ('spotify/playlist/JSONtemps')
 
 
 // makes a request to the spotify API to retrieve

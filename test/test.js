@@ -1,9 +1,9 @@
 //node modules 
-var should = require('should')
-var assert = require('assert')
-var request = require('supertest')
-var querystring = require('querystring')
-var spotifyAccountTemplate = require ('../spotify/account/JSONtemps')
+var should                  = require('should')
+var assert                  = require('assert')
+var request                 = require('supertest')
+var querystring             = require('querystring')
+var spotifyAccountTemplate  = require ('spotify/account/JSONtemps')
 
 //variables
 var url = 'localhost'

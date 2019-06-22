@@ -5,17 +5,17 @@ var twilio                = require('twilio')
 var client                = require('twilio/lib')(sid, atoken);
 
 //database modules
-var databaseHostTools     = require ('../database/hostTools')
-var databaseGuestTools    = require ('../database/guestTools')
-var databaseTrackTools    = require ('../database/trackTools')
+var databaseHostTools     = require ('database/hostTools')
+var databaseGuestTools    = require ('database/guestTools')
+var databaseTrackTools    = require ('database/trackTools')
 
 //spotify modules
-var spotifyGuestTools     = require ('../spotify/guest/tools')
-var spotifyPlaylistTools  = require ('../spotify/playlist/tools')
-var spotifyTrackTools     = require ('../spotify/track/tools')
+var spotifyGuestTools     = require ('spotify/guest/tools')
+var spotifyPlaylistTools  = require ('spotify/playlist/tools')
+var spotifyTrackTools     = require ('spotify/track/tools')
 
 //JSON templates
-var addResponse           = require ('./responses')
+var addResponse           = require ('twilio/responses')
 
 //message incoming
 function HandleIncomingMessage (req, res, db){
