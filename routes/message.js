@@ -3,7 +3,7 @@ var express 				= require('express')
 var bodyParser              = require('body-parser')
 
 //app modules
-var HandleIncomingMessage          = require ('services/twilio/HandleIncomingMessage')
+var handleIncomingMessage          = require ('services/twilio/handleIncomingMessage')
 
 //app definitions
 var router                  = express.Router()
@@ -17,7 +17,7 @@ router.post('/', function (req, res){
 	var requestObject = {}
 	requestObject.guestPhoneNumber  = req.body.From
 	requestObject.guestMessage  	= req.body.Body.toLowerCase().trim()
-	HandleIncomingMessage (requestObject, res)
+	handleIncomingMessage (requestObject, res)
 })
 
 module.exports = router
