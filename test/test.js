@@ -1,75 +1,100 @@
+// module paths without the ../../.. shit.
+require('app-module-path').addPath('/Users/claytonwarren/MyPorojects/PartyList');
+
 //node modules 
-var should = require('should')
-var assert = require('assert')
-var request = require('supertest')
-var querystring = require('querystring')
-var spotifyAccountTemplate = require ('../spotify/account/JSONtemps')
+var should            = require('should')
+var assert            = require('assert')
+var request           = require('supertest')
+var querystring       = require('querystring')
+
+//app modules
+var refreshTokens     = require ('services/spotify/account/refreshTokens')
+var hostTemplate      = require ('database/JSONtemps')
+var updateHostinDB    = require ('database/host/update')
 
 //variables
 var url = 'localhost'
 var validHostFail = 'validation error: could not find this host in our database, You must log in to continue'
 
 /*BEFORE EACH RUN OF TESTS!!
-use this url to retrieve a code so we can obtain access tokens
-for the tests. 
-
-localhost/login
-
-place the code in this next variable
+1. open postman
+2. 
 */
 
-// https://accounts.spotify.com/en/login?continue=https:%2F%2Faccounts.spotify.com%2Fen%2Fauthorize%3Fresponse_type%3Dcode%26client_id%3Da000adffbd26453fbef24e8c1ff69c3b%26scope%3Duser-read-private%2520user-read-email%2520user-read-birthdate%2520streaming%2520playlist-modify-private%2520playlist-modify-public%2520playlist-read-private%26redirect_uri%3Dhttp:%252F%252F104.131.215.55:80%252Fcallback
+var refreshToken = process.env.CRIW_DUMMY_REFRESH
+var hostID = process.env.CRIW_DUMMY_SPOTIFY_USER
+var host = {}
+var playlistID = ''
 
-var code = 'AQBZ6EqXSV-BgPyuJi1XOVdccng91fnsmLMilGasI24n92j-fg5BFIeMitxz-k3JxjmTS6i3x0GYhVNnl-4U4MTRRzTjxwjwRZB0w_0o4C1FcGSLk5s4PGVNFcyuBHvzw-PikW_nZ97QsxRL7MC7kypGArPmWA1mUfAn5WjrEEliPIdvvAxqWgNT2Z2KRREAWAzWjx-6GoeZng1nnNB_vJDDpbMFORWEIklCNTCUzsVd8X7lytd0rrxA83CiaZlpPoknmRGV1SDrXso2lCZC459_m2GQUv3--BGTLCyw9H0RcBjR329Aa7IrBd3Jq4sFYRyAeoVb2zXYU59Gs2r9TNu1_bYroC32-R63RCE0K_xvvvC2YbGqolKh3jH3R-JJJfzM'
+before(function(){
+  console.log ('starting pre test functions')
+  postData = {
+    "playName"    : "Mocha Test " + new Date(),
+    "hostID"      : hostID
+  }
+  host.databaseHost = hostTemplate.Host (hostID, '', refreshToken, '', '', '')
+  return refreshTokens (host)
+  .then (function (host){
+    request(url)
+    .post('/playlist/spotify/create')
+    .send (postData)
+    .end(function(err, res) {
+      playlistID = res.headers.location.split ('=')[2]
+      console.log (playlistID)
+      console.log ('finished create playlist')
+      if (err) {
+        throw err;
+      }
+      console.log (res.body)
+      res.status.should.equal(302);
+    });
+  })
+  .catch (function (err){
+    console.log ('pre-test error: ' +err)
+  })
+})
 
 //start tests
-describe('GET /login', function(){
-  it('login to spotify\' to obtain access and refresh tokens', function(done){
+describe('GET /', function(){
+  it('Ensure app is started test', function(done){
     request(url)
-    .get ('/login')
+    .get ('')
     .end(function(err, res) {
       if (err) {
         throw err;
       }
-      console.log (res)
-      res.status.should.equal(302);
+      res.status.should.equal(200);
       done();
     })
   });
 })
 
-describe('GET /callback', function(){
-  it('hit the callback enpoint with a valid authorization code. should be a redirect, to the hosts homepage.', function(done){
+describe('POST /playlist/spotify/delete', function(){
+  it('successfully delete a spotify playlist', function(done){
+    postData = {
+      "playlistID"  : playlistID,
+      "hostID"      : hostID
+    }
     request(url)
-    .get('/callback?code='+code)
-    .end(function(err, res) {
-      if (err) {
-        throw err;
-      }
-      res.status.should.equal(302);
-      done();
-    });
-  });
-  it('hit the callback endpoint with a bad authorization code. should be a redirect back to login.', function(done){
-    request(url)
-    .get('/callback?code=badcode')
+    .post('/playlist/spotify/delete')
+    .send (postData)
     .end(function(err, res) {
       if (err) {
         throw err;
       }
       console.log (res.body)
-      res.body.should.equal('error loggin in: WebapiError: invalid_grant: Invalid authorization code');
-      res.status.should.equal(400);
+      res.status.should.equal(200);
       done();
     });
   });
-})
+});
 
-describe('POST /playlist/spotify/create', function(){
+/*
+
   it('successfully create a spotify playlist', function(done){
     postData = {
-      "playName"  : "mocha test",
-      "host"      : "clay976"
+      "playName"  : "",
+      "host"      : hostID
     }
     request(url)
     .post('/playlist/spotify/create')
@@ -84,7 +109,33 @@ describe('POST /playlist/spotify/create', function(){
       done();
     });
   });
-  it('fail to create a playlist because name of playlist was missing', function(done){
+})
+
+/*
+
+describe('GET /callback', function(){
+  it('hit the callback endpoint with a bad authorization code. should be a redirect back to login.', function(done){
+    request(url)
+    .get('/login/callback?code=badcode')
+    .end(function(err, res) {
+      if (err) {
+        throw err;
+      }
+      res.body.should.equal('error: WebapiError: Bad Request');
+      res.status.should.equal(400);
+      done();
+    });
+  });
+})
+
+describe('POST /playlist/spotify/create', function(){
+  it('successfully create a spotify playlist', function(done){
+  });
+})
+
+/*
+
+it('fail to create a playlist because name of playlist was missing', function(done){
     postData = {
       "host"      : "clay976"
     }
@@ -119,12 +170,15 @@ describe('POST /playlist/spotify/create', function(){
       done();
     });
   });
-})
+
+
+
+
 describe('POST /playlist/spotify/set', function(){
   it('successfully set a playlist that the user owns', function(done){
     postData = {
       "playlistID"  : "0ktJLEaSUXtKIJPcRB2cK4",
-      "host"      : "clay976"
+      "host"        : "clay976"
     }
     request(url)
     .post('/playlist/spotify/set')
@@ -142,7 +196,7 @@ describe('POST /playlist/spotify/set', function(){
   it('try to set a playlist ID that the user does not own', function(done){
     postData = {
       "playlistID"  : "4VJ8BH056GfU5IdxVnaBNP",
-      "host"      : "clay976"
+      "host"        : "clay976"
     }
     request(url)
     .post('/playlist/spotify/set')
@@ -476,4 +530,4 @@ describe('POST /message', function(){
       done();
     });
   });
-})
+})*/

@@ -1,9 +1,11 @@
-function Host (data, accessToken, refreshToken, homePage, playID, playName){
+function Host (hostID, displayName, accessToken, refreshToken, homePage, playID, playName){
 	return {
-	  'hostID' 				: data,
+	  'hostID' 				: hostID,
+    'displayName'   : displayName,
 	  'access_token'	: accessToken,
 	  'expires_in'		: 3600,
 	  'refresh_token'	: refreshToken,
+    'timeSet'       : Date.now(),
 	  'homePage'			: homePage,
 	  'exlpicit'			: true,
     'playlistID'    : playID,
@@ -85,20 +87,6 @@ function spotifyGuest (databaseObject){
   }
 }
 
-function clearGuestTrack (num, trackID){
-  return  {
-    $inc            : {
-      numRequests   : num
-    }, 
-    $set            : { 
-      currentTracks : []
-    },
-    $push           : {
-      prevRequests  : trackID
-    }
-  }
-}
-
 module.exports = {
 	Host					  : Host,
 	Guest				    : Guest,
@@ -107,6 +95,5 @@ module.exports = {
 	setGuestTrack   : setGuestTrack,
   bothTokens		  : bothTokens,
   accessToken	    : accessToken,
-  spotifyGuest    : spotifyGuest,
-  clearGuestTrack : clearGuestTrack
+  spotifyGuest    : spotifyGuest
 }

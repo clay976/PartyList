@@ -1,7 +1,7 @@
 //node modules 
-var should = require('should')
-var assert = require('assert')
-var request = require('supertest')
+var should      = require('should')
+var assert      = require('assert')
+var request     = require('supertest')
 var querystring = require('querystring')
 
 //variables

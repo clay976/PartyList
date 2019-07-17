@@ -1,5 +1,5 @@
-var mongoose = require("mongoose");
-mongoose.Promise = require('bluebird');
+var mongoose      = require("mongoose");
+mongoose.Promise  = require('bluebird');
 //db.guests.remove( { phoneNum : '+16134539030' } )
 
 var guest = mongoose.Schema({
@@ -26,8 +26,10 @@ var track = mongoose.Schema({
 
 var host = mongoose.Schema({
   hostID 				: String,
+  displayName   : String,
   access_token	: String,
   expires_in		: { type: Number, default: 3600 },
+  timeSet       : Number,
   refresh_token	: String,
   playlistID		: { type: String, default: '' },
   playlistName  : { type: String, default: '' },
