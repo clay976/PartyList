@@ -1,7 +1,7 @@
 var searchSpotifyForGuestRequest    = require ('services/twilio/tools/searchSpotifyForGuestRequest')
 var obtainYearReleased              = require ('services/twilio/tools/obtainYearReleased')
 var checkForPreviousRequests        = require ('services/twilio/tools/checkForPreviousRequests')
-var finalizeTrackRequestInformation = require ('services/twilio/tools/finalizeTrackRequestInformation')
+var finalizeTrackRequestInformation = require ('services/twilio/tools/finalizetrackRequestInformation')
 
 var updateGuestInDB                 = require ('database/guest/update')
 var incrementOrAddSongInDatabase    = require ('database/track/incrementOrAdd')
