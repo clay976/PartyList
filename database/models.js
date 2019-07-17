@@ -26,6 +26,7 @@ var track = mongoose.Schema({
 
 var host = mongoose.Schema({
   hostID 				: String,
+  displayName   : String,
   access_token	: String,
   expires_in		: { type: Number, default: 3600 },
   timeSet       : Number,
