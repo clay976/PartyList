@@ -3,7 +3,8 @@ require('app-module-path').addPath(__dirname);
 
 //node modules
 var express                 = require('express')
-const dotenv                = require('dotenv');
+var mongoose                = require("mongoose")
+const dotenv                = require('dotenv')
 
 //app definitions
 dotenv.config();
