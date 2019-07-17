@@ -16,9 +16,7 @@ var message                 = require('routes/message')
 var songs                   = require('routes/songs')
 
 //database variable
-var MongoClient             = require('mongodb').MongoClient
-var mongoose                = require("mongoose");
-var mongoUrl                = 'mongodb://localhost:27017/party'
+var mongoUrl                = process.env.MONGO_URL
 mongoose.Promise            = global.Promise;
 
 //connect to the database, this happens when api starts, and the conection doesn't close until the API shuts down/crashes
