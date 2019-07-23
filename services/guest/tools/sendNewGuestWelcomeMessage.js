@@ -5,7 +5,7 @@ module.exports = function sendNewGuestWelcomeMessage (requestObject){
     let hostName
     if (requestObject.databaseHost.displayName) hostName = requestObject.databaseHost.displayName
     else hostName = requestObject.databaseHost.hostID 
-		twilio.API.sendMessage(welcomeMessage (requestObject.guestToAdd, requestObject.databaseHost.displayName, requestObject.databaseHost.reqThreshold, requestObject.databaseHost.playlistID))
+		twilio.API.sendMessage(welcomeMessage (requestObject.guestToAdd, hostName, requestObject.databaseHost.reqThreshold, requestObject.databaseHost.playlistID))
     .then (function (sentMessage){
       fulfill (requestObject)
     })
