@@ -6,6 +6,9 @@ var express                 = require('express')
 var mongoose                = require("mongoose")
 const dotenv                = require('dotenv')
 
+//API Wrappers
+spotifyApi                  = require ('config/SpotifyAPI')
+
 //app definitions
 dotenv.config();
 
@@ -17,6 +20,7 @@ var message                 = require('routes/message')
 var songs                   = require('routes/songs')
 
 //database variable
+var model                   = require ('database/models')
 var mongoUrl                = process.env.MONGO_URL
 mongoose.Promise            = global.Promise;
 
@@ -42,4 +46,29 @@ db.once('connected', function(db) {
 
   console.log ("Server Started successfully")
 
+  setInterval(autoRefreshHosts, 1000)
+
+  async function autoRefreshHosts (){
+    try{
+      var currentTime = Date.now ()
+      var diff = currentTime - 3000000
+      let hostsToRefresh =  await model.Host.find({ 'tokens.timeSet' : { $lt: diff}}).exec()
+      var promises = hostsToRefresh.map (async host => {
+        spotifyAPI.setRefrshToken (host.tokens.refresh)
+        let response = await spotifyAPI.refreshAccessToken()
+        console.log (response.body)
+        host.tokens.access = response.body.access_token
+        host.save()
+        return host
+      })
+      
+      let results = await Promise.all (promises)
+      console.log ('==================REFRESH SUCCESSFULL=================')
+      console.log (results)
+
+    }catch (err){
+      console.log ('there was a problem refreshing hosts tokens')
+      console.log (err)
+    }
+  }  
 })
