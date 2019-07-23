@@ -46,7 +46,7 @@ db.once('connected', function(db) {
 
   console.log ("Server Started successfully")
 
-  setInterval(autoRefreshHosts, 300000)
+  setInterval(autoRefreshHosts, 30000)
 
   async function autoRefreshHosts (){
     try{
@@ -54,7 +54,7 @@ db.once('connected', function(db) {
       var diff = currentTime - 300000
       let hostsToRefresh =  await model.Host.find(/*{ 'timeSet' : { $lt: diff}}*/).exec()
       var promises = hostsToRefresh.map (async host => {
-        spotifyAPI.setRefrshToken (host.refresh_token)
+        spotifyAPI.setRefreshToken (host.refresh_token)
         let response = await spotifyAPI.refreshAccessToken()
         console.log (response.body)
         host.access_token = response.body.access_token
