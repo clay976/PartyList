@@ -16,8 +16,11 @@ module.exports = function sendNewGuestWelcomeMessage (requestObject){
 }
 
 function welcome (hostID, reqThreshold, playlistID){
+  let haveS
+  if (reqThreshold < 2) haveS =''
+  else haveS ='s'
   return ('You have been added to ' +hostID+ '\'s party with Party List. Send your song requests to this number. Songs will be added after ' +reqThreshold+ 
-    ' request. You can find the playlist here https://play.spotify.com/user/'+hostID+'/playlist/'+ playlistID)
+    ' request'+haveS+'. You can find the playlist here https://play.spotify.com/user/'+hostID+'/playlist/'+ playlistID)
 }
 
 function welcomeMessage (toNum, hostID, reqThreshold, playlistID){
