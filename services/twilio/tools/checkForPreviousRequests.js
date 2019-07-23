@@ -6,6 +6,7 @@ module.exports = function checkForPreviousRequests (requestObject){
     for (var index = 0; index < 4; index ++){
       if (requestObject.tracks[index].addedPlaylist){
         requestObject.tracks[index] = addResponse.alreadyAdded (requestObject.tracks[index].name, requestObject.tracks[index].artist)
+        requestObject.databaseGuest.currentTracks[index] = requestObject.tracks[index]
       }else{
         for (var i = 0; i < requestObject.databaseGuest.prevRequests.length; i++){
           if (requestObject.tracks[index].trackID === requestObject.databaseGuest.prevRequests[i]){
