@@ -1,11 +1,6 @@
 module.exports = function populateGuestObjectTracks (spotifyTracks){
 	var arr = []
-	var limit
-	if (spotifyTracks.body.tracks.total > 3){
-		limit = 3
-	}else{
-		limit = spotifyTracks.body.tracks.total - 1
-	}
+	var limit = 3
 	for (var index = 0; index <= limit; index ++){
 		console.log (spotifyTracks.body.tracks.items[index].name)
 		arr[index] = {
