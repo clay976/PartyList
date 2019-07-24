@@ -21,7 +21,7 @@ module.exports = function setLatestPlaylist (host, res){
       track.addedPlaylist = false
       track.save()
       return
-    }
+    })
     let resolution = await Promise.all(promises)
     return requestObject
   })
