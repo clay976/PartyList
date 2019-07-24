@@ -29,7 +29,7 @@ module.exports = function setLatestPlaylist (host, res){
     let guests = await model.Guest.find ({'hostID' : requestObject.databaseHost.hostID})
     var promises = guests.map (async guest => {
       guest.prevRequests = []
-      guestS.save()
+      guest.save()
       return
     })
     let resolution = await Promise.all(promises)
