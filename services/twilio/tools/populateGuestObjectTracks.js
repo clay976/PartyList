@@ -7,6 +7,7 @@ module.exports = function populateGuestObjectTracks (spotifyTracks){
 		limit = spotifyTracks.body.tracks.total - 1
 	}
 	for (var index = 0; index <= limit; index ++){
+		console.log (spotifyTracks.body.tracks.items[index].name)
 		arr[index] = {
 	    'trackID'     : spotifyTracks.body.tracks.items[index].id,
 	    'name'        : spotifyTracks.body.tracks.items[index].name,
