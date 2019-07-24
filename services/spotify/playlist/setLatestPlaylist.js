@@ -25,6 +25,16 @@ module.exports = function setLatestPlaylist (host, res){
     let resolution = await Promise.all(promises)
     return requestObject
   })
+  .then (async function (requestObject){
+    let guests = await model.Guest.find ({'hostID' : requestObject.databaseHost.hostID})
+    var promises = guests.map (async guest => {
+      guest.prevRequests = []
+      guestS.save()
+      return
+    })
+    let resolution = await Promise.all(promises)
+    return requestObject
+  })
   .then (updatehost)
   .then (function (update){
     res.redirect (host.databaseHost.homePage)
